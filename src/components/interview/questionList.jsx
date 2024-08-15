@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Paper, Box } from '@mui/material';
 import QuestionItem from '@/components/interview/questionItem';
-import styles from '@/styles/interview/QuestionList.module.css';
+import styles from '@/styles/interview/questionList.module.css';
 
 const QuestionList = ({ activeTab }) => {
   const { questions, openQuestion } = useSelector(state => state.questions);
