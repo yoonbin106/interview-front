@@ -1,0 +1,22 @@
+.myPageContainer {
+  display: flex;
+  margin: 200px 30px 30px 30px;
+  width: 100%;
+}
+
+.myPageSidebar {
+  /* border: solid 2px; */
+  border-color: #DEFFF5;
+  margin: 80px 20px 10px 10px;
+  width: 180px;
+  /* min-width: 180px; */
+}
+
+.myPageContent {
+  padding: 50px 50px 50px 50px;
+  margin: 10px 10px 10px 10px;
+  border: solid 2px;
+  border-color: #DEFFF5;
+  min-width: 500px;
+  width: 1080px;
+}

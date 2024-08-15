@@ -1,0 +1,88 @@
+.botMessages {
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.messageContainer {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.messageContainer.user {
+  flex-direction: row-reverse; 
+  justify-content: flex-start; 
+}
+
+.userAvatar, .botAvatar {
+  font-size: 2rem; /* 아이콘 크기를 키웁니다 */
+  display: flex;
+  align-items: flex-end;
+}
+
+.userAvatar {
+  margin-left: 0.5rem; 
+}
+.botAvatar {
+  margin-right: 0.5rem;
+}
+
+.messageContent {
+  max-width: 70%;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+}
+
+.messageContainer.user .messageContent {
+  background-color: #e7f3ff;
+  color: #0056b3;
+}
+
+.messageContainer.bot .messageContent {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.messageActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.feedbackButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.feedbackButton.active {
+  color: #3b82f6;
+}
+.generating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #0056b3;
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+}

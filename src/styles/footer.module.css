@@ -1,0 +1,92 @@
+.footer {
+  padding: 20px 0;
+  background-color: #ffffff;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  /* max-width: 1200px; */
+  padding: 0 5%;
+}
+
+.footerLogo{
+  display: flex;
+  justify-content: flex-start;
+  width:100px ;
+  height: 85px;
+  margin-left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.footerEmpty{
+  width:100px ;
+  height: 85px;
+  margin-right: 20px;
+}
+
+.footerInfoFrame{
+  width:500px ;
+  height: 85px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logoSection {
+  text-align: left;
+  flex: 1;
+}
+
+.logoSection h4 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.socialIconsSection {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+
+.menuLink {
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.menuLink + .menuLink::before {
+  content: "|";
+  margin: 0 10px;
+  color: #ddd;
+}
+
+.addressSection {
+  align-self: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #777;
+}
+
+.addressSection p {
+  margin: 5px 0;
+  text-align: left;
+}
+
+.copyright {
+  font-size: 14px;
+  color: #777;
+}

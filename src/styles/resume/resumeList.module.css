@@ -1,0 +1,255 @@
+/* body {
+  background-color: #f0f0f0;
+} */
+
+.resumecontainer {
+  position: relative; /* 컨테이너의 위치를 고정하여 검색 박스가 영향을 미치지 않도록 */
+  overflow: visible; /* 자식 요소들이 잘리지 않도록 */
+  width: 40%;
+  background-color: #ffffff;
+  padding: 30px;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  min-height: 500px;
+
+}
+
+.h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.filteroptions {
+  display: flex;
+  align-items:center;
+  margin-bottom: 20px;
+}
+
+.filteroption {
+  font-size: 13px;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+.newresumebutton {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  gap: 10px;
+}
+
+.newresumebutton button {
+  width: 100%;
+  max-width: 1000px;
+  padding: 10px;
+  font-size: 15px !important;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #333;
+  transition: border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.newresumebutton button:hover {
+  border-color: #007bff;
+}
+
+.resumeright {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 10px;
+  height: 100%;
+}
+
+.resumedate {
+  color: #666;
+  
+}
+
+.resumetext {
+  margin-top: 5px; /* 5px 아래로 내림 */
+
+}
+
+.resumeicon {
+  margin-top: 5px; /* 5px 아래로 내림 */
+}
+
+.resumeactions {
+  display: flex;
+  align-items: center;
+}
+
+.resumeactions button {
+  color: #929191;
+  cursor: pointer;
+  font-size: 12px !important;
+  margin-top: 3px;
+}
+
+.subbutton {
+  width: 100px !important;
+  padding: 5px;
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff !important;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px !important;
+  margin-bottom: 5px;
+  margin-right: 5px !important;
+}
+
+.subbutton:hover {
+  background-color: #0056b3;
+}
+
+.resultbutton {
+  background-color: #007bff !important;
+  color: white !important;
+}
+
+.accordioncontainer .MuiAccordionroot {
+  margin-bottom: 10px;
+}
+
+.customaccordion {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.newbox {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newbox span {
+  font-size: 14px;
+}
+
+.newbox div {
+  padding: 5px 10px;
+  background-color: #fcfcfc;
+  color: #007bff;
+  border-radius: 5px;
+  font-size: 14px !important;
+  cursor: default; /* 마우스 호버 시 커서 변경 */
+}
+
+.proofreaddate {
+  margin-left: auto;
+  color: #929191;
+  font-size: 14px;
+  align-self: center;
+}
+
+.searchInput {
+  width: 60% !important;
+  padding: 10px;
+  margin: 20px auto 0 auto; /* 상단 마진 20px, 좌우 자동 정렬 */
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  display: block; /* 블록 요소로 변환하여 가운데 정렬 가능하게 함 */
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pageNumber {
+  padding: 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.activePage {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+  max-width: 1300px !important;
+  width: 100%;
+  margin: 20px auto;
+  box-sizing: border-box; /* 폼 컨테이너 크기를 고정 */
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+}
+
+.inputWithIcon {
+  z-index: 10; /* 검색 박스를 다른 요소들 위에 고정 */
+  position: relative; /* 검색 박스의 위치를 상위 요소에 고정 */
+  display: flex;
+  align-items: center !important;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 5px;
+  width: 100%; /* 검색 박스의 너비를 고정 */
+  max-width: 500px; /* 최대 너비를 설정하여 검색 박스의 크기가 일정하게 유지되도록 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  box-sizing: border-box; /* 박스 크기를 고정하여 크기가 갑자기 변하지 않도록 */
+  margin-right: 10px; /* 검색 버튼과 검색 박스 간의 간격 추가 */
+}
+
+.inputWithIcon input {
+  border: none !important;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  flex-shrink: 0; /* 입력 텍스트가 길어지더라도 요소가 줄어들지 않도록 설정 */
+}
+
+
+.inputWithIcon .icon {
+  margin-right: 5px;
+  color: #adb5bd;
+}
+
+.resumeTitleInput {
+  font-size: 1em;
+}
+
+.searchButton {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px !important;
+  margin-left: 10px;
+  width: 70px;
+}
+
+.searchButton:hover {
+  background-color: #0056b3;
+}

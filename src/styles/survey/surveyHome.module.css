@@ -1,0 +1,156 @@
+.surveyFrame {
+    display: flex;
+    justify-content: center;
+    background-color: #F3F3F3;
+    margin-top: 50px;
+    height: 1000px;
+}
+
+.surveyCenterFrameWidth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 660px;
+}
+
+.surveyCenterFrameHeight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 660px;
+    height: 500px;
+}
+
+.surveyCenterFrameHeightResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 660px;
+    height: 650px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.surveyMain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 440px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.surveyMainResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 590px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.surveyMainSection {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 540px;
+    height: 380px;
+}
+
+.surveyTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.surveySubTitle {
+    font-size: 16px;
+    color: #868686;
+    margin-bottom: 40px;
+}
+
+.surveySubTitleResult {
+    font-size: 16px;
+    color: #868686;
+    margin-bottom: 20px;
+}
+
+.surveySubTitleLine {
+    margin-bottom: 7px;
+}
+
+.surveySubTitleLineThank {
+    font-size: 20px;
+    color: #5A8AF2;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.surveyStartButtonFrame {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.surveyStartButtonResult {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #5A8AF2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+}
+
+.surveyStartButtonResult:hover {
+    background-color: #3366CC;
+    border-color: #1E4B99;
+    box-shadow: 0 8px 20px rgba(0, 51, 204, 0.5);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.surveyRecommendFrame {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.surveyRecommendGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px; /* 카드 간격을 더 넓게 설정 */
+    justify-items: center; /* 카드가 그리드 내에서 중앙에 배치되도록 설정 */
+}
+
+.surveyRecommendCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    width: 100px;
+    border-radius: 8px;
+    background-color: #e4f2ff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.3s, border-color 0.3s;
+    border: 2px solid transparent;
+}
+
+.surveyRecommendCard:hover {
+    background-color: #d0eaff;
+    border-color: #66b2ff;
+    transform: translateY(-3px);
+}
+
+.surveyRecommendLogo {
+    width: 80px; /* 로고 이미지의 너비를 고정하여 크기 통일 */
+    height: 80px; /* 로고 이미지의 높이도 고정 */
+    object-fit: contain; /* 이미지의 크기를 조정하면서 왜곡 없이 표시 */
+}

@@ -1,0 +1,56 @@
+.questionItem {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.questionText {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.chevronIcon {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.questionDetails {
+  padding: 1rem;
+}
+
+.scriptSection,
+.keywordsSection {
+  margin-bottom: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.editTextarea {
+  margin-bottom: 0.5rem !important;
+}
+
+.editButtons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.keywordsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.keyword {
+  margin: 0.25rem !important;
+}

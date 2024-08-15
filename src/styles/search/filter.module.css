@@ -1,0 +1,96 @@
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 200px; /* 기본 박스 크기 */
+}
+
+.filter-content-container {
+    padding: 10px;
+    flex-grow: 1;
+    min-width: 400px;
+    max-width: 400px;
+    overflow-y: auto;
+    height: 100%; /* 높이 100%로 설정 */
+    position: relative; /* 상대적 위치 설정 */
+}
+
+.filter-content-container.with-border::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #ccc; /* 선 색상 */
+}
+
+.sub-content-container {
+    padding: 10px;
+    flex-grow: 1;
+    height: 100%; /* 높이 100%로 설정 */
+    overflow-y: auto; /* 스크롤 추가 */
+}
+
+.districts-container {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - 20px); /* 스크롤을 위한 높이 설정 */
+    overflow-y: auto;
+}
+
+.district-item {
+    margin-bottom: 3px;
+}
+
+.filter-categories {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    background-color: #f1f1f1;
+    border-right: 1px solid #ccc;
+    flex-shrink: 0; /* 크기 조정 방지 */
+}
+
+.filter-category {
+    padding: 21px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ccc;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease; /* 세련된 전환 효과 추가 */
+}
+
+.filter-category:hover, .filter-category.active {
+    background-color: #007bff;
+    color: white;
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+        height: auto; /* 높이 자동 조정 */
+    }
+
+    .filter-content-container, .sub-content-container {
+        max-width: 100%; /* 최대 너비 100% */
+        height: auto; /* 높이 자동 조정 */
+    }
+
+    .filter-categories {
+        flex-direction: row;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .filter-category {
+        flex-grow: 1;
+        padding: 15px;
+    }
+}

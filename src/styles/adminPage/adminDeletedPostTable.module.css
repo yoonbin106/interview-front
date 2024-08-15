@@ -1,0 +1,26 @@
+/*adminDeletePostTable.module.css */
+
+.DeletedPostTableContainer {
+    margin-top: 20px;
+  }
+  
+  .DeletedPostHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+  }
+  .DeletedPostLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .DeletedPostLink:hover {
+    text-decoration: underline;
+  }
+  
+  .DeletedPostButtonContainer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }

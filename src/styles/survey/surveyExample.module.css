@@ -1,0 +1,209 @@
+.surveyFrame{
+    height: 1000px;
+    display: flex;
+    justify-content: center;
+    background-color: #F3F3F3;
+    margin-top: 50px;
+}
+
+.surveyFramePlay{
+    height: 1730px;
+    display: flex;
+    justify-content: center;
+    background-color: #F3F3F3;
+    margin-top: 50px;
+}
+
+.surveyCenterFrameWidth{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+
+}
+.surveyCenterFrameHeight{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+    height: 500px;
+
+}
+.surveyCenterFrameHeightPlay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+    height: 1620px;
+    flex-direction: column;
+}
+
+.SurveyMyProgressBar{
+     display: flex;
+     /* margin-bottom: 20px; */
+     position: relative;
+     z-index: 10; /* 진행 바를 뒤쪽으로 보내기 위한 z-index 값 설정 */
+}
+/* 가로세로 60px차이 */
+.surveyMain{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1140px;
+    height: 440px;
+    background-color: white;
+    border-radius: 8px;
+}
+.surveyMainPlay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1140px;
+    height: 1600px;
+    background-color: white;
+    border-radius: 8px;
+}
+.surveyMainSection{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 1080px;
+    height: 380px;
+    align-items: center;
+}
+
+.surveyTitle{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.surveySubTitle{
+    font-size: 16px;
+    color: #868686;
+    margin-bottom: 40px;
+}
+
+.surveySubTitleLine{
+    margin-bottom: 7px;
+}
+
+.surveyQuestionCard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1020px;
+    height: 160px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px hsl(0deg 0% 0%/0.07);
+    margin-bottom: 30px;
+}
+
+.surveyQuestion{
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.surveyAnswers{
+    width: 960px;
+    height: 70px;
+    display: flex;
+
+    justify-content: space-between;
+    /* background-color: antiquewhite; */
+}
+.surveyAnswer{
+    font-size: 17px;
+    color: #5A8AF2;
+    font-weight: bold;
+    width: 200px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    background-image: none;
+    border: none; 
+}
+.surveyAnswer:checked:hover{
+    background-color: #5A8AF2;
+    color: white;
+}
+
+.surveyAnswerCheck{
+    background-color: #5A8AF2;
+}
+.surveyAnswerLabel{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+    /* box-shadow: 0px 4px 12px hsl(0deg 0% 0%/0.07); */
+    border-color: white;
+    width: 460px;
+}
+
+.surveyAnswerLabel:active:hover{
+    border-color: #5A8AF2;
+}
+.surveyAnswerSub{
+    font-size: 16px;
+    color:#929292 ;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.surveyStartButtonFrame{
+    display: flex;
+    justify-content: space-between;
+    width: 1020px;
+}
+.surveyHomeButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none; 
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #5A8AF2;
+    cursor: pointer;
+    text-decoration: none;
+}
+.surveyPrevButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none; 
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #9CB8F5;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.surveyNextButton{
+    border: none; 
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #5A8AF2;
+    cursor: pointer;
+}
+
+.surveyNextButton:disabled {
+    background-color: #9CB8F5; /* 비활성화 시 배경색 */
+    cursor: pointer;
+  }
+
+ 

@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "baseUrl": "src",
+      "paths": {
+        "@heroicons/react/*": ["node_modules/@heroicons/react/*"]
+      }
+    },
+    "include": ["src"]
+  }

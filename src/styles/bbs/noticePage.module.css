@@ -1,0 +1,15 @@
+.notice-page {
+  
+    flex: 1;
+    padding: 20px;
+    background-color: #fff; /* 하얀 박스 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 50px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1300px;
+    box-sizing: border-box;
+    position: relative; /* 상대 위치 설정 */
+   
+  }
+ 

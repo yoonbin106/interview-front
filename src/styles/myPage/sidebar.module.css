@@ -1,0 +1,77 @@
+.customSidebar {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.customSidebar.max-md-ml-0 {
+    margin-left: 0;
+}
+
+.customSidebar.max-md-w-100 {
+    width: 100%;
+}
+
+.customNav {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 2.25rem 1rem 20px 20px;
+
+    width: 100%;
+    font-size: 0.875rem;
+    background-color: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.customNav.max-md-pb-3 {
+    padding-bottom: 1.5rem;
+}
+
+.customNav.max-md-mt-3 {
+    margin-top: 1.5rem;
+}
+
+.customTitle {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #4b5563;
+    /* text-zinc-800 */
+}
+
+.customTitle.max-md-display-4 {
+    font-size: 2.5rem;
+}
+
+.customList {
+    margin-top: 1rem;
+    list-style: none;
+    padding-left: 0;
+}
+
+.customListItem {
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+}
+
+.customListItem.max-md-ms-2 {
+    margin-left: 0.625rem;
+}
+
+.customLink {
+    text-decoration: none;
+}
+
+.customLink:hover {
+    text-decoration: underline;
+}
+
+.customDivider {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 1px;
+}

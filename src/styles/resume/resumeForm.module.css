@@ -1,0 +1,485 @@
+/* body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+
+.page {
+  background-color: #f2f3f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px !important;
+}
+
+.mainsectionheader {
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1300px;
+  margin-bottom: 20px;
+}
+
+.separator {
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 20px 0;
+}
+
+.sectionheader {
+  color: #343a40;
+  font-size: 40px !important;
+  margin-top: 20px;
+}
+
+.datePickerContainer,
+.monthPickerContainer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.calendarIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #adb5bd;
+}
+
+.genderButtons {
+  display: flex;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+.genderSelect {
+  width: 80%; /* 너비를 조절해서 박스 사이즈를 줄입니다 */
+  max-width: 200px; /* 원하는 최대 너비를 설정합니다 */
+}
+
+.genderButton {
+  flex: 1;
+  padding: 4px;
+  font-size: 0.7em;
+  cursor: pointer;
+  text-align: center;
+  background-color: #fff;
+  border-right: 1px solid #ced4da;
+}
+
+.genderButton:last-child {
+  border-right: none;
+}
+
+.genderButton.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.genderButton:not(.selected):hover {
+  background-color: #f1f1f1;
+}
+
+.resumeForm {
+  display: flex;
+  flex-direction: row;
+  background-color: #f2f3f5;
+  padding: 10px;
+  margin: 0 auto;
+  font-size: 22px;
+  justify-content: center;
+}
+
+.sidebar {
+  width: 160px;
+  background-color: #fff;
+  border-right: 1px solid #e9ecef;
+  padding: 10px;
+  height: fit-content;
+  margin-top: 30px;
+  position: sticky;
+  top: 20px; /* 스크롤할 때 상단에서 20px 떨어진 위치에 고정 */
+}
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  padding: 6px 0 6px 10px;
+  cursor: pointer;
+  color: #adb5bd;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+  color: #007bff;
+  background-color: #e7f3ff;
+  border-radius: 4px;
+}
+
+.formContainer {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+  max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.formContainer2 {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  font-size: 1.0em;
+
+}
+
+.formGroupInlineVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formInline {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.formInline .formGroup {
+  flex: 1;
+  min-width: 110px;
+}
+
+.formInline .formGroup.fullWidth {
+  flex: 0 0 100%;
+}
+
+.formGroupInline {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+.formGroupInlineCareer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #495057;
+  position: relative;
+  font-size: 0.7em;
+}
+
+.required::after {
+  content: '*' !important;
+  position: absolute;
+  top: 0;
+  color: red;
+  font-size: 0.9em !important;
+}
+
+.requiredTwo::after {
+  content: '*' !important;
+  position: absolute;
+  top: 0;
+  color: red;
+  font-size: 0.5em !important;
+}
+
+.inputText,
+.inputEmail,
+.inputFile,
+.textarea,
+.formInline input[type="text"],
+.formInline .react-datepicker-wrapper {
+  padding: 5px;
+  font-size: 0.8em;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select{
+  padding: 5px;
+  font-size: 0.8em !important;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+
+}
+
+.textareaContainer,
+.resulttextareacontainer {
+  position: relative;
+  margin-top: 5px;
+}
+
+.textareaContainer textarea,
+.resulttextareacontainer textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.textareaContainer textarea {
+  height: 300px;
+}
+
+.textareaContainer .charCounter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.9em;
+  color: #adb5bd;
+}
+
+.inputText::placeholder,
+.inputEmail::placeholder,
+.textarea::placeholder {
+  color: #adb5bd;
+  font-size: 0.9em;
+}
+
+.button {
+  padding: 4px 8px;
+  font-size: 10px !important;
+  color: #fff;
+  border: none;
+  background-color: #007bff;
+  border-radius: 6px !important;
+  cursor: pointer;
+  width: 100%;
+  max-width: 120px;
+  margin-bottom: 10px;
+}
+
+.button.submitBtn {
+  background-color: #007bff;
+  padding: 7px;
+  width: 120px;
+  font-size: 14px !important;
+}
+
+.button.cancelBtn {
+  background-color: #6c757d;
+  padding: 6px;
+  width: 120px;
+  font-size: 14px !important;
+
+}
+
+
+.button.add {
+  padding: 7px;
+  margin-bottom: 10px;
+  font-size: 14px !important;
+  margin-top: 10px;
+}
+
+.inputFile {
+  border: none;
+}
+
+.zipCodeInput {
+  width: 20% !important;
+  max-width: 300px;
+}
+
+.emailInput {
+  width:100% !important;
+  max-width: 300px;
+}
+
+.phoneNumInput {
+  width:100% !important;
+  max-width: 300px;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  padding-right: 20px;
+}
+
+.mt5 {
+  margin-top: 5px;
+}
+
+.mb5 {
+  margin-bottom: 5px;
+}
+
+.profileSection {
+  display: flex;
+  align-items: center; /* 중앙 정렬을 위한 속성 추가 */
+  gap: 60px;
+}
+
+.profileImageUpload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 60px !important;
+}
+
+.profileImageBox {
+  width: 160px;
+  height: 160px;
+  border: 1px dashed #ced4da;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 10px !important;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.plusButton {
+  font-size: 30px;
+  color: #007bff;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.alignItemsCenter {
+  align-items: center;
+}
+
+.sectionHeader {
+  position: relative;
+  padding-left: 15px;
+  font-size: 33px !important;
+  font-weight: 700;
+  color: #343a40;
+}
+
+.sectionHeaderContainer {
+  display: flex;
+  align-items: baseline;
+}
+
+.sectionHeader::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 18%;
+  bottom: 0;
+  width: 6px;
+  height: 20px;
+  background-color: #1982f1;
+}
+
+.subText {
+  font-size: 0.8em;
+  color: #adb5bd;
+  margin-left: 10px;
+}
+
+.charCounter {
+  text-align: right;
+  font-size: 0.9em;
+  color: #adb5bd;
+}
+
+.sameWidthBtn {
+  width: 80px;
+}
+
+
+.centerButtons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.inputWithIcon {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.inputWithIcon input {
+  border: none;
+  outline: none;
+  flex: 1;
+}
+
+.inputWithIcon .icon {
+  margin-right: 5px;
+  color: #adb5bd;
+}
+
+.react-datepicker__month {
+  margin: 0.9erm;
+}
+
+.react-datepicker__month .react-datepicker__month-text {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}

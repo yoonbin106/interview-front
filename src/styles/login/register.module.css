@@ -1,0 +1,43 @@
+.container {
+    min-height: 100vh;
+    background-color: #b4b5b5;
+  }
+
+  .registerBox {
+    width: 500px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .formGroup {
+    margin-bottom: 20px;
+  }
+  .check{
+    color: rgb(190, 56, 54)
+  }
+  
+  .termsBox {
+    width: 450px;
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .termsContent {
+    height: 150px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .alert-text {
+    color: red;
+  }

@@ -1,0 +1,33 @@
+.botHeader {
+  background: linear-gradient(135deg, #0056b3, #007bff);
+  color: white;
+  padding: 15px 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.botHeader .logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+.botHeader .status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #10B981;
+  margin-left: 10px;
+}
+.closeButton {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.closeButton:hover {
+  transform: scale(1.1);
+}

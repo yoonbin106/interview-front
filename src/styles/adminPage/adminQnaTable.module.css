@@ -1,0 +1,26 @@
+/* adminQnaTable.module.css */
+
+.QnaPaginationTableContainer {
+    margin-top: 20px;
+  }
+  
+  .QnaPaginationHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+  }
+  .QnaPaginationLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .QnaLink:hover {
+    text-decoration: underline;
+  }
+  
+  .QnaButtonContainer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }

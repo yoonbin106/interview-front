@@ -1,0 +1,26 @@
+/* adminPaginationTable.module.css */
+
+.NoticePaginationTableContainer {
+    margin-top: 20px;
+  }
+  
+  .NoticePaginationHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+  }
+  .NoticePaginationLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .NoticeLink:hover {
+    text-decoration: underline;
+  }
+  
+  .NoticeButtonContainer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }

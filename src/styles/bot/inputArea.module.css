@@ -1,0 +1,61 @@
+.inputArea {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f3f4f6;
+}
+
+.inputTextarea {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  resize: none;
+  font-size: 1rem;
+}
+
+.inputTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.sendButton, .micButton {
+  padding: 0.75rem;
+  margin-left: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sendButton:hover, .micButton:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.micButton.listening {
+  background-color: #ef4444;
+  color: white;
+}
+
+.dark .inputArea {
+  background-color: #1f2937;
+}
+
+.dark .inputTextarea {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .sendButton, .dark .micButton {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .sendButton:hover, .dark .micButton:hover {
+  background-color: #3b82f6;
+}

@@ -1,0 +1,26 @@
+/* adminDeletedCommentTable.module.css */
+
+.DeletedCommentPaginationTableContainer {
+    margin-top: 20px;
+  }
+  
+  .DeletedCommentPaginationHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+  }
+  .DeletedCommentPaginationLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .DeletedCommentLink:hover {
+    text-decoration: underline;
+  }
+  
+  .DeletedCommentButtonContainer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }

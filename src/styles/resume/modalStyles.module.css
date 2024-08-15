@@ -1,0 +1,61 @@
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.modalCancelButton, .modalConfirmButton {
+  font-size: 14px; /* 글자 크기 조정 */
+  line-height: 1.5;
+  padding: 8px 16px; /* 패딩 조정 */
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center; /* 텍스트를 중앙 정렬 */
+  display: inline-block; /* 버튼 크기를 텍스트에 맞춤 */
+  width: 110px; /* 버튼의 너비를 일정하게 조정 */
+  box-sizing: border-box;
+}
+
+.modalCancelButton {
+  background-color: #6c757d; /* 배경색 수정 */
+  color: #fff;
+  border: 1px solid #6c757d;
+  transition: background-color 150ms ease, border-color 150ms ease;
+  font-size: 13px !important;
+}
+
+.modalCancelButton:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+.modalCancelButton:active {
+  background-color: #545b62;
+}
+
+.modalCancelButton:focus-visible {
+  outline: none;
+}
+
+.modalConfirmButton {
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+  transition: background-color 150ms ease, border-color 150ms ease;
+  font-size: 15px !important;
+
+}
+
+.modalConfirmButton:hover {
+  background-color: #0066cc;
+  border-color: #0056a3;
+}
+
+.modalConfirmButton:active {
+  background-color: #0056a3;
+}
+
+.modalConfirmButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(153, 204, 255, 0.6);
+}

@@ -1,0 +1,127 @@
+.page {
+  font-family: 'Arial', sans-serif;
+  background-color: #f2f3f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  transform: scale(0.9); /* Scale everything to 90% */
+  width: 100%;
+  max-width: 1300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainsectionheader {
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.leftbox, .rightbox {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 48%;
+}
+
+.separator {
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 20px 0;
+}
+
+.sectionheader {
+  color: #343a40;
+  font-size: 45px !important;
+  margin-top: 5px;
+}
+
+.textareacontainer, .resulttextareacontainer {
+  position: relative;
+  margin-top: 5px;
+}
+
+.resulttextareacontainer textarea {
+  width: 100%;
+  height: 400px;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.textareacontainer textarea {
+  width: 100%;
+  height: 800px;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.textareacontainer .charcounter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.9em;
+  color: #adb5bd;
+}
+
+.buttons {
+  display: flex;
+  justify-content: end;
+}
+
+.submitbtn {
+  padding: 10px 20px;
+  font-size: 14px !important;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.h2 {
+  color: #343a40;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  position: relative;
+}
+
+.feedback {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.feedback .label {
+  margin-bottom: 0;
+  font-weight: bold;
+  color: #495057;
+  font-size: 0.9em;
+}

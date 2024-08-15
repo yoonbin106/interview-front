@@ -1,0 +1,158 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  flex-direction: column;
+  background-color: white;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  /* position: relative; */
+  z-index: 100; /* 진행 바보다 높은 값으로 설정 */
+}
+.headerin{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  height: 50px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  width: 220px;
+  display: flex;
+  align-items: start;
+  margin-left: 20px;
+  text-decoration: none;
+  color: #000;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+.navLinks :hover {
+  border-bottom: 3px solid #2F72E3;
+  
+}
+
+.navLink {
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin: 0 15px;
+  font-size: 16px;
+  color: #000;
+  text-decoration: none;
+  margin-left: 34px;
+  margin-right: 34px;
+  width: 95px;
+  height: 47px;
+}
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  width: 220px;
+  margin-right: 20px;
+  border: none;
+}
+
+.userName {
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+.notificationButton, .loginButton, .signupButton {
+  margin-left: 10px;
+  padding: 5px 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.notificationButton {
+  font-size: 18px;
+  background-color: transparent;
+  border: none;
+}
+
+.loginButton, .signupButton {
+  background-color: #fff;
+  border: 1px solid #2F72E3;
+  border-radius: 8px;
+  color: #2F72E3;
+}
+
+.signupButton {
+  
+  background-color: #2F72E3;
+  color: #fff;
+}
+/* 내려오는 메뉴바 */
+.subMenusFrame{
+  display: flex;
+  width: 814.93px;
+  align-items: flex-start;
+}
+.subMenus {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  display: inline-table;
+  align-items: flex-start;
+  margin-left:34px ;
+  margin-right:34px ;
+}
+.subMenu {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  text-decoration: none;
+  color: #555;
+  width: 95px;
+
+  
+}
+.subMenus :hover{
+  
+  color: #2F72E3;
+}
+
+
+.subMenuLink {
+  margin: 0 15px;
+  font-size: 14px;
+  color: #555;
+  text-decoration: none;
+}
+
+.dropMenuFrame{
+  border-top: 1px solid #ddd;
+  width: 100%;
+  background-color : rgb(255,255,255);
+  
+}
+
+.dropMenu{
+  display: flex;
+  justify-content: space-between;
+
+  height: 150px;
+}
+
+.emptyMenuFrame{
+  width: 200px;
+  display: flex;
+}
+
+

@@ -1,0 +1,51 @@
+.interviewCard {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .interviewCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  
+  .imageContainer {
+    width: 100%;
+    height: 300px; /* 고정 높이 설정 */
+    overflow: hidden;
+    background-color: #f0f0f0; /* 배경색 추가 */
+  }
+  
+  .interviewImage {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .interviewTitle {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .featureItem {
+    padding-left: 0;
+  }
+  
+  .startButton {
+    margin-top: auto;
+    padding: 12px 24px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .startButton:hover {
+    background-color: #1565C0;
+  }
+  
+  .interviewCard:hover .interviewImage {
+    transform: scale(1.05);
+  }

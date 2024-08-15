@@ -1,0 +1,27 @@
+.map-search-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px; /* 모양을 둥글게 변경 */
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.map-search-button:hover {
+    background-color: #0056b3;
+}
+
+.map-search-button .icon {
+    margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 */
+    font-size: 20px; /* 아이콘 크기 조정 */
+}

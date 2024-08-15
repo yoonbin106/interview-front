@@ -1,0 +1,87 @@
+.formContact {
+  /* 
+  border-radius: 8px; 
+  border: 1px solid #383838;*/
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  /* padding: 54px 61px 182px; */
+  
+}
+
+.profileContainer {
+  display: flex;
+  width: 100%;
+  max-width: 1216px;
+  flex-direction: column;
+  color: #000;
+}
+
+.profileTitle {
+  align-self: start;
+  font: 700 30px sans-serif;
+}
+
+.profileImage {
+  display: flex;
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 245px;
+  align-self: center;
+  max-width: 100%;
+  margin: 43px 0 0 36px;
+}
+
+.editProfileIcon{
+  display: flex;
+  align-items: end;
+  margin-bottom: 45px;
+}
+
+.editProfileLink {
+  letter-spacing: 0.6px;
+  align-self: end;
+  color: #ffa5aa;
+  /* margin-top: 17px; */
+  font: 300 15px/1 Roboto, sans-serif;
+}
+
+.userInfoContent {
+  width: 100%;
+  max-width: 1104px;
+  margin-top: 30px;
+}
+
+
+
+.buttonGroup {
+  display: flex;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 1167px;
+  gap: 20px;
+  white-space: nowrap;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.button {
+  width: 100px;
+  border-radius: 8px;
+  background-color: #5A8AF2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  justify-content: center;
+  padding: 12px;
+  border: 1px solid #5A8AF2;
+}
+
+.buttonText {
+  align-self: stretch;
+  margin: auto 0;
+  color: #fff;
+}
+

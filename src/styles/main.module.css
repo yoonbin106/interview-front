@@ -1,0 +1,467 @@
+@keyframes slide {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fade {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 1030px;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 2s ease-in-out;
+  position: relative; /* 가상 요소를 위한 설정 */
+  overflow: hidden; /* 가상 요소가 영역을 벗어나지 않도록 설정 */
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 50% 어둡게 */
+  z-index: 1; /* 이미지보다 위에 표시되도록 설정 */
+}
+
+.mainImages {
+  position: relative;
+  width: 100%;
+  height: 1030px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  z-index: 2;
+}
+.image1, .image2, .image3, .image4, .image5 {
+  background-size: cover; /* 여기서 cover 사용 */
+  background-position: center;
+  width: 100%; /* 추가 */
+  height: 100%; /* 추가 */
+}
+.image1 {
+  background-image: url('../../public/images/main1.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.image2 {
+  background-image: url('../../public/images/main2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.image3 {
+  background-image: url('../../public/images/main3.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.image4 {
+  background-image: url('../../public/images/main4.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.image5 {
+  background-image: url('../../public/images/main5.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.mainTitle {
+  margin-bottom: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+}
+
+.mainSubtitle {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #92b4fd;
+}
+
+.mainButton {
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  background-color: #5A8AF2;
+  color: white;
+}
+
+.container2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 1030px;
+  background-color: #EBEBEB;
+}
+.mainIntroFrameW{
+  width: 1670px;
+  height: 1030px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.mainIntroFrameH{
+  width: 1670px;
+  height: 760px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.mainIntroTitleFrame{
+  width: 1670px;
+  height: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.mainIntroTitle{
+  font-size: 40px;
+  font-weight: bold;
+  /* margin-bottom: 5px; */
+}
+
+.mainIntroBox {
+  width: 1670px;
+  height: 570px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-size: cover; /* 비율을 유지하면서 이미지가 박스를 완전히 덮도록 설정 */
+  background-position: center; /* 이미지를 중앙에 배치 */
+  background-repeat: no-repeat; /* 이미지 반복 제거 */
+  border-radius: 32px;
+  transition: background-image 1s ease-in-out; /* 부드러운 전환 */
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 슬라이드 이미지를 위한 클래스 */
+.bgImage1 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  url('../../public/images/info01.jpg');
+}
+
+.bgImage2 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+  url('../../public/images/info02.jpg');
+}
+
+.bgImage3 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+  url('../../public/images/info03.jpg');
+}
+
+.bgImage4 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+  url('../../public/images/info04.png');
+}
+
+.bgImage5 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+  url('../../public/images/info05.png');
+}
+
+.mainIntroBoxIn{
+  width: 1460px;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+.mainIntroBoxInTitle{
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: white;
+}
+.mainIntroBoxInSubtitleFrame{
+  height: 135px;
+}
+.mainIntroBoxInSubtitle{
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white;
+}
+.mainIntroBoxInButtonFrame{
+  height: 160px;
+}
+.mainIntroBoxInButton{
+  display: flex;
+  width: 124px;
+  height: 45px;
+  border-color: white;
+  border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
+  text-decoration: none;
+  justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.containe3{
+  width: 100%;
+  height: 950px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(223, 223, 223);
+}
+.keyWordFrame{
+  display: flex;
+  justify-content: space-between;
+  width: 1620px;
+  height: 630px;
+  background-color: #e7e7e7;
+}
+.keyWordFrames{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 300px;
+  height: 630px;
+
+}
+.keyWordFramesWide{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 630px;
+  height: 630px;
+
+}
+.keyWordBoxGrey{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #979797;
+}
+.keyWordBoxWhite{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #ffffff;
+}
+.keyWordBoxHeight{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 630px;
+  border-radius: 16px;
+  background-color: #ffffff;
+}
+.keyWordBoxGroup{
+  display: flex;
+  justify-content: space-between;
+}
+.keyWordBoxWidth{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 630px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #5A8AF2;
+}
+.keyWordTextWh{
+  width: 240px;
+  height: 240px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+}
+.keyWordTextBl{
+  width: 240px;
+  height: 240px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #444444;
+}
+.keyWordTextHeightBl{
+  width: 240px;
+  height: 570px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #444444;
+}
+.keyWordTextWidthWh{
+  width: 570px;
+  height: 240px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+}
+/* Progress Bar Wrapper 스타일 */
+.mainIntroProgress {
+  display: flex; /* 진행 바를 가로로 배치 */
+  gap: 5px; /* 각 진행 바 사이에 간격 추가 */
+  height: 8px;
+  position: relative;
+  justify-content: space-between;
+}
+
+.mainIntroProgressWrapper {
+  position: relative;
+  width: 280px; /* 각 바의 너비 */
+}
+
+.mainIntroProgressBarBase {
+  height: 8px;
+  background-color: grey; /* 기본 회색 바 */
+  width: 280px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mainIntroProgressBar {
+  height: 100%;
+  background-color: transparent;
+  width: 0px;  /* 기본적으로 0px에서 시작 */
+  transition: width 5s linear;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mainIntroProgressBar.active {
+  background-color: #007bff;
+  width: 280px;
+  transition: width 5s linear; 
+}
+
+.container4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 800px;
+  background-color: #f0f0f0;
+}
+
+.ticketheader {
+  margin-bottom: 10px;
+  font-size: 35px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.ticketSubheader {
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+  color: #5A8AF2;
+}
+
+.ticketplansFrame {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 1000px;
+  height: 470px;
+  /* background-color: #946a6a; */
+}
+.ticketplansFrameIn{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 8px;
+  /* border-color: #d3d3d3; */
+  width: 300px;
+  height: 470px;
+  background-color: rgb(255, 255, 255);
+}
+.ticketplansFrames{
+  display: flex;
+  width: 260px;
+  flex-direction: column;
+}
+
+.tickettitle{
+  display: flex;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+.ticketInfo{
+  margin-top: 15px;
+  width: 260px;
+  height: 335px;
+  border-radius: 8px;
+  border-color: #e7e7e7;
+  border-style: solid ;
+  border-width: 1px;
+  display: flex;
+  align-items: center;
+    justify-content: center;
+}
+.ticketInfoIn{
+  width: 230px;
+  height: 310px;
+
+  /* background-color: #946a6a; */
+}
+.ticketButtonFrame{
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+    align-items: center;
+
+}
+
+.ticketbutton {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #5A8AF2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+  text-decoration: none;
+
+}
+
+.ticketbutton:hover {
+  background-color: #86aaf8;
+}

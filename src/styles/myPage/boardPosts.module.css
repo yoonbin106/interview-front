@@ -1,0 +1,29 @@
+.formContact {
+    width: 1000px;
+    min-width: 500px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+  }
+
+.formTitle {
+    color: #000;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    align-self: flex-start;
+  }
+
+  .formSubTitle {
+    margin: 40px 0 20px 0;
+  }
+
+  .tablePagination {
+    display: flex;
+    margin: 25px auto;
+    justify-content: center;
+    justify-items: center;
+    /* margin: 20px 0 20px 0; */
+    width: 500px;
+  }

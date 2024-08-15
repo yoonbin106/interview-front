@@ -1,0 +1,30 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f0f0f0;
+   
+    
+  }
+  
+  .content {
+    display: flex;
+    flex: 1;
+    margin-top: 20px;
+    
+  }
+  
+  .header {
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: center;
+  }
+  .sidebar {
+    width: 200px;
+    
+  }
+  
+  .main {
+    flex: 1;
+    padding: 20px;
+  }

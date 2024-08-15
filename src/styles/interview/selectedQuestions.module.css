@@ -1,0 +1,58 @@
+.selectedQuestions {
+  padding: 1.5rem;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: calc(100% - 2rem); /* 컨테이너 높이를 100%에서 2rem 뺀 값으로 설정 */
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem; /* 푸터와의 간격을 위해 마진 추가 */
+}
+
+.sectionTitle {
+  color: #1976D2;
+  font-weight: 600;
+  margin-bottom: 1rem !important;
+}
+
+.questionList {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.questionItem {
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.questionText {
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.cancelButton, .selectButton {
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.cancelButton:hover, .selectButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.selectButton {
+  background-color: #00C853;
+}
+
+.selectButton:hover {
+  background-color: #00E676;
+}
