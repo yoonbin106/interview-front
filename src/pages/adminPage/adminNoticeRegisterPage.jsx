@@ -23,7 +23,7 @@ const NoticeRegister = () => {
                 <div className={styles['CreatePostNoticeRegisterContainer']}>
                     <h2 className={styles['CreatePostNoticeRegisterTitle']}>전체 공지사항</h2>
                     <CreatePost />
-                    <button type="button" onClick={handleSubmit} className={styles['submit-button']}>등록하기</button>
+                    <button type="button" onClick={handleSubmit} className={styles['CreatePostSubmitButton']}>등록하기</button>
                 </div>
             </div>
         </div>
