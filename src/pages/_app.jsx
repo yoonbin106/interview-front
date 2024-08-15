@@ -10,7 +10,7 @@ import Bot from '@/pages/bot/bot';
 import SpeedDial from '@/pages/bot/speedDial';
 import { Provider, useDispatch } from 'react-redux';
 import { ChatProvider } from '@/contexts/chatContext';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 const queryClient = new QueryClient();
 
