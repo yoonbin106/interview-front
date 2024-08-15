@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import CreateIcon from '@mui/icons-material/Create';
@@ -174,6 +174,7 @@ function ResumeForm() {
         open={isModalOpen}
         onClose={closeModal}
         slots={{ backdrop: StyledBackdrop }}
+        disableScrollLock
       >
         <ModalContent sx={{ width: 450 }}>
           <h2 id="unstyled-modal-title" className={modalStyles.modalText}>
@@ -196,6 +197,7 @@ function ResumeForm() {
         open={isConfirmationOpen}
         onClose={closeConfirmationModal}
         slots={{ backdrop: StyledBackdrop }}
+        disableScrollLock
       >
         <ModalContent sx={{ width: 450 }}>
           <h2 id="confirmation-modal-title" className={modalStyles.modalText}>
@@ -765,6 +767,7 @@ function ResumeForm() {
           </div>
         </form>
       </div>
+
       {/* 맞춤법 검사 사이드바 */}
       {isProofreadSidebarOpen && (
     <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
