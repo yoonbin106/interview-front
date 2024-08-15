@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import styles from '@/styles/adminPage/adminPaginationTable.module.css';
+import styles from '@/styles/adminPage/adminNoticeTable.module.css';
 
 export default function PaginationTableNotice({ rows }) {
   const [page, setPage] = React.useState(0);
@@ -48,7 +48,7 @@ export default function PaginationTableNotice({ rows }) {
             <TableRow key={row.id}>
               <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">
-                <a href={`/adminPage/adminAdminNoticeDetails`} style={{textDecoration:'none',color:'black'}}>
+                <a href={`/adminPage/adminNoticeDetails`} style={{textDecoration:'none',color:'black'}}>
                 {row.title}
                 </a>
               </TableCell>

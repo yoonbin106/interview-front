@@ -12,12 +12,11 @@
   background-color: #ffffff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
-  z-index: 60;
 }
 .botContent {
   flex-grow: 1;
   overflow-y: auto;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .botInfo {
@@ -26,26 +25,6 @@
   text-align: center;
   background: #f0f2f5;
   color: #666;
-}
-
-
-/* 반응형 디자인 */
-@media (max-width: 540px) {
-  .botContainer {
-    width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
-  .inputArea {
-    padding: 10px;
-  }
 }
 
 .group:hover .chatbotTooltip {
@@ -57,18 +36,17 @@
 .botTooltip::before {
   content: '';
   position: fixed;
-  bottom: -12px;
+  bottom: -8px;
   right: 0.3rem;
-  width: 0.6rem;
-  height: 2rem;
-  background-color: #9333ea;
+  width: 0.4rem;
+  height: 1rem;
+  background-color: #805ad5;
   transform: rotate(140deg);
   margin-right: -0.5rem;
   border-radius: 30px;
 }
 /* Wrapper */
 .atbotWrapper {
-  z-index: 50;
   position: fixed;
   bottom: 1.25rem;
   right: 1.25rem;
@@ -82,9 +60,14 @@
 
 /* Tooltip */
 .botTooltip {
+
   position: absolute;
-  bottom: 40%;
-  margin-right: 4.8rem;
+  /* bottom: 100%; */
+  bottom: 30px;
+  margin-bottom: 5rem;
+  /* margin-bottom: 2.2rem; */
+  margin-right: 5rem;
+
   right: 0;
   width: 16rem;
   padding: 1rem;
@@ -201,4 +184,20 @@
 
 .dark-mode .dark-mode-button {
   color: #d1d5db;
+}
+
+.chattingBackButton {
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.chattingBackButton:hover {
+  color: #0056b3;
 }

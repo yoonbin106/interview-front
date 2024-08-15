@@ -158,14 +158,15 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
                         </div>
                     ))}
                 </div>
-                <div className={`${stylesFilter['filter-content-container']} ${selectedCategory === '지역' ? stylesFilter['with-border'] : ''}`}>
+                <div className={`${stylesFilter['filter-content-container']} ${stylesFilter['filter-scrollbar']} ${selectedCategory === '지역' ? stylesFilter['with-border'] : ''}`}>
                     {renderContent()}
                 </div>
                 {selectedCategory === '지역' && (
-                    <div className={stylesFilter['sub-content-container']}>
+                    <div className={`${stylesFilter['sub-content-container']} ${stylesFilter['filter-scrollbar']}`}>
                         {renderSubContent()}
                     </div>
                 )}
+
             </div>
         </div>
     );

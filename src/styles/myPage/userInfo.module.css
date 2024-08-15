@@ -42,18 +42,18 @@
 .editProfileLink {
   letter-spacing: 0.6px;
   align-self: end;
-  color: #ffa5aa;
-  /* margin-top: 17px; */
-  font: 300 15px/1 Roboto, sans-serif;
+  color: #ee6a70;
+  margin-bottom: 10px;
 }
 
 .userInfoContent {
-  width: 100%;
+  /* width: 100%; */
   max-width: 1104px;
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
-
-
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeMedium.first-column {
+  background-color: none; /* 원하는 색상으로 변경 */
+}
 
 .buttonGroup {
   display: flex;
@@ -68,6 +68,7 @@
 
 .button {
   width: 100px;
+  height: 40px;
   border-radius: 8px;
   background-color: #5A8AF2;
   display: flex;
@@ -75,7 +76,7 @@
   gap: 8px;
   overflow: hidden;
   justify-content: center;
-  padding: 12px;
+  
   border: 1px solid #5A8AF2;
 }
 

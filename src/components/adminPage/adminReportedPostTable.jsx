@@ -1,3 +1,4 @@
+//adminReportedPostTable.jsx
 import * as React from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, TextField, InputLabel, MenuItem, FormControl, Select, Button, Grid } from '@mui/material';
 import styles from '@/styles/adminPage/adminReportedTable.module.css';
@@ -73,7 +74,7 @@ export default function ReportedPostTable({ rows }) {
                 <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="center">{row.category}</TableCell>
                 <TableCell align="center">
-                  <a href={`/adminPage/adminReportedPostDetailsPage`} style={{ textDecoration: 'none', color: 'black' }}>
+                  <a href={`/adminPage/adminReportedPostDetailsPage`} style={{textDecoration:'none',color:'black'}}>
                     {row.title}
                   </a>
                 </TableCell>
@@ -83,13 +84,12 @@ export default function ReportedPostTable({ rows }) {
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 30 * emptyRows }}>
-                <TableCell colSpan={5} />
+                <TableCell colSpan={4} />
               </TableRow>
             )}
           </TableBody>
         </Table>
-      </TableContainer>
-
+        </TableContainer>
       {/* 페이지네이션 컨트롤 */}
       <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Button
@@ -125,19 +125,22 @@ export default function ReportedPostTable({ rows }) {
         >
           마지막
         </Button>
+        <FormControl variant="outlined" sx={{ marginLeft: 2 }}>
         <Select
           value={rowsPerPage}
           onChange={handleRowsPerPageChange}
-          sx={{ marginLeft: 2 }}
+          displayEmpty
         >
-          <MenuItem value={5}>5</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={25}>25</MenuItem>
-        </Select>
+           <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={-1}>전체</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
-
+     
       {/* 검색 기능 */}
-      <Box sx={{ marginTop: 2 }}>
+      <Box className={styles.searchContainer}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={3}>
             <FormControl fullWidth variant="outlined">
@@ -164,24 +167,21 @@ export default function ReportedPostTable({ rows }) {
               value={searchQuery}
               onChange={handleSearchQueryChange}
               disabled={!searchCategory || searchCategory === 'all'}
+              style={{ height: '56px' }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} style={{display: 'flex', justifyContent: 'flex-end'}}>
             <Button
               fullWidth
               variant="contained"
               onClick={handleSearch}
-              sx={{
-                backgroundColor: '#4A90E2',
-                '&:hover': { backgroundColor: '#357ABD' },
-                height: '56px'
-              }}
+              style={{ height: '56px', width: '100%', backgroundColor:'#4A90E2',color: 'white'}}
             >
               검색
             </Button>
           </Grid>
         </Grid>
-      </Box>
+        </Box>
     </>
   );
 }
