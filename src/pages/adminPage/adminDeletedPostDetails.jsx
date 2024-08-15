@@ -35,8 +35,8 @@ export default function AdminDeletedPostDetailsPage() {
                 <p className={styles.ReportedPostDetailsDate}>2023-08-10</p>
                 <hr />
                 <div className={styles.ReportedPostDetailsContent}>
-                    <p><strong>게시판:</strong> 무슨 게시판</p>
-                    <p><strong>작성자:</strong> user789</p>
+                    <p><strong>게시판:</strong> 무슨 게시판</p><br></br>
+                    <p><strong>작성자:</strong> user789</p><br></br>
                     <p>
                         게시글1 게시글1 게시글1 게시글1 게시글1 
                         게시글1 게시글1 게시글1 게시글1 게시글1
@@ -44,12 +44,12 @@ export default function AdminDeletedPostDetailsPage() {
                         게시글1 게시글1 게시글1 게시글1 게시글1 
                         게시글1 게시글1 게시글1 게시글1 게시글1 
                         게시글1 게시글1 게시글1 게시글1 게시글1 
-                        
+                        <br></br>
                     </p>
                     <hr />
-                    
-
+                    <br></br>
                     <p><strong>게시글 등록 날짜:</strong> 2023-08-11</p>
+                    
                 </div>
                 <div className={styles.ReportedPostDetailsButtonContainer}>
                     <button className={styles.ReportedPostDetailsDeleteButton} onClick={handleDelete}>게시글 영구삭제</button>

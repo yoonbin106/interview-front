@@ -38,26 +38,30 @@ export default function AdminReportedPostDetailsPage() {
             </div>
         <div className={sidebar.content}>
             <div className={styles.ReportedPostDetailsWrapper}>
-                <h2>단 6개월만에 취업성공? ICT2기 절찬리에 모집중@@--&gt;링크클릭</h2>
+              <strong>단 6개월만에 취업성공? ICT2기 절찬리에 모집중@@--&gt;링크클릭</strong>
                 <p className={styles.ReportedPostDetailsDate}>2023-08-10</p>
                 <hr />
                 <div className={styles.ReportedPostDetailsContent}>
                     <p><strong>카테고리:</strong> 광고</p>
-                    <p><strong>작성자:</strong> user789</p>
+                    <p><br></br><strong>작성자:</strong> user789</p>
                     <p>
+                        <br></br>
                         요즘 취업이 어려운 상황 속에서 ICT2기 프로그램을 통해
                         단 6개월만에 취업에 성공한 사례가 늘고 있습니다.
                         이번 기회를 놓치지 마세요! 자세한 사항은 링크를 통해 확인해 주세요.
                     </p>
+                    <br></br>
                     <hr />
                     <p><strong>신고사유:</strong></p>
+                    <br></br>
                     <textarea
                         className={styles.ReportedPostDetailsReasonInput}
                         defaultValue="광고성 게시물입니다."
                         readOnly
                     />
-                    <p><strong>신고자:</strong> user123</p>
-                    <p><strong>신고날짜:</strong> 2023-08-11</p>
+                    <p>
+                    <br></br><strong>신고자:</strong> user123</p>
+                    <p><br></br><strong>신고날짜:</strong> 2023-08-11</p>
                 </div>
                 <div className={styles.ReportedPostDetailsButtonContainer}>
                     <button className={styles.ReportedPostDetailsDeleteButton} onClick={handleDelete}>게시글 삭제</button>

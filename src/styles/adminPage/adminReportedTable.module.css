@@ -1,14 +1,19 @@
-/* adminPaginationTable.module.css */
+/* adminReportedTable.module.css */
 
+/* 테이블 컨테이너 스타일 */
 .ReportedTableContainer {
   margin-top: 20px;
+
 }
 
+/* 테이블 헤더 셀 스타일 */
 .ReportedHeaderCell {
   font-weight: bold;
   background-color: #4A90E2;
   color: white;
 }
+
+/* 링크 스타일 */
 .ReportedLink {
   color: black;
   cursor: pointer;
@@ -19,7 +24,8 @@
   text-decoration: underline;
 }
 
-.ReportedButtonContainer {
+/* 버튼 컨테이너와 페이지네이션 컨트롤 스타일 */
+.ReportedButtonContainer{
   margin-top: 10px;
   display: flex;
   gap: 10px;
