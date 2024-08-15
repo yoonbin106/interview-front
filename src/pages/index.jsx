@@ -183,7 +183,7 @@ function Home() {
                 </div>
             </div>
             {/*  */}
-            <div className={styles.containe3}>
+            <div className={styles.container3}>
                 <div className={styles.keyWordFrame}>
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxGrey}>
