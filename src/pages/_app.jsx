@@ -29,7 +29,6 @@ function MyApp({ Component, pageProps }) {
               <Footer />
               <SpeedDial />
               <Bot />
-              {/* <Chatting/> */}
             </div>
           </ChatProvider>
         </StoreProvider>
