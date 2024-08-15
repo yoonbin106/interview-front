@@ -1,6 +1,6 @@
 .result-container {
     display: none; /* 기본적으로 숨김 */
-    height: 53vh; /* 길게 결과 보여주기 위해 높이 설정 */
+    height: 50vh; /* 길게 결과 보여주기 위해 높이 설정 */
     overflow-y: scroll; /* 스크롤 추가 */
     border: 1px solid #ccc;
     border-radius: 5px;

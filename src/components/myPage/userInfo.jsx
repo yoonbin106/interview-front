@@ -8,15 +8,14 @@ import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 16,
   },
   '&.first-column': {
-    backgroundColor: theme.palette.common.black,
+
     color: theme.palette.common.white,
     textAlign: 'center',
   },
@@ -88,32 +87,32 @@ const UserInfo = () => {
         </div>
 
         <a href="/myPage/editUserInfo" className={styles.editProfileLink}>
-          회원 정보 수정 <ArrowForwardIosIcon sx={{ fontSize: 10 }} />
+          회원 정보 수정 <ArrowForwardIosIcon sx={{ fontSize: 14 }} />
         </a>
       </div>
 
       <div className={styles.userInfoContent}>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700, height: 350 }} aria-label="customized table">
-            <TableBody>
+        <TableContainer >
+          <Table sx={{ minWidth: '700px', height: '224px', backgroundColor:'white'}} aria-label="customized table">
+            <TableBody sx={{ backgroundColor:'white'}}>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">이름</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column" sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이름</StyledTableCell>
                 <StyledTableCell>{userInfo.username}</StyledTableCell>
-                <StyledTableCell component="th" scope="row" className="first-column">생년월일</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column" sx={{height:'48px',backgroundColor:'#cdcdcd'}}>생년월일</StyledTableCell>
                 <StyledTableCell>{userInfo.birth}</StyledTableCell>
-                <StyledTableCell component="th" scope="row" className="first-column">성별</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column" sx={{height:'48px',backgroundColor:'#cdcdcd'}}>성별</StyledTableCell>
                 <StyledTableCell>{userInfo.gender}</StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">연락처</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column" sx={{height:'48px',backgroundColor:'#cdcdcd'}}>연락처</StyledTableCell>
                 <StyledTableCell colSpan={5}>{userInfo.phone}</StyledTableCell>
               </StyledTableRow>
-              <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">주소</StyledTableCell>
+              <StyledTableRow >
+                <StyledTableCell component="th" scope="row" className="first-column"  sx={{height:'80px',backgroundColor:'#cdcdcd'}}>주소</StyledTableCell>
                 <StyledTableCell colSpan={5}>{userInfo.address}</StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">이메일</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column" sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이메일</StyledTableCell>
                 <StyledTableCell colSpan={5}>{userInfo.email}</StyledTableCell>
               </StyledTableRow>
             </TableBody>

@@ -4,11 +4,14 @@ import SideMenu from '@/components/myPage/sideMenu';
 const Index = () => {
     return <>
         <div className={styles.myPageContainer}>
-            <div className={styles.myPageSidebar}>
-              <SideMenu/>
+            <div className={styles.myPageSidebarFrame}>
+                <div className={styles.myPageSidebar}>
+                    <SideMenu />
+                </div>
+
             </div>
             <div className={styles.myPageContent}>
-                <EditUserInfo/>
+                <EditUserInfo />
             </div>
         </div>
     </>

@@ -15,11 +15,11 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 16,
   },
   // 새로운 스타일 추가
   '&.first-column': {
-    backgroundColor: theme.palette.common.black,
+    // backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
     textAlign: 'center',
   },
@@ -51,32 +51,32 @@ const EditUserInfo = () => {
       </div>
 
       <div className={styles.userInfoContent}>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700, height: 350 }} aria-label="customized table">
-            <TableBody>
+        <TableContainer >
+          <Table sx={{ minWidth: '700px', height: '224px', backgroundColor:'white',borderRadius:'8px'}} aria-label="customized table">
+            <TableBody sx={{borderRadius:'8px'}}>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">이름</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이름</StyledTableCell>
                 <StyledTableCell>
                   <TextField required id="name" defaultValue="김과자" variant="standard" />
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row" className="first-column">생년월일</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>생년월일</StyledTableCell>
                 <StyledTableCell>
                   {/* <EditCalendarIcon/> */}
                   <TextField required id="name" defaultValue="1999월 9월 99일" variant="standard" />
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row" className="first-column">성별</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>성별</StyledTableCell>
                 <StyledTableCell>
                   <TextField required id="name" defaultValue="여자" variant="standard" />
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">연락처</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>연락처</StyledTableCell>
                 <StyledTableCell colSpan={5}>
                   <TextField required id="name" defaultValue="010-2222-3333" variant="standard" />
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">주소</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'80px',backgroundColor:'#cdcdcd'}}>주소</StyledTableCell>
 
                 <StyledTableCell colSpan={5} >
                   <TextField required id="name" defaultValue="(05050)" variant="standard" InputProps={{ readOnly: true, }} /><span>[우편번호 찾기 버튼 두기]</span><br />
@@ -92,7 +92,7 @@ const EditUserInfo = () => {
 
               </StyledTableRow>
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row" className="first-column">이메일</StyledTableCell>
+                <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이메일</StyledTableCell>
                 <StyledTableCell colSpan={5}>
                   <TextField required id="name" defaultValue="example01@gmail.com" variant="standard" />
                 </StyledTableCell>
