@@ -6,9 +6,11 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { HiLightBulb } from 'react-icons/hi';
 import styles from '@/styles/bot/bot.module.css';
 import { useChat } from '@/contexts/chatContext';
+import Chatting from 'pages/chat/chatting';
 
 const SpeedDial = () => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const { openBot } = useChat();
 
   const handleBotClick = () => {
@@ -17,7 +19,13 @@ const SpeedDial = () => {
   };
 
   const handleChattingClick = () => {
+    setIsChatOpen(true);
     console.log('Chatting clicked');
+  };
+
+  const closeChatting = () => {
+    console.log('닫기 ~');
+    setIsChatOpen(false); // 채팅 팝업을 닫기
   };
 
   return (
@@ -52,6 +60,7 @@ const SpeedDial = () => {
             <div className={styles.tooltipSubtext}>VIP 챗봇이 친절히 답변해 드립니다.</div>
           </div>
         )}
+        {isChatOpen && <Chatting closeChatting={closeChatting} />}
       </div>
     </div>
   );

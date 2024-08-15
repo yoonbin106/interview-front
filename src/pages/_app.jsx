@@ -10,6 +10,7 @@ import Bot from '@/pages/bot/bot';
 import SpeedDial from '@/pages/bot/speedDial';
 import { Provider, useDispatch } from 'react-redux';
 import { ChatProvider } from '@/contexts/chatContext';
+import Chatting from './chat/chatting';
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function MyApp({ Component, pageProps }) {
               <Footer />
               <SpeedDial />
               <Bot />
+              {/* <Chatting/> */}
             </div>
           </ChatProvider>
         </StoreProvider>
