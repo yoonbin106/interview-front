@@ -1,10 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { FcLike, FcDislike } from "react-icons/fc";
-import { BsRobot } from "react-icons/bs";
 import { RiUserHeartFill } from "react-icons/ri";
 import styles from '../../styles/chat/chattingMessages.module.css';
 
-const ChattingMessages = ({ messages, feedbacks, addFeedback, isGenerating }) => {
+const ChattingMessages = ({ messages }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -12,17 +10,20 @@ const ChattingMessages = ({ messages, feedbacks, addFeedback, isGenerating }) =>
   }, [messages]);
 
   return (
-    <div className={styles.botMessages}>
+    <div className={styles.chattingMessages}>
       {messages.map((message, index) => (
         <div key={index} className={`${styles.messageContainer} ${styles[message.sender]}`}>
           {message.sender === 'user' && <div className={styles.userAvatar} aria-hidden="true">
-            <RiUserHeartFill />
+
           </div>}
           {message.sender === 'bot' && <div className={styles.botAvatar} aria-hidden="true">
-            <BsRobot />
+            <RiUserHeartFill />
           </div>}
           <div className={styles.messageContent}>
             <p>{message.text}</p>
+
+            {/* 
+            // 핱트 벝튼
             {message.sender === 'bot' && message.answerId && (
               <div className={styles.messageActions}>
                 <button
@@ -39,21 +40,23 @@ const ChattingMessages = ({ messages, feedbacks, addFeedback, isGenerating }) =>
                 </button>
               </div>
             )}
+            */}
+
+
+
           </div>
-        </div>
-      ))}
-       {isGenerating && (
-        <div className={`${styles.messageContainer} ${styles.bot}`}>
-          <div className={styles.botAvatar} aria-hidden="true">
-            <BsRobot />
-          </div>
+          {/* 
+          // 텍스트 입력중 애니메이션
           <div className={`${styles.messageContent} ${styles.generating}`}>
             <span className={styles.dot}></span>
             <span className={styles.dot}></span>
             <span className={styles.dot}></span>
           </div>
+          */}
+
         </div>
-      )}
+      ))}
+
       <div ref={messagesEndRef} />
     </div>
   );

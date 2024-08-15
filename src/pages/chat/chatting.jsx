@@ -4,6 +4,8 @@ import ChattingHeader from '../../components/chat/chattingHeader';
 import ChattingMessages from '../../components/chat/chattingMessages';
 import ChattingInputArea from '../../components/chat/chattingInputArea';
 import mqtt from 'mqtt';
+import ChattingList from 'components/chat/chattingList';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 
 
@@ -17,7 +19,33 @@ const Chatting = ({ closeChatting }) => {
 
     const [client, setClient] = useState(null);
 
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
+    const [userInfo, setUserInfo] = useState({
+        username: '',
+        email: '',
+        profile: ''
+      });
+
+    const lists = [
+        {id: 1, name: '김지선', title: '채팅방 제목1', lastMessage: '아 커피 맛있다'},
+        {id: 2, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 3, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 4, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 5, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 6, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 7, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 8, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+
+
+    ]
+
     useEffect(() => {
+        setUserInfo({
+            username: localStorage.getItem('username') || '',
+            email: localStorage.getItem('email') || '',
+            profile: localStorage.getItem('profile') || '' // Assuming this is how you're storing the profile image URL or data
+          });
 
         // const mqttClient = mqtt.connect('wss://broker.hivemq.com:1883/ws/chat'); 
         // setClient(mqttClient);
@@ -112,6 +140,14 @@ const Chatting = ({ closeChatting }) => {
         setIsDarkMode(prev => !prev); // 다크 모드 상태를 전환
     };
 
+    const handleChatClick = () => {
+        setIsChatOpen(true); // 채팅 클릭 시 채팅창을 열림 상태로 설정
+    };
+
+    const handleBackClick = () => {
+        setIsChatOpen(false); // 뒤로 가기 시 채팅 목록으로 돌아감
+    };
+
 
     const sendMessage = async () => {
         if (inputMessage.trim()) {
@@ -158,16 +194,27 @@ const Chatting = ({ closeChatting }) => {
             <div className={`${styles.botContainer} ${isDarkMode ? styles.darkMode : ''}`}>
                 <ChattingHeader closeChatting={closeChatting} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
                 <div className={styles.botContent}>
-                    <ChattingMessages messages={messages} />
+                {!isChatOpen ? (
+                        <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} />
+                    ) : (
+                        <>
+                            <button className={styles.chattingBackButton} onClick={handleBackClick}>
+                                <ArrowBackIosNewRoundedIcon/>
+                            </button>
+                            <ChattingMessages messages={messages} />
+                        </>
+                    )}
                 </div>
-                <div className={styles.inputArea}>
-                    <ChattingInputArea
-                        inputMessage={inputMessage}
-                        setInputMessage={setInputMessage}
-                        sendMessage={sendMessage}
-                        handleKeyPress={handleKeyPress}
-                    />
-                </div>
+                {isChatOpen && (
+                    <div className={styles.inputArea}>
+                        <ChattingInputArea
+                            inputMessage={inputMessage}
+                            setInputMessage={setInputMessage}
+                            sendMessage={sendMessage}
+                            handleKeyPress={handleKeyPress}
+                        />
+                    </div>
+                )}
             </div>
 
         </div>

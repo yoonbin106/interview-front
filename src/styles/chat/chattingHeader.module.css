@@ -1,4 +1,4 @@
-.botHeader {
+.chattingHeader {
     background: linear-gradient(135deg, #0056b3, #007bff);
     color: white;
     padding: 15px 20px;
@@ -7,12 +7,12 @@
     justify-content: space-between;
     align-items: center;
   }
-  .botHeader .logo {
+  .chattingHeader .logo {
     font-size: 1.2rem;
     font-weight: bold;
     color: white;
   }
-  .botHeader .status {
+  .chattingHeader .status {
     width: 10px;
     height: 10px;
     border-radius: 50%;
