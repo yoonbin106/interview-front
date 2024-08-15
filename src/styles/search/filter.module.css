@@ -5,6 +5,9 @@
     border-radius: 10px;
     overflow: hidden;
     height: 200px; /* 기본 박스 크기 */
+    width: calc(100% - 40px); /* 전체에서 20px씩 양쪽으로 줄여서 가로 크기 조정 */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .filter-content-container {

@@ -6,6 +6,9 @@
     border-radius: 5px;
     padding: 10px;
     box-sizing: border-box;
+    width: calc(100% - 40px); /* 전체에서 20px씩 양쪽으로 줄여서 가로 크기 조정 */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .result-container.visible {
