@@ -10,8 +10,16 @@ import Bot from '@/pages/bot/bot';
 import SpeedDial from '@/pages/bot/speedDial';
 import { Provider, useDispatch } from 'react-redux';
 import { ChatProvider } from '@/contexts/chatContext';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const queryClient = new QueryClient();
+
+// MUI 테마 설정
+const theme = createTheme({
+  typography: {
+    fontFamily: '"Noto Sans KR", sans-serif',
+  },
+});
 
 function MyApp({ Component, pageProps }) {
 
@@ -19,16 +27,18 @@ function MyApp({ Component, pageProps }) {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <StoreProvider>
-        <ChatProvider>
+          <ChatProvider>
             <div className="app">
-              <Header />
-              <div className="content">
-                <Component {...pageProps}/>
+              {/* <ThemeProvider theme={theme}> */}
+                <Header />
+                <div className="content">
+                  <Component {...pageProps} />
+                </div>
+                <Footer />
+                <SpeedDial />
+                <Bot />
+                {/* </ThemeProvider> */}
               </div>
-              <Footer />
-              <SpeedDial />
-              <Bot />
-            </div>
           </ChatProvider>
         </StoreProvider>
       </Provider>
