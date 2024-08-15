@@ -9,7 +9,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { grey } from '@mui/material/colors';
 
-export default function SideMenu() {
+export default function SideMenu(theme) {
   const [openItems, setOpenItems] = React.useState({
     infoManagement: false,
     resumeManagement: false,
@@ -24,14 +24,14 @@ export default function SideMenu() {
   const nestedListItemButtonStyle = { pl: 4 };
   return (
     <List
-      sx={{ width: '100%', maxWidth: 240, bgcolor: '#FFFFFF' }}
+      sx={{ width: '100%', maxWidth: 240, bgcolor: '#FFFFFF', fontFamily: '"Noto Sans KR", sans-serif'}}
       component="nav"
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader
         component="div"
         id="nested-list-subheader"
-        sx={{ fontSize: '1.8rem', textAlign: 'center', mb: 5, fontWeight: 1000}}
+        sx={{ fontSize: '26px', textAlign: 'start', mb: 3, fontWeight: 1000,fontFamily:'Noto Sans KR',color:'black'}}
       >
         마이페이지
       </ListSubheader>
@@ -39,19 +39,19 @@ export default function SideMenu() {
   >
       <a href="/myPage" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
-          <ListItemText primary="회원정보" />
+          <ListItemText primary="회원정보" sx={{fontFamily:'Noto Sans KR'}} />
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[800] }}/>
+      <Divider sx={{ borderColor: grey[400] }}/>
 
       <ListItemButton onClick={() => handleClick('infoManagement')}>
         <ListItemText primary="개인 정보 관리" />
         {openItems.infoManagement ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={openItems.infoManagement} timeout="auto" unmountOnExit>
+      <Collapse in={openItems.infoManagement} timeout="auto" unmountOnExit >
         <List component="div" disablePadding>
-          <a href="/myPage/editUserInfo" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <a href="/myPage/editUserInfo" style={{ textDecoration: 'none', color: 'inherit',fontFamily:'Noto Sans KR'}}>
             <ListItemButton sx={nestedListItemButtonStyle}>
               <ListItemText primary="개인 정보 수정" />
             </ListItemButton>
@@ -69,7 +69,7 @@ export default function SideMenu() {
         </List>
       </Collapse>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <ListItemButton onClick={() => handleClick('resumeManagement')}>
         <ListItemText primary="이력서 관리" />
@@ -90,7 +90,7 @@ export default function SideMenu() {
         </List>
       </Collapse>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <a href="/myPage/interviewHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
@@ -98,7 +98,7 @@ export default function SideMenu() {
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <a href="/myPage/surveyHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
@@ -106,7 +106,7 @@ export default function SideMenu() {
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <a href="/myPage/boardPosts" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
@@ -114,7 +114,7 @@ export default function SideMenu() {
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <ListItemButton onClick={() => handleClick('inquiry')}>
         <ListItemText primary="문의 현황" />
@@ -135,7 +135,7 @@ export default function SideMenu() {
         </List>
       </Collapse>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <a href="/myPage/paymentHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
@@ -143,7 +143,7 @@ export default function SideMenu() {
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[800] }} />
+      <Divider sx={{ borderColor: grey[400] }} />
     </List>
   );
 }

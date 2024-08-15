@@ -92,20 +92,21 @@ const SurveyPlay = () => {
       apikey: API_KEY,
       qestrnSeq: Q_NUM,
       trgetSe: '100209',
-      name: userName,
-      gender: gender,
+      name: '가길동',
+      gender: '100323',
       school: '',
       grade: '',
       email: '',
       startDtm: Date.now(),
       answers: formattedAnswers,
     };
-
+    console.log(postData);
     try {
-      // const response = await PostResultAPI(postData);
-      // const resultData = response.data.RESULT;
-      // router.push('/survey/surveyResult', { state: { resultData, userName } });
-      router.push('/survey/surveyResult');
+      const response = await PostResultAPI(postData);
+      console.log('response: ',response);
+      const resultData = response.data.RESULT;
+      router.push('/survey/surveyResult', { state: { resultData, userName } });
+      // router.push('/survey/surveyResult');
     } catch (error) {
       console.error('Error submitting survey:', error);
       toast.error('설문 제출 중 오류가 발생했습니다.');
