@@ -7,9 +7,9 @@ import Avatar from '@mui/material/Avatar';
 const ChattingList = ({ lists, onChatClick, userInfo }) => {
     const listsEndRef = useRef(null);
 
-    useEffect(() => {
-        listsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [lists]);
+    // useEffect(() => {
+    //     listsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [lists]);
 
     return (
         <div className={styles.chattingListContainer}>

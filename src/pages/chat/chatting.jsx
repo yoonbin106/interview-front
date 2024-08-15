@@ -6,6 +6,7 @@ import ChattingInputArea from '../../components/chat/chattingInputArea';
 import mqtt from 'mqtt';
 import ChattingList from 'components/chat/chattingList';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import Chat from './chat';
 
 
 
@@ -194,6 +195,7 @@ const Chatting = ({ closeChatting }) => {
             <div className={`${styles.botContainer} ${isDarkMode ? styles.darkMode : ''}`}>
                 <ChattingHeader closeChatting={closeChatting} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
                 <div className={styles.botContent}>
+                
                 {!isChatOpen ? (
                         <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} />
                     ) : (
