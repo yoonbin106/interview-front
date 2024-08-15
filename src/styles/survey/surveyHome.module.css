@@ -94,7 +94,20 @@
     justify-content: flex-end;
     margin-bottom: 20px;
 }
-
+.surveyStartButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #5A8AF2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+}
 .surveyStartButtonResult {
     display: flex;
     align-items: center;

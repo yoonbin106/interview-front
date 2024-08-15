@@ -1,9 +1,12 @@
 // SurveyGenderChoice.jsx
 import React from 'react';
+import styles from '@/styles/survey/surveyHome.module.css';
 
 const SurveyGenderChoice = ({ onChangeHandler }) => {
   return (
     <div>
+
+<div>성별</div>
       <label>
         <input
           type="radio"

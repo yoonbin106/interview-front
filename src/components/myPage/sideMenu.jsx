@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { grey } from '@mui/material/colors';
+import styles from '@/styles/myPage/sideMenu.module.css'
 
 export default function SideMenu(theme) {
   const [openItems, setOpenItems] = React.useState({
@@ -24,26 +25,23 @@ export default function SideMenu(theme) {
   const nestedListItemButtonStyle = { pl: 4 };
   return (
     <List
-      sx={{ width: '100%', maxWidth: 240, bgcolor: '#FFFFFF', fontFamily: '"Noto Sans KR", sans-serif'}}
+      sx={{ width: '100%', maxWidth: 240, bgcolor: '#FFFFFF', fontFamily: '"Noto Sans KR", sans-serif' }}
       component="nav"
       aria-labelledby="nested-list-subheader"
       subheader={
-        <ListSubheader
-        component="div"
-        id="nested-list-subheader"
-        sx={{ fontSize: '26px', textAlign: 'start', mb: 3, fontWeight: 1000,fontFamily:'Noto Sans KR',color:'black'}}
-      >
-        마이페이지
-      </ListSubheader>
-    }
-  >
+        <div className={styles.myPageTitleIndex}> {/* className을 올바르게 사용 */}
+          마이페이지
+        </div>
+      }
+    >
+
       <a href="/myPage" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
-          <ListItemText primary="회원정보" sx={{fontFamily:'Noto Sans KR'}} />
+          <ListItemText primary="회원정보" sx={{ fontFamily: 'Noto Sans KR' }} />
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[400] }}/>
+      <Divider sx={{ borderColor: grey[400] }} />
 
       <ListItemButton onClick={() => handleClick('infoManagement')}>
         <ListItemText primary="개인 정보 관리" />
@@ -51,7 +49,7 @@ export default function SideMenu(theme) {
       </ListItemButton>
       <Collapse in={openItems.infoManagement} timeout="auto" unmountOnExit >
         <List component="div" disablePadding>
-          <a href="/myPage/editUserInfo" style={{ textDecoration: 'none', color: 'inherit',fontFamily:'Noto Sans KR'}}>
+          <a href="/myPage/editUserInfo" style={{ textDecoration: 'none', color: 'inherit', fontFamily: 'Noto Sans KR' }}>
             <ListItemButton sx={nestedListItemButtonStyle}>
               <ListItemText primary="개인 정보 수정" />
             </ListItemButton>

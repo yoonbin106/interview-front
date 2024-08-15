@@ -241,15 +241,15 @@
 .keyWordFrame{
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 1640px;
   height: 630px;
-  background-color: #e7e7e7;
+  /* background-color: #e7e7e7; */
 }
 .keyWordFrames{
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  width: 100%;
+  width: 1640px;
   height: 630px;
 
 }
@@ -257,7 +257,7 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  width: 100%;
+  width: 1640px;
   height: 630px;
 
 }

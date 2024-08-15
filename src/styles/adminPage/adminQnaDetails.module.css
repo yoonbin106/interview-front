@@ -1,0 +1,36 @@
+/*adminQnaDetails.module.css*/
+
+
+.qnaDetailsContainer{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    padding:110px;
+}
+
+.qnaDetailsPaper{
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.qnaDetailsGrayText{
+    color: gray;
+}
+
+.qnaDetailsGrid{
+    margin-top: 20px;
+}
+
+.qnaDetailsFormControl{
+    margin-top: 20px;
+}
+
+.qnaDetailsSubmitButton{
+    margin-top: 20px;
+}
+
+.qnaDetailsBackButton{
+    margin-top:20px;
+    margin-left:10px;
+}

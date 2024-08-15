@@ -1,8 +1,10 @@
-//adminQnaDetails.jsx
+//adminQnaDetailsPage.jsx
 import React, { useState } from 'react';
 import { TextField, Button, Paper, Typography, Grid, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
-
+import styles from '@/styles/adminPage/adminQnaDetails.module.css';
+import sidebar from '@/styles/adminPage/adminPage.module.css';
+import NestedList from '@/components/adminPage/adminSideMenu';
 const AdminQnaDetails = () => {
     const router = useRouter();
 
@@ -46,28 +48,33 @@ const AdminQnaDetails = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <Paper elevation={3} style={{ padding: '20px' }}>
-                <Typography variant="h6" gutterBottom style={{ color: 'gray' }}>
+        <div className={sidebar.container}>
+        <div className={sidebar.sidebar}>
+            <NestedList/>
+        </div>
+        <div className={sidebar.content}>
+        <div className={styles.qnaDetailsContainer}>
+            <Paper elevation={3} className={styles.qnaDetailsPaper}>
+                <Typography variant="h6" gutterBottom className={styles.qnaDetailsGrayText}>
                     [1:1 문의내역]
                 </Typography>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant ="h5" gutterBottom>
                     {qnaDetail.title}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                    작성자: {qnaDetail.author} | 날짜: {qnaDetail.date} | 카테고리: {category}
+                작성자: {qnaDetail.author} | 날짜: {qnaDetail.date} | 카테고리: {category}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    {qnaDetail.content}
+                {qnaDetail.content}
                 </Typography>
             </Paper>
 
-            <Box mt={4}>
-                <Paper elevation={3} style={{ padding: '20px' }}>
-                    <Typography variant="h6" gutterBottom>
-                        관리자 답변
-                    </Typography>
-                    <TextField
+        <Box mt={4}>
+            <Paper elevation={3} className={styles.qnaDetailsPaper}>
+                <Typography variant="h6" gutterBottom>
+                    관리자 답변
+                </Typography>
+                <TextField
                         fullWidth
                         variant="outlined"
                         label="답변을 입력하세요"
@@ -76,7 +83,7 @@ const AdminQnaDetails = () => {
                         value={response}
                         onChange={handleResponseChange}
                     />
-                    <Grid container spacing={2} alignItems="center" style={{ marginTop: '20px' }}>
+            <Grid container spacing={2} alignItems="center" className={styles.qnaDetailsGrid}>
                         <Grid item>
                             <Button variant="contained" component="label">
                                 파일 첨부
@@ -87,7 +94,7 @@ const AdminQnaDetails = () => {
                             {file && <Typography>{file.name}</Typography>}
                         </Grid>
                     </Grid>
-                    <FormControl fullWidth variant="outlined" style={{ marginTop: '20px' }}>
+                    <FormControl fullWidth variant="outlined" className={styles.qnaDetailsFormControl}>
                         <InputLabel id="category-label">카테고리 변경</InputLabel>
                         <Select
                             labelId="category-label"
@@ -105,7 +112,7 @@ const AdminQnaDetails = () => {
                         variant="contained"
                         color="primary"
                         onClick={handleSubmit}
-                        style={{ marginTop: '20px' }}
+                        className={styles.qnaDetailsSubmitButton}
                     >
                         답변 등록
                     </Button>
@@ -113,12 +120,14 @@ const AdminQnaDetails = () => {
                         variant="outlined"
                         color="primary"
                         onClick={handleBackToList}
-                        style={{ marginTop: '20px', marginLeft: '10px' }}
+                        className={styles.qnaDetailsBackButton}
                     >
                         목록
                     </Button>
                 </Paper>
             </Box>
+        </div>
+        </div>
         </div>
     );
 };
