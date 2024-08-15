@@ -12,16 +12,26 @@ import styles from '@/styles/survey/surveyExample.module.css';
 import Head from 'next/head';
 import SurveyHome from '..';
 
+
 const SurveyPlay = () => {
   const router = useRouter();
   const { page } = router.query;
   const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(Number(page) - 1 || 0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [userName, setUserName] = useState(''); // 사용자의 이름을 저장할 상태
-  const [gender, setGender] = useState(''); // 사용자의 성별을 저장할 상태
+  const [userName, setUserName] = useState(''); // 초기 상태 빈 문자열
+  const [gender, setGender] = useState(''); // 초기 상태 빈 문자열
+  const isLastPage = currentPage === Math.ceil(questions.length / QUESTIONS_PER_PAGE) - 1;
 
   const QUESTIONS_PER_PAGE = 7;
+
+  useEffect(() => {
+    const storedUserName = localStorage.getItem('username');
+    const storedGender = localStorage.getItem('gender');
+  
+    if (storedUserName) setUserName(storedUserName);
+    if (storedGender) setGender(storedGender);
+  }, []);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -92,8 +102,8 @@ const SurveyPlay = () => {
       apikey: API_KEY,
       qestrnSeq: Q_NUM,
       trgetSe: '100209',
-      name: '가길동',
-      gender: '100323',
+      name: userName,
+      gender: gender === 'men' ? '100323' : '100324',
       school: '',
       grade: '',
       email: '',
@@ -105,8 +115,17 @@ const SurveyPlay = () => {
       const response = await PostResultAPI(postData);
       console.log('response: ',response);
       const resultData = response.data.RESULT;
-      router.push('/survey/surveyResult', { state: { resultData, userName } });
-      // router.push('/survey/surveyResult');
+      console.log('resultData: ',resultData.url);
+      const url = resultData.url;
+      const encodedUrl = encodeURIComponent(url);
+     // 쿼리 파라미터를 객체로 전달
+      router.push({
+        pathname: '/survey/surveyResult',
+        query: { userName, url: encodedUrl },
+      });
+
+
+
     } catch (error) {
       console.error('Error submitting survey:', error);
       toast.error('설문 제출 중 오류가 발생했습니다.');
@@ -264,35 +283,46 @@ const SurveyPlay = () => {
                   ))}
                 </div>
     
-    
-                <div className={styles.surveyStartButtonFrame}>
-                  <button 
-                    className={styles.surveyPrevButton}
-                    onClick={handlePrevPage}
-                  >
-                    이전
-                  </button>
-    
-                  <div>{currentPage + 1} / 4</div>
-    
-                <button
-                className={styles.surveyNextButton}
-                style={{
-                  backgroundColor:
-                    Object.keys(selectedAnswers).length >= endIndex
-                      ? '#5A8AF2'
-                      : '#eaeaea',
-                  border:
-                    Object.keys(selectedAnswers).length >= endIndex
-                      ? '3px solid #5A8AF2'
-                      : '3px solid #eaeaea',
-                }}
-                onClick={handleNextPage}
+  
+              <div className={styles.surveyStartButtonFrame}>
+              <button 
+                className={styles.surveyPrevButton}
+                onClick={handlePrevPage}
               >
-                <ToastContainer autoClose={5000} />
-                {currentPage < Math.ceil(questions.length / QUESTIONS_PER_PAGE) - 1 ? '다음' : '제출'}
+                이전
               </button>
+
+              <div>{currentPage + 1} / 4</div>
+
+              {!isLastPage && (
+                <button
+                  className={styles.surveyNextButton}
+                  style={{
+                    backgroundColor: Object.keys(selectedAnswers).length >= endIndex ? '#5A8AF2' : '#eaeaea',
+                    border: Object.keys(selectedAnswers).length >= endIndex ? '3px solid #5A8AF2' : '3px solid #eaeaea',
+                  }}
+                  onClick={handleNextPage}
+                >
+                  다음
+                </button>
+              )}
+
+              {isLastPage && (
+                <button
+                  className={styles.surveySubmitButton}
+                  style={{
+                    backgroundColor: Object.keys(selectedAnswers).length >= totalQuestions ? '#5A8AF2' : '#eaeaea',
+                    border: Object.keys(selectedAnswers).length >= totalQuestions ? '3px solid #5A8AF2' : '3px solid #eaeaea',
+                  }}
+                  onClick={submitSurvey}
+                >
+                  제출
+                </button>
+              )}
             </div>
+
+            <ToastContainer autoClose={5000} />
+            {currentPage < Math.ceil(questions.length / QUESTIONS_PER_PAGE) - 1 ? '다음' : '제출'}
           </section>
         </div>
       </div>
