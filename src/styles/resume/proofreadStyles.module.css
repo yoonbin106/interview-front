@@ -6,7 +6,7 @@
   border-radius: 4px;
   font-size: 14px !important;
   cursor: pointer;
-  margin-left: 490px;
+  margin-left: 530px;
   
   
 }
@@ -55,6 +55,7 @@
   color: #343a40;
   padding-left: 80px;
   padding-top: 13px;
+  margin-bottom: 12px;
 }
 
 .sidebarContent {
@@ -62,17 +63,36 @@
   max-height: calc(100% - 50px);
   font-size: 15px;
   margin-bottom: 15px;
+  margin-left: 15px;
   font-weight: lighter !important;
 }
 .resultItem {
   padding: 10px 0;
   border-bottom: 2px dashed #a9afb4; /* 점선 추가 */
-  
   margin-right: 20px;
   margin-bottom: 15px;
+  position: relative;
 }
 
 .resultItem:last-child {
   border-bottom: none; /* 마지막 항목에는 점선을 추가하지 않음 */
 }
 
+.resultItem p {
+  margin-bottom: 5px; /* 문장 사이에 10px 간격을 추가 */
+  margin-left: 20px; /* 동그라미 크기만큼 왼쪽 여백 추가 */
+}
+
+.resultItem p:last-child {
+  margin-bottom: 15px; /* 마지막 문장에는 간격을 추가하지 않음 */
+}
+
+.resultItem p:first-of-type::before {
+  content: "•";
+  color: black;
+  font-size: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(4px); /* 텍스트 높이에 맞게 동그라미 위치 조정 */
+}
