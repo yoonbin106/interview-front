@@ -1,0 +1,78 @@
+.proofreadButton {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px !important;
+  cursor: pointer;
+  margin-left: 490px;
+  
+  
+}
+
+.proofreadButton:hover {
+  background-color: #0056b3;
+}
+
+.proofreadSidebar {
+  position: fixed;
+  right: -300px;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background-color: #f8f9fa;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.proofreadSidebar.open {
+  right: 0;
+}
+
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sidebarHeader h3 {
+  margin-left: 15px;
+  margin-top: 10px;
+  font-size: 20px;
+  color: #343a40;
+  font-weight: bold;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #343a40;
+  padding-left: 80px;
+  padding-top: 13px;
+}
+
+.sidebarContent {
+  overflow-y: auto;
+  max-height: calc(100% - 50px);
+  font-size: 15px;
+  margin-bottom: 15px;
+  font-weight: lighter !important;
+}
+.resultItem {
+  padding: 10px 0;
+  border-bottom: 2px dashed #a9afb4; /* 점선 추가 */
+  
+  margin-right: 20px;
+  margin-bottom: 15px;
+}
+
+.resultItem:last-child {
+  border-bottom: none; /* 마지막 항목에는 점선을 추가하지 않음 */
+}
+
