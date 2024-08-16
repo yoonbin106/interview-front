@@ -49,14 +49,14 @@ export default function ReportedFinCommentTable({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.RePortedFinTableContainer}>
+    <TableContainer component={Paper} className={styles.rePortedFinTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.ReportedFinHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.ReportedFinHeaderCell}>내용</TableCell>
-            <TableCell align="center" className={styles.ReportedFinHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.ReportedFinHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>내용</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -65,7 +65,7 @@ export default function ReportedFinCommentTable({ rows }) {
               <TableRow>
                 <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="center">
-                  <span onClick={() => toggleRow(index)} className={styles.ReportedFinLink}>
+                  <span onClick={() => toggleRow(index)} className={styles.reportedFinLink}>
                     {row.title}
                   </span>
                 </TableCell>
@@ -93,7 +93,7 @@ export default function ReportedFinCommentTable({ rows }) {
                       >
                         이 내용은 적절하지 않습니다.
                       </Box>
-                      <div className={styles.ReportedFinButtonContainer}>
+                      <div className={styles.reportedFinButtonContainer}>
                         <Button variant="contained" color="error" onClick={handleDelete}>댓글 삭제</Button>
                         <Button variant="contained" color="warning" onClick={handleHide}>댓글 숨김</Button>
                       </div>

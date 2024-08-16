@@ -39,7 +39,7 @@ const UserDetails = () => {
     if (typeof window !== 'undefined') {
       if(window.confirm("정말로 회원탈퇴를 하시겠습니까?")){
         alert("회원 탈퇴가 성공적으로 완료되었습니다.");
-        window.location.href = "http://localhost:3000/admin/user";
+        window.location.href = "http://localhost:3000/adminPage/adminUserDetailsPage";
       }
     }
 

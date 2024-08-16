@@ -45,6 +45,7 @@ export default function AdminDeletedPostDetailsPage() {
                         게시글1 게시글1 게시글1 게시글1 게시글1 
                         게시글1 게시글1 게시글1 게시글1 게시글1 
                         <br></br>
+                        
                     </p>
                     <hr />
                     <br></br>
