@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '@/styles/main.module.css';
 
 function Home() {
@@ -136,7 +136,7 @@ function Home() {
                 </div>
             </div>
             {/*  */}
-            <div className={styles.container2}>
+            <div className={styles.container2} id="systemInfo">
                 <div className={styles.mainIntroFrameW}>
                     <div className={styles.mainIntroFrameH}>
 
@@ -222,7 +222,7 @@ function Home() {
                 </div>
             </div>
             {/* 기타 섹션들 */}
-            <div className={styles.container4}>
+            <div className={styles.container4}  id="tickets">
                 <div className={styles.ticketheader}>요금제</div>
                 <div className={styles.ticketSubheader}>“ 합리적인 가격에 확실한 결과를 볼 수 있는 기회 ”</div>
 

@@ -22,6 +22,39 @@ const Header = observer(() => {
   const router = useRouter(); // useRouter 훅 사용
   const [isClient, setIsClient] = useState(false);
 
+  const smoothScroll = (targetPosition, duration) => {
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    let startTime = null;
+  
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const run = ease(timeElapsed, startPosition, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+  
+    const ease = (t, b, c, d) => {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t + b;
+      t--;
+      return -c / 2 * (t * (t - 2) - 1) + b;
+    };
+  
+    requestAnimationFrame(animation);
+  };
+
+  const handleTicketClick = (e, sectionId) => {
+    e.preventDefault();
+    const section = document.getElementById(sectionId);
+  
+    if (section) {
+      const targetPosition = section.offsetTop;
+      smoothScroll(targetPosition, 1000); // 1000ms (1초)에 걸쳐 부드럽게 스크롤
+    }
+  };
+  
   useEffect(() => {
     setIsClient(true);
     if (typeof window !== 'undefined') {
@@ -124,8 +157,8 @@ const Header = observer(() => {
                 <div className={styles.emptyMenuFrame}></div>
                 <div className={styles.subMenusFrame}>
                   <div className={styles.subMenus}>
-                    <a href="#" className={styles.subMenu}>시스템 소개</a>
-                    <a href="#" className={styles.subMenu}>이용권</a>
+                    <a href="#systemInfo" className={styles.subMenu} onClick={(e) => handleTicketClick(e, 'systemInfo')}>시스템 소개</a>
+                    <a href="#tickets" className={styles.subMenu} onClick={(e) => handleTicketClick(e, 'tickets')}>이용권</a>
                   </div>
                   <div className={styles.subMenus}>
                     <a href="/search" className={styles.subMenu}>회사 검색</a>
