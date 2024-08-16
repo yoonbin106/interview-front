@@ -93,33 +93,38 @@ const ResumeList = () => {
 
   return (
     <div className={styles.resumecontainer}>
-      <h2 className={styles.h2}>이력서 관리</h2>
+      <div className={styles.h2}>이력서 관리</div>
       <div className={styles.filteroptions}>
         <span className={styles.filteroption}>
           <DescriptionIcon sx={{ color: grey[400] }} />첨삭결과가 없는 이력서
         </span>
         <span className={styles.filteroption}>
-          <DescriptionIcon sx={{ color: blue[500] }} />첨삭결과가 있는 이력서
+          <DescriptionIcon sx={{ color: '#5A8AF2' }} />첨삭결과가 있는 이력서
         </span>
       </div>
       <div className={styles.newresumebutton}>
         <button onClick={() => handleButtonClick('/resume')}>
-          <ControlPointIcon sx={{ color: blue[500] }} className={styles.controlpointicon} />&nbsp; 새로운 이력서 등록
+          <ControlPointIcon sx={{ color: '#5A8AF2' }} className={styles.controlpointicon} />&nbsp; 새로운 이력서 등록
         </button>
       </div>
 
-      <hr />
+      <hr className={styles.hrStyles}/>
 
       <div className={styles.accordioncontainer}>
         {currentResumes.map((resume) => (
-          <Accordion key={resume.id} className={styles.customaccordion}>
+          <Accordion
+            key={resume.id}
+            className={styles.customaccordion}
+            elevation={0}
+            sx={{ '&::before': { backgroundColor: 'transparent' } }}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`panel${resume.id}-content`}
               id={`panel${resume.id}-header`}
               className={styles.accordionsummary}
             >
-              <DescriptionIcon sx={{ color: resume.proofreadDate ? blue[500] : grey[400] }} className={styles.resumeicon} /> &nbsp;
+              <DescriptionIcon sx={{ color: resume.proofreadDate ? '#5A8AF2' : grey[400] }} className={styles.resumeicon} /> &nbsp;
               <span className={styles.resumetext}>{resume.title}</span>
               <span className={styles.resumeright}>
                 <span className={styles.resumedate} style={{ marginRight: '10px' }}>{resume.date}</span>
@@ -130,7 +135,7 @@ const ResumeList = () => {
               </span>
             </AccordionSummary>
             <AccordionDetails className={styles.accordiondetails}>
-              <div style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Button className={`${styles.subbutton} ${styles.button}`} onClick={() => handleButtonClick('/resume/proofReadResult1')}>첨삭하기</Button>
                 {resume.proofreadDate && (
                   <Button className={`${styles.subbutton} ${styles.resultbutton}`} onClick={() => handleButtonClick('/resume/proofReadResult2')}>첨삭결과</Button>
@@ -162,21 +167,21 @@ const ResumeList = () => {
       </div>
 
       <div className={styles.formContainer}>
-          <div className={styles.mb5}>
-            <div className={styles.inputContainer}>
-              <div className={styles.inputWithIcon}>
-                <SearchIcon className={styles.icon} />
-                <input 
-                  type="text" 
-                  placeholder='이력서 제목으로 검색' 
-                  value={searchText}
-                  onChange={handleSearchChange}
-                  className={styles.resumeTitleInput}
-                />
-              </div>
-              <button onClick={handleSearchClick} className={styles.searchButton}>검색</button>
+        <div className={styles.mb5}>
+          <div className={styles.inputContainer}>
+            <div className={styles.inputWithIcon}>
+              <SearchIcon className={styles.icon} />
+              <input
+                type="text"
+                placeholder='이력서 제목으로 검색'
+                value={searchText}
+                onChange={handleSearchChange}
+                className={styles.resumeTitleInput}
+              />
             </div>
+            <button onClick={handleSearchClick} className={styles.searchButton}>검색</button>
           </div>
+        </div>
       </div>
 
       {/* 삭제 확인 모달 */}

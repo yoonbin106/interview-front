@@ -5,20 +5,21 @@
 .resumecontainer {
   position: relative; /* 컨테이너의 위치를 고정하여 검색 박스가 영향을 미치지 않도록 */
   overflow: visible; /* 자식 요소들이 잘리지 않도록 */
-  width: 40%;
+  width: 760px;
   background-color: #ffffff;
   padding: 30px;
   margin: 20px auto;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
-  margin-bottom: 30px;
-  min-height: 500px;
+  margin-top: 80px;
+  margin-bottom: 80px;
+  min-height: 400px;
 
 }
 
 .h2 {
-  font-size: 24px;
+  font-size: 20px;
+  font-weight: bold;
   margin-bottom: 20px;
 }
 
@@ -43,12 +44,13 @@
 }
 
 .newresumebutton button {
+  height: 40px;
   width: 100%;
   max-width: 1000px;
   padding: 10px;
   font-size: 15px !important;
   background-color: #ffffff;
-  border: 2px solid #ccc;
+  border: 1px solid #dbdbdb;
   border-radius: 8px;
   cursor: pointer;
   color: #333;
@@ -56,10 +58,11 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin-bottom: 10px;
 }
 
 .newresumebutton button:hover {
-  border-color: #007bff;
+  border-color: #5A8AF2;
 }
 
 .resumeright {
@@ -72,7 +75,7 @@
 
 .resumedate {
   color: #666;
-  
+  font-size: 14px;
 }
 
 .resumetext {
@@ -97,11 +100,15 @@
 }
 
 .subbutton {
-  width: 100px !important;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
   padding: 5px;
-  background-color: #007bff;
+  background-color: #5A8AF2;
   color: white;
-  border: 1px solid #007bff !important;
+  border: 1px solid #5A8AF2 !important;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px !important;
@@ -114,16 +121,24 @@
 }
 
 .resultbutton {
-  background-color: #007bff !important;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #5A8AF2 !important;
   color: white !important;
 }
-
+.accordioncontainer{
+  margin-top: 10px;
+}
 .accordioncontainer .MuiAccordionroot {
   margin-bottom: 10px;
 }
-
+.hrStyles{
+  border-top: 1px solid #8d8d8d;
+}
 .customaccordion {
-  border: 1px solid #ccc;
+  border: 1px solid #dbdbdb;
   border-radius: 4px;
   margin-bottom: 10px;
 }
@@ -132,7 +147,7 @@
   margin-top: 10px;
   padding: 10px;
   background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  border: 1px solid #dbdbdb;
   border-radius: 4px;
   display: flex;
   justify-content: space-between;
@@ -146,7 +161,7 @@
 .newbox div {
   padding: 5px 10px;
   background-color: #fcfcfc;
-  color: #007bff;
+  color: #5A8AF2;
   border-radius: 5px;
   font-size: 14px !important;
   cursor: default; /* 마우스 호버 시 커서 변경 */
@@ -164,7 +179,7 @@
   padding: 10px;
   margin: 20px auto 0 auto; /* 상단 마진 20px, 좌우 자동 정렬 */
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #dbdbdb;
   font-size: 14px;
   display: block; /* 블록 요소로 변환하여 가운데 정렬 가능하게 함 */
 }
@@ -177,17 +192,22 @@
 }
 
 .pageNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  width: 35px;
   padding: 10px;
   margin: 0 5px;
   cursor: pointer;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: 50px;
+  /* border: 1px solid #dbdbdb; */
 }
 
 .activePage {
-  background-color: #007bff;
+  background-color: #5A8AF2;
   color: white;
-  border-color: #007bff;
+  border-color: #5A8AF2;
 }
 
 .formContainer {
@@ -195,7 +215,7 @@
   justify-content: center;
   max-width: 1300px !important;
   width: 100%;
-  margin: 20px auto;
+  margin-top: 20px;
   box-sizing: border-box; /* 폼 컨테이너 크기를 고정 */
 }
 
@@ -209,7 +229,7 @@
   position: relative; /* 검색 박스의 위치를 상위 요소에 고정 */
   display: flex;
   align-items: center !important;
-  border: 1px solid #ced4da;
+  border: 1px solid #dbdbdb;
   border-radius: 4px;
   padding: 5px;
   width: 100%; /* 검색 박스의 너비를 고정 */
@@ -239,8 +259,11 @@
 }
 
 .searchButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #5A8AF2;
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -248,6 +271,7 @@
   font-size: 14px !important;
   margin-left: 10px;
   width: 70px;
+  height: 36px;
 }
 
 .searchButton:hover {
