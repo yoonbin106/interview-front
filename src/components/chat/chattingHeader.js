@@ -6,7 +6,7 @@ import styles from '../../styles/chat/chattingHeader.module.css';
 
 const ChattingHeader = ({ closeChatting, isDarkMode, toggleDarkMode }) => {
   return (
-    <div className={styles.botHeader}>
+    <div className={styles.chattingHeader}>
       <span className='botIcon'>
         <PiWechatLogoBold /> 
       </span>Chatting

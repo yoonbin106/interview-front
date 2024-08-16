@@ -30,13 +30,8 @@
     transition: background-color 0.3s, color 0.3s;
   }
   
-  .sendButton:hover, .micButton:hover {
+  .sendButton:hover {
     background-color: #3b82f6;
-    color: white;
-  }
-  
-  .micButton.listening {
-    background-color: #ef4444;
     color: white;
   }
   
