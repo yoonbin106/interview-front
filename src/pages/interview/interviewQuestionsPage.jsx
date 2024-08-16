@@ -25,11 +25,12 @@ const InterviewQuestionsPage = () => {
   };
 
   const handleSelectQuestion = () => {
-    router.push('/interview/interviewRecordPage', { 
-      state: { 
+    router.push({
+      pathname: '/interview/interviewRecordPage',
+      query: { 
         interviewType: 'mock', 
-        selectedQuestions 
-      } 
+        selectedQuestions: JSON.stringify(selectedQuestions)
+      }
     });
   };
 

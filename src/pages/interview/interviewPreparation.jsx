@@ -21,21 +21,15 @@ import {
   setAudioLevel, setAllReady, setButtonActive,setInterviewData
 } from '@/redux/slices/interviewSlice';
 import styles from '@/styles/interview/interviewPreparation.module.css';
-import { useSpeechRecognition } from "react-speech-kit";
 
 const InterviewPreparation = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [interviewType, setInterviewType] = useState(null);
-  useEffect(() => {
-    if (router.isReady) {
-      const { interviewType } = router.query;
-      setInterviewType(interviewType);
-    }
-  }, [router.isReady, router.query]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [transcript, setTranscript] = useState("");
-
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
   const {
     cameraReady,
     micReady,
@@ -52,11 +46,47 @@ const InterviewPreparation = () => {
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const animationFrameRef = useRef(null);
-  const { listen, listening, stop } = useSpeechRecognition({
-    onResult: (result) => {
-      setTranscript(result);
-    },
-  });
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { interviewType } = router.query;
+      setInterviewType(interviewType);
+    }
+  }, [router.isReady, router.query]);
+
+  // Web Speech API 설정
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window) {
+      recognitionRef.current = new window.webkitSpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'ko-KR';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        setTranscript(transcript);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    } else {
+      console.error('Web Speech API is not supported in this browser.');
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
    // 카메라와 마이크 준비 상태 체크
   useEffect(() => {
@@ -149,10 +179,24 @@ const InterviewPreparation = () => {
       updateAudioLevel();
   
       dispatch(setMicReady(true));
-      listen();
+      startListening();
     } catch (error) {
       console.error("마이크 접근 에러:", error);
       dispatch(setMicReady(false));
+    }
+  };
+
+  const startListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
     }
   };
    // 리셋 핸들러
