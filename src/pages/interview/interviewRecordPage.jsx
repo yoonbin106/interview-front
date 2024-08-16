@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import { 
   Container, Typography, Box, Button, Card, CardContent, 
   LinearProgress, IconButton, Fade, useTheme, CircularProgress, 
-  Modal, Paper, Grid, Tooltip, Menu, MenuItem
+  Modal, Paper, Grid, Tooltip, Menu, MenuItem,Popover
 } from '@mui/material';
-import { VisibilityOff, Visibility, Help, SettingsBackupRestore, Mic } from '@mui/icons-material';
+import { Help, SettingsBackupRestore, Mic } from '@mui/icons-material';
 import { setInterviewData, loadQuestions } from '../../redux/slices/interviewSlice';
-import styles from '@/styles/interview/InterviewRecordPage.module.css';
-
+import styles from '@/styles/interview/interviewRecordPage.module.css';
+import { useSpeechSynthesis } from "react-speech-kit";
 // 음성 분석을 위한 가상의 API
 const speechAnalysisAPI = {
   analyze: (audioData) => {
@@ -50,14 +50,22 @@ const InterviewRecordPage = () => {
   const [showStartButton, setShowStartButton] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [countdownTime, setCountdownTime] = useState(3);
-  const [hideScript, setHideScript] = useState(false);
+  const [showScript, setShowScript] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { speak, cancel } = useSpeechSynthesis();
 
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
   const [speechFeedback, setSpeechFeedback] = useState({ speed: 'normal', volume: 'good' });
   const [backgroundAnchorEl, setBackgroundAnchorEl] = useState(null);
   const [selectedBackground, setSelectedBackground] = useState('office');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);const [recordingStartTime, setRecordingStartTime] = useState(null);
+  
+  const [showWarning, setShowWarning] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [hintAnchorEl, setHintAnchorEl] = useState(null);
+  const [warningAnchorEl, setWarningAnchorEl] = useState(null);
+
 
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -118,6 +126,7 @@ const InterviewRecordPage = () => {
     setIsRecording(true);
     setTimeLeft(60);
     setShowStartButton(false);
+    setRecordingStartTime(Date.now());
   }, [stream]);
 
   const stopRecording = useCallback(() => {
@@ -132,6 +141,18 @@ const InterviewRecordPage = () => {
       setRecordedChunks((prev) => [...prev, event.data]);
     }
   }, []);
+  useEffect(() => {
+    let timer;
+    if (isRecording) {
+      timer = setTimeout(() => {
+        setIsSubmitEnabled(true);
+      }, 10000); // 10초 후 활성화
+    } else {
+      setIsSubmitEnabled(false);
+    }
+
+    return () => clearTimeout(timer);
+  }, [isRecording]);
 
   const handleStartAnswer = useCallback(() => {
     setShowModal(true);
@@ -144,11 +165,20 @@ const InterviewRecordPage = () => {
         setShowModal(false);
         setStatus('recording');
         startRecording();
+        setRecordingStartTime(Date.now());
+        if (questions[currentQuestionIndex]?.question) {
+          speak({ text: questions[currentQuestionIndex].question, lang: 'ko-KR' });
+        }
       }
     }, 1000);
-  }, [startRecording]);
+  }, [startRecording, speak, questions, currentQuestionIndex]);
 
   const handleSubmitAnswer = useCallback(() => {
+    const currentTime = Date.now();
+    if (recordingStartTime && currentTime - recordingStartTime < 10000) {
+      setWarningAnchorEl(event.currentTarget);
+      setShowWarning(true);
+    } else {
     stopRecording();
     setStatus('uploading');
     setIsSubmitting(true);
@@ -163,7 +193,8 @@ const InterviewRecordPage = () => {
         setStatus('ending');
       }
     }, 3000);
-  }, [stopRecording, currentQuestionIndex, questions.length]);
+  }  
+}, [stopRecording, currentQuestionIndex, questions.length, recordingStartTime]);
 
   const handleNextQuestion = useCallback(() => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -172,10 +203,14 @@ const InterviewRecordPage = () => {
       setTimeLeft(60);
       setShowStartButton(true);
     } else {
+      setStatus('ending');
       router.push('/interview/interviewResult');
     }
   }, [currentQuestionIndex, questions.length, router]);
-
+  const handleCloseWarning = () => {
+    setShowWarning(false);
+    setWarningAnchorEl(null);
+  };
   useEffect(() => {
     if (isRecording && timeLeft > 0) {
       timerRef.current = setInterval(() => {
@@ -238,16 +273,15 @@ const InterviewRecordPage = () => {
       return () => clearInterval(interval);
     }
   }, [isRecording, analyzeSpeech]);
-
-  const handleBackgroundSelect = useCallback((background) => {
-    setSelectedBackground(background);
-    setBackgroundAnchorEl(null);
-  }, []);
-
+  
   const handleHintRequest = useCallback(() => {
-    alert("힌트: 구체적인 예시를 들어 설명해보세요.");
+    setShowScript((prev) => !prev);
   }, []);
 
+  const handleCloseHint = () => {
+    setShowHint(false);
+    setHintAnchorEl(null);
+  };
   const handleGuideClose = () => setShowGuide(false);
 
   return (
@@ -284,22 +318,7 @@ const InterviewRecordPage = () => {
                   </Typography>
                 </Box>
               </Fade>
-              {interviewType === 'mock' && (
-                <Fade in={!hideScript}>
-                  <Box className={styles.scriptOverlay}>
-                    <Box className={styles.scriptHeader}>
-                      <Typography variant="subtitle1">스크립트 및 키워드</Typography>
-                      <IconButton onClick={() => setHideScript(!hideScript)} size="small" className={styles.scriptToggle}>
-                        {hideScript ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </Box>
-                    <Typography variant="body2">{questions[currentQuestionIndex]?.script}</Typography>
-                    <Typography variant="body2" className={styles.keywords}>
-                      키워드: {questions[currentQuestionIndex]?.keywords?.join(', ')}
-                    </Typography>
-                  </Box>
-                </Fade>
-              )}
+             
             </Box>
             <Box className={styles.controlsSection}>
               <Tooltip title="힌트 요청">
@@ -307,27 +326,24 @@ const InterviewRecordPage = () => {
                   <Help />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="배경 선택">
-                <IconButton onClick={(e) => setBackgroundAnchorEl(e.currentTarget)} className={styles.controlButton}>
-                  <SettingsBackupRestore />
-                </IconButton>
-              </Tooltip>
               <Tooltip title="음성 분석">
                 <IconButton onClick={analyzeSpeech} className={styles.controlButton} disabled={!isRecording || isAnalyzing}>
                   <Mic />
                 </IconButton>
               </Tooltip>
-              <Menu
-                anchorEl={backgroundAnchorEl}
-                open={Boolean(backgroundAnchorEl)}
-                onClose={() => setBackgroundAnchorEl(null)}
-              >
-                <MenuItem onClick={() => handleBackgroundSelect('office')}>사무실</MenuItem>
-                <MenuItem onClick={() => handleBackgroundSelect('meeting-room')}>회의실</MenuItem>
-                <MenuItem onClick={() => handleBackgroundSelect('home')}>집</MenuItem>
-              </Menu>
+  
             </Box>
-          </Grid>
+          
+            <Fade in={showScript}>
+              <Paper elevation={3} className={styles.scriptSection}>
+                <Typography variant="h6" gutterBottom>스크립트 및 키워드</Typography>
+                <Typography variant="body2">{questions[currentQuestionIndex]?.script}</Typography>
+                <Typography variant="body2" className={styles.keywords}>
+                  키워드: {questions[currentQuestionIndex]?.keywords?.join(', ')}
+                </Typography>
+              </Paper>
+            </Fade>
+            </Grid>
           <Grid item xs={12} md={4}>
             <Card className={styles.timerCard}>
               <CardContent>
@@ -362,6 +378,29 @@ const InterviewRecordPage = () => {
                       답변 제출
                     </Button>
                   )}
+                  
+                  <Popover
+                      open={showWarning}
+                      anchorEl={warningAnchorEl}
+                      onClose={handleCloseWarning}
+                      anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'center',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                    >
+                    <Box className={styles.warningPopover}>
+                      <Typography>
+                        답변 시간이 10초 이상 되어야 제출 가능합니다.
+                      </Typography>
+                      <Button onClick={handleCloseWarning} color="primary">
+                        확인
+                      </Button>
+                    </Box>
+                  </Popover>
                   {(status === 'uploading' || status === 'ending') && (
                     <Button
                       variant="contained"
@@ -410,7 +449,7 @@ const InterviewRecordPage = () => {
         <Box className={styles.modal}>
           {status === 'generating' && (
             <>
-              <Typography id="modal-title" variant="h6" component="h2">
+              <Typography id="modalTitle" variant="h6" component="h2">
                 면접 문제를 생성중입니다
               </Typography>
               <CircularProgress className={styles.modalProgress} />
@@ -418,10 +457,10 @@ const InterviewRecordPage = () => {
           )}
           {showModal && (
             <>
-              <Typography id="modal-title" variant="h6" component="h2">
+              <Typography id="modalTitle" variant="h6" component="h2">
                 {countdownTime}초 후에 면접이 시작됩니다
               </Typography>
-              <Typography id="modal-description" className={styles.modalDescription}>
+              <Typography id="modalDescription" className={styles.modalDescription}>
                 면접 답변을 준비해주세요
               </Typography>
             </>

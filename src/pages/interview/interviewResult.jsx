@@ -153,7 +153,50 @@ const ResultPage = () => {
       { text: '창의성', value: 48 },
       { text: '책임감', value: 47 },
       { text: '전문성', value: 44 },
-      // ... (기존 키워드)
+      { text: '의사소통', value: 42 },
+      { text: '리더십', value: 40 },
+      { text: '혁신', value: 38 },
+      { text: '분석력', value: 36 },
+      { text: '문제해결', value: 35 },
+      { text: '적응력', value: 33 },
+      { text: '성실성', value: 32 },
+      { text: '도전정신', value: 30 },
+      { text: '목표지향', value: 29 },
+      { text: '유연성', value: 28 },
+      { text: '협업', value: 27 },
+      { text: '자기주도', value: 26 },
+      { text: '긍정적', value: 25 },
+      { text: '전략적사고', value: 24 },
+      { text: '시간관리', value: 23 },
+      { text: '고객중심', value: 22 },
+      { text: '세부지향', value: 21 },
+      { text: '비판적사고', value: 20 },
+      { text: '네트워킹', value: 19 },
+      { text: '성과지향', value: 18 },
+      { text: '윤리의식', value: 17 },
+      { text: '글로벌마인드', value: 16 },
+      { text: '멀티태스킹', value: 15 },
+      { text: '프로젝트관리', value: 14 },
+      { text: '기획력', value: 13 },
+      { text: '실행력', value: 12 },
+      { text: '품질관리', value: 11 },
+      { text: '위기관리', value: 10 },
+      { text: '데이터분석', value: 9 },
+      { text: '협상력', value: 8 },
+      { text: '비전제시', value: 7 },
+      { text: '조직이해', value: 6 },
+      { text: '학습능력', value: 5 },
+      { text: '프레젠테이션', value: 4 },
+      { text: '동기부여', value: 3 },
+      { text: '창의력', value: 2 },
+      { text: '정보수집', value: 1 },
+      { text: '의사결정', value: 1 },
+      { text: '목표설정', value: 1 },
+      { text: '자기개발', value: 1 },
+      { text: '비즈니스통찰력', value: 1 },
+      { text: '감성지능', value: 1 },
+      { text: '체계적사고', value: 1 },
+      { text: '유머감각', value: 1 },
     ],
     keywordAnalysis: {
       topKeywords: ['열정', '팀워크', '창의성'],
@@ -175,8 +218,8 @@ const ResultPage = () => {
   };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-  const fontSizeMapper = word => Math.log2(word.value) * 5;
-  const rotate = word => word.value % 360;
+  const fontSizeMapper = word => Math.log2(word.value) * 4;
+  const rotate = word => word.value % 150;
   return (
     <StyledContainer maxWidth="lg">
       <StyledPaper elevation={3}>
@@ -430,13 +473,13 @@ const ResultPage = () => {
               <StyledCard>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>키워드 분석</Typography>
-                  <div style={{ height: 300 }}>
+                  <div style={{ height: 400 }}>
                     <Cloud
                       data={interviewResult.keywords}
                       fontSizeMapper={fontSizeMapper}
                       rotate={rotate}
-                      width={300}
-                      height={300}
+                      width={150}
+                      height={120}
                     />
                   </div>
                   <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.keywordAnalysis.evaluation}</Typography>
