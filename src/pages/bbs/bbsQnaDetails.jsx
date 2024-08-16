@@ -22,25 +22,7 @@ const BbsQnaDetails = () => {
     const [file, setFile] = useState(null); // 첨부할 파일 상태
     const [category, setCategory] = useState(qnaDetail.category); // 카테고리 상태
 
-    // 답변 입력 핸들러
-    const handleResponseChange = (event) => {
-        setResponse(event.target.value);
-    };
-
-    // 파일 선택 핸들러
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
-
-    // 카테고리 변경 핸들러
-    const handleCategoryChange = (event) => {
-        setCategory(event.target.value);
-    };
-
-    // 답변 제출 핸들러
-    const handleSubmit = () => {
-        alert(`답변을 등록하였습니다. 카테고리가 '${category}'(으)로 변경되었습니다.`);
-    };
+    
 
     // 목록 버튼 클릭 핸들러
     const handleBackToList = () => {
@@ -70,52 +52,7 @@ const BbsQnaDetails = () => {
             </Paper>
 
         <Box mt={4}>
-            <Paper elevation={3} className={styles.qnaDetailsPaper}>
-                <Typography variant="h6" gutterBottom>
-                    관리자 답변
-                </Typography>
-                <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="답변을 입력하세요"
-                        multiline
-                        rows={4}
-                        value={response}
-                        onChange={handleResponseChange}
-                    />
-            <Grid container spacing={2} alignItems="center" className={styles.qnaDetailsGrid}>
-                        <Grid item>
-                            <Button variant="contained" component="label">
-                                파일 첨부
-                                <input type="file" hidden onChange={handleFileChange} />
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            {file && <Typography>{file.name}</Typography>}
-                        </Grid>
-                    </Grid>
-                    <FormControl fullWidth variant="outlined" className={styles.qnaDetailsFormControl}>
-                        <InputLabel id="category-label">카테고리 변경</InputLabel>
-                        <Select
-                            labelId="category-label"
-                            id="category"
-                            value={category}
-                            onChange={handleCategoryChange}
-                            label="카테고리 변경"
-                        >
-                            <MenuItem value="대기">대기</MenuItem>
-                            <MenuItem value="진행중">진행중</MenuItem>
-                            <MenuItem value="완료">완료</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSubmit}
-                        className={styles.qnaDetailsSubmitButton}
-                    >
-                        답변 등록
-                    </Button>
+           
                     <Button
                         variant="outlined"
                         color="primary"
@@ -124,7 +61,7 @@ const BbsQnaDetails = () => {
                     >
                         목록
                     </Button>
-                </Paper>
+                
             </Box>
         </div>
         </div>

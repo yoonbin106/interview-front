@@ -1,7 +1,7 @@
 
 
 import React, { useState } from 'react';
-import PaginationTable from '@/components/adminPage/adminNoticeTable';
+import PaginationTable from '@/components/bbs/bbsTable';
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/BoardTable.module.css';

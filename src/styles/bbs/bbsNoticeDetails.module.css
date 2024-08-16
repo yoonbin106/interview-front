@@ -1,0 +1,51 @@
+/* adminNoticeDetails.module.css */
+.noticeDetailsContainer {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.noticeDetailsPaper {
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+}
+  
+
+.noticeDetailsGrayText {
+    color: gray;
+}
+
+.noticeDetailsHeader {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.noticeDetailsContent {
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.noticeDetailsButtonsContainer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.noticeDetailsSaveButton, .noticeDetailsEditButton {
+    margin-right: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
+
+.noticeDetailsDeleteButton {
+    background-color: red;
+    color: white;
+}
+
+.noticeDetailsNavButtons {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
