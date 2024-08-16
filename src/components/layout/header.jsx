@@ -47,10 +47,16 @@ const Header = observer(() => {
       <div className={styles.header}>
         <div className={styles.headerin}>
           <div>
-            <div className={styles.logo}>모의면접</div>
+            <div
+              className={styles.logo}
+              onClick={() => router.push('/')}
+              style={{ cursor: 'pointer' }}
+            >
+              모의면접
+            </div>
           </div>
-          <nav 
-            className={styles.navLinks} 
+          <nav
+            className={styles.navLinks}
             onMouseEnter={() => setHover(true)}
           >
             <a href="#" className={styles.navLink}>소개</a>
@@ -63,7 +69,7 @@ const Header = observer(() => {
             <div className={styles.userMenu}>
               <div className={styles.userMenuMyPage} >
                 <Dropdown>
-                  <MenuButton 
+                  <MenuButton
                     sx={{ height: 50 }}
                     slots={{ root: ListItemButton }}
                   >
@@ -109,7 +115,7 @@ const Header = observer(() => {
 
         {/* 내려오는 메뉴바 */}
         {hover && (
-          <div 
+          <div
             className={styles.dropMenuFrame}
             onMouseLeave={() => setHover(false)}
           >
