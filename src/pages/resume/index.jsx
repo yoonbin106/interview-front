@@ -17,7 +17,7 @@ function ResumeForm() {
   const [selfIntroduction, setSelfIntroduction] = useState('');
   const [motivation, setMotivation] = useState('');
 
-// 맞춤법 검사 결과를 저장할 상태 및 사이드바 열림 상태
+  // 맞춤법 검사 결과를 저장할 상태 및 사이드바 열림 상태
   const [proofreadResult, setProofreadResult] = useState([]);
   const [isProofreadSidebarOpen, setIsProofreadSidebarOpen] = useState(false);
 
@@ -248,7 +248,7 @@ function ResumeForm() {
           <h2 className={styles.sectionHeader} ref={sectionsRef.personalInfo}>인적사항</h2>
           <div className={styles.profileSection}>
             <div className={`${styles.formGroup} ${styles.profileImageUpload}`}>
-            <label className={styles.label}>프로필 사진</label>
+              <label className={styles.label}>프로필 사진</label>
               <div className={styles.profileImageBox}>
                 {profileImage ? (
                   <img src={profileImage} alt="Profile" className={styles.profileImage} />
@@ -266,7 +266,7 @@ function ResumeForm() {
             <div className={styles.personalInfo}>
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
-                <label className={`${styles.label} ${styles.required}`}>이름</label>
+                  <label className={`${styles.label} ${styles.required}`}>이름</label>
                   <input type="text" placeholder="이름" readOnly />
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
@@ -274,7 +274,7 @@ function ResumeForm() {
                   <input type="text" placeholder="생년월일" readOnly />
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
-                <label className={`${styles.label} ${styles.required}`}>성별</label>
+                  <label className={`${styles.label} ${styles.required}`}>성별</label>
                   <select name="gender" value={formData.gender} onChange={handleChange} className={`${styles.genderSelect} ${styles.select}`}>
                     <option value="">선택하세요</option>
                     <option value="male">남자</option>
@@ -285,27 +285,27 @@ function ResumeForm() {
               </div>
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
-                <label className={`${styles.label} ${styles.required}`}>이메일</label>
+                  <label className={`${styles.label} ${styles.required}`}>이메일</label>
                   <input type="email" className={styles.input} placeholder="이메일" readOnly />
                 </div>
                 <div className={styles.formGroup}>
-                <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
+                  <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
                   <input type="text" className={styles.phoneNumInput} placeholder="휴대전화번호" readOnly />
                 </div>
               </div>
             </div>
           </div>
           <div className={styles.formGroup} style={{ marginTop: '30px' }}>
-          <label className={`${styles.label} ${styles.required}`}>우편번호</label>
+            <label className={`${styles.label} ${styles.required}`}>우편번호</label>
             <input type="text" className={`${styles.zipCodeInput} ${styles.input}`} placeholder="우편번호" readOnly />
           </div>
           <div className={styles.formInline}>
             <div className={styles.formGroup}>
-            <label className={styles.label}>주소</label>
+              <label className={styles.label}>주소</label>
               <input type="text" placeholder="주소" readOnly />
             </div>
             <div className={styles.formGroup}>
-            <label className={styles.label}>상세주소</label>
+              <label className={styles.label}>상세주소</label>
               <input type="text" placeholder="상세주소" readOnly />
             </div>
           </div>
@@ -313,78 +313,78 @@ function ResumeForm() {
           <hr className={styles.hr} />
 
           <h2 className={styles.sectionHeader} ref={sectionsRef.education}>학력</h2>
-            {educationFields.map((field, index) => (
-              <div key={index}>
-     
-                {index > 0 && <div className={styles.formGroupSeparator}></div>}
+          {educationFields.map((field, index) => (
+            <div key={index}>
 
-                <div className={styles.formGroupInlineVertical}>
-                  <div className={styles.formGroupInline}>
-                    <div className={styles.formGroup}>
+              {index > 0 && <div className={styles.formGroupSeparator}></div>}
+
+              <div className={styles.formGroupInlineVertical}>
+                <div className={styles.formGroupInline}>
+                  <div className={styles.formGroup}>
 
                     <label className={styles.label}>학교</label>
-                      <input
-                        type="text"
-                        placeholder="학교 이름 입력"
-                        name="school_name"
-                        className={styles.input}
-                        value={field.school_name}
-                        onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
-                      />
-                    </div>
-                    <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-                    <label className={styles.label}>전공</label>
-                      <input
-                        type="text"
-                        placeholder="전공 입력"
-                        name="major"
-                        className={styles.input}
-                        value={field.major}
-                        onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      placeholder="학교 이름 입력"
+                      name="school_name"
+                      className={styles.input}
+                      value={field.school_name}
+                      onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+                    />
                   </div>
-                  <div className={styles.formGroupInline}>
-                    <div className={styles.formGroup}>
+                  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                    <label className={styles.label}>전공</label>
+                    <input
+                      type="text"
+                      placeholder="전공 입력"
+                      name="major"
+                      className={styles.input}
+                      value={field.major}
+                      onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+                    />
+                  </div>
+                </div>
+                <div className={styles.formGroupInline}>
+                  <div className={styles.formGroup}>
                     <label className={styles.label}>입학</label>
-                      <input
-                        type="month"
-                        placeholder="----년 --월"
-                        name="start_date"
-                        className={styles.input}
-                        value={field.start_date}
-                        onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
-                      />
-                    </div>
-                    <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                    <input
+                      type="month"
+                      placeholder="----년 --월"
+                      name="start_date"
+                      className={styles.input}
+                      value={field.start_date}
+                      onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+                    />
+                  </div>
+                  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
                     <label className={styles.label}>졸업</label>
-                      <input
-                        type="month"
-                        placeholder="----년 --월"
-                        name="end_date"
-                        className={styles.input}
-                        value={field.end_date}
-                        onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
-                      />
-                    </div>
-                    <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                    <input
+                      type="month"
+                      placeholder="----년 --월"
+                      name="end_date"
+                      className={styles.input}
+                      value={field.end_date}
+                      onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+                    />
+                  </div>
+                  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
                     <label className={styles.label}>졸업구분</label>
-                      <select
-                        name="graduation_status"
-                        value={field.graduation_status}
-                        className={styles.select}
-                        onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
-                      >
-                        <option value="">---</option>
-                        <option value="graduated">졸업</option>
-                        <option value="enrolled">재학중</option>
-                        <option value="leaveOfAbsence">휴학</option>
-                      </select>
-                    </div>
+                    <select
+                      name="graduation_status"
+                      value={field.graduation_status}
+                      className={styles.select}
+                      onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+                    >
+                      <option value="">---</option>
+                      <option value="graduated">졸업</option>
+                      <option value="enrolled">재학중</option>
+                      <option value="leaveOfAbsence">휴학</option>
+                    </select>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
           <button type="button" className={`${styles.add} ${styles.button}`} onClick={() => addField(educationFields, setEducationFields, { school_name: '', major: '', start_date: '', end_date: '', graduation_status: '' })}>+ 학력 추가</button>
 
           <hr className={styles.hr} />
@@ -392,13 +392,13 @@ function ResumeForm() {
           <h2 className={styles.sectionHeader} ref={sectionsRef.career}>경력사항</h2>
           {careerFields.map((field, index) => (
             <div key={index}>
-         
+
               {index > 0 && <div className={styles.formGroupSeparator}></div>}
-              
+
               <div className={styles.formGroupInlineVertical}>
                 <div className={styles.formGroupInline}>
                   <div className={styles.formGroup}>
-                  <label className={styles.label}>회사명</label>
+                    <label className={styles.label}>회사명</label>
                     <input
                       type="text"
                       placeholder="회사 이름 입력"
@@ -409,7 +409,7 @@ function ResumeForm() {
                     />
                   </div>
                   <div className={styles.formGroup} style={{ width: '200px', marginLeft: '30px' }}>
-                  <label className={styles.label}>입사날짜</label>
+                    <label className={styles.label}>입사날짜</label>
                     <input
                       type="month"
                       name="join_date"
@@ -419,7 +419,7 @@ function ResumeForm() {
                     />
                   </div>
                   <div className={styles.formGroup} style={{ width: '200px', marginLeft: '30px' }}>
-                  <label className={styles.label}>퇴사날짜</label>
+                    <label className={styles.label}>퇴사날짜</label>
                     <input
                       type="month"
                       name="leave_date"
@@ -431,7 +431,7 @@ function ResumeForm() {
                 </div>
                 <div className={styles.formGroupInline}>
                   <div className={styles.formGroup}>
-                  <label className={styles.label}>직위/직책</label>
+                    <label className={styles.label}>직위/직책</label>
                     <input
                       type="text"
                       placeholder="직위/직책 입력"
@@ -442,7 +442,7 @@ function ResumeForm() {
                     />
                   </div>
                   <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-                  <label className={styles.label}>업무내용</label>
+                    <label className={styles.label}>업무내용</label>
                     <input
                       type="text"
                       placeholder="업무내용 입력"
@@ -460,50 +460,50 @@ function ResumeForm() {
 
           <hr className={styles.hr} />
 
-           <h2 className={styles.sectionHeader} ref={sectionsRef.languages}>외국어</h2>
+          <h2 className={styles.sectionHeader} ref={sectionsRef.languages}>외국어</h2>
           {languageFields.map((field, index) => (
             <div key={index}>
-              
+
               {index > 0 && <div className={styles.formGroupSeparator}></div>}
 
               <div className={styles.formGroupInlineVertical}>
                 <div className={styles.formGroupInline}>
                   <div className={styles.formGroup}>
-              
-                  <label className={styles.label}>외국어</label>
-                <input
-                  type="text"
-                  placeholder="외국어 입력"
-                  name="language"
-                  className={styles.input}
-                  value={field.language}
-                  onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
-                />
+
+                    <label className={styles.label}>외국어</label>
+                    <input
+                      type="text"
+                      placeholder="외국어 입력"
+                      name="language"
+                      className={styles.input}
+                      value={field.language}
+                      onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
+                    />
+                  </div>
+                  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                    <label className={styles.label}>평가등급</label>
+                    <input
+                      type="text"
+                      placeholder="평가등급 입력"
+                      name="language_level"
+                      className={styles.input}
+                      value={field.language_level}
+                      onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
+                    />
+                  </div>
+                  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                    <label className={styles.label}>시험점수</label>
+                    <input
+                      type="text"
+                      placeholder="시험점수 입력"
+                      name="language_score"
+                      className={styles.input}
+                      value={field.language_score}
+                      onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>평가등급</label>
-                <input
-                  type="text"
-                  placeholder="평가등급 입력"
-                  name="language_level"
-                  className={styles.input}
-                  value={field.language_level}
-                  onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
-                />
-              </div>
-              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>시험점수</label>
-                <input
-                  type="text"
-                  placeholder="시험점수 입력"
-                  name="language_score"
-                  className={styles.input}
-                  value={field.language_score}
-                  onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
-                />
-              </div>
-            </div>
-            </div>
             </div>
           ))}
           <button type="button" className={`${styles.add} ${styles.button}`} onClick={() => addField(languageFields, setLanguageFields, { language: '', language_level: '', language_score: '' })}>+ 외국어 추가</button>
@@ -514,41 +514,41 @@ function ResumeForm() {
           {awardFields.map((field, index) => (
             <div key={index}>
 
-              {index > 0  && <div className={styles.formGroupSeparator}></div>}
+              {index > 0 && <div className={styles.formGroupSeparator}></div>}
               <div className={styles.formGroupInline}>
-              <div className={styles.formGroup}>
-              <label className={styles.label}>대회명</label>
-                <input
-                  type="text"
-                  placeholder="대회명 입력"
-                  name="contest_name"
-                  className={styles.input}
-                  value={field.contest_name}
-                  onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
-                />
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>대회명</label>
+                  <input
+                    type="text"
+                    placeholder="대회명 입력"
+                    name="contest_name"
+                    className={styles.input}
+                    value={field.contest_name}
+                    onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
+                  />
+                </div>
+                <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                  <label className={styles.label}>입상내역</label>
+                  <input
+                    type="text"
+                    placeholder="입상내역 입력"
+                    name="contest_award"
+                    className={styles.input}
+                    value={field.contest_award}
+                    onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
+                  />
+                </div>
+                <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                  <label className={styles.label}>수상날짜</label>
+                  <input
+                    type="month"
+                    name="contest_date"
+                    className={styles.input}
+                    value={field.contest_date}
+                    onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
+                  />
+                </div>
               </div>
-              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>입상내역</label>
-                <input
-                  type="text"
-                  placeholder="입상내역 입력"
-                  name="contest_award"
-                  className={styles.input}
-                  value={field.contest_award}
-                  onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
-                />
-              </div>
-              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>수상날짜</label>
-                <input
-                  type="month"
-                  name="contest_date"
-                  className={styles.input}
-                  value={field.contest_date}
-                  onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
-                />
-              </div>
-            </div>
             </div>
           ))}
           <button type="button" className={`${styles.add} ${styles.button}`} onClick={() => addField(awardFields, setAwardFields, { contest_name: '', contest_award: '', contest_date: '' })}>+ 입상경력 추가</button>
@@ -560,45 +560,45 @@ function ResumeForm() {
             <div key={index} >
               {index > 0 && <div className={styles.formGroupSeparator}></div>}
               <div className={styles.formGroupInline}>
-              <div className={styles.formGroup}>
-              <label className={styles.label}>자격증명</label>
-                <input
-                  type="text"
-                  placeholder="자격증명 입력"
-                  name="certificate_name"
-                  className={styles.input}
-                  value={field.certificate_name}
-                  onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
-                />
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>자격증명</label>
+                  <input
+                    type="text"
+                    placeholder="자격증명 입력"
+                    name="certificate_name"
+                    className={styles.input}
+                    value={field.certificate_name}
+                    onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
+                  />
+                </div>
+                <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                  <label className={styles.label}>발급기관</label>
+                  <input
+                    type="text"
+                    placeholder="발급기관 입력"
+                    name="certificate_issuer"
+                    className={styles.input}
+                    value={field.certificate_issuer}
+                    onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
+                  />
+                </div>
+                <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+                  <label className={styles.label}>취득날짜</label>
+                  <input
+                    type="month"
+                    name="certificate_date"
+                    className={styles.input}
+                    value={field.certificate_date}
+                    onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
+                  />
+                </div>
               </div>
-              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>발급기관</label>
-                <input
-                  type="text"
-                  placeholder="발급기관 입력"
-                  name="certificate_issuer"
-                  className={styles.input}
-                  value={field.certificate_issuer}
-                  onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
-                />
-              </div>
-              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>취득날짜</label>
-                <input
-                  type="month"
-                  name="certificate_date"
-                  className={styles.input}
-                  value={field.certificate_date}
-                  onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
-                />
-              </div>
-            </div>
             </div>
           ))}
           <button type="button" className={`${styles.add} ${styles.button}`} onClick={() => addField(certificateFields, setCertificateFields, { certificate_name: '', certificate_issuer: '', certificate_date: '' })}>+ 자격증 추가</button>
 
           <hr className={styles.hr} />
-          
+
           <div className={styles.formGroup} ref={sectionsRef.selfIntroduction}>
             <div className={styles.sectionHeaderContainer}>
               <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>자기소개</h2>
@@ -652,28 +652,28 @@ function ResumeForm() {
           <h2 className={styles.sectionHeader} ref={sectionsRef.portfolio}>포트폴리오</h2>
           {portfolioFields.map((field, index) => (
             <div key={index} >
-              {index > 0 && <div className={styles.formGroupSeparator}></div>}  
+              {index > 0 && <div className={styles.formGroupSeparator}></div>}
               <div className={styles.formGroupInline}>
-              <div className={styles.formGroup}>
-              <label className={styles.label}>파일 업로드</label>
-                <input 
-                  type="file" 
-                  name={`portfolio_file_${index}`}
-                  className={styles.input} // 각 파일 입력 필드에 고유한 name 부여
-                />
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>파일 업로드</label>
+                  <input
+                    type="file"
+                    name={`portfolio_file_${index}`}
+                    className={styles.input} // 각 파일 입력 필드에 고유한 name 부여
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>포트폴리오 설명</label>
+                  <input
+                    type="text"
+                    placeholder="포트폴리오 설명 입력"
+                    name="portfolio_description"
+                    className={styles.input}
+                    value={field.portfolio_description}
+                    onChange={(e) => handleFieldChange(index, e, portfolioFields, setPortfolioFields)}
+                  />
+                </div>
               </div>
-              <div className={styles.formGroup}>
-              <label className={styles.label}>포트폴리오 설명</label>
-                <input
-                  type="text"
-                  placeholder="포트폴리오 설명 입력"
-                  name="portfolio_description"
-                  className={styles.input}
-                  value={field.portfolio_description}
-                  onChange={(e) => handleFieldChange(index, e, portfolioFields, setPortfolioFields)}
-                />
-              </div>
-            </div>
             </div>
           ))}
           <button type="button" className={`${styles.add} ${styles.button}`} onClick={() => addField(portfolioFields, setPortfolioFields, { portfolio_description: '' })}>+ 포트폴리오 추가</button>
@@ -683,7 +683,7 @@ function ResumeForm() {
           <h2 className={styles.sectionHeader} ref={sectionsRef.military}>병역사항</h2>
           <div className={`${styles.formGroupInline} ${styles.alignItemsCenter}`}>
             <div className={styles.formGroup}>
-            <label className={styles.label}>복무구분</label>
+              <label className={styles.label}>복무구분</label>
               <select
                 name="military_service_type"
                 className={styles.select}
@@ -698,7 +698,7 @@ function ResumeForm() {
               </select>
             </div>
             <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-            <label className={styles.label}>복무 시작</label>
+              <label className={styles.label}>복무 시작</label>
               <input
                 type="month"
                 name="military_start_date"
@@ -708,7 +708,7 @@ function ResumeForm() {
               />
             </div>
             <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-            <label className={styles.label}>복무 종료</label>
+              <label className={styles.label}>복무 종료</label>
               <input
                 type="month"
                 name="military_end_date"
@@ -718,7 +718,7 @@ function ResumeForm() {
               />
             </div>
             <div className={styles.formGroup} style={{ marginLeft: '30px', width: '130px' }}>
-            <label className={styles.label}>계급(직급)</label>
+              <label className={styles.label}>계급(직급)</label>
               <input
                 type="text"
                 placeholder="계급 입력"
@@ -730,13 +730,13 @@ function ResumeForm() {
             </div>
           </div>
 
-          
+
           <hr className={styles.hr} />
 
           <h2 className={styles.sectionHeader} ref={sectionsRef.workConditions}>희망 근무조건</h2>
           <div className={styles.formGroupInline}>
             <div className={styles.formGroup}>
-            <label className={styles.label}>희망 연봉</label>
+              <label className={styles.label}>희망 연봉</label>
               <input
                 type="text"
                 placeholder="희망 연봉 입력 (원)"
@@ -747,7 +747,7 @@ function ResumeForm() {
               />
             </div>
             <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-            <label className={styles.label}>희망 입사날짜</label>
+              <label className={styles.label}>희망 입사날짜</label>
               <input
                 type="month"
                 name="desired_start_date"
@@ -770,30 +770,30 @@ function ResumeForm() {
 
       {/* 맞춤법 검사 사이드바 */}
       {isProofreadSidebarOpen && (
-    <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
-      <div className={proofreadStyles.sidebarHeader}>
-        <h3>맞춤법 검사 결과</h3>
-        <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
-          <CloseIcon />
-        </button>
-      </div>
-      <div className={proofreadStyles.sidebarContent}>
-        {proofreadResult.length > 0 ? (
-          <ul>
-            {proofreadResult.map((item, index) => (
-              <li key={index} className={proofreadStyles.resultItem}>
-                <p><strong>잘못된 표현 :</strong> {item.token}</p>
-                <p><strong>수정 제안 :</strong> {item.suggestions.join(', ')}</p>
-                <p><strong>수정 이유 :</strong> {item.info}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>맞춤법 검사 결과가 없습니다.</p>
-        )}
-      </div>
-    </div>
-  )}
+        <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
+          <div className={proofreadStyles.sidebarHeader}>
+            <h3>맞춤법 검사 결과</h3>
+            <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
+              <CloseIcon />
+            </button>
+          </div>
+          <div className={proofreadStyles.sidebarContent}>
+            {proofreadResult.length > 0 ? (
+              <ul>
+                {proofreadResult.map((item, index) => (
+                  <li key={index} className={proofreadStyles.resultItem}>
+                    <p><strong>잘못된 표현 :</strong> {item.token}</p>
+                    <p><strong>수정 제안 :</strong> {item.suggestions.join(', ')}</p>
+                    <p><strong>수정 이유 :</strong> {item.info}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>맞춤법 검사 결과가 없습니다.</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
