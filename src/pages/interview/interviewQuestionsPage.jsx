@@ -12,7 +12,7 @@ import { setActiveTab, toggleSelectedQuestion, clearSelectedQuestions } from '..
 import TabButtons from '@/components/interview/tabButton';
 import QuestionList from '@/components/interview/questionList';
 import SelectedQuestions from '@/components/interview/selectedQuestions';
-import styles from '@/styles/interview/InterviewQuestionsPage.module.css';
+import styles from '@/styles/interview/interviewQuestionsPage.module.css';
 
 const InterviewQuestionsPage = () => {
   const dispatch = useDispatch();
@@ -25,11 +25,12 @@ const InterviewQuestionsPage = () => {
   };
 
   const handleSelectQuestion = () => {
-    router.push('/interview/interviewRecordPage', { 
-      state: { 
+    router.push({
+      pathname: '/interview/interviewRecordPage',
+      query: { 
         interviewType: 'mock', 
-        selectedQuestions 
-      } 
+        selectedQuestions: JSON.stringify(selectedQuestions)
+      }
     });
   };
 

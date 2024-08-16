@@ -10,7 +10,7 @@ import {
   Fade
 } from '@mui/material';
 import InterviewOption from '@/components/interview/interviewOption';
-import styles from '@/styles/interview/InterviewSelectPage.module.css';
+import styles from '@/styles/interview/interviewSelectPage.module.css';
 
 const InterviewSelectPage = () => {
   const router = useRouter();

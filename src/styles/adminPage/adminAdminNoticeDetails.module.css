@@ -1,0 +1,51 @@
+/* adminAdminNoticeDetails.module.css */
+.adminNoticeDetailsContainer {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.adminNoticeDetailsPaper {
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+}
+  
+
+.adminNoticeDetailsGrayText {
+    color: gray;
+}
+
+.adminNoticeDetailsHeader {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.adminNoticeDetailsContent {
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.adminNoticeDetailsButtonsContainer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.adminNoticeDetailsSaveButton, .adminNoticeDetailsEditButton {
+    margin-right: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
+
+.adminNoticeDetailsDeleteButton {
+    background-color: red;
+    color: white;
+}
+
+.adminNoticeDetailsNavButtons {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}

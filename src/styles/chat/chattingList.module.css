@@ -1,0 +1,84 @@
+.chattingMessages {
+    overflow-y: auto;
+    /* padding: 1rem; */
+}
+
+.messageContainer {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.messageContainer.user {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.userAvatar,
+.botAvatar {
+    font-size: 2rem;
+    /* 아이콘 크기를 키웁니다 */
+    display: flex;
+    align-items: flex-end;
+}
+
+.botAvatar {
+    margin-right: 0.5rem;
+}
+
+.messageContent {
+    max-width: 70%;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+}
+
+.messageContainer.user .messageContent {
+    background-color: #e7f3ff;
+    color: #0056b3;
+}
+
+.messageContainer.bot .messageContent {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+
+
+
+
+
+.chattingListContainer {
+    /* border: solid 1px black; */
+    padding-top: 1px;
+}
+
+.chattingList:hover {
+    /* border: solid 1px black; */
+    background-color: #f0f0f0;
+}
+
+.chattingList {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: solid 1px rgb(206, 206, 206);
+}
+
+.chattingListProfile {
+    margin-right: 20px; /* 프로필과 콘텐츠 사이의 간격 조절 */
+}
+
+.chattingListContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chattingListTitle {
+    font-weight: bold;
+    margin-bottom: 4px; /* 제목과 마지막 메시지 사이의 간격 조절 */
+}
+
+.chattingListLastMessage {
+    color: #666; /* 마지막 메시지의 색상 조정 */
+    font-size: 14px;
+}

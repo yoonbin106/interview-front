@@ -8,6 +8,7 @@ class UserStore {
   birth = '';
   address = '';
   profile = '';
+  id = '';
 
   constructor() {
     makeAutoObservable(this);
@@ -58,6 +59,13 @@ class UserStore {
     }
   }
 
+  setId(id) {
+    this.id = id;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('id', id);
+    }
+  }
+
   setProfile(profile) {
     this.profile = profile;
     if (typeof window !== 'undefined') {
@@ -74,6 +82,7 @@ class UserStore {
       this.birth = localStorage.getItem('birth') || '';
       this.address = localStorage.getItem('address') || '';
       this.profile = localStorage.getItem('profile') || '';
+      this.id = localStorage.getItem('id') || '';
     }
   }
 }

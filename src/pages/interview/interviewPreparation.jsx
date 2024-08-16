@@ -20,20 +20,16 @@ import {
   setCameraReady, setMicReady, setStream, setCountdown, setCurrentStep,
   setAudioLevel, setAllReady, setButtonActive,setInterviewData
 } from '@/redux/slices/interviewSlice';
-import styles from '@/styles/interview/InterviewPreparation.module.css';
+import styles from '@/styles/interview/interviewPreparation.module.css';
 
 const InterviewPreparation = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [interviewType, setInterviewType] = useState(null);
-  useEffect(() => {
-    if (router.isReady) {
-      const { interviewType } = router.query;
-      setInterviewType(interviewType);
-    }
-  }, [router.isReady, router.query]);
   const [isModalOpen, setModalOpen] = useState(false);
-
+  const [transcript, setTranscript] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
   const {
     cameraReady,
     micReady,
@@ -50,6 +46,47 @@ const InterviewPreparation = () => {
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const animationFrameRef = useRef(null);
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { interviewType } = router.query;
+      setInterviewType(interviewType);
+    }
+  }, [router.isReady, router.query]);
+
+  // Web Speech API 설정
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window) {
+      recognitionRef.current = new window.webkitSpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'ko-KR';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        setTranscript(transcript);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    } else {
+      console.error('Web Speech API is not supported in this browser.');
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
    // 카메라와 마이크 준비 상태 체크
   useEffect(() => {
@@ -142,9 +179,24 @@ const InterviewPreparation = () => {
       updateAudioLevel();
   
       dispatch(setMicReady(true));
+      startListening();
     } catch (error) {
       console.error("마이크 접근 에러:", error);
       dispatch(setMicReady(false));
+    }
+  };
+
+  const startListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
     }
   };
    // 리셋 핸들러
@@ -158,6 +210,8 @@ const InterviewPreparation = () => {
     dispatch(setAudioLevel(0));
     dispatch(setAllReady(false));
     dispatch(setButtonActive(false));
+    setTranscript(''); // Reset transcript
+    stop();  // Stop listening for speech
   };
   // 완료 핸들러
   const handleComplete = () => {
@@ -262,10 +316,18 @@ const InterviewPreparation = () => {
                 <Box className={styles.audioMeter}>
                   <Box
                     className={styles.audioLevel}
-                    style={{ height: `${audioLevel * 100}%` }}
+                    style={{ width: `${audioLevel * 100}%` }}
                   />
                 </Box>
               )}
+              <Typography variant="h6" className={styles.transcriptTitle}>
+              <MicIcon color="primary" /> 음성 인식 결과
+            </Typography>
+            <Box className={styles.transcriptBox}>
+              <Typography variant="body1">
+                  {transcript || "'안녕하세요' 라고 말해보세요."}
+                </Typography>
+            </Box>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>

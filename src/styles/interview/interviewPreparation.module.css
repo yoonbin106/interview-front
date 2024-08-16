@@ -110,26 +110,54 @@
   font-weight: 500;
 }
 
+.transcriptBox {
+  border: 2px solid #007bff;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  margin-top: 20px;
+}
+
 .audioMeter {
-  width: 20px;
-  height: 100px;
-  background-color: #E0E0E0;
-  margin-top: 1rem;
-  border-radius: 10px;
+  width: 55%;
+  height: 10px;
+  background-color: #e9ecef;
+  border-radius: 5px;
   overflow: hidden;
+  margin-top: 10px;
 }
 
 .audioLevel {
-  width: 100%;
-  background-color: #00C853;
-  transition: height 0.1s;
+  height: 100%;
+  background-color: #28a745;
+  transition: width 0.1s ease;
 }
 
+.transcriptSection {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #F3F4F6;
+}
+
+.transcriptTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #1976D2;
+}
+
+.transcriptBox {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-y: auto;
+  border: 1px solid #E0E0E0;
+}
 .tipSection {
   margin-top: 3rem;
   background-color: #E3F2FD;
 }
-
 .tipTitle {
   padding: 1rem;
 }

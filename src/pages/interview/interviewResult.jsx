@@ -38,7 +38,8 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import Cloud from "react-d3-cloud";
+import AnimatedWordCloud from "components/interview/animatedWordCloud";
+import styles from "styles/interview/InterviewResult.module.css";
 
 // 스타일드 컴포넌트 정의
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -153,7 +154,50 @@ const ResultPage = () => {
       { text: '창의성', value: 48 },
       { text: '책임감', value: 47 },
       { text: '전문성', value: 44 },
-      // ... (기존 키워드)
+      { text: '의사소통', value: 42 },
+      { text: '리더십', value: 40 },
+      { text: '혁신', value: 38 },
+      { text: '분석력', value: 36 },
+      { text: '문제해결', value: 35 },
+      { text: '적응력', value: 33 },
+      { text: '성실성', value: 32 },
+      { text: '도전정신', value: 30 },
+      { text: '목표지향', value: 29 },
+      { text: '유연성', value: 28 },
+      { text: '협업', value: 27 },
+      { text: '자기주도', value: 26 },
+      { text: '긍정적', value: 25 },
+      { text: '전략적사고', value: 24 },
+      { text: '시간관리', value: 23 },
+      { text: '고객중심', value: 22 },
+      { text: '세부지향', value: 21 },
+      { text: '비판적사고', value: 20 },
+      { text: '네트워킹', value: 19 },
+      { text: '성과지향', value: 18 },
+      { text: '윤리의식', value: 17 },
+      { text: '글로벌마인드', value: 16 },
+      { text: '멀티태스킹', value: 15 },
+      { text: '프로젝트관리', value: 14 },
+      { text: '기획력', value: 13 },
+      { text: '실행력', value: 12 },
+      { text: '품질관리', value: 11 },
+      { text: '위기관리', value: 10 },
+      { text: '데이터분석', value: 9 },
+      { text: '협상력', value: 8 },
+      { text: '비전제시', value: 7 },
+      { text: '조직이해', value: 6 },
+      { text: '학습능력', value: 5 },
+      { text: '프레젠테이션', value: 4 },
+      { text: '동기부여', value: 3 },
+      { text: '창의력', value: 2 },
+      { text: '정보수집', value: 1 },
+      { text: '의사결정', value: 1 },
+      { text: '목표설정', value: 1 },
+      { text: '자기개발', value: 1 },
+      { text: '비즈니스통찰력', value: 1 },
+      { text: '감성지능', value: 1 },
+      { text: '체계적사고', value: 1 },
+      { text: '유머감각', value: 1 },
     ],
     keywordAnalysis: {
       topKeywords: ['열정', '팀워크', '창의성'],
@@ -175,53 +219,96 @@ const ResultPage = () => {
   };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-  const fontSizeMapper = word => Math.log2(word.value) * 5;
-  const rotate = word => word.value % 360;
+  // AI 종합평가 분석 및 피드백
+  const generateAIFeedback = (scores) => {
+    let feedback = "AI 종합 평가:\n";
+    scores.forEach(item => {
+      if (item.score >= 90) {
+        feedback += `${item.name}: 탁월한 수준입니다. 계속해서 이 강점을 발휘하세요.\n`;
+      } else if (item.score >= 80) {
+        feedback += `${item.name}: 우수한 수준입니다. 조금만 더 노력하면 탁월해질 수 있습니다.\n`;
+      } else if (item.score >= 70) {
+        feedback += `${item.name}: 양호한 수준입니다. 개선의 여지가 있으니 더 노력해보세요.\n`;
+      } else {
+        feedback += `${item.name}: 개선이 필요한 영역입니다. 집중적인 노력이 요구됩니다.\n`;
+      }
+    });
+    return feedback;
+  };
+
+  // 성격 특성 분석
+  const analyzePersonality = (data) => {
+    let analysis = "성격 특성 분석:\n";
+    data.forEach(trait => {
+      if (trait.score > 80) {
+        analysis += `${trait.name}: 매우 높음. `;
+      } else if (trait.score > 60) {
+        analysis += `${trait.name}: 높음. `;
+      } else if (trait.score > 40) {
+        analysis += `${trait.name}: 보통. `;
+      } else {
+        analysis += `${trait.name}: 낮음. `;
+      }
+    });
+    analysis += "\n\n요약: ";
+    if (data.find(t => t.name === '외향성').score > 70) {
+      analysis += "외향적이고 ";
+    } else {
+      analysis += "내향적이며 ";
+    }
+    if (data.find(t => t.name === '개방성').score > 70) {
+      analysis += "새로운 경험을 즐기는 ";
+    }
+    if (data.find(t => t.name === '성실성').score > 70) {
+      analysis += "책임감 있고 조직적인 ";
+    }
+    if (data.find(t => t.name === '친화성').score > 70) {
+      analysis += "협조적이고 타인을 배려하는 ";
+    }
+    if (data.find(t => t.name === '신경성').score < 30) {
+      analysis += "정서적으로 안정된 ";
+    }
+    analysis += "성격입니다.";
+    return analysis;
+  };
+
   return (
-    <StyledContainer maxWidth="lg">
-      <StyledPaper elevation={3}>
-        <Typography variant="h4" gutterBottom align="center" style={{ color: '#0D47A1', fontWeight: 'bold' }}>
+    <Container maxWidth="lg" className={styles.container}>
+      <Paper elevation={3} className={styles.paper}>
+        <Typography variant="h4" gutterBottom align="center"  className={styles.title}>
           AI 면접 결과 분석
         </Typography>
-        <StyledTabs value={activeTab} onChange={handleTabChange} centered>
-          <Tab label="AI종합평가" />
-          <Tab label="성격특성" />
-          <Tab label="음성 및 시선분석" />
-          <Tab label="키워드 및 시간" />
-        </StyledTabs>
-      </StyledPaper>
+        <Tabs value={activeTab} onChange={handleTabChange} centered className={styles.tabs}>
+          <Tab label="AI종합평가" className={styles.tab} />
+          <Tab label="성격특성" className={styles.tab}/>
+          <Tab label="음성 및 시선분석" className={styles.tab}/>
+          <Tab label="키워드 및 시간" className={styles.tab}/>
+        </Tabs>
+      </Paper>
 
       <Grid container spacing={4}>
         {/* AI 종합평가 탭 */}
         {activeTab === 0 && (
           <>
             <Grid item xs={12} md={4}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom align="center">
                     전체 등급
                   </Typography>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height={150}
-                  >
-                    <Typography
-                      variant="h2"
-                      style={{ color: "#1976D2", fontWeight: "bold" }}
-                    >
+                  <Box className={styles.gradeBox}>
+                    <Typography variant="h2" className={styles.gradeNumber}>
                       {interviewResult.aiEvaluation.grade}
                     </Typography>
-                    <Typography variant="h6" style={{ marginLeft: 8 }}>
+                    <Typography variant="h6" className={styles.gradeText}>
                       / 5등급 중
                     </Typography>
                   </Box>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
             <Grid item xs={12} md={4}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom align="center">
                     종합 평가
@@ -253,10 +340,10 @@ const ResultPage = () => {
                     </Box>
                   </Box>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
             <Grid item xs={12} md={4}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom align="center">
                     추천 지수
@@ -275,10 +362,10 @@ const ResultPage = () => {
                     </Typography>
                   </Box>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
             <Grid item xs={12}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     평가 항목별 점수
@@ -293,8 +380,11 @@ const ResultPage = () => {
                       <Bar dataKey="score" fill="#8884d8" />
                     </BarChart>
                   </ResponsiveContainer>
+                  <Typography variant="body1" style={{ marginTop: '10px' }}>
+                    {generateAIFeedback(interviewResult.aiEvaluation.evaluationItems)}
+                  </Typography>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
           </>
         )}
@@ -303,7 +393,7 @@ const ResultPage = () => {
         {activeTab === 1 && (
           <>
             <Grid item xs={12} md={6}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>성격 특성</Typography>
                   {interviewResult.personalityTraits.map((trait) => (
@@ -320,12 +410,15 @@ const ResultPage = () => {
                     </Box>
                   ))}
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>성격 분석</Typography>
+                  <Typography variant="body1" style={{ whiteSpace: 'pre-line' }}>
+                    {analyzePersonality(interviewResult.personalityTraits)}
+                  </Typography>
                   <Typography variant="subtitle1">적합한 직종:</Typography>
                   <ul>
                     {interviewResult.personalityAnalysis.suitableJobs.map((job, index) => (
@@ -345,7 +438,7 @@ const ResultPage = () => {
                     ))}
                   </ul>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
           </>
         )}
@@ -354,7 +447,7 @@ const ResultPage = () => {
         {activeTab === 2 && (
           <>
             <Grid item xs={12} md={6}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>시선 처리</Typography>
                   <ResponsiveContainer width="100%" height={200}>
@@ -368,13 +461,13 @@ const ResultPage = () => {
                   <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.gazeAnalysis.evaluation}</Typography>
                   <Typography variant="body2">{interviewResult.gazeAnalysis.feedback}</Typography>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>표정 분석</Typography>
-                  <ResponsiveContainer width="100%" height={200}>
+                  <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
                       <Pie
                         data={[
@@ -399,10 +492,10 @@ const ResultPage = () => {
                   <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.expressionAnalysis.evaluation}</Typography>
                   <Typography variant="body2">{interviewResult.expressionAnalysis.feedback}</Typography>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
             <Grid item xs={12}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>음성 분석</Typography>
                   <ResponsiveContainer width="100%" height={200}>
@@ -418,7 +511,7 @@ const ResultPage = () => {
                   <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.voiceAnalysis.evaluation}</Typography>
                   <Typography variant="body2">{interviewResult.voiceAnalysis.feedback}</Typography>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
           </>
         )}
@@ -427,25 +520,25 @@ const ResultPage = () => {
         {activeTab === 3 && (
           <>
             <Grid item xs={12} md={6}>
-              <StyledCard>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>키워드 분석</Typography>
-                  <div style={{ height: 300 }}>
-                    <Cloud
-                      data={interviewResult.keywords}
-                      fontSizeMapper={fontSizeMapper}
-                      rotate={rotate}
-                      width={300}
-                      height={300}
-                    />
-                  </div>
-                  <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.keywordAnalysis.evaluation}</Typography>
-                  <Typography variant="body2">{interviewResult.keywordAnalysis.feedback}</Typography>
-                </CardContent>
-              </StyledCard>
-            </Grid>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>키워드 분석</Typography>
+                <AnimatedWordCloud
+                  data={interviewResult.keywords}
+                  width="100%"
+                  height={300}
+                />
+                <Typography variant="subtitle1" gutterBottom>
+                  평가: {interviewResult.keywordAnalysis.evaluation}
+                </Typography>
+                <Typography variant="body2">
+                  {interviewResult.keywordAnalysis.feedback}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
             <Grid item xs={12} md={6}>
-              <StyledCard>
+              <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>답변 시간 분석</Typography>
                   <ResponsiveContainer width="100%" height={300}>
@@ -459,7 +552,7 @@ const ResultPage = () => {
                   <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.answerTimeAnalysis.evaluation}</Typography>
                   <Typography variant="body2">{interviewResult.answerTimeAnalysis.feedback}</Typography>
                 </CardContent>
-              </StyledCard>
+              </Card>
             </Grid>
           </>
         )}
@@ -488,7 +581,7 @@ const ResultPage = () => {
           메인으로 돌아가기
         </Button>
       </Box>
-    </StyledContainer>
+    </Container>
   );
 };
 

@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import styles from '@/styles/adminPage/adminPaginationTable.module.css';
+import styles from '@/styles/adminPage/adminAdminNoticeTable.module.css';
 
 export default function AdminNoticeTable({ rows }) {
   const [page, setPage] = React.useState(0);

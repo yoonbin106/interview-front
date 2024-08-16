@@ -16,12 +16,22 @@
   box-sizing: border-box;
 }
 
+.modalText{
+  color: #343a40;
+  line-height: 1.5;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
 .modalCancelButton {
   background-color: #6c757d; /* 배경색 수정 */
   color: #fff;
   border: 1px solid #6c757d;
   transition: background-color 150ms ease, border-color 150ms ease;
-  font-size: 13px !important;
+  font-size: 15px !important;
 }
 
 .modalCancelButton:hover {
@@ -43,6 +53,8 @@
   border: 1px solid #007bff;
   transition: background-color 150ms ease, border-color 150ms ease;
   font-size: 15px !important;
+  width: 110px;
+  height: 45px;
 
 }
 
@@ -58,4 +70,14 @@
 .modalConfirmButton:focus-visible {
   outline: none;
   box-shadow: 0 0 0 4px rgba(153, 204, 255, 0.6);
+}
+.modalListButton{
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  transition: background-color 150ms ease, border-color 150ms ease;
+  font-size: 15px !important;
+  width: 110px;
+  height: 45px;
 }

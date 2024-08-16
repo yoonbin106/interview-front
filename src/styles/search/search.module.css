@@ -6,9 +6,6 @@
     text-align: center;
     margin-bottom: 20px;
     position: relative; /* 내부 위치 지정 */
-    width: calc(100% - 40px); /* 전체에서 20px씩 양쪽으로 줄여서 가로 크기 조정 */
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .search-container h2 {
