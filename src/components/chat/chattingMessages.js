@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { RiUserHeartFill } from "react-icons/ri";
+import Avatar from '@mui/material/Avatar';
 import styles from '../../styles/chat/chattingMessages.module.css';
 
-const ChattingMessages = ({ messages }) => {
+const ChattingMessages = ({ messages, userInfo }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -12,17 +12,84 @@ const ChattingMessages = ({ messages }) => {
   return (
     <div className={styles.chattingMessages}>
       {messages.map((message, index) => (
-        <div key={index} className={`${styles.messageContainer} ${styles[message.sender]}`}>
-          {message.sender === 'user' && <div className={styles.userAvatar} aria-hidden="true">
 
-          </div>}
-          {message.sender === 'bot' && <div className={styles.botAvatar} aria-hidden="true">
-            <RiUserHeartFill />
-          </div>}
-          <div className={styles.messageContent}>
-            <p>{message.text}</p>
+        message.sender === userInfo.username ? (
+          <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
+            <div className={styles.messageContent}>
+              <p>{message.text}</p>
+            </div>
+          </div>
+        ) : (
+          <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
+
+            <div className={styles.recieverAvatar} aria-hidden="true">
+              <Avatar>Y</Avatar>
+            </div>
+            <div className={styles.messageContent}>
+                <p>{message.text}</p>
+              </div>
+
+{/*               
+            <div className={styles.othersMessageContent}>
+              <div className={styles.othersMessageSender}>{message.sender}</div>
+              
+            </div> */}
+
+
+            {/*             
+            <div className={styles.othersMessageSender}>{message.sender}</div>
+            <div className={styles.messageContent}>
+              <p>{message.text}</p>
+            </div> */}
 
             {/* 
+
+          
+              <div className={styles.recieverAvatar} aria-hidden="true">
+                <Avatar>Y</Avatar>
+              </div>
+              <div className={styles.othersMessageContent}>
+                <div className={styles.othersMessageSender}>{message.sender}</div>
+                <div className={styles.messageContent}>
+                  <p>{message.text}</p>
+                </div>
+              </div>
+            */}
+
+          </div>
+        )
+
+
+        // <div key={index} className={`${styles.messageContainer} ${message.sender === userInfo.username ? styles.my : styles.others}`}>
+        //   {message.sender !== userInfo.username && <div className={styles.recieverAvatar} aria-hidden="true">
+        //   <Avatar>Y</Avatar>
+        //   {/* <div>{message.sender}</div> */}
+        //   </div>}
+        //   <div className={styles.messageContent}>
+        //     <p>{message.text}</p>
+
+        //   </div>
+        // </div>
+
+
+
+      ))}
+
+      <div ref={messagesEndRef} />
+    </div>
+  );
+};
+
+{/* 
+          // 텍스트 입력중 애니메이션
+          <div className={`${styles.messageContent} ${styles.generating}`}>
+            <span className={styles.dot}></span>
+            <span className={styles.dot}></span>
+            <span className={styles.dot}></span>
+          </div>
+          */}
+
+{/* 
             // 핱트 벝튼
             {message.sender === 'bot' && message.answerId && (
               <div className={styles.messageActions}>
@@ -41,25 +108,5 @@ const ChattingMessages = ({ messages }) => {
               </div>
             )}
             */}
-
-
-
-          </div>
-          {/* 
-          // 텍스트 입력중 애니메이션
-          <div className={`${styles.messageContent} ${styles.generating}`}>
-            <span className={styles.dot}></span>
-            <span className={styles.dot}></span>
-            <span className={styles.dot}></span>
-          </div>
-          */}
-
-        </div>
-      ))}
-
-      <div ref={messagesEndRef} />
-    </div>
-  );
-};
 
 export default ChattingMessages;

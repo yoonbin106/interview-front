@@ -9,36 +9,45 @@
     margin-bottom: 1rem;
   }
   
-  .messageContainer.user {
+  .messageContainer.my {
     flex-direction: row-reverse; 
     justify-content: flex-start; 
   }
   
-  .userAvatar, .botAvatar {
-    font-size: 2rem; /* 아이콘 크기를 키웁니다 */
-    display: flex;
-    align-items: flex-end;
-  }
-  
-  .userAvatar {
-    margin-left: 0.5rem; 
-  }
-  .botAvatar {
-    margin-right: 0.5rem;
-  }
+
   
   .messageContent {
     max-width: 70%;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
   }
+
+  .recieverAvatar {
+    font-size: 2rem;
+    display: flex;
+    align-items: flex-end;
+    margin-top: 6px;
+    margin-right: 0.5rem;
+  }
+
+  .othersMessageContent {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .othersMessageSender {
+    font-weight: bold;
+    margin-left: 2px;
+    margin-bottom: 3px; 
+    color: #333; 
+  }
   
-  .messageContainer.user .messageContent {
+  .messageContainer.my .messageContent {
     background-color: #e7f3ff;
     color: #0056b3;
   }
   
-  .messageContainer.bot .messageContent {
+  .messageContainer.others .messageContent {
     background-color: #f3f4f6;
     color: #1f2937;
   }

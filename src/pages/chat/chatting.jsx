@@ -17,22 +17,18 @@ const Chatting = ({ closeChatting }) => {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isDarkMode, setIsDarkMode] = useState(false);
-
-    const [client, setClient] = useState(null);
-
     const [isChatOpen, setIsChatOpen] = useState(false);
-
     const [userInfo, setUserInfo] = useState({
         username: '',
         email: '',
         profile: ''
-      });
+    });
+
+    const [client, setClient] = useState(null);
 
     const lists = [
-        {id: 1, name: '김길동', title: '2팀회의 방', lastMessage: '오류나요'},
-        {id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-
-
+        { id: 1, name: '김길동', title: '2팀회의 방', lastMessage: '오류나요' },
+        // { id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구' },
     ]
 
     useEffect(() => {
@@ -40,7 +36,11 @@ const Chatting = ({ closeChatting }) => {
             username: localStorage.getItem('username') || '',
             email: localStorage.getItem('email') || '',
             profile: localStorage.getItem('profile') || '' // Assuming this is how you're storing the profile image URL or data
-          });
+        });
+
+        loadingPastChatting();
+
+
 
         // const mqttClient = mqtt.connect('wss://broker.hivemq.com:1883/ws/chat'); 
         // setClient(mqttClient);
@@ -68,25 +68,27 @@ const Chatting = ({ closeChatting }) => {
 
         // return () => mqttClient.end();
 
+        // ========================================================================================
 
-        const websocketClient = new WebSocket('ws://localhost:8000/ws/chat');
-        setClient(websocketClient);
+        // const websocketClient = new WebSocket('ws://localhost:8000/ws/chat');
+        // setClient(websocketClient);
 
-        websocketClient.onopen = () => {
-            console.log("WebSocket connection established");
-        };
+        // websocketClient.onopen = () => {
+        //     console.log("WebSocket connection established");
+        // };
 
-        websocketClient.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            console.log("Received WebSocket message: ", message);
-            setMessages((prevMessages) => [...prevMessages, message]);
-        };
+        // websocketClient.onmessage = (event) => {
+        //     const message = JSON.parse(event.data);
+        //     console.log("Received WebSocket message: ", message);
+        //     setMessages((prevMessages) => [...prevMessages, message]);
+        // };
 
-        websocketClient.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
+        // websocketClient.onclose = () => {
+        //     console.log("WebSocket connection closed");
+        // };
 
-        return () => websocketClient.close();
+        // return () => websocketClient.close();
+
     }, []);
 
     // const startNewBot = useCallback(async () => {
@@ -132,24 +134,38 @@ const Chatting = ({ closeChatting }) => {
 
 
     const toggleDarkMode = () => {
-        setIsDarkMode(prev => !prev); // 다크 모드 상태를 전환
+        setIsDarkMode(prev => !prev);
     };
 
     const handleChatClick = () => {
-        setIsChatOpen(true); // 채팅 클릭 시 채팅창을 열림 상태로 설정
+        setIsChatOpen(true);
     };
 
     const handleBackClick = () => {
-        setIsChatOpen(false); // 뒤로 가기 시 채팅 목록으로 돌아감
+        setIsChatOpen(false);
     };
 
 
+
+    const loadingPastChatting = () => {
+        const pastMessages = [
+            { text: '오류나요', sender: '김길동', timestamp: new Date() },
+        ]
+
+        pastMessages.map((pastMessage, index) => (
+            setMessages(prev => [...prev, pastMessage])
+        ));
+    }
+
     const sendMessage = async () => {
         if (inputMessage.trim()) {
-            const userMessage = { text: inputMessage, sender: 'user' };
+
+
+
+            const userMessage = { text: inputMessage, sender: userInfo.username };
             setMessages(prev => [...prev, userMessage]);
 
-            client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
+            // client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
 
 
             setInputMessage('');
@@ -169,10 +185,10 @@ const Chatting = ({ closeChatting }) => {
                 //     answerId: answerResponse.data.answerId
                 // };
                 if (inputMessage == '지금')
-                    setMessages(prev => [...prev, { text: '상대방의 메세지', sender: 'bot' }]);
+                    setMessages(prev => [...prev, { text: '상대방의 메세지', sender: 'kim' }]);
             } catch (error) {
                 console.error('Error processing message:', error);
-                setMessages(prev => [...prev, { text: "죄송합니다. 오류가 발생했습니다.", sender: 'bot' }]);
+                setMessages(prev => [...prev, { text: "죄송합니다. 오류가 발생했습니다.", sender: 'kim' }]);
             }
         }
     };
@@ -189,15 +205,15 @@ const Chatting = ({ closeChatting }) => {
             <div className={`${styles.botContainer} ${isDarkMode ? styles.darkMode : ''}`}>
                 <ChattingHeader closeChatting={closeChatting} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
                 <div className={styles.botContent}>
-                
-                {!isChatOpen ? (
+
+                    {!isChatOpen ? (
                         <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} />
                     ) : (
                         <>
                             <button className={styles.chattingBackButton} onClick={handleBackClick}>
-                                <ArrowBackIosNewRoundedIcon/>
+                                <ArrowBackIosNewRoundedIcon />
                             </button>
-                            <ChattingMessages messages={messages} />
+                            <ChattingMessages messages={messages} userInfo={userInfo}/>
                         </>
                     )}
                 </div>
