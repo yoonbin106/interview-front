@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow: auto !important;
+  overflow: auto;
 }
 
 .page {
@@ -101,6 +101,7 @@
   margin: 0 auto;
   font-size: 22px;
   justify-content: center;
+  overflow:visible;
 }
 
 .sidebar {
@@ -111,7 +112,7 @@
   height: fit-content;
   margin-top: 30px;
   position: sticky;
-  top: 20px; /* 스크롤할 때 상단에서 20px 떨어진 위치에 고정 */
+  top: 60px;
 }
 .sidebar ul {
   list-style-type: none;

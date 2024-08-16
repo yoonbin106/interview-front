@@ -23,7 +23,7 @@ const ResumeList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [resumesPerPage] = useState(4);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchText, setSearchText] = useState(''); // 검색 버튼을 위한 상태
+  const [searchText, setSearchText] = useState('');
 
   const resumes = [
     {
@@ -37,7 +37,6 @@ const ResumeList = () => {
       title: '이력서 두번째 입니다2',
       date: '2024.07.23',
     },
-    // Add more resumes here
   ];
 
   const handleButtonClick = (url) => {
@@ -71,15 +70,14 @@ const ResumeList = () => {
     setSearchTerm(searchText);
   };
 
-  // Filter resumes based on the search term
   const filteredResumes = resumes.filter((resume) =>
     resume.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const displayResumes = filteredResumes.length > 0 ? filteredResumes : resumes;
 
-  // Pagination logic
-  const totalResumes = displayResumes.length;  // 총 이력서 개수 계산
+
+  const totalResumes = displayResumes.length;
   const indexOfLastResume = currentPage * resumesPerPage;
   const indexOfFirstResume = indexOfLastResume - resumesPerPage;
   const currentResumes = displayResumes.slice(indexOfFirstResume, indexOfLastResume);
@@ -119,20 +117,21 @@ const ResumeList = () => {
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`panel${resume.id}-content`}
               id={`panel${resume.id}-header`}
+              className={styles.accordionsummary}
             >
               <DescriptionIcon sx={{ color: resume.proofreadDate ? blue[500] : grey[400] }} className={styles.resumeicon} /> &nbsp;
               <span className={styles.resumetext}>{resume.title}</span>
               <span className={styles.resumeright}>
                 <span className={styles.resumedate} style={{ marginRight: '10px' }}>{resume.date}</span>
                 <span className={styles.resumeactions}>
-                  <Button onClick={() => handleButtonClick('/resume/resumeEdit')}>수정</Button>
-                  <Button onClick={handleDeleteClick}>삭제</Button>
+                  <Button onClick={() => handleButtonClick('/resume/resumeEdit')} className={styles.button}>수정</Button>
+                  <Button onClick={handleDeleteClick} className={styles.button}>삭제</Button>
                 </span>
               </span>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails className={styles.accordiondetails}>
               <div style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-                <Button className={styles.subbutton} onClick={() => handleButtonClick('/resume/proofReadResult1')}>첨삭하기</Button>
+                <Button className={`${styles.subbutton} ${styles.button}`} onClick={() => handleButtonClick('/resume/proofReadResult1')}>첨삭하기</Button>
                 {resume.proofreadDate && (
                   <Button className={`${styles.subbutton} ${styles.resultbutton}`} onClick={() => handleButtonClick('/resume/proofReadResult2')}>첨삭결과</Button>
                 )}
