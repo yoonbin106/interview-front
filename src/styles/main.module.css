@@ -159,7 +159,7 @@
   background-size: cover; /* 비율을 유지하면서 이미지가 박스를 완전히 덮도록 설정 */
   background-position: center; /* 이미지를 중앙에 배치 */
   background-repeat: no-repeat; /* 이미지 반복 제거 */
-  border-radius: 32px;
+  /* border-radius: 32px; */
   transition: background-image 1s ease-in-out; /* 부드러운 전환 */
   background-color: rgba(0, 0, 0, 0.5);
 }
