@@ -1,15 +1,15 @@
 import React from 'react';
-import BoardHeader from '@/components/bbs/boardHeader';
+
 import BoardTable from '@/components/bbs/boardTable';
-import '@/styles/bbs/bbsPage.module.css';
-import Sidebar from '@/components/bbs/bbsSidebar';
+import styles from '@/styles/bbs/bbsPage.module.css';
+
 
 const BbsPage = () => {
 
   return <>
-    <Sidebar/>
-      <div className="bbs-page"> 
-        <BoardHeader />
+    
+      <div className={styles.BbsPage}> 
+       
         <BoardTable />
       </div>
     

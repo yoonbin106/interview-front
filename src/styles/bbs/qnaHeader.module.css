@@ -1,4 +1,4 @@
-.qnaheader {
+.qnaHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,26 +8,26 @@
   
   
 }
-.qna-header h1 {
+.qnaHeader h1 {
   font-size: 20px;
   margin: 0;
   margin-left: 30px;
   margin-top: 30px;
 }
-.qna-header h2 {
+.qnaHeader h2 {
   font-size: 20px;
   margin: 0;
   margin-left: 30px;
   
 }
-.qna-header-controls {
+.qnaHeaderControl {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
 }
 
-.qna-header-controls select,
-.qna-header-controls input[type="checkbox"]{
+.qnaHeaderControl select,
+.qnaHeaderControl input[type="checkbox"]{
   padding: 5px;
 }

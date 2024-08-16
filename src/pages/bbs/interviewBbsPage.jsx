@@ -67,7 +67,7 @@ const boardTable = () => {
             <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '90%' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 게시판</h2>
+                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>면접자 게시판</h2>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                             {/* 게시판 등록 버튼 */}
                             <RegisterButton to="/bbs/bbsRegisterPage" />

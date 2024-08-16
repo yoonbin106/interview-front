@@ -1,4 +1,4 @@
-.create-post-container {
+.createPostContainer {
     max-width: 1000px;
     padding: 20px;
     border: 1px solid #ddd;
@@ -13,19 +13,19 @@
     position: relative;
 }
 
-.create-post-header {
+.createPostHeader {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
     
 }
 
-.create-post-form {
+.createPostForm {
     display: flex;
     flex-direction: column;
 }
 
-.create-post-title {
+.createPostTitle {
     padding: 10px;
     font-size: 16px;
     margin-bottom: 10px;
@@ -33,26 +33,26 @@
     border-radius: 3px;
 }
 
-.font-settings {
+.fontSettings {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.font-settings label {
+.fontSettings label {
     font-size: 16px;
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-.font-settings select {
+.fontSettings select {
     padding: 5px;
     font-size: 16px;
 }
 
-.font-settings button {
+.fontSetting button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -66,15 +66,15 @@
     cursor: pointer;
 }
 
-.font-settings button:hover {
+.fontSetting button:hover {
     background-color: #e1e1e1;
 }
-.content-container {
+.contentContainer {
     position: relative;
     display: flex;
     flex-direction: column;
 }
-.content-size {
+.contentSize {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -82,7 +82,7 @@
     color: #999;
     margin-bottom: 10px;
 }
-.create-post-content {
+.createPostContent {
     padding: 10px;
     font-size: 16px;
     margin-bottom: 10px;
@@ -92,7 +92,7 @@
     resize: none;
 }
 
-.create-post-footer {
+.createPostFooter {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -106,23 +106,23 @@
     flex: 1;
     resize: none;
 }
-.footer-wrapper {
+.footerWrapper {
     display: flex;
     align-items: center;
     width: 100%; /* 전체 너비를 차지하도록 설정 */ 
 }
 
-.file-upload {
+.fileIn {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.file-input {
+.fileInput {
     display: none;
 }
 
-.file-label {
+.fileLabel {
     padding: 5px 10px;
     font-size: 14px;
     background-color: #f0f0f0;
@@ -131,13 +131,13 @@
     cursor: pointer;
 }
 
-.file-size {
+.fileSize {
     margin-left: 10px;
     font-size: 14px;
     color: #999;
     
 }
-.submit-button {
+.submitButton {
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
@@ -149,6 +149,6 @@
     position: absolute;
 }
 
-.submit-button:hover {
+.submitButton:hover {
     background-color: #0056b3;
 }
