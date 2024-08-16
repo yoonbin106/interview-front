@@ -26,7 +26,7 @@ const BbsQnaDetails = () => {
 
     // 목록 버튼 클릭 핸들러
     const handleBackToList = () => {
-        router.push('/adminPage/adminQnaPage');
+        router.push('/bbs/bbsQnaPage');
     };
 
     return (
