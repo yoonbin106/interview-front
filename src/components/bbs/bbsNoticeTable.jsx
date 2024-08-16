@@ -1,4 +1,3 @@
-//adminQnaTable.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -11,9 +10,9 @@ import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import styles from '@/styles/adminPage/adminQnaTable.module.css';
+import styles from '@/styles/bbs/bbsNoticeTable.module.css';
 
-export default function PaginationTableQna({ rows }) {
+export default function PaginationTableNotice({ rows }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -25,21 +24,20 @@ export default function PaginationTableQna({ rows }) {
 
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // 페이지를 첫 페이지로 초기화
+    setPage(0);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.QnaPaginationTableContainer}>
+    <TableContainer component={Paper} className={styles.NoticePaginationTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>카테고리</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>제목</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>제목</TableCell>
+            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -49,19 +47,18 @@ export default function PaginationTableQna({ rows }) {
           ).map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center">{row.id}</TableCell>
-              <TableCell align="center">{`[${row.category}]`}</TableCell>
               <TableCell align="center">
-                <a href={`/adminPage/adminQnaDetails`} style={{ textDecoration: 'none', color: 'black' }}>
-                  {row.title}
+                <a href={`/bbs/bbsNoticeDetails`} style={{textDecoration:'none',color:'black'}}>
+                {row.title}
                 </a>
               </TableCell>
               <TableCell align="center">{row.author}</TableCell>
               <TableCell align="center">{row.date}</TableCell>
             </TableRow>
           ))}
-          {emptyRows > 0 && (
+        {emptyRows > 0 && (
             <TableRow style={{ height: 30 * emptyRows }}>
-              <TableCell colSpan={6} />
+              <TableCell colSpan={4} />
             </TableRow>
           )}
         </TableBody>

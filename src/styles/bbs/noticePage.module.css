@@ -1,15 +1,27 @@
-.notice-page {
-  
-    flex: 1;
-    padding: 20px;
-    background-color: #fff; /* 하얀 박스 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 50px;
-    border-radius: 8px;
+/*noticePage.module.css*/
+.container {
+    display: flex;
+    margin: 30px 30px 30px 30px;
     width: 100%;
-    max-width: 1300px;
-    box-sizing: border-box;
-    position: relative; /* 상대 위치 설정 */
-   
+    height:1000px ;
+    justify-content: center;
   }
- 
+  
+  .sidebar {
+    border: solid 2px;
+    border-color: #DEFFF5;
+    margin: 10px 20px 10px 10px;
+    min-width: 200px;
+  }
+  
+  .content {
+    background-color: white;
+    padding: 20px;
+    margin: 10px 10px 10px 10px;
+    border: solid 2px;
+    border-color: #DEFFF5;
+    min-width: 500px;
+    width: 1080px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }

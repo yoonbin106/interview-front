@@ -11,7 +11,7 @@ import { fetchCorpInfo } from '@/api/searchCorpApi'; // Import fetchCorpInfo fro
 
 function Search() {
     const [pageNo, setPageNo] = useState('1');
-    const [numOfRows, setNumOfRows] = useState('200');
+    const [numOfRows, setNumOfRows] = useState('9999');
     const [resultType, setResultType] = useState('json');
     const [crno, setCrno] = useState('');
     const [corpNm, setCorpNm] = useState('');

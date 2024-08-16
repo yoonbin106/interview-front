@@ -31,14 +31,14 @@ export default function PaginationTableFinComment({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.tableContainer} sx={{ backgroundColor: '#f7f7f7' }}>
+    <TableContainer component={Paper} className={styles.rePortedFinTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.headerCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.headerCell}>내용</TableCell>
-            <TableCell align="center" className={styles.headerCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.headerCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>내용</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.reportedFinHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

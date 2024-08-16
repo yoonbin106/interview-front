@@ -1,30 +1,30 @@
-//adminNoticePage.jsx
+
 
 import React, { useState } from 'react';
-import PaginationTable from '@/components/bbs/bbsNoticeTable';
+import PaginationTable from '@/components/bbs/bbsTable';
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import styles from '@/styles/bbs/noticePage.module.css';
+import styles from '@/styles/bbs/BoardTable.module.css';
 import NestedList from '@/components/bbs/bbsSidebar';
 
-const Notice = () => {
-    // 하드코딩된 공지사항 데이터
+const boardTable = () => {
+    
     const notices = [
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 13, title: '신규 기능 업데이트 예정', author: 'admin1107', date: '2024-07-05' },
-        { id: 12, title: '고객센터 운영 시간 변경 안내', author: 'admin123', date: '2024-07-01' },
-        { id: 11, title: '긴급 서버 점검 안내 (7월 3일)', author: 'admin1004', date: '2024-06-28' },
-        { id: 10, title: '6월 결산 보고서', author: 'admin1107', date: '2024-06-25' },
-        { id: 9, title: '고객 설문조사 이벤트 당첨자 발표', author: 'admin123', date: '2024-06-20' },
-        { id: 8, title: '보안 강화 관련 정책 변경 안내', author: 'admin1004', date: '2024-06-15' },
-        { id: 7, title: '6월의 우수 고객 혜택 안내', author: 'admin1107', date: '2024-06-10' },
-        { id: 6, title: '서비스 이용약관 변경 안내', author: 'admin123', date: '2024-06-05' },
-        { id: 5, title: '회원 등급별 혜택 안내', author: 'admin1004', date: '2024-06-01' },
-        { id: 4, title: '5월의 우수 고객 혜택 안내', author: 'admin1107', date: '2024-05-25' },
-        { id: 3, title: '5월 결산 보고서', author: 'admin123', date: '2024-05-20' },
-        { id: 2, title: '시스템 업데이트 공지 (5월 18일)', author: 'admin1004', date: '2024-05-15' },
-        { id: 1, title: '개인정보 처리방침 변경 안내', author: 'admin1107', date: '2024-05-10' },
+        { bbs_id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15', hitcount: 13, likes: 20 },
+        { bbs_id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10', hitcount: 15, likes: 10 },
+        { bbs_id: 13, title: '신규 기능 업데이트 예정', author: 'admin1107', date: '2024-07-05', hitcount: 17, likes: 30 },
+        { bbs_id: 12, title: '고객센터 운영 시간 변경 안내', author: 'admin123', date: '2024-07-01', hitcount: 15, likes: 15 },
+        { bbs_id: 11, title: '긴급 서버 점검 안내 (7월 3일)', author: 'admin1004', date: '2024-06-28', hitcount: 13, likes: 20 },
+        { bbs_id: 10, title: '6월 결산 보고서', author: 'admin1107', date: '2024-06-25', hitcount: 13, likes: 20 },
+        { bbs_id: 9, title: '고객 설문조사 이벤트 당첨자 발표', author: 'admin123', date: '2024-06-20', hitcount: 13, likes: 20 },
+        { bbs_id: 8, title: '보안 강화 관련 정책 변경 안내', author: 'admin1004', date: '2024-06-15', hitcount: 13, likes: 20 },
+        { bbs_id: 7, title: '6월의 우수 고객 혜택 안내', author: 'admin1107', date: '2024-06-10', hitcount: 13, likes: 20 },
+        { bbs_id: 6, title: '서비스 이용약관 변경 안내', author: 'admin123', date: '2024-06-05', hitcount: 13, likes: 20 },
+        { bbs_id: 5, title: '회원 등급별 혜택 안내', author: 'admin1004', date: '2024-06-01', hitcount: 13, likes: 20 },
+        { bbs_id: 4, title: '5월의 우수 고객 혜택 안내', author: 'admin1107', date: '2024-05-25', hitcount: 13, likes: 20 },
+        { bbs_id: 3, title: '5월 결산 보고서', author: 'admin123', date: '2024-05-20', hitcount: 13, likes: 20 },
+        { bbs_id: 2, title: '시스템 업데이트 공지 (5월 18일)', author: 'admin1004', date: '2024-05-15', hitcount: 13, likes: 20 },
+        { bbs_id: 1, title: '개인정보 처리방침 변경 안내', author: 'admin1107', date: '2024-05-10', hitcount: 13, likes: 20 },
     ];
 
     const [searchCategory, setSearchCategory] = useState(''); // 검색 카테고리 상태 관리
@@ -63,14 +63,14 @@ const Notice = () => {
                 <NestedList/>
             </div>
         <div className={styles.content}>
-        <div className="main-container">
+        <div className={"main-container"}>
             <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '90%' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 공지사항</h2>
+                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 게시판</h2>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                            {/* 공지사항 등록 버튼 */}
-                            <RegisterButton to="/bbs/bbsNoticeRegisterPage" />
+                            {/* 게시판 등록 버튼 */}
+                            <RegisterButton to="/bbs/bbsRegisterPage" />
                         </div>
                     </div>
                     {/* 필터링된 공지사항을 테이블로 렌더링 */}
@@ -127,4 +127,5 @@ const Notice = () => {
     );
 };
 
-export default Notice;
+export default boardTable
+;

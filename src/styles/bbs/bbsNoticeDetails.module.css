@@ -1,50 +1,50 @@
-/* /adminAdminNoticeDetails.module.css */
-.adminNoticeDetailsContainer {
+/* adminNoticeDetails.module.css */
+.noticeDetailsContainer {
     padding: 20px;
     display: flex;
     justify-content: center;
 }
 
-.adminNoticeDetailsPaper {
+.noticeDetailsPaper {
     padding: 20px;
     max-width: 800px;
     width: 100%;
 }
   
 
-.adminNoticeDetailsGrayText {
+.noticeDetailsGrayText {
     color: gray;
 }
 
-.adminNoticeDetailsHeader {
+.noticeDetailsHeader {
     border-bottom: 1px solid #ddd;
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
 
-.adminNoticeDetailsContent {
+.noticeDetailsContent {
     white-space: pre-wrap;
     line-height: 1.6;
 }
 
-.adminNoticeDetailsButtonsContainer {
+.noticeDetailsButtonsContainer {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
 }
 
-.adminNoticeDetailsSaveButton, .adminNoticeDetailsEditButton {
+.noticeDetailsSaveButton, .noticeDetailsEditButton {
     margin-right: 10px;
     background-color: #4A90E2;
     color: white;
 }
 
-.adminNoticeDetailsDeleteButton {
+.noticeDetailsDeleteButton {
     background-color: red;
     color: white;
 }
 
-.adminNoticeDetailsNavButtons {
+.noticeDetailsNavButtons {
     margin-top: 40px;
     display: flex;
     justify-content: space-between;

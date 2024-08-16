@@ -1,26 +1,25 @@
-/* /adminAdminNoticeTable.module.css */
+/* adminQnaTable.module.css */
 
-.adminNoticePaginationTableContainer {
+.QnaPaginationTableContainer {
     margin-top: 20px;
-
   }
   
-  .adminNoticePaginationHeaderCell {
+  .QnaPaginationHeaderCell {
     font-weight: bold;
     background-color: #4A90E2;
     color: white;
   }
-  .adminNoticePaginationLink {
+  .QnaPaginationLink {
     color: black;
     cursor: pointer;
     text-decoration: none;
   }
   
-  .adminNoticeLink:hover {
+  .QnaLink:hover {
     text-decoration: underline;
   }
   
-  .adinNoticeButtonContainer {
+  .QnaButtonContainer {
     margin-top: 10px;
     display: flex;
     gap: 10px;

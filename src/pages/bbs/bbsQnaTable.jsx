@@ -1,4 +1,3 @@
-//adminQnaTable.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -11,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import styles from '@/styles/adminPage/adminQnaTable.module.css';
+import styles from '@/styles/bbs/bbsQnaTable.module.css';
 
 export default function PaginationTableQna({ rows }) {
   const [page, setPage] = React.useState(0);
@@ -51,7 +50,7 @@ export default function PaginationTableQna({ rows }) {
               <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">{`[${row.category}]`}</TableCell>
               <TableCell align="center">
-                <a href={`/adminPage/adminQnaDetails`} style={{ textDecoration: 'none', color: 'black' }}>
+                <a href={`/bbs/bbsQnaDetails`} style={{ textDecoration: 'none', color: 'black' }}>
                   {row.title}
                 </a>
               </TableCell>
