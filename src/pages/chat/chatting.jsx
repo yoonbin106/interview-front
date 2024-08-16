@@ -13,10 +13,10 @@ import Chat from './chat';
 
 
 const Chatting = ({ closeChatting }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    // const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
-    const [isDarkMode, setIsDarkMode] = useState(false); // 다크 모드 상태
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     const [client, setClient] = useState(null);
 
@@ -29,14 +29,8 @@ const Chatting = ({ closeChatting }) => {
       });
 
     const lists = [
-        {id: 1, name: '김지선', title: '채팅방 제목1', lastMessage: '아 커피 맛있다'},
-        {id: 2, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-        {id: 3, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-        {id: 4, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-        {id: 5, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-        {id: 6, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-        {id: 7, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
-        {id: 8, name: '이수경', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
+        {id: 1, name: '김길동', title: '2팀회의 방', lastMessage: '오류나요'},
+        {id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구'},
 
 
     ]
