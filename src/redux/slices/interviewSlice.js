@@ -43,10 +43,12 @@ export const loadMockQuestions = createAsyncThunk(
         }
       ];
 
-      return selectedQuestions && selectedQuestions.length > 0
-        ? selectedQuestions.map(id => mockQuestions.find(q => q.id === id) || { id, question: `질문 ${id}` })
-        : mockQuestions;
-    }
+      console.log("Selected questions for mock interview:", selectedQuestions);
+
+       return selectedQuestions && selectedQuestions.length > 0
+      ? selectedQuestions.map(id => mockQuestions.find(q => q.id === id) || { id, question: `질문 ${id}` })
+      : mockQuestions;
+  }
   );
     
   // 실전 면접 질문 로드 (OpenAI 통합을 가정)
@@ -98,8 +100,10 @@ export const loadQuestions = createAsyncThunk(
     let result;
     if (interviewType === 'mock') {
       result = await dispatch(loadMockQuestions(selectedQuestions)).unwrap();
-    } else {
+    } else if (interviewType === 'real') {
       result = await dispatch(loadRealQuestions(candidateData)).unwrap();
+    } else {
+      throw new Error(`Invalid interview type: ${interviewType}`);
     }
     console.log("loadQuestions result:", result);
     return result;
@@ -121,6 +125,8 @@ const interviewSlice = createSlice({
     questions: [],
     buttonActive: false,
     interviewData: null,
+    status: 'idle', // 새로운 상태 추가
+    error: null, // 에러 상태 추가
   },
   reducers: {
     setInterviewType: (state, action) => {
@@ -159,18 +165,28 @@ const interviewSlice = createSlice({
     setQuestions: (state, action) => {
       state.questions = action.payload;
     },
+    setStatus: (state, action) => {
+      state.status = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadQuestions.fulfilled, (state, action) => {
-        state.questions = action.payload;
-      })
-      .addCase(loadMockQuestions.fulfilled, (state, action) => {
-        state.questions = action.payload;
-      })
-      .addCase(loadRealQuestions.fulfilled, (state, action) => {
-        state.questions = action.payload;
-      });
+    .addCase(loadQuestions.pending, (state) => {
+      state.status = 'loading';
+      state.error = null;
+    })
+    .addCase(loadQuestions.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.questions = action.payload;
+      state.error = null;
+    })
+    .addCase(loadQuestions.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    });
   },
 });
 
@@ -187,6 +203,8 @@ export const {
   setButtonActive,
   setInterviewData,
   setQuestions,
+  setStatus,
+  setError,
 } = interviewSlice.actions;
 
 export default interviewSlice.reducer;

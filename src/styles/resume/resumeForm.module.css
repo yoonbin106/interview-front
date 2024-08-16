@@ -85,7 +85,7 @@
 }
 
 .genderButton.selected {
-  background-color: #007bff;
+  background-color: #5A8AF2;
   color: #fff;
 }
 
@@ -130,18 +130,19 @@
 
 .sidebar li:hover,
 .sidebar li.active {
-  color: #007bff;
+  color: #5A8AF2;
   background-color: #e7f3ff;
   border-radius: 4px;
 }
 
 .formContainer {
   background-color: #fff;
-  padding: 20px;
+  padding: 40px;
   border: 1px solid #e9ecef;
   border-radius: 5px;
-  max-width: 900px;
-  width: 100%;
+  max-width: 1000px;
+  /* width: 100%; */
+  width: 1000px;
   box-sizing: border-box;
   margin-left: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -177,6 +178,13 @@
   margin-left: 0;
   padding-left: 0;
 }
+.personalInfo {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  height: 170px;
+  justify-content: space-between;
+}
 
 .formInline .formGroup {
   flex: 1;
@@ -192,7 +200,7 @@
   flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
-  margin: 8px 0;
+  margin: 4px 0;
 }
 .formGroupInlineCareer {
   display: flex;
@@ -310,11 +318,12 @@
 }
 
 .button {
+  
   padding: 4px 8px;
   font-size: 10px !important;
   color: #fff;
   border: none;
-  background-color: #007bff;
+  background-color: #5A8AF2;
   border-radius: 6px !important;
   cursor: pointer;
   width: 100%;
@@ -324,7 +333,7 @@
 
 
 .submitBtn {
-  background-color: #007bff;
+  background-color: #5A8AF2;
   padding: 7px;
   width: 120px;
   font-size: 14px !important;
@@ -341,10 +350,11 @@
 
 
 .add {
+  
   padding: 7px;
   margin-bottom: 10px;
   font-size: 14px !important;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .zipCodeInput {
@@ -418,7 +428,7 @@
 
 .plusButton {
   font-size: 30px;
-  color: #007bff;
+  color: #5A8AF2;
 }
 
 .hiddenFileInput {
@@ -430,9 +440,10 @@
 }
 
 .sectionHeader {
+
   position: relative;
   padding-left: 15px;
-  font-size: 30px !important;
+  font-size: 26px ;
   font-weight: 700;
   color: #343a40;
   margin-bottom: 25px;
@@ -452,7 +463,7 @@
   bottom: 0;
   width: 6px;
   height: 20px;
-  background-color: #1982f1;
+  background-color: #5A8AF2;
 }
 
 .subText {
@@ -513,8 +524,8 @@
 }
 
 .hr {
-  margin-top: 15px;
-  margin-bottom: 10px;
+  margin-top: 30px;
+  margin-bottom: 25px;
   border: none; /* 원하는 대로 변경 가능 */
-  border-top: 2px solid #64696e; /* hr의 선 스타일을 지정 */
+  border-top: 2px solid #8d8d8d; /* hr의 선 스타일을 지정 */
 }
