@@ -104,7 +104,7 @@ const ResumeList = () => {
       </div>
       <div className={styles.newresumebutton}>
         <button onClick={() => handleButtonClick('/resume')}>
-          <ControlPointIcon sx={{ color: '#5A8AF2' }} className={styles.controlpointicon} />&nbsp; 새로운 이력서 등록
+          <ControlPointIcon sx={{ color: '#5A8AF2',marginLeft:'6px'}} className={styles.controlpointicon} />&nbsp; 새로운 이력서 등록
         </button>
       </div>
 
@@ -113,43 +113,54 @@ const ResumeList = () => {
       <div className={styles.accordioncontainer}>
         {currentResumes.map((resume) => (
           <Accordion
-            key={resume.id}
-            className={styles.customaccordion}
-            elevation={0}
-            sx={{ '&::before': { backgroundColor: 'transparent' } }}
+          key={resume.id}
+          className={styles.customaccordion}
+          elevation={0}
+          sx={{
+            '&::before': {
+              backgroundColor: 'transparent',
+            },
+            '&:first-of-type': {
+              borderRadius:'8px'
+            },
+            '&:last-of-type':{
+              borderRadius:'8px'
+            }
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`panel${resume.id}-content`}
+            id={`panel${resume.id}-header`}
+            className={styles.accordionsummary}
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel${resume.id}-content`}
-              id={`panel${resume.id}-header`}
-              className={styles.accordionsummary}
-            >
-              <DescriptionIcon sx={{ color: resume.proofreadDate ? '#5A8AF2' : grey[400] }} className={styles.resumeicon} /> &nbsp;
-              <span className={styles.resumetext}>{resume.title}</span>
-              <span className={styles.resumeright}>
-                <span className={styles.resumedate} style={{ marginRight: '10px' }}>{resume.date}</span>
-                <span className={styles.resumeactions}>
-                  <Button onClick={() => handleButtonClick('/resume/resumeEdit')} className={styles.button}>수정</Button>
-                  <Button onClick={handleDeleteClick} className={styles.button}>삭제</Button>
-                </span>
+            <DescriptionIcon sx={{ color: resume.proofreadDate ? '#5A8AF2' : grey[400] }} className={styles.resumeicon} /> &nbsp;
+            <span className={styles.resumetext}>{resume.title}</span>
+            <span className={styles.resumeright}>
+              <span className={styles.resumedate} style={{ marginRight: '10px' }}>{resume.date}</span>
+              <span className={styles.resumeactions}>
+                <Button onClick={() => handleButtonClick('/resume/resumeEdit')} className={styles.button}>수정</Button>
+                <Button onClick={handleDeleteClick} className={styles.button}>삭제</Button>
               </span>
-            </AccordionSummary>
-            <AccordionDetails className={styles.accordiondetails}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                <Button className={`${styles.subbutton} ${styles.button}`} onClick={() => handleButtonClick('/resume/proofReadResult1')}>첨삭하기</Button>
-                {resume.proofreadDate && (
-                  <Button className={`${styles.subbutton} ${styles.resultbutton}`} onClick={() => handleButtonClick('/resume/proofReadResult2')}>첨삭결과</Button>
-                )}
-                {resume.proofreadDate && (
-                  <span className={styles.proofreaddate}>최근 첨삭일 {resume.proofreadDate}</span>
-                )}
-              </div>
-              <div className={styles.newbox}>
-                <span>2024.07.25 모의면접(면접이름)</span>
-                <div>등록완료</div>
-              </div>
-            </AccordionDetails>
-          </Accordion>
+            </span>
+          </AccordionSummary>
+          <AccordionDetails className={styles.accordiondetails}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+              <Button className={`${styles.subbutton} ${styles.button}`} onClick={() => handleButtonClick('/resume/proofReadResult1')}>첨삭하기</Button>
+              {resume.proofreadDate && (
+                <Button className={`${styles.subbutton} ${styles.resultbutton}`} onClick={() => handleButtonClick('/resume/proofReadResult2')}>첨삭결과</Button>
+              )}
+              {resume.proofreadDate && (
+                <span className={styles.proofreaddate}>최근 첨삭일 {resume.proofreadDate}</span>
+              )}
+            </div>
+            <div className={styles.newbox}>
+              <span>2024.07.25 모의면접(면접이름)</span>
+              <div>등록완료</div>
+            </div>
+          </AccordionDetails>
+        </Accordion>
+        
         ))}
       </div>
 
