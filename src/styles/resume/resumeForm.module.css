@@ -117,6 +117,7 @@
   top: 60px;
 }
 .sidebar ul {
+  
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -128,12 +129,14 @@
   color: #929292;
   font-size: 16px;
   transition: background-color 0.3s, color 0.3s;
+  margin-bottom: 2px;
 }
 
 .sidebar li:hover,
 .sidebar li.active {
   color: #5A8AF2;
-  
+  display: flex;
+  align-items: center;
   background-color: #e7f3ff;
   border-radius: 8px;
 }
@@ -531,5 +534,5 @@
   margin-top: 30px;
   margin-bottom: 25px;
   border: none; /* 원하는 대로 변경 가능 */
-  border-top: 2px solid #8d8d8d; /* hr의 선 스타일을 지정 */
+  border-top: 1px solid #8d8d8d; /* hr의 선 스타일을 지정 */
 }

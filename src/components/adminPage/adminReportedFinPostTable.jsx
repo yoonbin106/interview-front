@@ -65,15 +65,15 @@ export default function ReportedFinPostTable({ rows }) {
 
   return (
     <>
-      <TableContainer component={Paper} className={styles.RePortedFinTableContainer}>
+      <TableContainer component={Paper} className={styles.rePortedFinTableContainer}>
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" className={styles.ReportedFinHeaderCell}>글 번호</TableCell>
-              <TableCell align="center" className={styles.ReportedFinHeaderCell}>카테고리</TableCell>
-              <TableCell align="center" className={styles.ReportedFinHeaderCell}>제목</TableCell>
-              <TableCell align="center" className={styles.ReportedFinHeaderCell}>작성자</TableCell>
-              <TableCell align="center" className={styles.ReportedFinHeaderCell}>작성날짜</TableCell>
+              <TableCell align="center" className={styles.reportedFinHeaderCell}>글 번호</TableCell>
+              <TableCell align="center" className={styles.reportedFinHeaderCell}>카테고리</TableCell>
+              <TableCell align="center" className={styles.reportedFinHeaderCell}>제목</TableCell>
+              <TableCell align="center" className={styles.reportedFinHeaderCell}>작성자</TableCell>
+              <TableCell align="center" className={styles.reportedFinHeaderCell}>작성날짜</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
