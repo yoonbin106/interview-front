@@ -268,7 +268,7 @@ function ResumeEdit() {
                   <input type="text" placeholder="이름" readOnly />
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
-                  <label className={styles.required}>생년월일</label>
+                <label className={`${styles.label} ${styles.required}`}>생년월일</label>
                   <input type="text" placeholder="생년월일" readOnly />
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px'}}>
@@ -284,7 +284,7 @@ function ResumeEdit() {
               <div className={styles.formInline}>
                 <div className={styles.formGroup} >
                 <label className={`${styles.label} ${styles.required}`}>이메일</label>
-                  <input type="email" className={styles.emailInput} placeholder="이메일" readOnly />
+                <input type="email" className={styles.input} placeholder="이메일" readOnly />
                 </div>
                 <div className={styles.formGroup} >
                 <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
