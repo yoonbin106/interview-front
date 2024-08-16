@@ -23,6 +23,7 @@ export const login = async (loginData, authStore, userStore) => {  // authStoreë
       localStorage.setItem('token', pureToken);
       localStorage.setItem('isAdmin', response.data.isAdmin);
       localStorage.setItem('refresh', response.data.refresh);
+      userStore.setId(response.data.id);
       userStore.setEmail(response.data.username);
       userStore.setUsername(response.data.name);
       userStore.setAddress(response.data.address);
