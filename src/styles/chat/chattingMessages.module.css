@@ -1,5 +1,5 @@
 .chattingMessages {
-  padding: 1rem;
+  padding: 10px 10px 10px 2px;
   margin: 20px;
 }
 
@@ -20,6 +20,7 @@
 }
 
 .messageContent {
+  display: inline-block;
   max-width: 70%;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
@@ -33,13 +34,15 @@
 }
 
 .recieverAvatar {
-  font-size: 2rem;
-  margin-right: 0.5rem; /* MessageInfo와의 간격 설정 */
+  font-size: 10px;
+  margin: 3px 10px 0 0; 
 }
 
 .othersMessageSender {
-  font-weight: bold;
-  margin-bottom: 0.3rem; /* MessageContent와의 간격 설정 */
+  /* font-weight: bold; */
+  font-weight: 500;
+  font-size: 15px;
+  margin: 0 0 5px 7px;
   color: #333;
 }
 

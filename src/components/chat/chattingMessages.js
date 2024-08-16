@@ -23,7 +23,7 @@ const ChattingMessages = ({ messages, userInfo }) => {
           <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
             <div className={styles.recieverAvatar} aria-hidden="true">
-              <Avatar>Y</Avatar>
+              <Avatar sx={{width: 50, height: 50}}>Y</Avatar>
             </div>
 
             <div className={styles.othersMessageInfo}>
@@ -31,9 +31,15 @@ const ChattingMessages = ({ messages, userInfo }) => {
               <div className={styles.othersMessageSender}>
                 {message.sender}
               </div>
-              <div className={styles.messageContent}>
-                {message.text}
+
+              <div>
+                <div className={styles.messageContent}>
+                  {message.text}
+                </div>
               </div>
+
+
+
 
             </div>
 
@@ -59,35 +65,6 @@ const ChattingMessages = ({ messages, userInfo }) => {
 
  */}
 
-
-
-
-            {/*               
-            <div className={styles.othersMessageContent}>
-              <div className={styles.othersMessageSender}>{message.sender}</div>
-              
-            </div> */}
-
-
-            {/*             
-            <div className={styles.othersMessageSender}>{message.sender}</div>
-            <div className={styles.messageContent}>
-              <p>{message.text}</p>
-            </div> */}
-
-            {/* 
-
-          
-              <div className={styles.recieverAvatar} aria-hidden="true">
-                <Avatar>Y</Avatar>
-              </div>
-              <div className={styles.othersMessageContent}>
-                <div className={styles.othersMessageSender}>{message.sender}</div>
-                <div className={styles.messageContent}>
-                  <p>{message.text}</p>
-                </div>
-              </div>
-            */}
 
           </div>
 
