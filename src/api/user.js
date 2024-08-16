@@ -48,6 +48,7 @@ export const logout = async (authStore, userStore) => {
     userStore.setBirth('');
     userStore.setPhone('');
     userStore.setProfile('');
+    userStore.setId('');
     return res
   });
 };
