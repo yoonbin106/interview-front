@@ -25,11 +25,44 @@ const ChattingMessages = ({ messages, userInfo }) => {
             <div className={styles.recieverAvatar} aria-hidden="true">
               <Avatar>Y</Avatar>
             </div>
-            <div className={styles.messageContent}>
-                <p>{message.text}</p>
+
+            <div className={styles.othersMessageInfo}>
+
+              <div className={styles.othersMessageSender}>
+                {message.sender}
+              </div>
+              <div className={styles.messageContent}>
+                {message.text}
               </div>
 
-{/*               
+            </div>
+
+
+
+
+
+
+            {/* 
+
+            <div className={styles.othersMessageInfo}>
+              <div className={styles.recieverAvatar} aria-hidden="true">
+                <Avatar>Y</Avatar>
+              </div>
+              <div className={styles.othersMessageSender}>
+                {message.sender}
+              </div>
+            </div>
+
+            <div className={styles.messageContent}>
+              {message.text}
+            </div>
+
+ */}
+
+
+
+
+            {/*               
             <div className={styles.othersMessageContent}>
               <div className={styles.othersMessageSender}>{message.sender}</div>
               
@@ -57,8 +90,8 @@ const ChattingMessages = ({ messages, userInfo }) => {
             */}
 
           </div>
-        )
 
+        )
 
         // <div key={index} className={`${styles.messageContainer} ${message.sender === userInfo.username ? styles.my : styles.others}`}>
         //   {message.sender !== userInfo.username && <div className={styles.recieverAvatar} aria-hidden="true">
@@ -71,42 +104,11 @@ const ChattingMessages = ({ messages, userInfo }) => {
         //   </div>
         // </div>
 
-
-
       ))}
 
       <div ref={messagesEndRef} />
     </div>
   );
 };
-
-{/* 
-          // 텍스트 입력중 애니메이션
-          <div className={`${styles.messageContent} ${styles.generating}`}>
-            <span className={styles.dot}></span>
-            <span className={styles.dot}></span>
-            <span className={styles.dot}></span>
-          </div>
-          */}
-
-{/* 
-            // 핱트 벝튼
-            {message.sender === 'bot' && message.answerId && (
-              <div className={styles.messageActions}>
-                <button
-                  onClick={() => addFeedback(message.answerId, true)}
-                  className={`${styles.feedbackButton} ${feedbacks[message.answerId] === 'liked' ? 'active' : ''}`}
-                  aria-label="Like">
-                  <FcLike />
-                </button>
-                <button
-                  onClick={() => addFeedback(message.answerId, false)}
-                  className={`${styles.feedbackButton} ${feedbacks[message.answerId] === 'disliked' ? 'active' : ''}`}
-                  aria-label="Dislike">
-                  <FcDislike/>
-                </button>
-              </div>
-            )}
-            */}
 
 export default ChattingMessages;
