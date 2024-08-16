@@ -277,9 +277,9 @@ function ResumeForm() {
                 <label className={`${styles.label} ${styles.required}`}>성별</label>
                   <select name="gender" value={formData.gender} onChange={handleChange} className={`${styles.genderSelect} ${styles.select}`}>
                     <option value="">선택하세요</option>
-                    <option value="male">남자</option>
-                    <option value="female">여자</option>
-                    <option value="other">기타</option>
+                      <option value="male">남자</option>
+                      <option value="female">여자</option>
+                      <option value="other">기타</option>
                   </select>
                 </div>
               </div>
