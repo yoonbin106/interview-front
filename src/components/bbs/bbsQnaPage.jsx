@@ -10,17 +10,17 @@ const BbsQna = () => {
     // 하드코딩된 문의사항 데이터
     const adminqna = [
         { id: 12, category: '대기', title: '결제하려는데 계속 오류가 떠요 ㅠㅠ 어떻게 해야 되나요?', author: 'user123', date: '2024-08-12' },
-        { id: 11, category: '진행중', title: '로그인할 때마다 비밀번호가 틀렸다고 나오는데... 왜 그런 거죠? ㅠ', author: 'user12341', date: '2024-08-11' },
-        { id: 10, category: '완료', title: '서비스 이용 중에 자꾸 로그아웃되는데 이거 버그 아닌가요?', author: 'user215', date: '2024-08-10' },
+        { id: 11, category: '진행중', title: '로그인할 때마다 비밀번호가 틀렸다고 나오는데... 왜 그런 거죠? ㅠ', author: 'user123', date: '2024-08-11' },
+        { id: 10, category: '완료', title: '서비스 이용 중에 자꾸 로그아웃되는데 이거 버그 아닌가요?', author: 'user123', date: '2024-08-10' },
         { id: 9, category: '대기', title: '구독 취소하려고 하는데 어디서 하면 되나요?', author: 'user123', date: '2024-08-09' },
-        { id: 8, category: '진행중', title: '프로모션 코드를 입력했는데 적용이 안 되네요. 도와주실 수 있나요?', author: 'user456', date: '2024-08-08' },
-        { id: 7, category: '완료', title: '비밀번호 재설정 이메일이 오질 않아요. 어떻게 해야 하나요?', author: 'user3032', date: '2024-08-07' },
-        { id: 6, category: '대기', title: '회원정보 수정이 불가능한데, 이유가 뭘까요?', author: 'user778', date: '2024-08-06' },
-        { id: 5, category: '진행중', title: '결제 내역을 어디서 확인할 수 있나요? 안내 부탁드립니다.', author: 'user56465', date: '2024-08-05' },
-        { id: 4, category: '완료', title: '아이디를 변경할 수 있는지 궁금해요!', author: 'user11', date: '2024-08-04' },
-        { id: 3, category: '대기', title: '서비스 구독 연장이 생각보다 복잡하네요. 좀 더 간편하게 할 수 없을까요?', author: 'user72', date: '2024-08-03' },
-        { id: 2, category: '진행중', title: '2차 인증 설정하는데 문제가 생겼어요. 빠른 해결 부탁드립니다.', author: 'user4456', date: '2024-08-02' },
-        { id: 1, category: '완료', title: '프로필 사진을 업로드하려고 했는데 자꾸 실패해요. 왜 그런지 아시나요?', author: 'user30', date: '2024-08-01' },
+        { id: 8, category: '진행중', title: '프로모션 코드를 입력했는데 적용이 안 되네요. 도와주실 수 있나요?', author: 'user123', date: '2024-08-08' },
+        { id: 7, category: '완료', title: '비밀번호 재설정 이메일이 오질 않아요. 어떻게 해야 하나요?', author: 'user123', date: '2024-08-07' },
+        { id: 6, category: '대기', title: '회원정보 수정이 불가능한데, 이유가 뭘까요?', author: 'user123', date: '2024-08-06' },
+        { id: 5, category: '진행중', title: '결제 내역을 어디서 확인할 수 있나요? 안내 부탁드립니다.', author: 'user123', date: '2024-08-05' },
+        { id: 4, category: '완료', title: '아이디를 변경할 수 있는지 궁금해요!', author: 'user123', date: '2024-08-04' },
+        { id: 3, category: '대기', title: '서비스 구독 연장이 생각보다 복잡하네요. 좀 더 간편하게 할 수 없을까요?', author: 'user123', date: '2024-08-03' },
+        { id: 2, category: '진행중', title: '2차 인증 설정하는데 문제가 생겼어요. 빠른 해결 부탁드립니다.', author: 'user123', date: '2024-08-02' },
+        { id: 1, category: '완료', title: '프로필 사진을 업로드하려고 했는데 자꾸 실패해요. 왜 그런지 아시나요?', author: 'user123', date: '2024-08-01' },
     ];
 
     // 검색 상태 관리

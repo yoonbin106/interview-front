@@ -50,7 +50,7 @@ export default function PaginationTableQna({ rows }) {
               <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">{`[${row.category}]`}</TableCell>
               <TableCell align="center">
-                <a href={`/adminPage/adminQnaDetails`} style={{ textDecoration: 'none', color: 'black' }}>
+                <a href={`/bbs/bbsQnaDetails`} style={{ textDecoration: 'none', color: 'black' }}>
                   {row.title}
                 </a>
               </TableCell>
