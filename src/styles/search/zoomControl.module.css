@@ -9,6 +9,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* #007bff 색상으로 테두리 추가 */
 }
 
 .zoom-control button {

@@ -5,6 +5,7 @@ import { login, getProfileImage } from '@/api/user';
 import { handleAxiosError } from '@/api/errorAxiosHandle';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '@/contexts/storeContext';
+import KakaoLogin from '@/components/auth/kakaoLogin';
 
 const Login = observer(() => {
   const router = useRouter();
@@ -87,10 +88,10 @@ const Login = observer(() => {
           </div>
           <button type="submit" className="btn btn-dark w-100 mb-3">로그인</button>
         </form>
-        {/* <button type="button" onClick={handleLogout} className="btn btn-dark w-100 mb-3">로그아웃</button> */}
         <div className="d-flex justify-content-around mb-4">
           <img style={iconStyle} src="/images/naverButton.png" alt="Naver" />
-          <img style={iconStyle} src="/images/kakaoButton.png" alt="Kakao" />
+          {/* <img style={iconStyle} src="/images/kakaoButton.png" alt="Kakao" /> */}
+          <KakaoLogin/>
           <img style={iconStyle} src="/images/googleButton.png" alt="Google" />
         </div>
         <div className="d-flex justify-content-between mt-3">

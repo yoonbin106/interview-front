@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import styles from '@/styles/search/result.module.css'; // 수정된 부분
+import styles from '@/styles/search/result.module.css';
 import Filter from '@/components/search/filter';
 import UserLocationMap from '@/components/search/userLocationMap';
 import LoadingSpinner from '@/components/search/loadingSpinner';
 import CompanyList from '@/components/search/companyList';
-import MapSearchButton from '@/components/search/mapSearchButton'; // MapSearchButton import
-import { fetchCorpInfo } from '@/api/searchCorpApi'; // Import fetchCorpInfo from api.js
-
+import MapSearchButton from '@/components/search/mapSearchButton';
+import EconomicNews from '@/components/search/economicNews'; // 경제 뉴스 컴포넌트 임포트
+import { fetchCorpInfo } from '@/api/searchCorpApi';
 
 function Search() {
     const [pageNo, setPageNo] = useState('1');
-    const [numOfRows, setNumOfRows] = useState('9999');
+    const [numOfRows, setNumOfRows] = useState('200');
     const [resultType, setResultType] = useState('json');
     const [crno, setCrno] = useState('');
     const [corpNm, setCorpNm] = useState('');
@@ -20,11 +20,12 @@ function Search() {
     const [mapFilteredCompanies, setMapFilteredCompanies] = useState([]);
     const [userLocation, setUserLocation] = useState({ lat: 37.5665, lng: 126.9780 });
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // 기본 로딩 상태를 true로 설정
     const [mapBounds, setMapBounds] = useState(null);
     const [searchTriggered, setSearchTriggered] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
-    const [isMapSearch, setIsMapSearch] = useState(false); // 지도 검색 여부 상태 추가
+    const [isMapSearch, setIsMapSearch] = useState(false);
+    const [newsLoading, setNewsLoading] = useState(true); // 뉴스 로딩 상태 추가
 
     const searchInputRef = useRef(null);
     const mapRef = useRef(null);
@@ -46,6 +47,22 @@ function Search() {
                 }
             );
         }
+
+        const fetchNews = async () => {
+            try {
+                const response = await fetch('/api/economicNews'); // API 호출
+                const data = await response.json();
+                setFilteredCompanies(data); // 뉴스 상태 업데이트
+            } catch (error) {
+                console.error('Error fetching economic news:', error);
+            } finally {
+                setNewsLoading(false); // 데이터 로드 완료 후 로딩 상태 해제
+            }
+        };
+
+        fetchNews(); // 컴포넌트 마운트 시 뉴스 가져오기
+
+        setLoading(false); // 기존 데이터 로드 완료 후 로딩 상태 해제
     }, []);
 
     const handleFetchCorpInfo = async (useMapBounds) => {
@@ -110,7 +127,7 @@ function Search() {
     const handleSearch = () => {
         console.log('기존검색버튼');
         setSearchTriggered(true);
-        setIsMapSearch(false); // 기존 검색 설정
+        setIsMapSearch(false);
         console.log('searchTriggered after handleSearch:', searchTriggered);
         console.log('isMapSearch after handleSearch:', isMapSearch);
         handleFetchCorpInfo(false);
@@ -118,7 +135,7 @@ function Search() {
 
     const handleMapSearch = () => {
         console.log('화면내검색버튼');
-        setIsMapSearch(true); // 지도 검색 설정
+        setIsMapSearch(true);
         console.log('searchTriggered after handleMapSearch:', searchTriggered);
         console.log('isMapSearch after handleMapSearch:', isMapSearch);
         handleFetchCorpInfo(true);
@@ -151,61 +168,60 @@ function Search() {
     console.log('filteredCompanies:', filteredCompanies);
     console.log('mapFilteredCompanies:', mapFilteredCompanies);
 
-    return <>
-    <div className='app'>
-       
-        <div style={{ display: 'flex', height: '100vh' }} onKeyPress={handleKeyPress}>
-            {loading && <LoadingSpinner />}
-            <div style={{ width: '30%', padding: '10px', boxSizing: 'border-box' }}>
-                <Filter 
-                    onFilterChange={handleFilterChange} 
-                    handleSearch={handleSearch} 
-                    setSearchInputFocus={setSearchInputFocus}
-                    searchInputRef={searchInputRef}
-                    setCorpNm={setCorpNm} // Set corpNm state
-                />
-                {error && <p>Error: {error}</p>}
-                <div className={`${styles['result-container']} ${searchTriggered ? styles['visible'] : ''}`}>
-    {searchTriggered && !isMapSearch && (
-        <>
-            <p>검색 결과: {filteredCompanies.length}건</p>
-            <CompanyList 
-                companies={filteredCompanies} 
-                onCompanyClick={handleCompanyClick} 
-                onMarkerClick={handleMarkerClick} 
-            />
-        </>
-    )}
-    {searchTriggered && isMapSearch && (
-        <>
-            <p>검색 결과: {mapFilteredCompanies.length}건</p>
-            <CompanyList 
-                companies={mapFilteredCompanies} 
-                onCompanyClick={handleCompanyClick} 
-                onMarkerClick={handleMarkerClick} 
-            />
-        </>
-    )}
-</div>
+    return (
+        <div className='app'>
+            <div style={{ display: 'flex', height: '100vh' }} onKeyPress={handleKeyPress}>
+                {(loading || newsLoading) && <LoadingSpinner />} {/* 로딩 상태 표시 */}
+                <div style={{ width: '30%', padding: '10px', boxSizing: 'border-box' }}>
+                   
+                    <Filter 
+                        onFilterChange={handleFilterChange} 
+                        handleSearch={handleSearch} 
+                        setSearchInputFocus={setSearchInputFocus}
+                        searchInputRef={searchInputRef}
+                        setCorpNm={setCorpNm}
+                    />
+                      {!searchTriggered && !isMapSearch && <EconomicNews />} {/* 검색이 실행되지 않았을 때만 뉴스 표시 */}
+                    {error && <p>Error: {error}</p>}
+                    <div className={`${styles['result-container']} ${searchTriggered ? styles['visible'] : ''}`}>
+                        {searchTriggered && !isMapSearch && (
+                            <>
+                                <p>검색 결과: {filteredCompanies.length}건</p>
+                                <CompanyList 
+                                    companies={filteredCompanies} 
+                                    onCompanyClick={handleCompanyClick} 
+                                    onMarkerClick={handleMarkerClick} 
+                                />
+                            </>
+                        )}
+                        {searchTriggered && isMapSearch && (
+                            <>
+                                <p>검색 결과: {mapFilteredCompanies.length}건</p>
+                                <CompanyList 
+                                    companies={mapFilteredCompanies} 
+                                    onCompanyClick={handleCompanyClick} 
+                                    onMarkerClick={handleMarkerClick} 
+                                />
+                            </>
+                        )}
+                    </div>
+                </div>
+                <div style={{ width: '70%', position: 'relative' }}>
+                    <UserLocationMap 
+                        companies={corpInfo} 
+                        setMapBounds={setMapBounds} 
+                        searchTriggered={searchTriggered} 
+                        setFilteredCompanies={setFilteredCompanies} 
+                        setLoading={setLoading}
+                        selectedCompany={selectedCompany}
+                        mapRef={mapRef}
+                    />
+                    {searchTriggered && <MapSearchButton onClick={handleMapSearch} />}
 
-            </div>
-            <div style={{ width: '70%', position: 'relative' }}>
-                <UserLocationMap 
-                    companies={corpInfo} 
-                    setMapBounds={setMapBounds} 
-                    searchTriggered={searchTriggered} 
-                    setFilteredCompanies={setFilteredCompanies} 
-                    setLoading={setLoading}
-                    selectedCompany={selectedCompany}
-                    mapRef={mapRef}
-                  
-                />
-                <MapSearchButton onClick={handleMapSearch} /> {/* MapSearchButton 추가 */}
+                </div>
             </div>
         </div>
-       
-    </div>
-</>
+    );
 }
 
 export default Search;

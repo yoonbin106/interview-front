@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
+
+
 class UserStore {
   username = '';
   email = '';
@@ -10,13 +12,37 @@ class UserStore {
   profile = '';
   id = '';
 
+
+
   constructor() {
     makeAutoObservable(this);
     if (typeof window !== 'undefined') {
       this.loadUserData(); // 페이지 로드 시 사용자 데이터를 복원 (클라이언트 환경에서만)
     }
   }
-
+  
+  // 초기화 함수 추가
+  initializeUserStore() {
+    this.username = '';
+    this.email = '';
+    this.phone = '';
+    this.gender = '';
+    this.birth = '';
+    this.address = '';
+    this.profile = '';
+    this.id = '';
+    
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('username');
+      localStorage.removeItem('email');
+      localStorage.removeItem('phone');
+      localStorage.removeItem('gender');
+      localStorage.removeItem('birth');
+      localStorage.removeItem('address');
+      localStorage.removeItem('profile');
+      localStorage.removeItem('id');
+    }
+  }
   setEmail(email) {
     this.email = email;
     if (typeof window !== 'undefined') {
