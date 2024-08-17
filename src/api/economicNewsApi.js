@@ -6,15 +6,15 @@ const defaultImageUrl = '/images/default.jpg';
 
 export const fetchEconomicNews = async () => {
     try {
-        console.log('Starting to fetch economic news from Naver...');
+        //console.log('Starting to fetch economic news from Naver...');
 
         // Step 1: Axios 요청
         let response;
         try {
             response = await axios.get('https://news.naver.com/breakingnews/section/101/261');
-            console.log('Received response from Naver with status:', response.status);
+            //console.log('Received response from Naver with status:', response.status);
         } catch (axiosError) {
-            console.error('Axios request failed:', axiosError.message);
+            //console.error('Axios request failed:', axiosError.message);
             throw new Error('Failed to fetch page from Naver');
         }
 
@@ -22,12 +22,12 @@ export const fetchEconomicNews = async () => {
         let $;
         try {
             $ = cheerio.load(response.data);
-            console.log('Successfully loaded HTML with cheerio.');
+            //console.log('Successfully loaded HTML with cheerio.');
 
             // Step 3: HTML 구조 출력 (초기 500자만 출력해서 확인)
-            console.log('HTML 구조 일부:', response.data.slice(0, 500));
+            //console.log('HTML 구조 일부:', response.data.slice(0, 500));
         } catch (cheerioError) {
-            console.error('Cheerio failed to parse HTML:', cheerioError.message);
+            //console.error('Cheerio failed to parse HTML:', cheerioError.message);
             throw new Error('Failed to parse HTML');
         }
 
@@ -51,16 +51,16 @@ export const fetchEconomicNews = async () => {
                 newsList.push({ title, link, imgUrl, press, time });
             });
 
-            console.log('Total news items parsed:', newsList.length);
+            //console.log('Total news items parsed:', newsList.length);
         } catch (parsingError) {
-            console.error('Failed to parse news items:', parsingError.message);
+            //console.error('Failed to parse news items:', parsingError.message);
             throw new Error('Failed to parse news items');
         }
 
         // Step 5: 결과 반환
         return newsList;
     } catch (error) {
-        console.error('Error in fetchEconomicNews:', error.message);
+        //console.error('Error in fetchEconomicNews:', error.message);
         throw error;
     }
 };

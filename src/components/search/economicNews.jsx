@@ -17,7 +17,7 @@ const EconomicNews = () => {
                 setNews(data); 
             } catch (error) {
                 setError(error.message);
-                console.error('Error fetching economic news:', error);
+                //console.error('Error fetching economic news:', error);
             } finally {
                 setLoading(false); 
             }
