@@ -1,4 +1,4 @@
-//**adminSideMenu.jsx */
+//**adminS */
 import * as React from 'react';
 import { useRouter } from 'next/router'; // Next.js의 useRouter 사용
 import ListSubheader from '@mui/material/ListSubheader';
@@ -49,7 +49,7 @@ export default function NestedList() {
           component="div"
           id="nested-list-subheader"
           sx={{ fontSize: '1.3rem', textAlign: 'center' }} // 가운데 정렬 추가
-          onClick={() => handleNavigation('/adminPage/adminMainPage')} // 홈 아이콘 클릭 시 메인 페이지로 이동
+          onClick={() => handleNavigation('/adminPage')} // 홈 아이콘 클릭 시 메인 페이지로 이동
         >
           <HomeIcon />
           　관리자 페이지

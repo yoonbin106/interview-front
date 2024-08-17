@@ -1,7 +1,7 @@
-/* adminNoticeRegister.module.css */
+/* adminAdminNoticeRegister.module.css */
 
 /* 전체 컨테이너 */
-.adminNoticeRegisterContainer {
+.adminAdminNoticeRegisterContainer {
     max-width: 1000px;
     margin: 50px auto; /* 페이지 중앙에 위치 */
     padding: 20px;
@@ -11,23 +11,23 @@
 }
 
 /* 제목 텍스트 필드 */
-.adminNoticeRegisterTitleInput {
+.adminAdminNoticeRegisterTitleInput {
     margin-bottom: 10px;
 }
 
 /* 글꼴 크기 선택 및 아이콘 버튼 */
-.adminNoticeRegisterFontControls {
+.adminAdminNoticeRegisterFontControls {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 }
 
-.adminNoticeRegisterFontControlItem {
+.adminAdminNoticeRegisterFontControlItem {
     margin-right: 5px;
 }
 
 /* 내용 텍스트 필드 */
-.adminNoticeRegisterContentInput {
+.adminAdminNoticeRegisterContentInput {
     font-size: 15px;
     font-style: normal;
     font-weight: normal;
@@ -37,24 +37,24 @@
 }
 
 /* 글자 수 텍스트 */
-.adminNoticeRegisterCharCount {
+.adminAdminNoticeRegisterCharCount {
     text-align: right;
     color: gray;
 }
 
 /* 파일 첨부 버튼 */
-.adminNoticeRegisterFileAttachButton {
+.adminAdminNoticeRegisterFileAttachButton {
     margin-right: 10px;
 }
 
 /* 파일 첨부 텍스트 */
-.adminNoticeRegisterFileAttachText {
+.adminAdminNoticeRegisterFileAttachText {
     margin-top: 5px;
     color: gray;
     font-size: 0.9em;
 }
 
-.adminNoticeRegisterSubmitButton {
+.adminAdminNoticeRegisterSubmitButton {
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
@@ -66,13 +66,13 @@
     margin-top: 20px; /* 버튼과 위의 내용 사이에 간격 추가 */
 }
 
-.adminNoticeRegisterSubmitButton:hover {
+.adminAdminNoticeRegisterSubmitButton:hover {
     background-color: #0056b3;
 }
 
 
 
-.adminNoticeRegisterTitle {
+.adminAdminNoticeRegisterTitle {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 30px;

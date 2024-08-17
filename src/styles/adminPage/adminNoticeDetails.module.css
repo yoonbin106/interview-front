@@ -1,51 +1,76 @@
 /* adminNoticeDetails.module.css */
-.noticeDetailsContainer {
+
+/* 전체 컨테이너 스타일 */
+.adminNoticeDetailsContainer {
     padding: 20px;
     display: flex;
     justify-content: center;
 }
 
-.noticeDetailsPaper {
+/* 공지사항 카드 스타일 */
+.adminNoticeDetailsPaper {
     padding: 20px;
     max-width: 800px;
     width: 100%;
 }
-  
 
-.noticeDetailsGrayText {
-    color: gray;
-}
-
-.noticeDetailsHeader {
+/* 공지사항 제목 스타일 */
+.adminNoticeDetailsHeader {
     border-bottom: 1px solid #ddd;
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
 
-.noticeDetailsContent {
+/* 공지사항 날짜 스타일 */
+.adminNoticeDetailsDate {
+    color: gray;
+}
+
+/* 공지사항 내용 스타일 */
+.adminNoticeDetailsContent {
     white-space: pre-wrap;
     line-height: 1.6;
 }
 
-.noticeDetailsButtonsContainer {
+/* 버튼 컨테이너 스타일 */
+.adminNoticeDetailsButtonsContainer {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
 }
 
-.noticeDetailsSaveButton, .noticeDetailsEditButton {
+/* 저장하기 버튼 스타일 */
+.admiNoticeSaveButton {
     margin-right: 10px;
     background-color: #4A90E2;
     color: white;
 }
 
-.noticeDetailsDeleteButton {
+/* 수정하기 버튼 스타일 */
+.adminNoticeEditButton {
+    margin-right: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
+
+/* 삭제하기 버튼 스타일 */
+.adminNoticeDeleteButton {
     background-color: red;
     color: white;
 }
 
-.noticeDetailsNavButtons {
+/* 이전글 / 다음글 버튼 스타일 */
+.adminNoticeNavButtons {
     margin-top: 40px;
     display: flex;
     justify-content: space-between;
+}
+
+/* 다이얼로그 스타일 */
+.adminNoticeDialogTitle {
+    font-weight: bold;
+}
+
+.adminNoticeDialogContentText {
+    margin-top: 20px;
 }

@@ -1,0 +1,86 @@
+/* adminNotice.module.css */
+
+/* 테이블 관련 스타일 */
+.noticeTableContainer {
+    margin-top: 20px;
+}
+
+.noticeTableHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+    width: 150px;
+    white-space:nowrap;
+}
+
+.noticeTableLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.noticeTableLink:hover {
+    text-decoration: underline;
+}
+
+.noticeTableButtonContainer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+/* 레이아웃 및 컨테이너 스타일 */
+.noticeContainer {
+    display: flex;
+    margin: 30px 30px 30px 30px;
+    width: 100%;
+    height:1000px ;
+    justify-content: center;
+}
+
+.noticeSidebar {
+    border: solid 2px;
+    border-color: #DEFFF5;
+    margin: 10px 20px 10px 10px;
+    min-width: 200px;
+}
+
+.noticeContent {
+    background-color: white;
+    padding: 20px;
+    margin: 10px 10px 10px 10px;
+    border: solid 2px;
+    border-color: #DEFFF5;
+    min-width: 500px;
+    width: 1080px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.noticeMainContainer {
+    padding: 20px;
+}
+
+/* 기타 스타일 */
+.noticeTitle {
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 40px;
+}
+
+.noticeGridContainer {
+    margin-top: 20px;
+    max-width: 100%;
+}
+
+.noticeGridItem {
+    height: 56px;
+}
+
+.noticeSearchButton {
+    background-color: #4A90E2;
+    &:hover {
+        background-color: #357ABD;
+    }
+    height: 56px;
+}

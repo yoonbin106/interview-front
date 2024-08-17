@@ -1,63 +1,120 @@
 /*adminMain.module.css*/
 
-.adminPageTitle {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 세련된 폰트 사용 */
-    font-size: 2.5rem; /* 폰트 크기 조정 */
-    color: #0056b3; /* 진한 파란색 텍스트 */
-    text-align: center; /* 가운데 정렬 */
-    margin-bottom: 20px; /* 아래쪽 여백 추가 */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
-    background-color: #f0f8ff; /* 밝은 파란색 배경 추가 */
-    padding: 15px; /* 텍스트 주위 여백 추가 */
-    border-radius: 12px; /* 모서리를 둥글게 */
-    border: 2px solid #ddd; /* 얇은 테두리 추가 */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-}
+/* 기존 adminMain.module.css에서 가져온 스타일 */
+
 
 .adminMainContainerFluid {
     display: flex;
     flex-direction: column;
     position: relative;
-    margin-top: 25px; /* 위 여백 추가 */
- 
+    margin-top: 25px;
 }
 
 .adminMainContent {
     flex: 1;
-   
 }
 
+.adminMainColPadding {
+    padding-right: 15px;
+    padding-left: 15px;
+    min-width: 950px;
+}
+.adminMainTitle {
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 40px;
+}
+/* adminMainInfoCard */
+.infoCard {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.infoCardHeader {
+    font-weight: bold;
+    padding: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
+
+.infoTableContainer {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.infoTableColumn {
+    flex: 1;
+    border-left: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+}
+
+.infoTableColumn:first-child {
+    border-left: none;
+}
+
+/* adminMainNoticeTable*/
+.mainNoticeTableCard {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.mainNoticeTableHeader {
+    font-weight: bold;
+    padding: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
+
+.mainNoticeTable {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.mainNoticeTableHeaderCell {
+    text-align: center;
+    font-weight: 600;
+}
+
+.noAnnouncementMessage {
+    color: #888;
+    text-align: center;
+}
+
+/* 기존 adminMain.module.css에서 가져온 스타일 */
 .adminMainCard {
     margin-bottom: 20px;
-    width:100%;
-   
+    width: 100%;
 }
 
 .adminMainTable {
     margin-top: 20px;
     width: 100%;
-  
-  
 }
+
 .adminMainTableContainer {
     display: flex;
     justify-content: space-between;
-    border: 1px solid #000; /* 테두리 추가 */
+    border: 1px solid #000;
     padding: 10px;
 }
+
 .adminMainTableColumn {
     flex: 1;
-    border-left: 1px solid #000; /* 컬럼 사이 테두리 추가 */
+    border-left: 1px solid #000;
     padding: 10px;
     text-align: center;
 }
-.adminMainTableColumn:first-child{
+
+.adminMainTableColumn:first-child {
     border-left: none;
 }
+
 .adminMainCardHeader {
     font-weight: bold;
     padding: 10px;
- 
 }
 
 .adminMainCardBodyP {
@@ -69,27 +126,18 @@
     margin: 5px 0;
 }
 
-.adminMainColPadding {
-    padding-right: 15px;
-    padding-left: 15px;
-    min-width: 950px;
-}
-
-.adminMainMainHeader {
-    background-color: #4A90E2; /* 파란색 코드 */
-    color: white;
-
-}
-
 .adminMainTableHeader {
     text-align: center;
     font-weight: 600;
 }
 
+.adminMainMainHeader {
+    background-color: #4A90E2;
+    color: white;
+}
 
 /* 우선순위를 높이기 위해 부모 클래스와 결합하여 지정 */
 .adminMainCard .adminMainMainHeader {
-    background-color: #4A90E2; /* 파란색 코드 */
+    background-color: #4A90E2;
     color: white;
-  
 }
