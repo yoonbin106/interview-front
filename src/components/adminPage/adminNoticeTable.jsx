@@ -31,14 +31,14 @@ export default function PaginationTableNotice({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.NoticePaginationTableContainer}>
+    <TableContainer component={Paper} className={styles.noticeTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>제목</TableCell>
-            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.NoticePaginationHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.noticeHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.noticeHeaderCell}>제목</TableCell>
+            <TableCell align="center" className={styles.noticeHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.noticeHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -1,25 +1,25 @@
 /* adminNoticeTable.module.css */
 
-.NoticePaginationTableContainer {
+.noticeTableContainer {
     margin-top: 20px;
   }
   
-  .NoticePaginationHeaderCell {
+  .noticeHeaderCell {
     font-weight: bold;
     background-color: #4A90E2;
     color: white;
   }
-  .NoticePaginationLink {
+  .noticeLink {
     color: black;
     cursor: pointer;
     text-decoration: none;
   }
   
-  .NoticeLink:hover {
+  .noticeLink:hover {
     text-decoration: underline;
   }
   
-  .NoticeButtonContainer {
+  .noticeButtonContainer {
     margin-top: 10px;
     display: flex;
     gap: 10px;
