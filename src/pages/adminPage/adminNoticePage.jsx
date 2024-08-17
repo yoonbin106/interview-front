@@ -1,4 +1,4 @@
-//adminNoticePage.jsx
+//**adminNoticePage.jsx
 
 import React, { useState } from 'react';
 import PaginationTable from '@/components/adminPage/adminNoticeTable';

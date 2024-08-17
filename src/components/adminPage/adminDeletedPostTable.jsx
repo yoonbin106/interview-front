@@ -1,3 +1,4 @@
+//**adminDeletedPostTable.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -67,14 +68,14 @@ export default function DeletedPostTable({ rows }) {
 
   return (
     <>
-      <TableContainer component={Paper} className={styles.DeletedPostTableContainer}>
+      <TableContainer component={Paper} className={styles.deletedPostTableContainer}>
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" className={styles.DeletedPostHeaderCell}>글 번호</TableCell>
-              <TableCell align="center" className={styles.DeletedPostHeaderCell}>제목</TableCell>
-              <TableCell align="center" className={styles.DeletedPostHeaderCell}>작성자</TableCell>
-              <TableCell align="center" className={styles.DeletedPostHeaderCell}>삭제날짜</TableCell>
+              <TableCell align="center" className={styles.deletedPostHeaderCell}>글 번호</TableCell>
+              <TableCell align="center" className={styles.deletedPostHeaderCell}>제목</TableCell>
+              <TableCell align="center" className={styles.deletedPostHeaderCell}>작성자</TableCell>
+              <TableCell align="center" className={styles.deletedPostHeaderCell}>삭제날짜</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -1,0 +1,32 @@
+/* adminReportedCommentTable.module.css */
+
+/* 테이블 컨테이너 스타일 */
+.reportedCommentTableContainer {
+    margin-top: 20px;
+  
+  }
+  
+  /* 테이블 헤더 셀 스타일 */
+  .reportedCommentTableHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+  }
+  
+  /* 링크 스타일 */
+  .reportedCommentTableLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .reportedCommentTableLink:hover {
+    text-decoration: underline;
+  }
+  
+  /* 버튼 컨테이너와 페이지네이션 컨트롤 스타일 */
+  .reportedCommentTableButtonContainer{
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }

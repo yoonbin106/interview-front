@@ -1,4 +1,4 @@
-//adminAdminNoticeRegisterPage.jsx
+//**adminAdminNoticeRegisterPage.jsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import CreatePost from '@/components/adminPage/adminCreatePost';
@@ -20,10 +20,10 @@ const AdminNoticeRegister = () => {
                 <NestedList/>
             </div>
             <div className={sidebar.content}>
-                <div className={styles['CreatePostNoticeRegisterContainer']}>
-                    <h2 className={styles['CreatePostNoticeRegisterTitle']}>관리자 공지사항</h2>
+                <div className={styles['createPostNoticeRegisterContainer']}>
+                    <h2 className={styles['createPostNoticeRegisterTitle']}>관리자 공지사항</h2>
                     <CreatePost />
-                    <button type="button" onClick={handleSubmit} className={styles['CreatePostSubmitButton']}>등록하기</button>
+                    <button type="button" onClick={handleSubmit} className={styles['createPostSubmitButton']}>등록하기</button>
                 </div>
             </div>
         </div>

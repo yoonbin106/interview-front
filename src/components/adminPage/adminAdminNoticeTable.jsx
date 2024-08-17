@@ -1,4 +1,4 @@
-//*adminAdminNoticeTable.jsx
+//**adminAdminNoticeTable.jsx
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
@@ -33,14 +33,14 @@ export default function AdminNoticeTable({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.adminNoticePaginationTableContainer}>
+    <TableContainer component={Paper} className={styles.adminNoticeTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.adminNoticePaginationHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.adminNoticePaginationHeaderCell}>제목</TableCell>
-            <TableCell align="center" className={styles.adminNoticePaginationHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.adminNoticePaginationHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.adminNoticeTableHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.adminNoticeTableHeaderCell}>제목</TableCell>
+            <TableCell align="center" className={styles.adminNoticeTableHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.adminNoticeTableHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

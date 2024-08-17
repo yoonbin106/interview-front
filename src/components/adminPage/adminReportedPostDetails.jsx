@@ -1,4 +1,4 @@
-//adminReportedPostDetails.jsx
+//**adminReportedPostDetails.jsx
 
 import React from 'react';
 import { useRouter } from 'next/router';

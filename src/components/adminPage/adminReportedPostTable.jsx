@@ -1,7 +1,7 @@
-//adminReportedPostTable.jsx
+//**adminReportedPostTable.jsx
 import * as React from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, TextField, InputLabel, MenuItem, FormControl, Select, Button, Grid } from '@mui/material';
-import styles from '@/styles/adminPage/adminReportedTable.module.css';
+import styles from '@/styles/adminPage/adminReportedPostTable.module.css';
 
 export default function ReportedPostTable({ rows }) {
   const [page, setPage] = React.useState(0);
@@ -54,15 +54,15 @@ export default function ReportedPostTable({ rows }) {
 
   return (
     <>
-      <TableContainer component={Paper} className={styles.ReportedTableContainer}>
+      <TableContainer component={Paper} className={styles.reportedPostTableContainer}>
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" className={styles.ReportedHeaderCell}>글 번호</TableCell>
-              <TableCell align="center" className={styles.ReportedHeaderCell}>카테고리</TableCell>
-              <TableCell align="center" className={styles.ReportedHeaderCell}>제목</TableCell>
-              <TableCell align="center" className={styles.ReportedHeaderCell}>작성자</TableCell>
-              <TableCell align="center" className={styles.ReportedHeaderCell}>작성날짜</TableCell>
+              <TableCell align="center" className={styles.reportedPostHeaderCell}>글 번호</TableCell>
+              <TableCell align="center" className={styles.reportedPostHeaderCell}>카테고리</TableCell>
+              <TableCell align="center" className={styles.reportedPostHeaderCell}>제목</TableCell>
+              <TableCell align="center" className={styles.reportedPostHeaderCell}>작성자</TableCell>
+              <TableCell align="center" className={styles.reportedPostHeaderCell}>작성날짜</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -140,7 +140,7 @@ export default function ReportedPostTable({ rows }) {
       </Box>
      
       {/* 검색 기능 */}
-      <Box className={styles.searchContainer}>
+      <Box>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={3}>
             <FormControl fullWidth variant="outlined">

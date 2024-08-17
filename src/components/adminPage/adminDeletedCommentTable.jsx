@@ -1,3 +1,4 @@
+//**adminDeletedCommentTable.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -7,12 +8,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import TableHead from '@mui/material/TableHead';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import styles from '@/styles/adminPage/adminReportedTable.module.css';
+import styles from '@/styles/adminPage/adminDeletedCommentTable.module.css';
 import { FormControl } from '@mui/material';
 
 export default function AdminDeletedCommentTable({ rows }) {
@@ -44,14 +44,14 @@ export default function AdminDeletedCommentTable({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.ReportedTableContainer}>
+    <TableContainer component={Paper} className={styles.deletedCommentTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>내용</TableCell>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.deletedCommentHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.deletedCommentHeaderCell}>내용</TableCell>
+            <TableCell align="center" className={styles.deletedCommentHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.deletedCommentHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -60,7 +60,7 @@ export default function AdminDeletedCommentTable({ rows }) {
               <TableRow>
                 <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="center">
-                  <span onClick={() => toggleRow(index)} className={styles.ReportedLink}>
+                  <span onClick={() => toggleRow(index)} className={styles.deletedCommentLink}>
                     {row.title}
                   </span>
                 </TableCell>
@@ -86,7 +86,7 @@ export default function AdminDeletedCommentTable({ rows }) {
                       >
                         돌아서면 까먹어
                       </Box>
-                      <div className={styles.ReportedButtonContainer}>
+                      <div className={styles.deletedCommentButtonContainer}>
                         <Button variant="contained" color="error" onClick={handleDelete}>댓글 삭제</Button>
                       </div>
                     </Box>

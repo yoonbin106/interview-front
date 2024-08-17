@@ -1,3 +1,4 @@
+//**adminFaqPage.jsx */
 import React, { useState } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, InputLabel, Select, MenuItem, Box, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

@@ -1,4 +1,4 @@
-//adminQnaDetailsPage.jsx
+//**adminQnaDetailsPage.jsx
 import React, { useState } from 'react';
 import { TextField, Button, Paper, Typography, Grid, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';

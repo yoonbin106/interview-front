@@ -1,26 +1,32 @@
-/* adminDeletedCommentTable.module.css */
+/* adminReportedTable.module.css */
 
-.DeletedCommentPaginationTableContainer {
-    margin-top: 20px;
-  }
-  
-  .DeletedCommentPaginationHeaderCell {
-    font-weight: bold;
-    background-color: #4A90E2;
-    color: white;
-  }
-  .DeletedCommentPaginationLink {
-    color: black;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .DeletedCommentLink:hover {
-    text-decoration: underline;
-  }
-  
-  .DeletedCommentButtonContainer {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-  }
+/* 테이블 컨테이너 스타일 */
+.deletedCommentTableContainer {
+  margin-top: 20px;
+
+}
+
+/* 테이블 헤더 셀 스타일 */
+.deletedCommentHeaderCell {
+  font-weight: bold;
+  background-color: #4A90E2;
+  color: white;
+}
+
+/* 링크 스타일 */
+.deletedCommentLink {
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.deletedCommentLink:hover {
+  text-decoration: underline;
+}
+
+/* 버튼 컨테이너와 페이지네이션 컨트롤 스타일 */
+.deletedCommentButtonContainer{
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}

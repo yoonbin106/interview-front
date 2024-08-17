@@ -1,4 +1,4 @@
-/*adminReportedCommentPage.jsx*/
+/**adminReportedCommentPage.jsx*/
 
 import React from 'react';
 import PaginationTableComment from '@/components/adminPage/adminReportedCommentTable';

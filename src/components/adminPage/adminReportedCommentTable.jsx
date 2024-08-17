@@ -1,6 +1,7 @@
+//**adminReportedCommentTable.jsx */
 import * as React from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem } from '@mui/material';
-import styles from '@/styles/adminPage/adminReportedTable.module.css';
+import styles from '@/styles/adminPage/adminReportedCommentTable.module.css';
 
 export default function PaginationTableComment({ rows }) {
   const [page, setPage] = React.useState(0);
@@ -37,14 +38,14 @@ export default function PaginationTableComment({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.ReportedTableContainer}>
+    <TableContainer component={Paper} className={styles.reportedCommentTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>내용</TableCell>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.ReportedHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.reportedCommentTableHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.reportedCommentTableHeaderCell}>내용</TableCell>
+            <TableCell align="center" className={styles.reportedCommentTableHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.reportedCommentTableHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,7 +54,7 @@ export default function PaginationTableComment({ rows }) {
               <TableRow>
                 <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="center">
-                  <span onClick={() => toggleRow(index)} className={styles.link}>
+                  <span onClick={() => toggleRow(index)} className={styles.reportedCommentTableLink}>
                     {row.title}
                   </span>
                 </TableCell>
@@ -81,7 +82,7 @@ export default function PaginationTableComment({ rows }) {
                       >
                         이 내용은 적절하지 않습니다.
                       </Box>
-                      <div className={styles.buttonContainer}>
+                      <div className={styles.reportedCommentTableButtonContainer}>
                         <Button variant="contained" color="error" onClick={handleDelete}>댓글 삭제</Button>
                         <Button variant="contained" color="warning" onClick={handleHide}>댓글 숨김</Button>
                       </div>

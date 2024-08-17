@@ -1,4 +1,4 @@
-/*adminMain.jsx*/
+//**adminMain.jsx*/
 import React, { useState, useEffect } from 'react';
 import { Table, Container, Row, Col, Card } from 'react-bootstrap';
 //import { getNotices, getAdminNotices } from '../../api/axios';

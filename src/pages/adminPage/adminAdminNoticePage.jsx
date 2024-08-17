@@ -1,4 +1,4 @@
-//adminAdminNoticePage.jsx
+//**adminAdminNoticePage.jsx
 import styles from '@/styles/adminPage/adminPage.module.css';
 import React, { useState } from 'react';
 import RegisterButton from '@/components/adminPage/adminRegisterButton';

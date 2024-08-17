@@ -1,4 +1,4 @@
-// adminReportedPostDetailsPage.jsx
+//**adminReportedPostDetailsPage.jsx
 
 import React from 'react';
 import { useRouter } from 'next/router';
@@ -37,11 +37,11 @@ export default function AdminReportedPostDetailsPage() {
                 <NestedList/>
             </div>
         <div className={sidebar.content}>
-            <div className={styles.ReportedPostDetailsWrapper}>
+            <div className={styles.reportedPostDetailsWrapper}>
               <strong>단 6개월만에 취업성공? ICT2기 절찬리에 모집중@@--&gt;링크클릭</strong>
-                <p className={styles.ReportedPostDetailsDate}>2023-08-10</p>
+                <p className={styles.reportedPostDetailsDate}>2023-08-10</p>
                 <hr />
-                <div className={styles.ReportedPostDetailsContent}>
+                <div className={styles.reportedPostDetailsContent}>
                     <p><strong>카테고리:</strong> 광고</p>
                     <p><br></br><strong>작성자:</strong> user789</p>
                     <p>
@@ -55,7 +55,7 @@ export default function AdminReportedPostDetailsPage() {
                     <p><strong>신고사유:</strong></p>
                     <br></br>
                     <textarea
-                        className={styles.ReportedPostDetailsReasonInput}
+                        className={styles.reportedPostDetailsReasonInput}
                         defaultValue="광고성 게시물입니다."
                         readOnly
                     />
@@ -63,10 +63,10 @@ export default function AdminReportedPostDetailsPage() {
                     <br></br><strong>신고자:</strong> user123</p>
                     <p><br></br><strong>신고날짜:</strong> 2023-08-11</p>
                 </div>
-                <div className={styles.ReportedPostDetailsButtonContainer}>
-                    <button className={styles.ReportedPostDetailsDeleteButton} onClick={handleDelete}>게시글 삭제</button>
-                    <button className={styles.ReportedPostDetailsHideButton} onClick={handleHide}>게시글 숨김</button>
-                    <button className={styles.ReportedPostDetailsBackButton} onClick={handleBack}>목록</button>
+                <div className={styles.reportedPostDetailsButtonContainer}>
+                    <button className={styles.reportedPostDetailsDeleteButton} onClick={handleDelete}>게시글 삭제</button>
+                    <button className={styles.reportedPostDetailsHideButton} onClick={handleHide}>게시글 숨김</button>
+                    <button className={styles.reportedPostDetailsBackButton} onClick={handleBack}>목록</button>
                 </div>
             </div>
         </div>

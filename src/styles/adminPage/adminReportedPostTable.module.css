@@ -1,31 +1,31 @@
 /* adminReportedTable.module.css */
 
 /* 테이블 컨테이너 스타일 */
-.ReportedTableContainer {
+.reportedPostTableContainer {
   margin-top: 20px;
 
 }
 
 /* 테이블 헤더 셀 스타일 */
-.ReportedHeaderCell {
+.reportedPostHeaderCell {
   font-weight: bold;
   background-color: #4A90E2;
   color: white;
 }
 
 /* 링크 스타일 */
-.ReportedLink {
+.reportedPostLink {
   color: black;
   cursor: pointer;
   text-decoration: none;
 }
 
-.ReportedLink:hover {
+.reportedPostLink:hover {
   text-decoration: underline;
 }
 
 /* 버튼 컨테이너와 페이지네이션 컨트롤 스타일 */
-.ReportedButtonContainer{
+.reportedPostButtonContainer{
   margin-top: 10px;
   display: flex;
   gap: 10px;

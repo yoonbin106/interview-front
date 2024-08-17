@@ -1,4 +1,4 @@
-//adminNoticeDetails.jsx
+//**adminNoticeDetails.jsx
 
 import React,{useState} from 'react';
 import{Button,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Paper,TextField,Typography,} from '@mui/material';

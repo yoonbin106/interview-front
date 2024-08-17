@@ -1,3 +1,4 @@
+//**adminSearchResults.jsx */
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { useRouter } from 'next/router';

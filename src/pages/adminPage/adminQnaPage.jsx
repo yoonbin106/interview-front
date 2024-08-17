@@ -1,4 +1,4 @@
-//adminQnaPage.jsx
+//**adminQnaPage.jsx
 
 import React, { useState } from 'react';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';

@@ -1,4 +1,4 @@
-//adminUserDetails.jsx
+//**adminUserDetails.jsx
 
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Paper, Avatar, TextField, Button } from '@mui/material';

@@ -1,6 +1,6 @@
-/* adminReportedPostDetails.module.css */
+/* adminDeletedPostDetails.module.css */
 
-.reportedPostDetailsWrapper {
+.deletedPostDetailsWrapper {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
@@ -9,31 +9,31 @@
     margin: 20px auto;
 }
 
-.reportedPostDetailsH2 {
+.deletedPostDetailsH2 {
     margin-bottom: 10px;
     font-size: 24px;
     font-weight: bold;
 }
 
-.reportedPostDetailsDate {
+.deletedPostDetailsDate {
     font-size: 14px;
     color: #888;
     margin-bottom: 20px;
 }
 
-.reportedPostDetailsHr {
+.deletedPostDetailsHr {
     margin: 20px 0;
     border: 0;
     border-top: 1px solid #ddd;
 }
 
-.reportedPostDetailsContent {
+.deletedPostDetailsContent {
     font-size: 16px;
     line-height: 1.6;
     margin-bottom: 30px;
 }
 
-.reportedPostDetailsReasonInput {
+.deletedPostDetailsReasonInput {
     width: 100%;
     height: 80px;
     padding: 10px;
@@ -44,13 +44,13 @@
     background-color: #f8f9fa;
 }
 
-.reportedPostDetailsButtonContainer {
+.deletedPostDetailsButtonContainer {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
-.reportedPostDetailsDeleteButton, .reportedPostDetailsHideButton, .reportedPostDetailsBackButton {
+.deletedPostDetailsDeleteButton, .deletedPostDetailsHideButton, .deletedPostDetailsBackButton {
     padding: 10px 20px;
     font-size: 16px;
     border: none;
@@ -58,29 +58,29 @@
     cursor: pointer;
 }
 
-.reportedPostDetailsDeleteButton {
+.deletedPostDetailsDeleteButton {
     background-color: #dc3545;
     color: white;
 }
 
-.reportedPostDetailsDeleteButton:hover {
+.deletedPostDetailsDeleteButton:hover {
     background-color: #c82333;
 }
 
-.reportedPostDetailsHideButton {
+.deletedPostDetailsHideButton {
     background-color: #ffc107;
     color: white;
 }
 
-.reportedPostDetailsHideButton:hover {
+.deletedPostDetailsHideButton:hover {
     background-color: #e0a800;
 }
 
-.reportedPostDetailsBackButton {
+.deletedPostDetailsBackButton {
     background-color: #007bff;
     color: white;
 }
 
-.reportedPostDetailsBackButton:hover {
+.deletedPostDetailsBackButton:hover {
     background-color: #0056b3;
 }

@@ -1,4 +1,4 @@
-// adminReportedFinPostPage.jsx
+//**adminReportedFinPostPage.jsx
 
 import React from 'react';
 import { useRouter } from 'next/router';

@@ -1,4 +1,4 @@
-//adminUserDetailsPage.jsx
+//**adminUserDetailsPage.jsx
 import React from 'react';
 import UserDetails from '@/components/adminPage/adminUserDetails';
 import styles from '@/styles/adminPage/adminPage.module.css';

@@ -1,4 +1,4 @@
-//adminQnaTable.jsx
+//**adminQnaTable.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -31,15 +31,15 @@ export default function PaginationTableQna({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.QnaPaginationTableContainer}>
+    <TableContainer component={Paper} className={styles.qnaTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>카테고리</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>제목</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.QnaPaginationHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.qnaHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.qnaHeaderCell}>카테고리</TableCell>
+            <TableCell align="center" className={styles.qnaHeaderCell}>제목</TableCell>
+            <TableCell align="center" className={styles.qnaHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.qnaHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

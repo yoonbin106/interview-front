@@ -1,4 +1,4 @@
-/*adminDeletedCommentPage.jsx*/
+/**adminDeletedCommentPage.jsx*/
 
 import React from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';

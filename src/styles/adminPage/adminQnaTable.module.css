@@ -1,25 +1,25 @@
 /* adminQnaTable.module.css */
 
-.QnaPaginationTableContainer {
+.qnaTableContainer {
     margin-top: 20px;
   }
   
-  .QnaPaginationHeaderCell {
+  .qnaHeaderCell {
     font-weight: bold;
     background-color: #4A90E2;
     color: white;
   }
-  .QnaPaginationLink {
+  .qnaLink {
     color: black;
     cursor: pointer;
     text-decoration: none;
   }
   
-  .QnaLink:hover {
+  .qnaLink:hover {
     text-decoration: underline;
   }
   
-  .QnaButtonContainer {
+  .qnaButtonContainer {
     margin-top: 10px;
     display: flex;
     gap: 10px;

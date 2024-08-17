@@ -1,9 +1,9 @@
-//adminFaqRegisterPage.jsx
+//**adminFaqRegisterPage.jsx
 
 import React from 'react';
 import { useRouter } from 'next/router';
 import CreatePost from '@/components/adminPage/adminCreatePost';
-import styles from '@/styles/adminPage/adminCreatePost.module.css';
+import styles from '@/styles/adminPage/adminFaqRegister.module.css';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 
@@ -21,10 +21,10 @@ const FaqRegister = () => {
                 <NestedList/>
             </div>
             <div className={sidebar.content}>
-                <div className={styles['CreatePostNoticeRegisterContainer']}>
-                    <h2 className={styles['CreatePostNoticeRegisterTitle']}>자주 묻는 질문</h2>
+                <div className={styles['faqPostNoticeRegisterContainer']}>
+                    <h2 className={styles['faqPostNoticeRegisterTitle']}>자주 묻는 질문</h2>
                     <CreatePost />
-                    <button type="button" onClick={handleSubmit} className={styles['CreatePostSubmitButton']}>등록하기</button>
+                    <button type="button" onClick={handleSubmit} className={styles['faqPostSubmitButton']}>등록하기</button>
                 </div>
             </div>
         </div>

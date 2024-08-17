@@ -1,3 +1,4 @@
+//**adminReportedFinCommentTable.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -11,7 +12,7 @@ import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import styles from '@/styles/adminPage/adminPaginationTableFin.module.css';
+import styles from '@/styles/adminPage/adminReportedFinCommentTable.module.css';
 import { FormControl } from '@mui/material';
 
 export default function ReportedFinCommentTable({ rows }) {
@@ -49,14 +50,14 @@ export default function ReportedFinCommentTable({ rows }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.rePortedFinTableContainer}>
+    <TableContainer component={Paper} className={styles.reportedFinCommentTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="center" className={styles.reportedFinHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.reportedFinHeaderCell}>내용</TableCell>
-            <TableCell align="center" className={styles.reportedFinHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.reportedFinHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.reportedFinCommentHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.reportedFinCommentHeaderCell}>내용</TableCell>
+            <TableCell align="center" className={styles.reportedFinCommentHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.reportedFinCommentHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -65,7 +66,7 @@ export default function ReportedFinCommentTable({ rows }) {
               <TableRow>
                 <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="center">
-                  <span onClick={() => toggleRow(index)} className={styles.reportedFinLink}>
+                  <span onClick={() => toggleRow(index)} className={styles.reportedFinCommentLink}>
                     {row.title}
                   </span>
                 </TableCell>
@@ -93,7 +94,7 @@ export default function ReportedFinCommentTable({ rows }) {
                       >
                         이 내용은 적절하지 않습니다.
                       </Box>
-                      <div className={styles.reportedFinButtonContainer}>
+                      <div className={styles.reportedFinCommentButtonContainer}>
                         <Button variant="contained" color="error" onClick={handleDelete}>댓글 삭제</Button>
                         <Button variant="contained" color="warning" onClick={handleHide}>댓글 숨김</Button>
                       </div>

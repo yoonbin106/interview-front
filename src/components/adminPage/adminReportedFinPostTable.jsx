@@ -1,3 +1,4 @@
+//**adminReportedFinPostTable.jsx */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -13,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import styles from '@/styles/adminPage/adminPaginationTableFin.module.css';
+import styles from '@/styles/adminPage/adminReportedFinPostTable.module.css';
 import { Grid } from '@mui/material';
 
 export default function ReportedFinPostTable({ rows }) {
@@ -65,15 +66,15 @@ export default function ReportedFinPostTable({ rows }) {
 
   return (
     <>
-      <TableContainer component={Paper} className={styles.rePortedFinTableContainer}>
+      <TableContainer component={Paper} className={styles.reportedFinPostTableContainer}>
         <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" className={styles.reportedFinHeaderCell}>글 번호</TableCell>
-              <TableCell align="center" className={styles.reportedFinHeaderCell}>카테고리</TableCell>
-              <TableCell align="center" className={styles.reportedFinHeaderCell}>제목</TableCell>
-              <TableCell align="center" className={styles.reportedFinHeaderCell}>작성자</TableCell>
-              <TableCell align="center" className={styles.reportedFinHeaderCell}>작성날짜</TableCell>
+              <TableCell align="center" className={styles.reportedFinPostHeaderCell}>글 번호</TableCell>
+              <TableCell align="center" className={styles.reportedFinPostHeaderCell}>카테고리</TableCell>
+              <TableCell align="center" className={styles.reportedFinPostHeaderCell}>제목</TableCell>
+              <TableCell align="center" className={styles.reportedFinPostHeaderCell}>작성자</TableCell>
+              <TableCell align="center" className={styles.reportedFinPostHeaderCell}>작성날짜</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

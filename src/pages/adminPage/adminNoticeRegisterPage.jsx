@@ -1,8 +1,8 @@
-//adminNoticeRegisterPage.jsx
+//**adminNoticeRegisterPage.jsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import CreatePost from '@/components/adminPage/adminCreatePost';
-import styles from '@/styles/adminPage/adminCreatePost.module.css';
+import styles from '@/styles/adminPage/adminNoticeRegister.module.css';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 

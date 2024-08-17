@@ -1,8 +1,8 @@
-// adminReportedPostDetailsPage.jsx
+//**adminReportedPostDetailsPage.jsx
 
 import React from 'react';
 import { useRouter } from 'next/router';
-import styles from '@/styles/adminPage/adminReportedPostDetails.module.css';
+import styles from '@/styles/adminPage/adminDeletedPostDetails.module.css';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 
@@ -30,11 +30,11 @@ export default function AdminDeletedPostDetailsPage() {
             <NestedList/>
         </div>
         <div className={sidebar.content}>
-            <div className={styles.ReportedPostDetailsWrapper}>
+            <div className={styles.deletedPostDetailsWrapper}>
                 <h2>게시글1</h2>
-                <p className={styles.ReportedPostDetailsDate}>2023-08-10</p>
+                <p className={styles.deletedPostDetailsDate}>2023-08-10</p>
                 <hr />
-                <div className={styles.ReportedPostDetailsContent}>
+                <div className={styles.deletedPostDetailsContent}>
                     <p><strong>게시판:</strong> 무슨 게시판</p><br></br>
                     <p><strong>작성자:</strong> user789</p><br></br>
                     <p>
@@ -52,9 +52,9 @@ export default function AdminDeletedPostDetailsPage() {
                     <p><strong>게시글 등록 날짜:</strong> 2023-08-11</p>
                     
                 </div>
-                <div className={styles.ReportedPostDetailsButtonContainer}>
-                    <button className={styles.ReportedPostDetailsDeleteButton} onClick={handleDelete}>게시글 영구삭제</button>
-                    <button className={styles.ReportedPostDetailsBackButton} onClick={handleBack}>목록</button>
+                <div className={styles.deletedPostDetailsButtonContainer}>
+                    <button className={styles.deletedPostDetailsDeleteButton} onClick={handleDelete}>게시글 영구삭제</button>
+                    <button className={styles.deletedPostDetailsBackButton} onClick={handleBack}>목록</button>
                 </div>
             </div>
         </div>

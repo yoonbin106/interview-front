@@ -1,4 +1,4 @@
-//*adminAdminNoticeRegisterPage.jsx
+//**adminAdminNoticeRegisterPage.jsx
 import React from 'react';
 import { useRouter } from 'next/router';
 import CreatePost from '@/components/adminPage/adminCreatePost';
