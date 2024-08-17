@@ -47,7 +47,7 @@ export const fetchEconomicNews = async () => {
                     imgUrl = defaultImageUrl;
                 }
 
-                console.log(`Parsed news item ${index + 1}:`, { title, link, imgUrl, press, time });
+               //console.log(`Parsed news item ${index + 1}:`, { title, link, imgUrl, press, time });
                 newsList.push({ title, link, imgUrl, press, time });
             });
 
