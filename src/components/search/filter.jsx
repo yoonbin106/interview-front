@@ -133,7 +133,7 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
 
     return (
         <div>
-            <SearchBox searchInputRef={searchInputRef} />
+            <SearchBox searchInputRef={searchInputRef} setCorpNm={setCorpNm} handleSearch={handleSearch}/>
             <div className={stylesFilter['filter-container']} onKeyPress={handleKeyPress}>
                 <div className={stylesFilter['filter-categories']}>
                     {['지역', '규모', '연봉'].map((category) => (
