@@ -3,6 +3,7 @@ import stylesFilter from '@/styles/search/filter.module.css';
 import stylesSearch from '@/styles/search/search.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import SearchBox from '@/components/search/searchBox';
 
 const regions = {
     "서울": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
@@ -50,7 +51,7 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
 
     const handleCheckboxChange = (setter, value) => {
         setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
-        setSearchInputFocus();
+        // setSearchInputFocus();
     };
 
     const handleDistrictCheckboxChange = (e) => {
@@ -78,7 +79,7 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
                                 <input type="radio" value={region} checked={selectedRegion === region} onChange={() => {
                                     setSelectedRegion(region);
                                     setSelectedDistricts([]);
-                                    setSearchInputFocus();
+                                    // setSearchInputFocus();
                                 }} />
                                 <label>{region}</label>
                             </div>
@@ -132,20 +133,7 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
 
     return (
         <div>
-            <div className={stylesSearch['search-container']}>
-                <h2>지도</h2>
-                <p>전국의 기업을 지도로 한눈에 확인하세요!</p>
-                <div className={stylesSearch['search-box']}>
-                    <input 
-                        type="text" 
-                        placeholder="기업명을 검색해주세요" 
-                        ref={searchInputRef} 
-                        onChange={(e) => setCorpNm(e.target.value)}  
-                        onKeyPress={handleKeyPress} 
-                    />
-                    <button onClick={handleSearch}><FontAwesomeIcon icon={faSearch} /></button>
-                </div>
-            </div>
+            <SearchBox searchInputRef={searchInputRef} />
             <div className={stylesFilter['filter-container']} onKeyPress={handleKeyPress}>
                 <div className={stylesFilter['filter-categories']}>
                     {['지역', '규모', '연봉'].map((category) => (
