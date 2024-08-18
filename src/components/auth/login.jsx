@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { useStores } from '@/contexts/storeContext';
 import KakaoLogin from '@/components/auth/kakaoLogin';
 import NaverLogin from '@/components/auth/naverLogin';
+import GoogleLogin from '@/components/auth/googleLogin';
 
 const Login = observer(() => {
   const router = useRouter();
@@ -90,10 +91,9 @@ const Login = observer(() => {
           <button type="submit" className="btn btn-dark w-100 mb-3">로그인</button>
         </form>
         <div className="d-flex justify-content-around mb-4">
-          {/* <img style={iconStyle} src="/images/naverButton.png" alt="Naver" /> */}
           <NaverLogin/>
           <KakaoLogin/>
-          <img style={iconStyle} src="/images/googleButton.png" alt="Google" />
+          <GoogleLogin/>
         </div>
         <div className="d-flex justify-content-between mt-3">
           

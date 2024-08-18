@@ -10,7 +10,18 @@ const LoginSuccess = observer(() => {
     useEffect(() => {
         if (!router.isReady) return;  // 라우터가 준비되었는지 확인
 
-        const { access, refresh, isAdmin, id, gender, username, email, birth, phone, profile } = router.query;
+        const { 
+            access, 
+            refresh, 
+            isAdmin, 
+            id, 
+            gender = '', 
+            username, 
+            email, 
+            birth = '', 
+            phone = '',
+            profile 
+        } = router.query;
 
         if (access && refresh) {
             if (typeof window !== 'undefined') {
@@ -26,7 +37,7 @@ const LoginSuccess = observer(() => {
                 userStore.setId(id);
                 userStore.setEmail(email);
                 userStore.setUsername(decodedUsername);
-                userStore.setAddress('주소 정보가 없습니다.');
+                userStore.setAddress('');
                 userStore.setGender(gender);
                 userStore.setBirth(birth);
                 userStore.setPhone(phone);
