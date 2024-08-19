@@ -1,11 +1,8 @@
-/* adminNotice.module.css */
-
-/* 테이블 관련 스타일 */
-.adminNoticeTableContainer {
+.qnaTableContainer {
   margin-top: 20px;
 }
 
-.adminNoticeTableHeaderCell {
+.qnaHeaderCell {
   font-weight: bold;
   background-color: #4A90E2;
   color: white;
@@ -13,20 +10,19 @@
   white-space:nowrap;
 }
 
-.adminNoticeTableLink {
+.qnaTableLink {
   color: black;
   cursor: pointer;
   text-decoration: none;
 }
 
-.adminNoticeTableLink:hover {
+.qnaTableLink:hover {
   text-decoration: underline;
 }
 
 
 
-/* 레이아웃 및 컨테이너 스타일 */
-.adminNoticeContainer {
+.qnaContainer {
   display: flex;
   margin: 30px 30px 30px 30px;
   width: 100%;
@@ -34,14 +30,14 @@
   justify-content: center;
 }
 
-.adminNoticeSidebar {
+.qnaSidebar {
   border: solid 2px;
   border-color: #DEFFF5;
   margin: 10px 20px 10px 10px;
   min-width: 200px;
 }
 
-.adminNoticeContent {
+.qnaContent {
   background-color: white;
   padding: 20px;
   margin: 10px 10px 10px 10px;
@@ -53,30 +49,40 @@
   overflow-y: auto;
 }
 
-.adminNoticeMainContainer {
+
+
+
+
+.mainContainer {
   padding: 20px;
 }
 
-/* 기타 스타일 */
-.adminNoticeTitle {
+.pageControlButtons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.statusFilter, .searchCategory, .searchTerm {
+  width: 100%;
+}
+
+.searchButton {
+  height: 56px;
+  width: 100%;
+  background-color: #4A90E2;
+  color: white;
+}
+
+.qnaTitle {
   margin: 15px;
   white-space: nowrap;
   font-size: 40px;
-}
-
-.adminNoticeGridContainer {
-  margin-top: 20px;
-  max-width: 100%;
-}
-
-.adminNoticeGridItem {
-  height: 56px;
-}
-
-.adminNoticeSearchButton {
-  background-color: #4A90E2;
-  &:hover {
-      background-color: #357ABD;
-  }
-  height: 56px;
 }
