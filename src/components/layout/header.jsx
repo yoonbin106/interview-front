@@ -94,6 +94,7 @@ const Header = observer(() => {
   };
 
   return (
+    <>
     <header>
       <div className={styles.header}>
         <div className={styles.headerin}>
@@ -165,45 +166,48 @@ const Header = observer(() => {
         </div>
 
         {/* 내려오는 메뉴바 */}
-        {hover && (
+        {/* {hover && ( */}
           <div
-            className={styles.dropMenuFrame}
-            onMouseLeave={() => setHover(false)}
-          >
-            <div>
-              <div className={styles.dropMenu}>
-                <div className={styles.emptyMenuFrame}></div>
-                <div className={styles.subMenusFrame}>
-                  <div className={styles.subMenus}>
-                    <a href="#systemInfo" className={styles.subMenu}
-                      onClick={(e) => handleTicketClick(e, 'systemInfo')}>시스템 소개</a>
-                    <a href="#tickets" className={styles.subMenu}
-                      onClick={(e) => handleTicketClick(e, 'tickets')}>이용권</a>
-                  </div>
-                  <div className={styles.subMenus}>
-                    <a href="/search" className={styles.subMenu}>회사 검색</a>
-                    <a href="/survey" className={styles.subMenu}>설문조사</a>
-                  </div>
-                  <div className={styles.subMenus}>
-                    <a href="/resume/resumeList" className={styles.subMenu}>이력서</a>
-                    <a href="/interview" className={styles.subMenu}>모의면접</a>
-                    <a href="/interview/interviewResult" className={styles.subMenu}>면접결과</a>
-                  </div>
-                  <div className={styles.subMenus}>
-                    <a href="/bbs" className={styles.subMenu}>면접자 게시판</a>
-                    <a href="/bbs/noticePage" className={styles.subMenu}>공지사항</a>
-                  </div>
-                  <div className={styles.subMenus}>
-                    <a href="/bbs/bbsQnaPage" className={styles.subMenu}>고객센터</a>
-                  </div>
+          className={`${styles.dropMenuFrame} ${hover ? styles.show : ''}`}
+          onMouseLeave={() => setHover(false)}
+        >
+          <div>
+            <div className={styles.dropMenu}>
+              <div className={styles.emptyMenuFrame}></div>
+              <div className={styles.subMenusFrame}>
+                <div className={styles.subMenus}>
+                  <a href="#systemInfo" className={styles.subMenu}
+                    onClick={(e) => handleTicketClick(e, 'systemInfo')}>시스템 소개</a>
+                  <a href="#tickets" className={styles.subMenu}
+                    onClick={(e) => handleTicketClick(e, 'tickets')}>이용권</a>
                 </div>
-                <div className={styles.emptyMenuFrame}></div>
+                <div className={styles.subMenus}>
+                  <a href="/search" className={styles.subMenu}>회사 검색</a>
+                  <a href="/survey" className={styles.subMenu}>설문조사</a>
+                </div>
+                <div className={styles.subMenus}>
+                  <a href="/resume/resumeList" className={styles.subMenu}>이력서</a>
+                  <a href="/interview" className={styles.subMenu}>모의면접</a>
+                  <a href="/interview/interviewResult" className={styles.subMenu}>면접결과</a>
+                </div>
+                <div className={styles.subMenus}>
+                  <a href="/bbs" className={styles.subMenu}>면접자 게시판</a>
+                  <a href="/bbs/noticePage" className={styles.subMenu}>공지사항</a>
+                </div>
+                <div className={styles.subMenus}>
+                  <a href="/bbs/bbsQnaPage" className={styles.subMenu}>고객센터</a>
+                </div>
               </div>
+              <div className={styles.emptyMenuFrame}></div>
             </div>
           </div>
-        )}
+        </div>
+        {/* )} */}
       </div>
     </header>
+    {/* 어두운 배경 추가 */}
+    <div className={`${styles.overlay} ${hover ? styles.showOverlay : ''}`}></div>
+    </>
   );
 });
 
