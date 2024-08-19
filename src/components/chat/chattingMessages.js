@@ -23,7 +23,7 @@ const ChattingMessages = ({ messages, userInfo }) => {
           <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
             <div className={styles.recieverAvatar} aria-hidden="true">
-              <Avatar sx={{width: 50, height: 50}}>Y</Avatar>
+              <Avatar sx={{width: 50, height: 50}}></Avatar>
             </div>
 
             <div className={styles.othersMessageInfo}>

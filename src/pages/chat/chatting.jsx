@@ -46,7 +46,7 @@ const Chatting = ({ closeChatting }) => {
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT broker');
             setIsConnected(true);
-            mqttClient.subscribe('python/mqtt'); // 원하는 토픽 구독
+            mqttClient.subscribe('python/mqtt'); // 토픽
         });
 
         mqttClient.on('message', (topic, message) => {
@@ -72,7 +72,6 @@ const Chatting = ({ closeChatting }) => {
 
         setClient(mqttClient);
 
-        // 컴포넌트 언마운트 시 클라이언트 종료
         return () => {
             if (mqttClient) {
                 mqttClient.end();
@@ -238,7 +237,7 @@ const Chatting = ({ closeChatting }) => {
 
     const loadingPastChatting = () => {
         const pastMessages = [
-            { text: '오류나요', sender: '김길동', timestamp: new Date() },
+            { text: '테스트용 첫 채팅', sender: '김길동', timestamp: new Date() },
         ]
 
         pastMessages.map((pastMessage, index) => (

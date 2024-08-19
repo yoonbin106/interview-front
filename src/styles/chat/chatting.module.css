@@ -187,13 +187,13 @@
 }
 
 .chattingBackButton {
+  position: fixed;
   background-color: transparent;
   border: none;
   color: #007bff;
   font-size: 16px;
   cursor: pointer;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 8px 8px 8px 3px;
   display: flex;
   align-items: center;
 }
