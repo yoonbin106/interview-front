@@ -148,6 +148,7 @@ function Home() {
 
                         <div className={`${styles.mainIntroBox} ${styles[contentList[currentIndex].bgClass]}`}>
                             <div className={styles.mainIntroBoxIn}>
+                                
                                 <div className={styles.mainIntroBoxInTitle}>{contentList[currentIndex].title}</div>
                                 <div className={styles.mainIntroBoxInSubtitleFrame}>
                                     <div className={styles.mainIntroBoxInSubtitle}>{contentList[currentIndex].subtitle1}</div>
@@ -174,6 +175,7 @@ function Home() {
                                         </div>
                                     ))}
                                 </div>
+
                             </div>
                         </div>
                         {/*  */}
