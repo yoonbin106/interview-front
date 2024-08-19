@@ -1,70 +1,115 @@
-import React, { useState, useRef, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from '@/styles/login/registerInput.module.css';
-import { useRouter } from 'next/router';
-import { sendPhoneCode, verifyPhoneCode } from '../../api/phoneApi';
-import { sendEmailCode, verifyEmailCode } from '../../api/emailApi';
-import { useLoadDaumPostcodeScript, openPostcodePopup } from '../../api/getPostCode';
+import React, { useState, useRef, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "@/styles/login/registerInput.module.css";
+import { useRouter } from "next/router";
+import { sendPhoneCode, verifyPhoneCode } from "../../api/phoneApi";
+import { sendEmailCode, verifyEmailCode } from "../../api/emailApi";
+import {
+  useLoadDaumPostcodeScript,
+  openPostcodePopup,
+} from "../../api/getPostCode";
 
 function SignupForm() {
-  const [email, setEmail] = useState('');
-  const [emailCodeVisible, setEmailCodeVisible] = useState(false);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isCodeSent, setIsCodeSent] = useState(false);
-  const [timer, setTimer] = useState(180); // 3분 = 180초
-  const timerRef = useRef(null);
-  const [selectedGender, setSelectedGender] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordAgain, setShowPasswordAgain] = useState(false);
   const [postcode, setPostcode] = useState('');
   const [address, setAddress] = useState('');
   const [extraAddress, setExtraAddress] = useState('');
   const [specificAddress, setSpecificAddress] = useState('');
-  const [phone, setPhone] = useState('');
-  const [phoneCodeVisible, setPhoneCodeVisible] = useState(false);
-  const [phoneTimer, setPhoneTimer] = useState(180); // 3분 = 180초
+  const [formState, setFormState] = useState({
+    email: "",
+    phone: "",
+    password: "",
+    passwordAgain: "",
+    username: "",
+    birth: "",
+    gender: "",
+    postcode: "",
+    address: "",
+    extraAddress: "",
+    specificAddress: "",
+  });
+
+  const [validationState, setValidationState] = useState({
+    isEmailVerified: false,
+    isPhoneVerified: false,
+    emailCodeVisible: false,
+    phoneCodeVisible: false,
+    timer: 180,
+    phoneTimer: 180,
+    emailError: "",
+    passwordError: "",
+    passwordAgainError: "",
+    nameError: "",
+    birthError: "",
+    genderError: "",
+    phoneError: "",
+    postcodeError: "",
+  });
+
+  const timerRef = useRef(null);
   const phoneTimerRef = useRef(null);
-  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const router = useRouter();
 
-  // 이메일 유효성 검사
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleValidationChange = (key, value) => {
+    setValidationState((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const validateEmail = (email) => {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email);
   };
 
+  const validatePhone = (phone) => {
+    const phonePattern = /^\d{11}$/;
+    return phonePattern.test(phone);
+  };
+
   const handleSendCode = async () => {
-    if (validateEmail(email)) {
+    if (validateEmail(formState.email)) {
       try {
-        const response = await sendEmailCode(email);
+        const response = await sendEmailCode(formState.email);
         if (response) {
-          console.log('이메일 유효성 검사 통과. 인증번호를 발송합니다.');
-          setEmailCodeVisible(true);
-          setIsCodeSent(true);
+          handleValidationChange("emailCodeVisible", true);
+          handleValidationChange("emailError", "");
           startTimer();
         } else {
-          alert('인증번호 발송에 실패했습니다.');
+          alert("인증번호 발송에 실패했습니다.");
         }
       } catch (error) {
-        console.error('Error sending verification code:', error);
-        alert('인증번호 발송 중 오류가 발생했습니다.');
+        console.error("Error sending verification code:", error);
+        alert("인증번호 발송 중 오류가 발생했습니다.");
       }
     } else {
-      alert('올바른 이메일 형식을 입력해주세요.');
+      handleValidationChange(
+        "emailError",
+        "올바른 이메일 형식을 입력해주세요."
+      );
     }
   };
 
   const handleVerifyEmailCode = async () => {
-    const code = document.getElementById('emailCode').value;
+    const code = document.getElementById("emailCode").value;
     try {
-      const response = await verifyEmailCode(email, code);
+      const response = await verifyEmailCode(formState.email, code);
       if (response) {
-        alert('이메일 인증에 성공했습니다.');
-        setIsEmailVerified(true); // 이메일 인증 성공 시 상태 업데이트
-        clearInterval(timerRef.current); // 타이머 제거
-        setEmailCodeVisible(false); // 이메일 인증 버튼 제거
+        alert("이메일 인증에 성공했습니다.");
+        handleValidationChange("isEmailVerified", true);
+        clearInterval(timerRef.current);
+        handleValidationChange("emailCodeVisible", false);
       } else {
-        alert('인증코드가 올바르지 않습니다.');
+        alert("인증코드가 올바르지 않습니다.");
       }
     } catch (error) {
       alert(error.message);
@@ -72,36 +117,39 @@ function SignupForm() {
   };
 
   const handleSendPhoneCode = async () => {
-    if (validatePhone(phone)) {
+    if (validatePhone(formState.phone)) {
       try {
-        const response = await sendPhoneCode(phone);
+        const response = await sendPhoneCode(formState.phone);
         if (response) {
-          console.log('전화번호 유효성 검사 통과. 인증번호를 발송합니다.');
-          setPhoneCodeVisible(true);
+          handleValidationChange("phoneCodeVisible", true);
+          handleValidationChange("phoneError", "");
           startPhoneTimer();
         } else {
-          alert('인증번호 발송에 실패했습니다.');
+          alert("인증번호 발송에 실패했습니다.");
         }
       } catch (error) {
-        console.error('Error sending phone verification code:', error);
-        alert('인증번호 발송 중 오류가 발생했습니다.');
+        console.error("Error sending phone verification code:", error);
+        alert("인증번호 발송 중 오류가 발생했습니다.");
       }
     } else {
-      alert('올바른 전화번호 형식을 입력해주세요. (11자리 숫자)');
+      handleValidationChange(
+        "phoneError",
+        "올바른 전화번호 형식을 입력해주세요. (11자리 숫자)"
+      );
     }
   };
 
   const handleVerifyPhoneCode = async () => {
-    const code = document.getElementById('phoneCode').value;
+    const code = document.getElementById("phoneCode").value;
     try {
-      const response = await verifyPhoneCode(phone, code);
+      const response = await verifyPhoneCode(formState.phone, code);
       if (response) {
-        alert('전화번호 인증에 성공했습니다.');
-        setIsPhoneVerified(true);
-        clearInterval(phoneTimerRef.current); // 타이머 제거
-        setPhoneCodeVisible(false); // 전화번호 인증 버튼 제거
+        alert("전화번호 인증에 성공했습니다.");
+        handleValidationChange("isPhoneVerified", true);
+        clearInterval(phoneTimerRef.current);
+        handleValidationChange("phoneCodeVisible", false);
       } else {
-        alert('인증코드가 올바르지 않습니다.');
+        alert("인증코드가 올바르지 않습니다.");
       }
     } catch (error) {
       alert(error.message);
@@ -113,16 +161,16 @@ function SignupForm() {
       clearInterval(timerRef.current);
     }
 
-    setTimer(180); // 3분으로 타이머 설정
+    handleValidationChange("timer", 180); // 3분으로 타이머 설정
     timerRef.current = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer <= 1) {
+      setValidationState((prevState) => {
+        const newTimer = prevState.timer - 1;
+        if (newTimer <= 0) {
           clearInterval(timerRef.current);
-          setEmailCodeVisible(false);
-          setIsCodeSent(false); // 3분 후 인증 코드 발송 버튼 활성화
-          return 0;
+          handleValidationChange("emailCodeVisible", false);
+          return { ...prevState, timer: 0 };
         }
-        return prevTimer - 1;
+        return { ...prevState, timer: newTimer };
       });
     }, 1000);
   };
@@ -132,23 +180,18 @@ function SignupForm() {
       clearInterval(phoneTimerRef.current);
     }
 
-    setPhoneTimer(180); // 3분으로 타이머 설정
+    handleValidationChange("phoneTimer", 180); // 3분으로 타이머 설정
     phoneTimerRef.current = setInterval(() => {
-      setPhoneTimer((prevTimer) => {
-        if (prevTimer <= 1) {
+      setValidationState((prevState) => {
+        const newTimer = prevState.phoneTimer - 1;
+        if (newTimer <= 0) {
           clearInterval(phoneTimerRef.current);
-          setPhoneCodeVisible(false);
-          return 0;
+          handleValidationChange("phoneCodeVisible", false);
+          return { ...prevState, phoneTimer: 0 };
         }
-        return prevTimer - 1;
+        return { ...prevState, phoneTimer: newTimer };
       });
     }, 1000);
-  };
-
-  // 전화번호 유효성 검사
-  const validatePhone = (phone) => {
-    const phonePattern = /^\d{11}$/;
-    return phonePattern.test(phone);
   };
 
   useEffect(() => {
@@ -168,10 +211,6 @@ function SignupForm() {
   }, []);
 
   useLoadDaumPostcodeScript();
-
-  const handleGenderChange = (event) => {
-    setSelectedGender(event.target.value);
-  };
 
   const buttonStyle = (isSelected) => ({
     display: 'block',
@@ -195,29 +234,98 @@ function SignupForm() {
     setShowPasswordAgain(!showPasswordAgain);
   };
 
-  const handleNextClick = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
+    let hasError = false;
+
+    if (!validationState.isEmailVerified) {
+      handleValidationChange("emailError", "* 이메일: 인증이 필요합니다");
+      hasError = true;
+    }
+
+    if (!validationState.isPhoneVerified) {
+      handleValidationChange("phoneError", "* 전화번호: 인증이 필요합니다");
+      hasError = true;
+    }
+
+    if (!formState.password) {
+      handleValidationChange(
+        "passwordError",
+        "* 비밀번호 입력: 필수정보입니다"
+      );
+      hasError = true;
+    } else {
+      handleValidationChange("passwordError", "");
+    }
+
+    if (!formState.passwordAgain) {
+      handleValidationChange(
+        "passwordAgainError",
+        "* 비밀번호 재 입력: 필수정보입니다"
+      );
+      hasError = true;
+    } else {
+      handleValidationChange("passwordAgainError", "");
+    }
+
+    if (!formState.username) {
+      handleValidationChange("nameError", "* 이름: 필수정보입니다");
+      hasError = true;
+    } else {
+      handleValidationChange("nameError", "");
+    }
+
+    if (!formState.birth) {
+      handleValidationChange("birthError", "* 생년월일: 필수정보입니다");
+      hasError = true;
+    } else {
+      handleValidationChange("birthError", "");
+    }
+
+    if (!formState.gender) {
+      handleValidationChange("genderError", "* 성별: 필수정보입니다");
+      hasError = true;
+    } else {
+      handleValidationChange("genderError", "");
+    }
+
+    if (!postcode) {
+      handleValidationChange("postcodeError", "* 우편번호: 필수정보입니다");
+      hasError = true;
+    } else {
+      handleValidationChange("postcodeError", "");
+    }
+
+    if (hasError) return;
+
+    // 폼 데이터를 객체로 변환
     const formData = new FormData(e.target);
     const formObject = {};
     formData.forEach((value, key) => {
       formObject[key] = value;
     });
-  
-    if (isEmailVerified) {
-      formObject.email = email;
+
+    // 이메일과 전화번호 상태 추가
+    if (validationState.isEmailVerified) {
+      formObject.email = formState.email;
     }
-  
-    if (isPhoneVerified) {
-      formObject.phone = phone;
+
+    if (validationState.isPhoneVerified) {
+      formObject.phone = formState.phone;
     }
+
+    // 주소 데이터 추가
     formObject.address = `${postcode} ${address} ${specificAddress} ${extraAddress}`;
+
     console.log(formObject);
+
+    // 페이지 이동
     router.push({
-      pathname: '/auth/registerInputProfile',
+      pathname: "/auth/registerInputProfile",
       query: formObject,
     });
   };
-
 
   return (
     <div
@@ -227,7 +335,7 @@ function SignupForm() {
         <div className={`card ${styles.card}`}>
           <h2 className={styles.title}>회원가입</h2>
           <hr />
-          <form onSubmit={handleNextClick}>
+          <form onSubmit={handleSubmit}>
             <div>
               <div className={`form-group ${styles["form-group"]}`}>
                 <label htmlFor="email" className="form-label">
@@ -240,54 +348,60 @@ function SignupForm() {
                     id="email"
                     name="email"
                     placeholder="이메일 입력"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={isEmailVerified} // 이메일 인증 시 입력 비활성화
+                    value={formState.email}
+                    onChange={(e) => handleInputChange(e)}
+                    disabled={validationState.isEmailVerified} // 이메일 인증 시 입력 비활성화
                   />
-                  {!isEmailVerified && (
+                  {!validationState.isEmailVerified && (
                     <button
                       className="btn btn-outline-secondary"
                       type="button"
                       onClick={handleSendCode}
-                      disabled={isCodeSent} // 인증 코드 발송 후 비활성화
                     >
                       인증번호 발송
                     </button>
                   )}
                 </div>
+                {validationState.emailError && (
+                  <p className={styles["alert-text"]}>
+                    {validationState.emailError}
+                  </p>
+                )}
               </div>
 
-              {emailCodeVisible && !isEmailVerified && (
-                <div className={`form-group ${styles["form-group"]}`}>
-                  <label htmlFor="emailCode" className="form-label">
-                    <i className="fa-regular fa-envelope"></i>&nbsp;인증코드 입력
-                  </label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="emailCode"
-                      placeholder="인증코드 입력"
-                    />
-                    <button
-                      className="btn btn-outline-success"
-                      type="button"
-                      onClick={handleVerifyEmailCode}
-                    >
-                      이메일 인증
-                    </button>
-                    <span className="input-group-text text-danger">
-                      {Math.floor(timer / 60)
-                        .toString()
-                        .padStart(2, "0")}
-                      :
-                      {Math.floor(timer % 60)
-                        .toString()
-                        .padStart(2, "0")}
-                    </span>
+              {validationState.emailCodeVisible &&
+                !validationState.isEmailVerified && (
+                  <div className={`form-group ${styles["form-group"]}`}>
+                    <label htmlFor="emailCode" className="form-label">
+                      <i className="fa-regular fa-envelope"></i>&nbsp;인증코드
+                      입력
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="emailCode"
+                        placeholder="인증코드 입력"
+                      />
+                      <button
+                        className="btn btn-outline-success"
+                        type="button"
+                        onClick={handleVerifyEmailCode}
+                      >
+                        이메일 인증
+                      </button>
+                      <span className="input-group-text text-danger">
+                        {Math.floor(validationState.timer / 60)
+                          .toString()
+                          .padStart(2, "0")}
+                        :
+                        {Math.floor(validationState.timer % 60)
+                          .toString()
+                          .padStart(2, "0")}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
 
             <div>
@@ -302,6 +416,8 @@ function SignupForm() {
                     id="password"
                     placeholder="비밀번호 입력"
                     name="password"
+                    value={formState.password}
+                    onChange={handleInputChange}
                   />
                   <button
                     type="button"
@@ -315,6 +431,11 @@ function SignupForm() {
                     ></i>
                   </button>
                 </div>
+                {validationState.passwordError && (
+                  <p className={styles["alert-text"]}>
+                    {validationState.passwordError}
+                  </p>
+                )}
               </div>
               <div className="form-group mb-3">
                 <label htmlFor="passwordAgain" className="form-label">
@@ -326,6 +447,9 @@ function SignupForm() {
                     className="form-control"
                     id="passwordAgain"
                     placeholder="비밀번호 재 입력"
+                    name="passwordAgain"
+                    value={formState.passwordAgain}
+                    onChange={handleInputChange}
                   />
                   <button
                     type="button"
@@ -339,6 +463,11 @@ function SignupForm() {
                     ></i>
                   </button>
                 </div>
+                {validationState.passwordAgainError && (
+                  <p className={styles["alert-text"]}>
+                    {validationState.passwordAgainError}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -352,12 +481,19 @@ function SignupForm() {
                 id="username"
                 placeholder="이름 입력"
                 name="username"
+                value={formState.username}
+                onChange={handleInputChange}
               />
+              {validationState.nameError && (
+                <p className={styles["alert-text"]}>
+                  {validationState.nameError}
+                </p>
+              )}
             </div>
 
             <div className={`form-group ${styles["form-group"]}`}>
               <label htmlFor="birth" className="form-label">
-                <i className="fa-regular fa-calendar">&nbsp;</i>생년월일 8자리
+                <i className="fa-regular fa-calendar">&nbsp;</i>생년월일
               </label>
               <input
                 type="date"
@@ -365,7 +501,14 @@ function SignupForm() {
                 id="birth"
                 placeholder="생년월일 입력"
                 name="birth"
+                value={formState.birth}
+                onChange={handleInputChange}
               />
+              {validationState.birthError && (
+                <p className={styles["alert-text"]}>
+                  {validationState.birthError}
+                </p>
+              )}
             </div>
 
             <div className={`form-group ${styles["form-group"]}`}>
@@ -380,14 +523,14 @@ function SignupForm() {
                     id="men"
                     name="gender"
                     value="men"
-                    checked={selectedGender === "men"}
-                    onChange={handleGenderChange}
+                    checked={formState.gender === "men"}
+                    onChange={handleInputChange}
                     style={{ position: "absolute", opacity: 0 }}
                   />
                   <label
                     className="form-check-label"
                     htmlFor="men"
-                    style={buttonStyle(selectedGender === "men")}
+                    style={buttonStyle(formState.gender === "men")}
                   >
                     남자
                   </label>
@@ -399,19 +542,24 @@ function SignupForm() {
                     id="women"
                     name="gender"
                     value="women"
-                    checked={selectedGender === "women"}
-                    onChange={handleGenderChange}
+                    checked={formState.gender === "women"}
+                    onChange={handleInputChange}
                     style={{ position: "absolute", opacity: 0 }}
                   />
                   <label
                     className="form-check-label"
                     htmlFor="women"
-                    style={buttonStyle(selectedGender === "women")}
+                    style={buttonStyle(formState.gender === "women")}
                   >
                     여자
                   </label>
                 </div>
               </div>
+              {validationState.genderError && (
+                <p className={styles["alert-text"]}>
+                  {validationState.genderError}
+                </p>
+              )}
             </div>
 
             <div>
@@ -426,56 +574,61 @@ function SignupForm() {
                     id="phone"
                     name="phone"
                     placeholder="전화번호 입력"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    disabled={isPhoneVerified} // 전화번호 인증 시 입력 비활성화
+                    value={formState.phone}
+                    onChange={handleInputChange}
+                    disabled={validationState.isPhoneVerified} // 전화번호 인증 시 입력 비활성화
                   />
-                  {!isPhoneVerified && (
+                  {!validationState.isPhoneVerified && (
                     <button
                       className="btn btn-outline-secondary"
                       type="button"
                       onClick={handleSendPhoneCode}
-                      disabled={phoneCodeVisible} // 인증 코드 발송 후 비활성화
                     >
                       인증번호 발송
                     </button>
                   )}
                 </div>
+                {validationState.phoneError && (
+                  <p className={styles["alert-text"]}>
+                    {validationState.phoneError}
+                  </p>
+                )}
               </div>
 
-              {phoneCodeVisible && !isPhoneVerified && (
-                <div className={`form-group ${styles["form-group"]}`}>
-                  <label htmlFor="phoneCode" className="form-label">
-                    <i className="fa-solid fa-phone"></i>&nbsp;인증코드 입력
-                  </label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="phoneCode"
-                      placeholder="인증코드 입력"
-                    />
-                    <button
-                      className="btn btn-outline-success"
-                      type="button"
-                      onClick={handleVerifyPhoneCode}
-                    >
-                      전화번호 인증
-                    </button>
-                    <span className="input-group-text text-danger">
-                      {Math.floor(phoneTimer / 60)
-                        .toString()
-                        .padStart(2, "0")}
-                      :
-                      {Math.floor(phoneTimer % 60)
-                        .toString()
-                        .padStart(2, "0")}
-                    </span>
+              {validationState.phoneCodeVisible &&
+                !validationState.isPhoneVerified && (
+                  <div className={`form-group ${styles["form-group"]}`}>
+                    <label htmlFor="phoneCode" className="form-label">
+                      <i className="fa-solid fa-phone"></i>&nbsp;인증코드 입력
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="phoneCode"
+                        placeholder="인증코드 입력"
+                      />
+                      <button
+                        className="btn btn-outline-success"
+                        type="button"
+                        onClick={handleVerifyPhoneCode}
+                      >
+                        전화번호 인증
+                      </button>
+                      <span className="input-group-text text-danger">
+                        {Math.floor(validationState.phoneTimer / 60)
+                          .toString()
+                          .padStart(2, "0")}
+                        :
+                        {Math.floor(validationState.phoneTimer % 60)
+                          .toString()
+                          .padStart(2, "0")}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
-    
+
             <div className={`form-group ${styles["form-group"]}`}>
               <label htmlFor="zipcode" className="form-label">
                 <i className="fa-solid fa-location-dot">&nbsp;</i>우편번호
@@ -527,21 +680,26 @@ function SignupForm() {
                   readOnly
                 />
               </div>
+              {validationState.postcodeError && (
+                  <p className={styles["alert-text"]}>
+                    {validationState.postcodeError}
+                  </p>
+              )}
             </div>
 
-            <p className={styles["alert-text"]}>* 아이디: 필수정보입니다</p>
-            <p className={styles["alert-text"]}>* 비밀번호: 필수정보입니다</p>
             <div className="btn-group d-flex justify-content-between">
-              <a href="/auth/register" className="btn btn-primary me-2 rounded">이전</a>
-            <button type="submit" className="btn btn-secondary rounded">
-              다음
-            </button>
-          </div>
-        </form>
+              <a href="/auth/register" className="btn btn-primary me-2 rounded">
+                이전
+              </a>
+              <button type="submit" className="btn btn-secondary rounded">
+                다음
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default SignupForm;
