@@ -6,11 +6,6 @@ import ChattingInputArea from '../../components/chat/chattingInputArea';
 import mqtt from 'mqtt';
 import ChattingList from 'components/chat/chattingList';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import Chat from './chat';
-
-
-
-
 
 const Chatting = ({ closeChatting }) => {
     // const [isOpen, setIsOpen] = useState(false);
@@ -23,8 +18,10 @@ const Chatting = ({ closeChatting }) => {
         email: '',
         profile: ''
     });
+   
 
     const [client, setClient] = useState(null);
+    const [isConnected, setIsConnected] = useState(false);
 
     const lists = [
         { id: 1, name: '김길동', title: '2팀회의 방', lastMessage: '오류나요' },
@@ -35,27 +32,78 @@ const Chatting = ({ closeChatting }) => {
         setUserInfo({
             username: localStorage.getItem('username') || '',
             email: localStorage.getItem('email') || '',
-            profile: localStorage.getItem('profile') || '' // Assuming this is how you're storing the profile image URL or data
+            profile: localStorage.getItem('profile') || ''
         });
 
         loadingPastChatting();
 
 
 
-        // const mqttClient = mqtt.connect('wss://broker.hivemq.com:1883/ws/chat'); 
-        // setClient(mqttClient);
+
+        // MQTT 브로커에 연결
+        const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884'); // 또는 'ws://broker.hivemq.com:8000/mqtt' (웹소켓 사용 시)
+        
+        mqttClient.on('connect', () => {
+            console.log('Connected to MQTT broker');
+            setIsConnected(true);
+            mqttClient.subscribe('python/mqtt'); // 원하는 토픽 구독
+        });
+
+        mqttClient.on('message', (topic, message) => {
+            console.log('Received message:', message.toString());
+            if (topic === 'python/mqtt') {
+
+                const receivedMessage = JSON.parse(message);
+                if(message.sender !== userInfo.username){
+                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                }
+                
+            }
+        });
+
+        mqttClient.on('error', (err) => {
+            console.error('Connection error:', err);
+        });
+
+        mqttClient.on('close', () => {
+            console.log('Disconnected from MQTT broker');
+            setIsConnected(false);
+        });
+
+        setClient(mqttClient);
+
+        // 컴포넌트 언마운트 시 클라이언트 종료
+        return () => {
+            if (mqttClient) {
+                mqttClient.end();
+            }
+        };
+
+
+        // const broker = 'ws://192.168.0.137:8000/mqtt';
+        // const mqttClient = mqtt.connect(broker);
+        // setMqttClient(mqttClient);
+
+        // // const mqttClient = mqtt.connect('mqtt://192.168.0.137');
+        // // setMqttClient(mqttClient);
 
         // mqttClient.on('connect', () => {
         //     console.log('MQTT connection established');
-        //     mqttClient.subscribe('chat/messages', (err) => {
+        //     const topic = 'python/mqtt'
+        //     mqttClient.subscribe(topic, (err) => {
         //         if (!err) {
-        //             console.log('Subscribed to chat/messages');
+        //             console.log('Subscribed to python/mqtt');
         //         }
         //     });
         // });
 
+        // // Unsubscribe
+        // client.unubscribe(topic, () => {
+        //     console.log('Unsubscribed')
+        // })
+
         // mqttClient.on('message', (topic, message) => {
-        //     if (topic === 'chat/messages') {
+        //     if (topic === 'python/mqtt') {
         //         const receivedMessage = JSON.parse(message.toString());
         //         console.log('Received MQTT message: ', receivedMessage);
         //         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
@@ -68,9 +116,47 @@ const Chatting = ({ closeChatting }) => {
 
         // return () => mqttClient.end();
 
+
         // ========================================================================================
 
-        // const websocketClient = new WebSocket('ws://localhost:8000/ws/chat');
+        // // const mqtt = require('mqtt');
+
+        // const broker = 'mqtt://192.168.0.137:1883';
+        // const mqttClient = mqtt.connect(broker);
+        // setMqttClient(mqttClient);
+
+        // // const mqttClient = mqtt.connect('mqtt://192.168.0.137');
+        // // setMqttClient(mqttClient);
+
+        // mqttClient.on('connect', () => {
+        //     console.log('MQTT connection established');
+        //     const topic= 'python/mqtt'
+        //     mqttClient.subscribe(topic, (err) => {
+        //         if (!err) {
+        //             console.log('Subscribed to python/mqtt');
+        //         }
+        //     });
+        // });
+
+        // mqttClient.on('message', (topic, message) => {
+        //     if (topic === 'python/mqtt') {
+        //         const receivedMessage = JSON.parse(message.toString());
+        //         console.log('Received MQTT message: ', receivedMessage);
+        //         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+        //     }
+        // });
+
+        // mqttClient.on('close', () => {
+        //     console.log('MQTT connection closed');
+        // });
+
+        // return () => mqttClient.end();
+
+
+
+        // ========================================================================================
+
+        // const websocketClient = new WebSocket('ws://192.168.0.137:8081/mqtt');
         // setClient(websocketClient);
 
         // websocketClient.onopen = () => {
@@ -88,6 +174,9 @@ const Chatting = ({ closeChatting }) => {
         // };
 
         // return () => websocketClient.close();
+
+
+
 
     }, []);
 
@@ -160,12 +249,40 @@ const Chatting = ({ closeChatting }) => {
     const sendMessage = async () => {
         if (inputMessage.trim()) {
 
-
-
             const userMessage = { text: inputMessage, sender: userInfo.username };
-            setMessages(prev => [...prev, userMessage]);
+            // setMessages(prev => [...prev, userMessage]);
+
+            client.publish('python/mqtt', JSON.stringify({ text: inputMessage, sender: userInfo.username, timestamp: new Date() }));
+            
 
             // client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
+
+            // client.publish('python/mqtt', 'ws connection demo...!');
+
+            // // Received
+            // client.on('message', (topic, inputMessage, packet) => {
+            //     console.log('Received Message: ' + inputMessage.toString() + '\nOn topic: ' + topic)
+            // })
+
+            // mqttClient.on('connect', () => {
+            //     const topic = 'python/mqtt'
+            //     mqttClient.subscribe(topic, (err) => {
+            //         if (!err) {
+            //             mqttClient.publish('python/mqtt', JSON.stringify(userMessage))
+            //         }
+            //     });
+            // });
+
+            // MQTT를 통해 메시지 전송
+            // mqttClient.publish('python/mqtt', JSON.stringify(userMessage), (err) => {
+            //     if (err) {
+            //         console.error('MQTT publish error:', err);
+            //     } else {
+            //         console.log('Message sent to python/mqtt');
+            //     }
+            // });
+
+
 
 
             setInputMessage('');
@@ -184,6 +301,9 @@ const Chatting = ({ closeChatting }) => {
                 //     sender: 'bot',
                 //     answerId: answerResponse.data.answerId
                 // };
+
+                
+
                 if (inputMessage == '지금')
                     setMessages(prev => [...prev, { text: '상대방의 메세지', sender: 'kim' }]);
             } catch (error) {
@@ -213,7 +333,7 @@ const Chatting = ({ closeChatting }) => {
                             <button className={styles.chattingBackButton} onClick={handleBackClick}>
                                 <ArrowBackIosNewRoundedIcon />
                             </button>
-                            <ChattingMessages messages={messages} userInfo={userInfo}/>
+                            <ChattingMessages messages={messages} userInfo={userInfo} />
                         </>
                     )}
                 </div>
@@ -234,3 +354,4 @@ const Chatting = ({ closeChatting }) => {
 };
 
 export default Chatting;
+
