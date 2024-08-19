@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '@/styles/header.module.css';
 import NotificationsNoneTwoToneIcon from '@mui/icons-material/NotificationsNoneTwoTone';
@@ -14,7 +14,6 @@ import Badge from '@mui/joy/Badge';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import { logout } from '@/api/user';  // 로그아웃 API 임포트
-import { useEffect } from 'react';
 
 const Header = observer(() => {
   const [hover, setHover] = useState(false);
@@ -47,11 +46,20 @@ const Header = observer(() => {
 
   const handleTicketClick = (e, sectionId) => {
     e.preventDefault();
-    const section = document.getElementById(sectionId);
-  
-    if (section) {
-      const targetPosition = section.offsetTop;
-      smoothScroll(targetPosition, 1000); // 1000ms (1초)에 걸쳐 부드럽게 스크롤
+
+    // 현재 페이지가 메인 페이지가 아니라면 메인 페이지로 이동 후 스크롤
+    if (router.pathname !== '/') {
+      router.push({
+        pathname: '/',
+        query: { scrollTo: sectionId }
+      });
+    } else {
+      // 메인 페이지일 때 부드럽게 스크롤
+      const section = document.getElementById(sectionId);
+      if (section) {
+        const targetPosition = section.offsetTop;
+        smoothScroll(targetPosition, 1000); // 1000ms (1초)에 걸쳐 부드럽게 스크롤
+      }
     }
   };
   
@@ -60,7 +68,17 @@ const Header = observer(() => {
     if (typeof window !== 'undefined') {
       authStore.checkLoggedIn();
     }
-  }, []);
+
+    // 쿼리 파라미터 확인 후 해당 섹션으로 스크롤
+    if (router.query.scrollTo) {
+      const section = document.getElementById(router.query.scrollTo);
+
+      if (section) {
+        const targetPosition = section.offsetTop;
+        smoothScroll(targetPosition, 1000); // 부드럽게 스크롤
+      }
+    }
+  }, [router.query.scrollTo]);
 
   if (!isClient) {
     return null; // 서버 사이드 렌더링 중에는 아무것도 렌더링하지 않음
@@ -157,8 +175,10 @@ const Header = observer(() => {
                 <div className={styles.emptyMenuFrame}></div>
                 <div className={styles.subMenusFrame}>
                   <div className={styles.subMenus}>
-                    <a href="#systemInfo" className={styles.subMenu} onClick={(e) => handleTicketClick(e, 'systemInfo')}>시스템 소개</a>
-                    <a href="#tickets" className={styles.subMenu} onClick={(e) => handleTicketClick(e, 'tickets')}>이용권</a>
+                    <a href="#systemInfo" className={styles.subMenu}
+                      onClick={(e) => handleTicketClick(e, 'systemInfo')}>시스템 소개</a>
+                    <a href="#tickets" className={styles.subMenu}
+                      onClick={(e) => handleTicketClick(e, 'tickets')}>이용권</a>
                   </div>
                   <div className={styles.subMenus}>
                     <a href="/search" className={styles.subMenu}>회사 검색</a>

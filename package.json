@@ -24,7 +24,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
-    "cheerio": "^1.0.0-rc.10",
+    "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "customize-cra": "^1.0.0",
     "d3-cloud": "^1.2.7",
