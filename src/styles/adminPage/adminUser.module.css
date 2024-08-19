@@ -1,0 +1,53 @@
+/* 전체 박스 스타일 */
+.adminUserContainer {
+    padding: 20px;
+    
+    border-radius: 5px;
+    margin: 0 auto;
+    max-width: 1000px;
+    background-color: white;
+}
+
+/* 검색 버튼 스타일 */
+.adminUserSearchButton {
+    background-color: #4A90E2;
+    border: 2px solid #007bff;
+    width: 30%;
+}
+
+.adminUserSearchButton:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* 테이블 헤더 스타일 */
+.adminUserTableHead {
+    background-color: #f5f5f5;
+}
+.adminUserTableContainer {
+    margin-top: 20px;
+    max-width: 100%; /* 테이블이 컨테이너에 맞도록 설정 */
+}
+
+/* 테이블 스타일 */
+.adminUserTable {
+    width: 100%; /* 테이블 전체 너비를 컨테이너에 맞춤 */
+    table-layout: fixed; /* 테이블 셀의 고정된 레이아웃 */
+    border-collapse: collapse; /* 테이블 테두리 결합 */
+}
+/* 상세보기 버튼 스타일 */
+.adminUserViewDetailsButton {
+    background-color: #4A90E2;
+}
+
+.adminUserViewDetailsButton:hover {
+    background-color: #357ABD;
+}
+.adminUserTableHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+    width: 100px;
+    white-space:nowrap;
+  }
+

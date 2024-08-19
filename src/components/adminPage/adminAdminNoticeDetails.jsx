@@ -103,39 +103,45 @@ const AdminAdminNoticeDetails = ({ noticeData, onSave, onDelete, onEdit }) => {
     );
 
     return (
-        <div className={styles.adminAdminNoticeDetailsContainer}>
-            <Paper elevation={3} className={styles.adminAdminNoticeDetailsPaper}>
-                <Typography variant="h6" gutterBottom className={styles.adminAdminNoticeDetailsDate}>
-                    [전체 공지사항]
-                </Typography>
-                {renderHeader()}
-                {renderContent()}
-                {renderButtons()}
+       
+            <div className={styles.adminAdminNoticeContent}>
+                <div className={styles.adminAdminNoticeDetailsContainer}>
+                    <Paper elevation={3} className={styles.adminAdminNoticeDetailsPaper}>
+                        <Typography variant="h6" gutterBottom className={styles.adminAdminNoticeDetailsDate}>
+                            [전체 공지사항]
+                        </Typography>
+                        
+                        {renderHeader()}
+                        {renderContent()}
+                        {renderButtons()}
 
-                {/* 삭제 확인 다이얼로그 */}
-                <Dialog open={open} onClose={handleCancelDelete}>
-                    <DialogTitle className={styles.adminAdminNoticeDialogTitle}>공지사항 삭제</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText className={styles.adminAdminNoticeDialogContentText}>
-                            공지사항을 삭제하시겠습니까?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCancelDelete} color="primary">
-                            취소
-                        </Button>
-                        <Button onClick={handleConfirmDelete} color="secondary">
-                            확인
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                        {/* 삭제 확인 다이얼로그 */}
+                        <Dialog open={open} onClose={handleCancelDelete}>
+                            <DialogTitle className={styles.adminAdminNoticeDialogTitle}>공지사항 삭제</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText className={styles.adminAdminNoticeDialogContentText}>
+                                    공지사항을 삭제하시겠습니까?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCancelDelete} color="primary">
+                                    취소
+                                </Button>
+                                <Button onClick={handleConfirmDelete} color="secondary">
+                                    확인
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
 
-                {/* 이전글 / 다음글 기능 */}
-                <div className={styles.adminAdminNoticeNavButtons}>
-                    <Button>&lt; 이전글</Button>
-                    <Button>다음글 &gt;</Button>
+                        {/* 이전글 / 다음글 기능 */}
+                        <div className={styles.adminAdminNoticeNavButtons}>
+                            <Button>&lt; 이전글</Button>
+                            <Button>다음글 &gt;</Button>
+                        </div>
+                    </Paper>
                 </div>
-            </Paper>
+            </div>
+        </div>
         </div>
     );
 };

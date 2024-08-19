@@ -28,8 +28,8 @@ const PaginationTableQna = ({ rows, page, rowsPerPage }) => {
             <TableRow key={row.id}>
               <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">{`[${row.category}]`}</TableCell>
-              <TableCell align="center">
-                <a href={`/adminPage/adminQnaDetails`} style={{ textDecoration: 'none', color: 'black' }}>
+              <TableCell align="center" className={styles.qnaTitleCell}>
+              <a href={`/adminPage/adminQnaDetailsPage`} className={styles.qnaTableLink}>
                   {row.title}
                 </a>
               </TableCell>
@@ -133,57 +133,11 @@ const AdminQna = () => {
                             <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                             </div>
                             </div>
+                            
                             {/* 필터링된 QnA를 테이블로 렌더링 */}
                             <PaginationTableQna rows={filteredQna} page={page} rowsPerPage={rowsPerPage} />
-
-                            {/* 페이지네이션 컨트롤 */}
-                            <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => handleChangePage(0)}
-                                    disabled={page === 0}
-                                    sx={{ marginRight: 2 }}
-                                >
-                                    처음
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => handleChangePage(page - 1)}
-                                    disabled={page === 0}
-                                    sx={{ marginRight: 2 }}
-                                >
-                                    이전
-                                </Button>
-                                <span>{page + 1} / {totalPages}</span>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => handleChangePage(page + 1)}
-                                    disabled={page >= totalPages - 1}
-                                    sx={{ marginLeft: 2 }}
-                                >
-                                    다음
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => handleChangePage(totalPages - 1)}
-                                    disabled={page >= totalPages - 1}
-                                    sx={{ marginLeft: 2 }}
-                                >
-                                    마지막
-                                </Button>
-                                <Select
-                                    value={rowsPerPage}
-                                    onChange={handleRowsPerPageChange}
-                                    sx={{ marginLeft: 2 }}
-                                >
-                                    <MenuItem value={5}>5</MenuItem>
-                                    <MenuItem value={10}>10</MenuItem>
-                                    <MenuItem value={25}>25</MenuItem>
-                                </Select>
-                            </Box>
-
-                            {/* 검색 필터링 UI */}
-                            <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
+                             {/* 검색 필터링 UI */}
+                             <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
                                 <Grid item xs={3}>
                                     <FormControl fullWidth variant="outlined">
                                         <InputLabel id="status-filter-label">상태</InputLabel>
@@ -239,6 +193,53 @@ const AdminQna = () => {
                                     </Button>
                                 </Grid>
                             </Grid> 
+                            {/* 페이지네이션 컨트롤 */}
+                            <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(0)}
+                                    disabled={page === 0}
+                                    sx={{ marginRight: 2 }}
+                                >
+                                    처음
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(page - 1)}
+                                    disabled={page === 0}
+                                    sx={{ marginRight: 2 }}
+                                >
+                                    이전
+                                </Button>
+                                <span>{page + 1} / {totalPages}</span>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(page + 1)}
+                                    disabled={page >= totalPages - 1}
+                                    sx={{ marginLeft: 2 }}
+                                >
+                                    다음
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(totalPages - 1)}
+                                    disabled={page >= totalPages - 1}
+                                    sx={{ marginLeft: 2 }}
+                                >
+                                    마지막
+                                </Button>
+                                <Select
+                                    value={rowsPerPage}
+                                    onChange={handleRowsPerPageChange}
+                                    sx={{ marginLeft: 2 }}
+                                >
+                                    <MenuItem value={5}>5</MenuItem>
+                                    <MenuItem value={10}>10</MenuItem>
+                                    <MenuItem value={25}>25</MenuItem>
+                                </Select>
+                            </Box>
+
+                           
                         </div>
                     </div>
                 </div>

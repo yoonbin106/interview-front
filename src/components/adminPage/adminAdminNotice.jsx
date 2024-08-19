@@ -133,7 +133,7 @@ const AdminAdminNotice = () => {
                                         <TableRow key={row.id}>
                                             <TableCell align="center">{row.id}</TableCell>
                                             <TableCell align="center">
-                                                <a href={`/adminPage/adminAdminNoticeDetailsPage`} style={{ textDecoration: 'none', color: 'black' }}>
+                                                <a href={`/adminPage/adminAdminNoticeDetailsPage`} className={styles.adminNoticeTableLink}>
                                                     {row.title}
                                                 </a>
                                             </TableCell>

@@ -1,7 +1,6 @@
-//**adminUserDetails.jsx
-
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Paper, Avatar, TextField, Button } from '@mui/material';
+import styles from '@/styles/adminPage/adminUserDetails.module.css'; // 모듈 CSS 임포트
 
 const UserDetails = () => {
   const [editMode, setEditMode] = useState(false);
@@ -39,28 +38,28 @@ const UserDetails = () => {
     if (typeof window !== 'undefined') {
       if(window.confirm("정말로 회원탈퇴를 하시겠습니까?")){
         alert("회원 탈퇴가 성공적으로 완료되었습니다.");
-        window.location.href = "http://localhost:3000/adminPage/adminUserDetailsPage";
+        window.location.href = "http://localhost:3000/adminPage/adminUserPage";
       }
     }
-
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3 }}>
-      <Typography variant="h4" sx={{ mb: 2 }}>개인 정보 수정</Typography>
-      <Paper sx={{ p: 3, maxWidth: 800, width: '100%' }}>
+      
+    <Box className={styles.userDetailsContainer}>
+      <Typography variant="h4" className={styles.userDetailsTitle}>개인 정보 수정</Typography>
+      <Paper className={styles.userDetailsPaper}>
         <Grid container spacing={2}>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
             <Avatar
-              sx={{ width: 120, height: 120 }}
+              className={styles.userAvatar}
               src={user.profileImage}  // 프로필 이미지
               alt="User Profile"
             />
+            
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>회원 정보</Typography>
+            <Typography variant="h6" className={styles.userInfoTitle}>회원 정보</Typography>
           </Grid>
-
           <Grid item xs={6}>
             <TextField
               fullWidth
@@ -180,19 +179,21 @@ const UserDetails = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Grid item xs={12} className={styles.userDetailsGridContainer}>
             <Button
               variant="contained"
               color="primary"
               onClick={editMode ? handleSaveClick : handleEditClick}
-              sx={{ mr: 2 }}
+              className={styles.userDetailsButton}
             >
               {editMode ? "회원정보저장" : "회원정보수정"}
             </Button>
             {editMode && (
-              <Button variant="outlined" 
-              color="secondary"
-              onClick={handleDeleteAccount}>
+              <Button
+                variant="outlined"
+                className={styles.userDetailsDeleteButton}
+                onClick={handleDeleteAccount}
+              >
                 회원탈퇴
               </Button>
             )}

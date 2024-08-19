@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import AdminNoticeDetails from 'components/adminPage/adminNoticeDetails';
+import NestedList from '@/components/adminPage/adminSideMenu';
+import styles from '@/styles/adminPage/adminPage.module.css';
 
 const AdminNoticeDetailsPage = () => {
     const router = useRouter();
@@ -38,12 +40,19 @@ const AdminNoticeDetailsPage = () => {
     };
 
     return (
+        <div className={styles.container}>
+            <div className={styles.sidebar}>
+                <NestedList/>
+            </div>
+            <div className={styles.content}>
         <AdminNoticeDetails
             noticeData={noticeData}
             onSave={handleSave}
             onDelete={handleDelete}
             onEdit={handleEdit}
         />
+          </div>
+          </div>
     );
 };
 

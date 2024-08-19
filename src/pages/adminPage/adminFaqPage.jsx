@@ -1,46 +1,10 @@
-//**adminFaqPage.jsx */
 import React, { useState } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, InputLabel, Select, MenuItem, Box, Button } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { styled } from '@mui/system'; 
-import RegisterButton from '@/components/adminPage/adminRegisterButton';
 import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
+import AdminFaq from '@/components/adminPage/adminFaq';
 
-const StyledSelect = styled(Select)({
-    backgroundColor: '#4A90E2',
-    color: 'white',
-    fontWeight: 'bold',
-    '& .MuiSelect-icon': {
-        color: 'white',
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#4A90E2',
-    },
-    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#4A90E2',
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#4A90E2',
-    },
-});
-
-const StyledMenuItem = styled(MenuItem)({
-    backgroundColor: '#4A90E2',
-    color: 'white',
-    fontWeight: 'bold',
-    '&:hover': {
-        backgroundColor: '#3A78D2',
-    },
-});
-
-const StyledInputLabel = styled(InputLabel)({
-    color: 'white',
-    fontWeight: 'bold',
-});
-
-const AdminFaq = () => {
-    // 하드코딩된 FAQ 데이터, 각 객체는 카테고리, 질문, 답변을 포함합니다.
+const AdminFaqPage = () => {
+    // 하드코딩된 FAQ 데이터
     const faqs = [
         { id: 1, category: '계정 및 로그인', question: '비밀번호를 잊어버렸어요. 어떻게 재설정하나요?', answer: '비밀번호 재설정은 로그인 페이지에서 "비밀번호 찾기"를 클릭한 후, 이메일 주소를 입력하면 재설정 링크가 발송됩니다.' },
         { id: 2, category: 'AI 면접 준비', question: 'AI 면접에서 자주 나오는 질문은 무엇인가요?', answer: 'AI 면접에서 자주 나오는 질문은 자기소개, 장단점, 팀 프로젝트 경험 등이 있습니다.' },
@@ -92,106 +56,24 @@ const AdminFaq = () => {
     };
 
     return (
-    <div className={styles.container}>
-        <div className={styles.sidebar}>
-            <NestedList/>
-        </div>
-        <div className={styles.content}>
-            <div style={{ padding: '20px' }}>
-                <Box mb={3} display="flex" justifyContent="space-between">
-                    <Typography variant="h4" gutterBottom>
-                        자주 묻는 질문 (FAQ)
-                    </Typography>
-                    <RegisterButton to="/adminPage/adminFaqRegisterPage" />
-                </Box>
-                <Box mb={3}>
-                    <FormControl fullWidth variant="outlined">
-                        <StyledInputLabel>카테고리로 검색</StyledInputLabel>
-                        <StyledSelect
-                            value={selectedCategory}
-                            onChange={handleCategoryChange}
-                            label="카테고리로 검색"
-                        >
-                            <StyledMenuItem value="">
-                                <em>전체</em>
-                            </StyledMenuItem>
-                            <StyledMenuItem value="계정 및 로그인">계정 및 로그인</StyledMenuItem>
-                            <StyledMenuItem value="AI 면접 준비">AI 면접 준비</StyledMenuItem>
-                            <StyledMenuItem value="기술 문제 해결">기술 문제 해결</StyledMenuItem>
-                            <StyledMenuItem value="결제 및 환불">결제 및 환불</StyledMenuItem>
-                            <StyledMenuItem value="기타">기타</StyledMenuItem>
-                        </StyledSelect>
-                    </FormControl>
-                </Box>
-                {filteredFaqs
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(faq => (
-                        <Accordion key={faq.id}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls={`panel${faq.id}-content`}
-                                id={`panel${faq.id}-header`}
-                            >
-                                <Typography variant="h6">{faq.category}: {faq.question}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    {faq.answer}
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                    ))
-                }
-
-                {/* 페이지네이션 컨트롤 */}
-                <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Button
-                        variant="outlined"
-                        onClick={() => handleChangePage(0)}
-                        disabled={page === 0}
-                        sx={{ marginRight: 2 }}
-                    >
-                        처음
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={() => handleChangePage(page - 1)}
-                        disabled={page === 0}
-                        sx={{ marginRight: 2 }}
-                    >
-                        이전
-                    </Button>
-                    <span>{page + 1} / {totalPages}</span>
-                    <Button
-                        variant="outlined"
-                        onClick={() => handleChangePage(page + 1)}
-                        disabled={page >= totalPages - 1}
-                        sx={{ marginLeft: 2 }}
-                    >
-                        다음
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={() => handleChangePage(totalPages - 1)}
-                        disabled={page >= totalPages - 1}
-                        sx={{ marginLeft: 2 }}
-                    >
-                        마지막
-                    </Button>
-                    <Select
-                        value={rowsPerPage}
-                        onChange={handleRowsPerPageChange}
-                        sx={{ marginLeft: 2 }}
-                    >
-                        <MenuItem value={5}>5</MenuItem>
-                        <MenuItem value={10}>10</MenuItem>
-                        <MenuItem value={15}>15</MenuItem>
-                    </Select>
-                </Box>
+        <div className={styles.container}>
+            <div className={styles.sidebar}>
+                <NestedList/>
+            </div>
+            <div className={styles.content}>
+                <AdminFaq 
+                    faqs={filteredFaqs} 
+                    onPageChange={handleChangePage} 
+                    onRowsPerPageChange={handleRowsPerPageChange} 
+                    rowsPerPage={rowsPerPage} 
+                    page={page} 
+                    totalPages={totalPages}
+                    handleCategoryChange={handleCategoryChange}
+                    selectedCategory={selectedCategory}
+                />
             </div>
         </div>
-    </div>
     );
 };
 
-export default AdminFaq;
+export default AdminFaqPage;

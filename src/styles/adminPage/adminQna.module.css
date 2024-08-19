@@ -86,3 +86,9 @@
   white-space: nowrap;
   font-size: 40px;
 }
+
+.qnaTitleCell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

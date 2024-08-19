@@ -1,0 +1,50 @@
+/* 전체 컨테이너의 padding 설정 */
+.faqContainer {
+    padding: 20px;
+}
+
+
+/* 상단 제목과 버튼을 포함한 박스의 스타일 */
+.faqHeader {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 카테고리 검색을 위한 FormControl 스타일 */
+.faqCategorySearch {
+    margin-bottom: 24px;
+    background-color: #4A90E2;
+}
+
+/* 페이지네이션 컨트롤 박스의 스타일 */
+.faqPagination {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 페이지네이션 컨트롤의 버튼 스타일 */
+.faqPaginationButton {
+    margin-right: 8px;
+}
+
+.faqPaginationButton:last-of-type {
+    margin-right: 0;
+    margin-left: 8px;
+}
+
+/* 페이지네이션 선택 메뉴 스타일 */
+.faqRowsPerPageSelect {
+    margin-left: 16px;
+}
+
+.faqMenuItem {
+    color: white;
+    background-color: #4A90E2; /* 필요 시 배경색도 설정 가능 */
+}
+
+.faqMenuItem:hover {
+    background-color: #3A78D2; /* hover 시 배경색 */
+}

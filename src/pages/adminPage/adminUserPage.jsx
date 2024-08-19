@@ -1,16 +1,10 @@
-//**adminUserPage.jsx
-
-import React, { useState } from 'react';
-import { Box, Grid } from '@mui/material';
-import SearchForm from '@/components/adminPage/adminSearchForm';
-import SearchResults from '@/components/adminPage/adminSearchResults';
+import React from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
+import AdminUser from '@/components/adminPage/adminUser'; // 방금 만든 adminUser 컴포넌트 임포트
 
-const AdminUser = () => {
-    const [results, setResults] = useState([]);
-    
-    // 더미 데이터를 AdminUser 컴포넌트에서만 정의
+const AdminUserPage = () => {
+    // 더미 데이터를 AdminUser 컴포넌트로 전달
     const data = [
         { name: '최미지', gender: '여', birth: '1995.11.07', phone: '010-2790-7021', email: 'meezi_@naver.com' },
         { name: '지미초이', gender: '여', birth: '1995.77.77', phone: '010-7777-7021', email: 'jimichoi77@naver.com' },
@@ -28,39 +22,16 @@ const AdminUser = () => {
         { name: '이수경', gender: '여', birth: '1998.12.23', phone: '010-0000-0000', email: 'tnrud@naver.com' },
     ];
 
-    const handleSearch = (condition, term) => {
-        const filteredResults = data.filter(item => {
-            if (condition === 'email') {
-                return item.email.includes(term);
-            } else if (condition === 'phonelastnumber4') {
-                return item.phone.endsWith(term);
-            }
-            return false;
-        });
-        setResults(filteredResults);
-    };
-
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
-                <NestedList/>
+                <NestedList />
             </div>
             <div className={styles.content}>
-                <Box> 
-                    <Grid container>
-                        <Grid item xs={1}></Grid>
-                        <Grid item xs={10}>
-                            <Box sx={{ p: 2 }}>
-                                <h2>회원 검색</h2>
-                                <SearchForm onSearch={handleSearch} />
-                                <SearchResults results={results} allData={data} />
-                            </Box>
-                        </Grid>
-                    </Grid>
-                </Box>
+                <AdminUser allData={data} /> {/* AdminUser 컴포넌트 사용 */}
+            </div>
         </div>
-    </div>
     );
 };
 
-export default AdminUser;
+export default AdminUserPage;
