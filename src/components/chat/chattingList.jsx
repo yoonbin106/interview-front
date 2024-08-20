@@ -27,6 +27,10 @@ const ChattingList = ({ lists, onChatClick, userInfo }) => {
                 </div>
             ))}
 
+            <div>
+                <button/>
+            </div>
+
             <div ref={listsEndRef} />
         </div>
     );
