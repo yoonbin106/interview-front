@@ -56,7 +56,7 @@
 }
 
 .feedbackButton.active {
-  color: #3b82f6;
+  color: #5A8AF2;
 }
 .generating {
   display: flex;
@@ -68,7 +68,7 @@
 .dot {
   width: 8px;
   height: 8px;
-  background-color: #0056b3;
+  background-color: #5A8AF2;
   border-radius: 50%;
   margin: 0 3px;
   animation: pulse 1.5s infinite ease-in-out;

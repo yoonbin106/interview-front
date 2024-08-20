@@ -32,10 +32,10 @@ const SpeedDial = () => {
     <div className={`${styles.atbotWrapper}`}>
       <div className={styles.botInactive}>
         <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
-          <MuiSpeedDial
+          <MuiSpeedDial 
             ariaLabel="SpeedDial basic example"
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon />}
+            icon={<SpeedDialIcon/>}
           >
             <SpeedDialAction
               key='ChatBot'

@@ -16,7 +16,7 @@
 
 .inputTextarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #5A8AF2;
 }
 
 .sendButton, .micButton {
@@ -31,7 +31,7 @@
 }
 
 .sendButton:hover, .micButton:hover {
-  background-color: #3b82f6;
+  background-color: #5A8AF2;
   color: white;
 }
 
@@ -57,5 +57,5 @@
 }
 
 .dark .sendButton:hover, .dark .micButton:hover {
-  background-color: #3b82f6;
+  background-color: #5A8AF2;
 }

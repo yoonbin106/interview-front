@@ -8,7 +8,7 @@
   position: relative;
   padding: 1rem;
   color: white;
-  background-color: #3b82f6;
+  background-color: #5A8AF2;
   border-radius: 9999px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transition: background-color 0.3s;
@@ -16,7 +16,7 @@
 }
 
 .botButton:hover {
-  background-color: #2563eb;
+  background-color: #5A8AF2;
 }
 
 .botButtonText {
