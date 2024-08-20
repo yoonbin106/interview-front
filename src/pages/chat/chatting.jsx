@@ -319,11 +319,11 @@ const Chatting = ({ closeChatting }) => {
 
 
     return (
-        <div className={`${styles.atbotWrapper} ${isDarkMode ? `${styles.darkMode}` : ''}`}>
+        <div className={`${styles.atchatWrapper} ${isDarkMode ? `${styles.darkMode}` : ''}`}>
 
-            <div className={`${styles.botContainer} ${isDarkMode ? styles.darkMode : ''}`}>
+            <div className={`${styles.chatContainer} ${isDarkMode ? styles.darkMode : ''}`}>
                 <ChattingHeader closeChatting={closeChatting} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-                <div className={styles.botContent}>
+                <div className={styles.chatContent}>
 
                     {!isChatOpen ? (
                         <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} />
