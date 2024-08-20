@@ -15,3 +15,7 @@
 .errorMessage {
   margin-bottom: 20px;
 }
+
+.alert-text {
+  color: red;
+}
