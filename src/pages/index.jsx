@@ -197,7 +197,7 @@ function Home() {
                     </div>
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxHeight}>
-                            <div className={styles.keyWordTextHeightBl}>힘내는말들</div>
+                            <div className={styles.keyWordTextHeightBl}>"반으로 접겠습니다"</div>
                         </div>
                     </div>
                     <div className={styles.keyWordFrames}>

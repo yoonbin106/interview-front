@@ -113,8 +113,8 @@ const Header = observer(() => {
           >
             <a href="#" className={styles.navLink}>소개</a>
             <a href="#" className={styles.navLink}>회사 검색</a>
-            <a href="#" className={styles.navLink}>모의 면접</a>
-            <a href="#" className={styles.navLink}>게시판</a>
+            <a href="#" className={styles.navLink}>AI 서비스</a>
+            <a href="#" className={styles.navLink}>커뮤니티</a>
             <a href="#" className={styles.navLink}>고객센터</a>
           </nav>
           <div>
@@ -177,12 +177,12 @@ const Header = observer(() => {
               <div className={styles.subMenusFrame}>
                 <div className={styles.subMenus}>
                   <a href="#systemInfo" className={styles.subMenu}
-                    onClick={(e) => handleTicketClick(e, 'systemInfo')}>시스템 소개</a>
+                    onClick={(e) => handleTicketClick(e, 'systemInfo')}>서비스 소개</a>
                   <a href="#tickets" className={styles.subMenu}
-                    onClick={(e) => handleTicketClick(e, 'tickets')}>이용권</a>
+                    onClick={(e) => handleTicketClick(e, 'tickets')}>이용권 구매</a>
                 </div>
                 <div className={styles.subMenus}>
-                  <a href="/search" className={styles.subMenu}>회사 검색</a>
+                  <a href="/search" className={styles.subMenu}>상세 검색</a>
                   <a href="/survey" className={styles.subMenu}>설문조사</a>
                 </div>
                 <div className={styles.subMenus}>
@@ -191,7 +191,7 @@ const Header = observer(() => {
                   <a href="/interview/interviewResult" className={styles.subMenu}>면접결과</a>
                 </div>
                 <div className={styles.subMenus}>
-                  <a href="/bbs" className={styles.subMenu}>면접자 게시판</a>
+                  <a href="/bbs" className={styles.subMenu}>자유게시판</a>
                   <a href="/bbs/noticePage" className={styles.subMenu}>공지사항</a>
                 </div>
                 <div className={styles.subMenus}>
