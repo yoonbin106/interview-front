@@ -83,81 +83,6 @@ const Chatting = observer(({ closeChatting }) => {
             }
         };
 
-
-        // const broker = 'ws://192.168.0.137:8000/mqtt';
-        // const mqttClient = mqtt.connect(broker);
-        // setMqttClient(mqttClient);
-
-        // // const mqttClient = mqtt.connect('mqtt://192.168.0.137');
-        // // setMqttClient(mqttClient);
-
-        // mqttClient.on('connect', () => {
-        //     console.log('MQTT connection established');
-        //     const topic = 'python/mqtt'
-        //     mqttClient.subscribe(topic, (err) => {
-        //         if (!err) {
-        //             console.log('Subscribed to python/mqtt');
-        //         }
-        //     });
-        // });
-
-        // // Unsubscribe
-        // client.unubscribe(topic, () => {
-        //     console.log('Unsubscribed')
-        // })
-
-        // mqttClient.on('message', (topic, message) => {
-        //     if (topic === 'python/mqtt') {
-        //         const receivedMessage = JSON.parse(message.toString());
-        //         console.log('Received MQTT message: ', receivedMessage);
-        //         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-        //     }
-        // });
-
-        // mqttClient.on('close', () => {
-        //     console.log('MQTT connection closed');
-        // });
-
-        // return () => mqttClient.end();
-
-
-        // ========================================================================================
-
-        // // const mqtt = require('mqtt');
-
-        // const broker = 'mqtt://192.168.0.137:1883';
-        // const mqttClient = mqtt.connect(broker);
-        // setMqttClient(mqttClient);
-
-        // // const mqttClient = mqtt.connect('mqtt://192.168.0.137');
-        // // setMqttClient(mqttClient);
-
-        // mqttClient.on('connect', () => {
-        //     console.log('MQTT connection established');
-        //     const topic= 'python/mqtt'
-        //     mqttClient.subscribe(topic, (err) => {
-        //         if (!err) {
-        //             console.log('Subscribed to python/mqtt');
-        //         }
-        //     });
-        // });
-
-        // mqttClient.on('message', (topic, message) => {
-        //     if (topic === 'python/mqtt') {
-        //         const receivedMessage = JSON.parse(message.toString());
-        //         console.log('Received MQTT message: ', receivedMessage);
-        //         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-        //     }
-        // });
-
-        // mqttClient.on('close', () => {
-        //     console.log('MQTT connection closed');
-        // });
-
-        // return () => mqttClient.end();
-
-
-
         // ========================================================================================
 
         // const websocketClient = new WebSocket('ws://192.168.0.137:8081/mqtt');
@@ -178,9 +103,6 @@ const Chatting = observer(({ closeChatting }) => {
         // };
 
         // return () => websocketClient.close();
-
-
-
 
     }, []);
 
@@ -238,8 +160,6 @@ const Chatting = observer(({ closeChatting }) => {
         setIsChatOpen(false);
     };
 
-
-
     const loadingPastChatting = () => {
         const pastMessages = [
             { text: '테스트용 첫 채팅', sender: '김길동', timestamp: new Date() },
@@ -248,6 +168,10 @@ const Chatting = observer(({ closeChatting }) => {
         pastMessages.map((pastMessage, index) => (
             setMessages(prev => [...prev, pastMessage])
         ));
+    }
+
+    const createChatRoom = async () => {
+        
     }
 
     const sendMessage = async () => {
@@ -285,9 +209,6 @@ const Chatting = observer(({ closeChatting }) => {
             //         console.log('Message sent to python/mqtt');
             //     }
             // });
-
-
-
 
             setInputMessage('');
             try {
