@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import stylesSearch from '@/styles/search/search.module.css';
+import stylesError from '@/styles/search/errorMessage.module.css'; // 오류 메시지 스타일 임포트
 
 import axios from 'axios'; // Axios로 API 호출
 import { observer } from 'mobx-react-lite';
@@ -12,6 +13,8 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
     const [showDropdown, setShowDropdown] = useState(false);
     const { userStore } = useStores();
     const baseURL = 'http://localhost:8080';
+    const [errorMessage, setErrorMessage] = useState('');
+
 
     const fetchSearchHistory = async () => {
         try {
@@ -63,22 +66,21 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
     const validateSearchInput = (input) => {
         // 1. 검색어 길이 제한
         if (input.length < 2 || input.length > 15) {
-            alert("검색어는 2자 이상 15자 이하로 입력해주세요.");
+            setErrorMessage("검색어는 2자 이상 15자 이하로 입력해주세요.");
             return false;
         }
-
-            // 2. 특수문자 필터링
+    
+        // 2. 특수문자 필터링
         const specialCharPattern = /[!@#$%^&*(),.?":{}|<>~`'\\/\[\];=_+-]/;
         if (specialCharPattern.test(input)) {
-            alert("특수문자는 사용할 수 없습니다.");
+            setErrorMessage("특수문자는 사용할 수 없습니다.");
             return false;
         }
-
-
+    
         // 3. 공백 처리
         const trimmedInput = input.trim().replace(/\s+/g, ' ');
-
-       // 4. 금칙어 필터링
+    
+        // 4. 금칙어 필터링
         const forbiddenWords = [
             "씨발", "섹스", "시발", "개새", "좆", "씹", "병신", "ㅅㅂ", "ㅂㅅ", "ㅄ", 
             "ㅈㄹ", "ㅈㄴ", "ㅗ", "ㅜ", "ㅁㅊ", "ㅊㅊ", "ㅉ", "ㄷㅊ", "ㅍㅅ", "ㄱㅅ", 
@@ -94,32 +96,32 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
             "좆같", "좆밥", "좆만", "좆이", "좇같", "좇밥", "좇만", "짱깨", "짱개", 
             "창녀", "창놈", "캐년", "캐놈", "캐세끼", "호로", "호로새끼", "후레"
         ];
-
+    
         const hasForbiddenWord = forbiddenWords.some(word => trimmedInput.includes(word));
         if (hasForbiddenWord) {
-            alert("부적절한 단어가 포함되어 있습니다.");
+            setErrorMessage("부적절한 단어가 포함되어 있습니다.");
             return false;
         }
-
-
+    
         // 5. 반복 문자 제한
         const repeatedCharPattern = /(.)\1{2,}/;
         if (repeatedCharPattern.test(trimmedInput)) {
-            alert("동일 문자가 3번 이상 반복되었습니다.");
+            setErrorMessage("동일 문자가 3번 이상 반복되었습니다.");
             return false;
         }
-
-      // 6. 글자 완성 제한 (자음, 모음만 있는 경우 및 영어 대소문자 포함)
-        const incompleteCharPattern = /[ㄱ-ㅎㅏ-ㅣa-zA-Z]/;
+    
+        // 6. 글자 완성 제한 (자음, 모음만 있는 경우만 필터링)
+        const incompleteCharPattern = /^[ㄱ-ㅎㅏ-ㅣ]+$/;
         if (incompleteCharPattern.test(trimmedInput)) {
-            alert("완성된 한글만 입력해주세요.");
+            setErrorMessage("완성된 한글만 입력해주세요.");
             return false;
         }
-
-
+    
+        // 오류가 없으면 에러 메시지를 지움
+        setErrorMessage('');
         return trimmedInput;
     };
-
+    
 
     const handleSearchClick = async () => {
         const searchValue = searchInputRef.current.value.trim();
@@ -129,27 +131,21 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
             try {
                 await saveSearchHistory(validatedInput); // 유효성 검사를 통과한 경우에만 검색어 저장
                 setCorpNm(validatedInput); // 상태 업데이트
-                handleSearch(); // 검색 실행
+                handleSearch(); // 검색을 실제로 실행
+             
             } catch (error) {
                 console.error('Failed to save search history:', error);
             }
         }
     };
     
-    const handleSearchHistoryClick = async (term) => {
+    const handleSearchHistoryClick = (term) => {
         const validatedInput = validateSearchInput(term); // 유효성 검사
     
         if (validatedInput) {
-            try {
-                setSearchTriggered(true); // 검색 시작 상태로 설정
-                await saveSearchHistory(validatedInput); //  검색어 저장
-                searchInputRef.current.value = validatedInput; // 검색 창에 클릭한 검색어를 표시
-                setCorpNm(validatedInput); // 검색어 상태 업데이트
-                setShowDropdown(false);
-                handleSearch(); // 검색 실행 트리거
-            } catch (error) {
-                console.error('Failed to save search history:', error);
-            }
+            searchInputRef.current.value = validatedInput; // 검색 창에 클릭한 검색어를 표시
+            setCorpNm(validatedInput); // 검색어 상태 업데이트
+            setShowDropdown(false); // 드롭다운 닫기
         }
     };
     
@@ -184,6 +180,11 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
         <div className={stylesSearch['search-container']}>
             <h2>지도</h2>
             <p>전국의 기업을 지도로 한눈에 확인하세요!</p>
+            {errorMessage && (
+                <div className={stylesError.errorPopup}>
+                    {errorMessage}
+                </div>
+            )}
             <div className={stylesSearch['search-box']}>
                 <input 
                     type="text" 
@@ -206,7 +207,7 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
                                             style={{ flexShrink: 0 }}
                                         />
                                       <span 
-                                    onClick={() => handleSearchHistoryClick(term)} // 클릭한 검색어로 검색 실행
+                                    onClick={() => handleSearchHistoryClick(term)} 
                                     style={{
                                         flexGrow: 1, 
                                         marginLeft: '10px', 

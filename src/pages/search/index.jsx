@@ -26,25 +26,16 @@ function Search() {
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [isMapSearch, setIsMapSearch] = useState(false);
     const [newsLoading, setNewsLoading] = useState(true); // 뉴스 로딩 상태 추가
-
     const searchInputRef = useRef(null);
     const mapRef = useRef(null);
-
     const [filters, setFilters] = useState({});
+    const [noResults, setNoResults] = useState(false);
+
     const handleFilterChange = (newFilters) => {
         setFilters(newFilters);
     };
 
-    useEffect(() => {
-        if (searchTriggered) {
-            console.log("Search Triggered: 뉴스가 사라져야 함");
-            handleFetchCorpInfo(isMapSearch);
-            setSearchTriggered(false); // 검색이 완료된 후 다시 false로 설정
-        } else {
-            console.log("Search Ended: 뉴스가 다시 나타날 수 있음");
-            // 여기에 필요할 경우 추가 작업을 수행할 수 있습니다.
-        }
-    }, [searchTriggered]);
+    
     
 
     useEffect(() => {
@@ -126,6 +117,7 @@ function Search() {
                 setFilteredCompanies(filtered);
             }
             setError(null);
+            setNoResults(filtered.length === 0);  // 결과가 0건일 때 상태 업데이트
         } catch (error) {
             console.error('API 요청 오류:', error);
             setError(error.message);
@@ -135,6 +127,7 @@ function Search() {
             } else {
                 setFilteredCompanies([]);
             }
+            setNoResults(true);  // 오류가 발생해도 결과가 0건으로 처리
         } finally {
             setLoading(false);
         }
@@ -148,7 +141,7 @@ function Search() {
         console.log('searchTriggered after handleSearch:', searchTriggered);
         console.log('isMapSearch after handleSearch:', isMapSearch);
        
-        // handleFetchCorpInfo(false);이거반드시돌려놔야함 지금 고치는거임 다고장나면반드시돌려야함
+        handleFetchCorpInfo(false);
         
     };
 
@@ -192,6 +185,15 @@ function Search() {
         <div className='app'>
             <div style={{ display: 'flex', height: '100vh' }} onKeyPress={handleKeyPress}>
                 {(loading || newsLoading) && <LoadingSpinner />} {/* 로딩 상태 표시 */}
+                    {noResults && (
+                    <div className={styles['no-results-popup']}>
+                        검색된 결과가 없습니다.
+                    </div>
+                )}
+
+
+
+
                 <div style={{ width: '30%', padding: '10px', boxSizing: 'border-box' }}>
                     
                     <Filter 
@@ -203,8 +205,10 @@ function Search() {
                         setSearchTriggered={setSearchTriggered}
                     />
     
-                    {/* 검색 결과가 없고, 검색이 트리거되지 않았을 때만 뉴스 표시 */}
-                    {!searchTriggered && !isMapSearch && !loading && !newsLoading && <EconomicNews />} 
+                   {/* 검색 결과가 없고, 검색이 트리거되지 않았을 때 또는 검색 결과가 0건일 때 뉴스 표시 */}
+                   {(!searchTriggered && !isMapSearch && !loading && !newsLoading) || noResults ? (
+                        <EconomicNews />
+                    ) : null}
                     
                     {/* 검색 결과가 있을 때만 결과 표시 */}
                     {searchTriggered && (
