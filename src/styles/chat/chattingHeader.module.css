@@ -1,33 +1,49 @@
 .chattingHeader {
-    background: linear-gradient(135deg, #0056b3, #007bff);
-    color: white;
-    padding: 15px 20px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .chattingHeader .logo {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-  }
-  .chattingHeader .status {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #10B981;
-    margin-left: 10px;
-  }
-  .closeButton {
-    margin-left: 5px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  .closeButton:hover {
-    transform: scale(1.1);
-  }
+  background: linear-gradient(135deg, #0056b3, #007bff);
+  color: white;
+  padding: 15px 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+
+.chattingHeader div {
+  display: flex;
+  align-items: center;
+  /* 버튼들을 수직 가운데 정렬 */
+}
+
+.chattingHeader .logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.chattingHeader .status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #10B981;
+  margin-left: 10px;
+}
+
+.darkModeButton {
+  display: flex;
+}
+
+.closeButton {
+  display: flex;
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
+}

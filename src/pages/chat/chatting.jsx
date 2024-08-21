@@ -9,6 +9,8 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
+import axios from 'axios';
+import { getAllUsers } from 'api/user';
 
 const Chatting = observer(({ closeChatting }) => {
     // const [isOpen, setIsOpen] = useState(false);
@@ -23,17 +25,38 @@ const Chatting = observer(({ closeChatting }) => {
     });
 
     const { authStore, userStore } = useStores();
-   
+
+    const [users, setUsers] = useState([]);
+
 
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
 
     const lists = [
         { id: 1, name: '김길동', title: '2팀회의 방', lastMessage: '오류나요' },
-        // { id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구' },
+        { id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구' },
     ]
 
+
+    // const getUserList = async () => {
+    //     // try {
+    //     //     const response = await axios.get('http://localhost:8080/api/chat/users');
+    //     //     setUsers(response.data);
+    //     // } catch (error) {
+    //     //     console.error('Error:', error);
+    //     // }
+
+
+    // };
+
+    const getUserList = async () => {
+        const response = await getAllUsers();
+        setUsers(response.data);
+    }
+
+
     useEffect(() => {
+        //나중에 지울 것
         setUserInfo({
             username: localStorage.getItem('username') || '',
             email: localStorage.getItem('email') || '',
@@ -42,12 +65,12 @@ const Chatting = observer(({ closeChatting }) => {
 
         loadingPastChatting();
 
-
+        getUserList();
 
 
         // MQTT 브로커에 연결
         const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884'); // 또는 'ws://broker.hivemq.com:8000/mqtt' (웹소켓 사용 시)
-        
+
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT broker');
             setIsConnected(true);
@@ -59,10 +82,10 @@ const Chatting = observer(({ closeChatting }) => {
             if (topic === 'python/mqtt') {
 
                 const receivedMessage = JSON.parse(message);
-                if(message.sender !== userInfo.username){
+                if (message.sender !== userInfo.username) {
                     setMessages((prevMessages) => [...prevMessages, receivedMessage]);
                 }
-                
+
             }
         });
 
@@ -171,7 +194,7 @@ const Chatting = observer(({ closeChatting }) => {
     }
 
     const createChatRoom = async () => {
-        
+
     }
 
     const sendMessage = async () => {
@@ -181,7 +204,7 @@ const Chatting = observer(({ closeChatting }) => {
             // setMessages(prev => [...prev, userMessage]);
 
             client.publish('python/mqtt', JSON.stringify({ text: inputMessage, sender: userInfo.username, timestamp: new Date() }));
-            
+
 
             // client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
 
@@ -227,7 +250,7 @@ const Chatting = observer(({ closeChatting }) => {
                 //     answerId: answerResponse.data.answerId
                 // };
 
-                
+
 
                 if (inputMessage == '지금')
                     setMessages(prev => [...prev, { text: '상대방의 메세지', sender: 'kim' }]);
@@ -252,7 +275,7 @@ const Chatting = observer(({ closeChatting }) => {
                 <div className={styles.chatContent}>
 
                     {!isChatOpen ? (
-                        <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} userStore={userStore} />
+                        <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} userStore={userStore} users={users} />
                     ) : (
                         <>
                             <button className={styles.chattingBackButton} onClick={handleBackClick}>

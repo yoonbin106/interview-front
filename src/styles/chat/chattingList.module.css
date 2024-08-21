@@ -3,6 +3,42 @@
     padding-top: 1px;
 }
 
+.chattingListHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: solid 1px rgb(168, 168, 168);
+}
+
+.chattingListTitle {
+    font-weight: 600;
+    margin-right: auto;
+}
+
+.chattingListCreate {
+    margin-left: 15px;
+}
+
+.chattingListCreate:hover {
+    transform: scale(1.1);
+}
+
+.chattingListSettings {
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.chattingListSettings:hover {
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+
 .chattingList:hover {
     /* border: solid 1px black; */
     background-color: #f0f0f0;
@@ -16,7 +52,7 @@
 }
 
 .chattingListProfile {
-    margin-right: 20px; /* 프로필과 콘텐츠 사이의 간격 조절 */
+    margin-right: 20px;
 }
 
 .chattingListContent {
@@ -25,12 +61,12 @@
     justify-content: center;
 }
 
-.chattingListTitle {
+.chattingRoomTitle {
     font-weight: bold;
-    margin-bottom: 4px; /* 제목과 마지막 메시지 사이의 간격 조절 */
+    margin-bottom: 4px;
 }
 
-.chattingListLastMessage {
-    color: #666; /* 마지막 메시지의 색상 조정 */
+.chattingRoomLastMessage {
+    color: #666;
     font-size: 14px;
 }
