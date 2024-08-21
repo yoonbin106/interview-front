@@ -36,6 +36,18 @@ function Search() {
     };
 
     useEffect(() => {
+        if (searchTriggered) {
+            console.log("Search Triggered: 뉴스가 사라져야 함");
+            handleFetchCorpInfo(isMapSearch);
+            setSearchTriggered(false); // 검색이 완료된 후 다시 false로 설정
+        } else {
+            console.log("Search Ended: 뉴스가 다시 나타날 수 있음");
+            // 여기에 필요할 경우 추가 작업을 수행할 수 있습니다.
+        }
+    }, [searchTriggered]);
+    
+
+    useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -47,6 +59,9 @@ function Search() {
                 }
             );
         }
+
+       
+        
 
         const fetchNews = async () => {
             try {
@@ -77,6 +92,7 @@ function Search() {
 
             if (crno) params.append('crno', crno);
             if (corpNm) params.append('corpNm', corpNm);
+            console.log('corpNm:', corpNm);
 
             if (useMapBounds && mapBounds) {
                 const sw = mapBounds.getSouthWest();
@@ -126,15 +142,19 @@ function Search() {
 
     const handleSearch = () => {
         console.log('기존검색버튼');
+        console.log("Search Triggered");
         setSearchTriggered(true);
         setIsMapSearch(false);
         console.log('searchTriggered after handleSearch:', searchTriggered);
         console.log('isMapSearch after handleSearch:', isMapSearch);
-        handleFetchCorpInfo(false);
+       
+        // handleFetchCorpInfo(false);이거반드시돌려놔야함 지금 고치는거임 다고장나면반드시돌려야함
+        
     };
 
     const handleMapSearch = () => {
         console.log('화면내검색버튼');
+        console.log("Map Search Triggered");
         setIsMapSearch(true);
         console.log('searchTriggered after handleMapSearch:', searchTriggered);
         console.log('isMapSearch after handleMapSearch:', isMapSearch);
@@ -173,38 +193,44 @@ function Search() {
             <div style={{ display: 'flex', height: '100vh' }} onKeyPress={handleKeyPress}>
                 {(loading || newsLoading) && <LoadingSpinner />} {/* 로딩 상태 표시 */}
                 <div style={{ width: '30%', padding: '10px', boxSizing: 'border-box' }}>
-                   
+                    
                     <Filter 
                         onFilterChange={handleFilterChange} 
                         handleSearch={handleSearch} 
                         setSearchInputFocus={setSearchInputFocus}
                         searchInputRef={searchInputRef}
                         setCorpNm={setCorpNm}
+                        setSearchTriggered={setSearchTriggered}
                     />
-                      {!searchTriggered && !isMapSearch && <EconomicNews />} {/* 검색이 실행되지 않았을 때만 뉴스 표시 */}
-                    {error && <p>Error: {error}</p>}
-                    <div className={`${styles['result-container']} ${searchTriggered ? styles['visible'] : ''}`}>
-                        {searchTriggered && !isMapSearch && (
-                            <>
-                                <p>검색 결과: {filteredCompanies.length}건</p>
-                                <CompanyList 
-                                    companies={filteredCompanies} 
-                                    onCompanyClick={handleCompanyClick} 
-                                    onMarkerClick={handleMarkerClick} 
-                                />
-                            </>
-                        )}
-                        {searchTriggered && isMapSearch && (
-                            <>
-                                <p>검색 결과: {mapFilteredCompanies.length}건</p>
-                                <CompanyList 
-                                    companies={mapFilteredCompanies} 
-                                    onCompanyClick={handleCompanyClick} 
-                                    onMarkerClick={handleMarkerClick} 
-                                />
-                            </>
-                        )}
-                    </div>
+    
+                    {/* 검색 결과가 없고, 검색이 트리거되지 않았을 때만 뉴스 표시 */}
+                    {!searchTriggered && !isMapSearch && !loading && !newsLoading && <EconomicNews />} 
+                    
+                    {/* 검색 결과가 있을 때만 결과 표시 */}
+                    {searchTriggered && (
+                        <div className={`${styles['result-container']} ${styles['visible']}`}>
+                            {!isMapSearch && (
+                                <>
+                                    <p>검색 결과: {filteredCompanies.length}건</p>
+                                    <CompanyList 
+                                        companies={filteredCompanies} 
+                                        onCompanyClick={handleCompanyClick} 
+                                        onMarkerClick={handleMarkerClick} 
+                                    />
+                                </>
+                            )}
+                            {isMapSearch && (
+                                <>
+                                    <p>검색 결과: {mapFilteredCompanies.length}건</p>
+                                    <CompanyList 
+                                        companies={mapFilteredCompanies} 
+                                        onCompanyClick={handleCompanyClick} 
+                                        onMarkerClick={handleMarkerClick} 
+                                    />
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <div style={{ width: '70%', position: 'relative' }}>
                     <UserLocationMap 
@@ -217,11 +243,12 @@ function Search() {
                         mapRef={mapRef}
                     />
                     {searchTriggered && <MapSearchButton onClick={handleMapSearch} />}
-
                 </div>
             </div>
         </div>
     );
+    
+    
 }
 
 export default Search;

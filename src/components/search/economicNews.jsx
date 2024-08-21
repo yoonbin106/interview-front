@@ -7,6 +7,7 @@ const EconomicNews = () => {
     const [error, setError] = useState(null); 
 
     useEffect(() => {
+        
         const fetchNews = async () => {
             try {
                 const response = await fetch('/api/economicNews'); 

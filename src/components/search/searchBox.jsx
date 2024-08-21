@@ -7,7 +7,7 @@ import axios from 'axios'; // Axios로 API 호출
 import { observer } from 'mobx-react-lite';
 import { useStores } from '@/contexts/storeContext';
 
-const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef, setCorpNm }) => {
+const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef, setCorpNm, setSearchTriggered }) => {
     const [searchHistory, setSearchHistory] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const { userStore } = useStores();
@@ -41,7 +41,7 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
                 setTimeout(() => setShowDropdown(false), 200); // 약간의 지연 후 드롭다운 닫기
             });
         }
-    }, [searchInputRef]);
+}, [searchInputRef]);
 
     const saveSearchHistory = async (searchInput) => {
         try {
@@ -60,11 +60,107 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
         setCorpNm(e.target.value);
     };
 
+    const validateSearchInput = (input) => {
+        // 1. 검색어 길이 제한
+        if (input.length < 2 || input.length > 15) {
+            alert("검색어는 2자 이상 15자 이하로 입력해주세요.");
+            return false;
+        }
+
+            // 2. 특수문자 필터링
+        const specialCharPattern = /[!@#$%^&*(),.?":{}|<>~`'\\/\[\];=_+-]/;
+        if (specialCharPattern.test(input)) {
+            alert("특수문자는 사용할 수 없습니다.");
+            return false;
+        }
+
+
+        // 3. 공백 처리
+        const trimmedInput = input.trim().replace(/\s+/g, ' ');
+
+       // 4. 금칙어 필터링
+        const forbiddenWords = [
+            "씨발", "섹스", "시발", "개새", "좆", "씹", "병신", "ㅅㅂ", "ㅂㅅ", "ㅄ", 
+            "ㅈㄹ", "ㅈㄴ", "ㅗ", "ㅜ", "ㅁㅊ", "ㅊㅊ", "ㅉ", "ㄷㅊ", "ㅍㅅ", "ㄱㅅ", 
+            "개년", "걸레", "쓰레기", "느개비", "닭대가리", "또라이", "똘추", "찌질이", 
+            "빙신", "느개비", "좆까", "좆같", "좆밥", "썅", "싸가지", "개같", "개놈", 
+            "개년", "개소리", "개새끼", "개자식", "개지랄", "개좆", "개호로", "개호로새끼", 
+            "닥쳐", "닥치라", "닥치고", "닥치", "대갈빡", "대갈통", "대가리", "대갈", 
+            "병신같", "병자", "뻐큐", "빡대가리", "빡치", "빻았", "새끼", "씹새", 
+            "씹할", "씹년", "씹치", "씹팔", "씹창", "십창", "씨팔", "씨발놈", "씨발년", 
+            "씨발새끼", "씨팔", "쌍년", "쌍놈", "쌍세끼", "썅년", "썅놈", "썅새끼", 
+            "썩을", "썩창", "썅창", "쓰레기", "애미", "애비", "앰창", "엠창", "염병", 
+            "엿먹", "조까", "조까치", "존나", "존맛", "죽일놈", "죽일년", "좆까", 
+            "좆같", "좆밥", "좆만", "좆이", "좇같", "좇밥", "좇만", "짱깨", "짱개", 
+            "창녀", "창놈", "캐년", "캐놈", "캐세끼", "호로", "호로새끼", "후레"
+        ];
+
+        const hasForbiddenWord = forbiddenWords.some(word => trimmedInput.includes(word));
+        if (hasForbiddenWord) {
+            alert("부적절한 단어가 포함되어 있습니다.");
+            return false;
+        }
+
+
+        // 5. 반복 문자 제한
+        const repeatedCharPattern = /(.)\1{2,}/;
+        if (repeatedCharPattern.test(trimmedInput)) {
+            alert("동일 문자가 3번 이상 반복되었습니다.");
+            return false;
+        }
+
+      // 6. 글자 완성 제한 (자음, 모음만 있는 경우 및 영어 대소문자 포함)
+        const incompleteCharPattern = /[ㄱ-ㅎㅏ-ㅣa-zA-Z]/;
+        if (incompleteCharPattern.test(trimmedInput)) {
+            alert("완성된 한글만 입력해주세요.");
+            return false;
+        }
+
+
+        return trimmedInput;
+    };
+
+
     const handleSearchClick = async () => {
-        console.log("Search button clicked");
-        await saveSearchHistory(searchInputRef.current.value); // 검색 기록 저장
-        handleSearch();
-        setShowDropdown(false); // 검색을 수행한 후 드롭다운 닫기
+        const searchValue = searchInputRef.current.value.trim();
+        const validatedInput = validateSearchInput(searchValue); // 유효성 검사
+    
+        if (validatedInput) {
+            try {
+                await saveSearchHistory(validatedInput); // 유효성 검사를 통과한 경우에만 검색어 저장
+                setCorpNm(validatedInput); // 상태 업데이트
+                handleSearch(); // 검색 실행
+            } catch (error) {
+                console.error('Failed to save search history:', error);
+            }
+        }
+    };
+    
+    const handleSearchHistoryClick = async (term) => {
+        const validatedInput = validateSearchInput(term); // 유효성 검사
+    
+        if (validatedInput) {
+            try {
+                setSearchTriggered(true); // 검색 시작 상태로 설정
+                await saveSearchHistory(validatedInput); //  검색어 저장
+                searchInputRef.current.value = validatedInput; // 검색 창에 클릭한 검색어를 표시
+                setCorpNm(validatedInput); // 검색어 상태 업데이트
+                setShowDropdown(false);
+                handleSearch(); // 검색 실행 트리거
+            } catch (error) {
+                console.error('Failed to save search history:', error);
+            }
+        }
+    };
+    
+
+  
+
+    const handleKeyDown = async (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSearchClick(); // Enter 키를 눌렀을 때도 handleSearchClick 함수 호출
+        }
     };
 
      // 삭제 이벤트 핸들러
@@ -93,13 +189,8 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
                     type="text" 
                     placeholder="기업명을 검색해주세요" 
                     ref={searchInputRef} 
-                    onChange={handleInputChange}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            handleSearchClick();
-                        }
-                    }}
+                   onChange={handleInputChange}  // 검색어 입력 시 상태 업데이트
+                    onKeyDown={handleKeyDown} // onKeyPress 대신 onKeyDown 사용
                 />
                 <button onClick={handleSearchClick}><FontAwesomeIcon icon={faSearch} /></button>
                 {showDropdown && searchHistory.length > 0 && (
@@ -114,22 +205,19 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
                                             className={stylesSearch['search-icon']}
                                             style={{ flexShrink: 0 }}
                                         />
-                                        <span 
-                                            onClick={() => {
-                                                setCorpNm(term);
-                                                handleSearch();
-                                                setShowDropdown(false);
-                                            }}
-                                            style={{
-                                                flexGrow: 1, 
-                                                marginLeft: '10px', 
-                                                whiteSpace: 'nowrap', 
-                                                overflow: 'hidden', 
-                                                textOverflow: 'ellipsis'
-                                            }}
-                                        >
-                                            {term}
-                                        </span>
+                                      <span 
+                                    onClick={() => handleSearchHistoryClick(term)} // 클릭한 검색어로 검색 실행
+                                    style={{
+                                        flexGrow: 1, 
+                                        marginLeft: '10px', 
+                                        whiteSpace: 'nowrap', 
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis'
+                                    }}
+                                    >
+                                    {term}
+                                    </span>
+
                                         <button 
                                             className={stylesSearch['delete-btn']} 
                                             onClick={(event) => handleDeleteSearchHistory(term, event)}
