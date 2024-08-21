@@ -81,3 +81,19 @@ export const getAllUsers = async () => {
     console.error("유저목록을 가져오는데 오류가 발생했습니다:", error);
   }
 };
+
+export const getUserByEmail = async (email) => {
+  try {
+    const user = await axios.get(`${baseUrl}/findUserByEmail`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      params: {
+        email: email  // 이메일을 쿼리 파라미터로 전달
+      }
+    });
+    return user;
+  } catch (error) {
+    console.error("유저 정보를 가져오는 데 오류가 발생했습니다:", error);
+  }
+};

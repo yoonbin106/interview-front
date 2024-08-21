@@ -46,14 +46,16 @@ const formatPhone = (phone) => {
 const formatAddress = (address) => {
   if (!address) return '주소에 대한 정보가 없습니다';
   const [zip, ...rest] = address.split(' ');
-  const location = rest.slice(0, 4).join(' ');
-  const detail = rest.slice(4).join(' ');
+  const location = rest.slice(0, 4).join(' ');  // '서울 서초구 강남대로 48-3'까지 추출
+  const detail = rest.slice(4).join(' ');       // 그 이후 부분 추출
+  // detail을 두 부분으로 나누기 위해 첫 번째 공백에서 분리
+  const [mainDetail, subDetail] = detail.split(/ (.+)/); 
   return (
     <>
       {zip} <br />
       {location} <br />
-      {detail.split(' ')[0]} <br />
-      {detail.split(' ')[1]} <br />
+      {mainDetail} <br />
+      {subDetail} <br />
     </>
   );
 };
