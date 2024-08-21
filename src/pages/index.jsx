@@ -44,7 +44,7 @@ function Home() {
             subtitle2: "확실한 정보를 제공합니다.",
             buttonText: "사용하기",
             href: "/resume",
-             bgClass: 'bgImage2'
+            bgClass: 'bgImage2'
         },
         {
             title: "비대면 면접",
@@ -52,7 +52,7 @@ function Home() {
             subtitle2: "지금 확인하세요!",
             buttonText: "사용하기",
             href: "/interview",
-             bgClass: 'bgImage3'
+            bgClass: 'bgImage3'
         },
         {
             title: "AI 면접 평가",
@@ -60,7 +60,7 @@ function Home() {
             subtitle2: "효율적인 학습을 제공합니다.",
             buttonText: "사용하기",
             href: "/interviewResult",
-             bgClass: 'bgImage4'
+            bgClass: 'bgImage4'
         },
         {
             title: "사람들과 실시간 소통",
@@ -68,7 +68,7 @@ function Home() {
             subtitle2: "지금 바로 활용해보세요.",
             buttonText: "사용하기",
             href: "/chat",
-             bgClass: 'bgImage5'
+            bgClass: 'bgImage5'
         },
     ];
 
@@ -79,9 +79,6 @@ function Home() {
         // 현재 애니메이션을 중단하고 인덱스를 업데이트
         setCurrentIndex(index);  // 클릭된 인덱스로 상태 업데이트
     };
-   
-    
-
 
 
 
@@ -123,7 +120,7 @@ function Home() {
             <div className={`${styles.container} ${imageClasses[currentImage]}`}>
                 <div className={styles.mainImages}>
                     <div className={styles.mainTitle}>
-                        
+
                     </div>
                     <div className={styles.mainSubtitle}>
                         포커스잡에 오신걸 환영합니다
@@ -135,7 +132,7 @@ function Home() {
                     </a>
                 </div>
             </div>
-            {/*  */}
+            {/*두번째 화면  */}
             <div className={styles.container2} id="systemInfo">
                 <div className={styles.mainIntroFrameW}>
                     <div className={styles.mainIntroFrameH}>
@@ -148,7 +145,7 @@ function Home() {
 
                         <div className={`${styles.mainIntroBox} ${styles[contentList[currentIndex].bgClass]}`}>
                             <div className={styles.mainIntroBoxIn}>
-                                
+
                                 <div className={styles.mainIntroBoxInTitle}>{contentList[currentIndex].title}</div>
                                 <div className={styles.mainIntroBoxInSubtitleFrame}>
                                     <div className={styles.mainIntroBoxInSubtitle}>{contentList[currentIndex].subtitle1}</div>
@@ -184,12 +181,12 @@ function Home() {
                     </div>
                 </div>
             </div>
-            {/*  */}
+            {/* 키워드 */}
             <div className={styles.container3}>
                 <div className={styles.keyWordFrame}>
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxGrey}>
-                            <div className={styles.keyWordTextWh}>모의면접 키워드</div>
+                            <div className={styles.keyWordTextWh}>면접 준비는 "FocusJob"</div>
                         </div>
                         <div className={styles.keyWordBoxWhiteImage}>
                             <div className={styles.keyWordTextBlImage}>
@@ -199,7 +196,7 @@ function Home() {
                     </div>
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxHeight}>
-                            <div className={styles.keyWordTextHeightBl}>"반으로 접겠습니다"</div>
+                            <div className={styles.keyWordTextHeightBl}>장점 1</div>
                         </div>
                     </div>
                     <div className={styles.keyWordFrames}>
@@ -207,7 +204,7 @@ function Home() {
                             <div className={styles.keyWordTextBl}>모의면접 키워드</div>
                         </div>
                         <div className={styles.keyWordBoxWhite}>
-                            <div className={styles.keyWordTextBl}>아니면 쓰는 기술키워드들</div>
+                            <div className={styles.keyWordTextBl}>장점2</div>
                         </div>
                     </div>
                     <div className={styles.keyWordFramesWide}>
@@ -221,70 +218,30 @@ function Home() {
                                 <div className={styles.keyWordTextBl}>모의면접 키워드</div>
                             </div>
                             <div className={styles.keyWordBoxGrey}>
-                                <div className={styles.keyWordTextWh}>모의면접 키워드</div>
+                                <div className={styles.keyWordTextWh}>" 나만의 방식으로 면접을 준비하세요! "</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* 기타 섹션들 */}
-            <div className={styles.container4}  id="tickets">
-                <div className={styles.ticketheader}>요금제</div>
-                <div className={styles.ticketSubheader}>“ 합리적인 가격에 확실한 결과를 볼 수 있는 기회 ”</div>
+            {/* 뉴스칸 */}
+            <div className={styles.container5}>
+                <div className={styles.newsFrameW}>
+                    <div className={styles.newsFrameH}>
+                        <div className={styles.newsFrame}>
 
-                {/*  */}
-                <div className={styles.ticketplansFrame}>
-
-                    <div className={styles.ticketplansFrameIn}>
-                        <div className={styles.ticketplansFrames}>
-                            <div className={styles.tickettitle}>무료 혜택</div>
-                            <div className={styles.ticketInfo}>
-                                <div className={styles.ticketInfoIn}>
-                                    <div>무료 혜택</div>
-                                </div>
+                            <div className={styles.newsTitleFrame}>
+                                <div className={styles.newsTitle}>news</div>
                             </div>
-                            <div className={styles.ticketButtonFrame}>
-                                <a href='#' className={styles.ticketbutton}>가입하기</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.ticketplansFrameIn}>
-                        <div className={styles.ticketplansFrames}>
-                            <div className={styles.tickettitle}>1회 요금제</div>
-                            <div className={styles.ticketInfo}>
-                                <div className={styles.ticketInfoIn}>
-                                    <div>1회 요금제</div>
-                                </div>
-                            </div>
-                            <div className={styles.ticketButtonFrame}>
-                                <div>1,000 원</div>
-                                <a href='#' className={styles.ticketbutton}>결제하기</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.ticketplansFrameIn}>
-                        <div className={styles.ticketplansFrames}>
-                            <div className={styles.tickettitle}>10회+1회 요금제</div>
-                            <div className={styles.ticketInfo}>
-                                <div className={styles.ticketInfoIn}>
-                                    <div>10회+1회 요금제</div>
-                                </div>
-                            </div>
-                            <div className={styles.ticketButtonFrame}>
-                                <div>10,000 원</div>
-                                <a href='#' className={styles.ticketbutton}>결제하기</a>
+                            <div className={styles.newsInfoFrame}>
+                                <div>여기에 뉴스 스라이드</div>
                             </div>
 
                         </div>
                     </div>
-
                 </div>
-
-                {/*  */}
             </div>
-            {/*  */}
+            {/* 뉴스칸 끝 */}
         </div>
     );
 }

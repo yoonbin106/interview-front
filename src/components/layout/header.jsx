@@ -62,6 +62,31 @@ const Header = observer(() => {
       }
     }
   };
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      const dropMenu = document.querySelector(`.${styles.dropMenuFrame}`);
+      const navLinks = document.querySelector(`.${styles.navLinks}`);
+  
+      // 마우스가 dropMenuFrame 또는 navLinks 내부에 있지 않으면 hover를 false로 설정
+      if (dropMenu && navLinks && !dropMenu.contains(event.target) && !navLinks.contains(event.target)) {
+        setHover(false);
+      }
+    };
+  
+    const handleMouseLeaveWindow = () => {
+      setHover(false); // 마우스가 창을 벗어나면 hover를 false로 설정
+    };
+  
+    // 전역적으로 마우스 움직임을 감지
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeaveWindow);
+  
+    // 컴포넌트 언마운트 시 이벤트 제거
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeaveWindow);
+    };
+  }, []);
   
   useEffect(() => {
     setIsClient(true);
@@ -178,8 +203,8 @@ const Header = observer(() => {
                 <div className={styles.subMenus}>
                   <a href="#systemInfo" className={styles.subMenu}
                     onClick={(e) => handleTicketClick(e, 'systemInfo')}>서비스 소개</a>
-                  <a href="#tickets" className={styles.subMenu}
-                    onClick={(e) => handleTicketClick(e, 'tickets')}>이용권 구매</a>
+                  <a href="/payment" className={styles.subMenu}
+                    >이용권 구매</a>
                 </div>
                 <div className={styles.subMenus}>
                   <a href="/search" className={styles.subMenu}>상세 검색</a>
