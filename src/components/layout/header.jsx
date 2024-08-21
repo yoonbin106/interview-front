@@ -104,7 +104,7 @@ const Header = observer(() => {
               onClick={() => router.push('/')}
               style={{ cursor: 'pointer' }}
             >
-              모의면접
+              <div className={styles.mainLogo}></div>
             </div>
           </div>
           <nav

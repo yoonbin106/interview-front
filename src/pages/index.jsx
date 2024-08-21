@@ -123,13 +123,13 @@ function Home() {
             <div className={`${styles.container} ${imageClasses[currentImage]}`}>
                 <div className={styles.mainImages}>
                     <div className={styles.mainTitle}>
-                        모의면접
+                        
                     </div>
                     <div className={styles.mainSubtitle}>
-                        모의면접에 오신걸 환영합니다
+                        포커스잡에 오신걸 환영합니다
                     </div>
                     <a className={styles.mainButton} href="#">
-                        모의면접 보러가기
+                        AI 서비스 체험하기
                         {/* 로그인X=>로그인으로 */}
                         {/* 로그인O=>면접페이지으로 */}
                     </a>
@@ -141,7 +141,7 @@ function Home() {
                     <div className={styles.mainIntroFrameH}>
 
                         <div className={styles.mainIntroTitleFrame}>
-                            <div className={styles.mainIntroTitle}>모의면접</div>
+                            <div className={styles.mainIntroTitle}>포커스잡</div>
                             <div className={styles.mainIntroTitle}>어떤 서비스가 있나요?</div>
                         </div>
                         {/* 내용바뀌는 부분 */}
@@ -191,8 +191,10 @@ function Home() {
                         <div className={styles.keyWordBoxGrey}>
                             <div className={styles.keyWordTextWh}>모의면접 키워드</div>
                         </div>
-                        <div className={styles.keyWordBoxWhite}>
-                            <div className={styles.keyWordTextBl}>그림이나 임티</div>
+                        <div className={styles.keyWordBoxWhiteImage}>
+                            <div className={styles.keyWordTextBlImage}>
+                                gd
+                            </div>
                         </div>
                     </div>
                     <div className={styles.keyWordFrames}>
@@ -210,7 +212,9 @@ function Home() {
                     </div>
                     <div className={styles.keyWordFramesWide}>
                         <div className={styles.keyWordBoxWidth}>
-                            <div className={styles.keyWordTextWidthWh}>포인트가될 말들</div>
+                            <div className={styles.keyWordTextWidthWh}>
+                                뿌힝
+                            </div>
                         </div>
                         <div className={styles.keyWordBoxGroup}>
                             <div className={styles.keyWordBoxWhite}>

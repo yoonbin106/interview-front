@@ -20,11 +20,18 @@
 .footerLogo{
   display: flex;
   justify-content: flex-start;
-  width:100px ;
-  height: 85px;
-  margin-left: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  width:140px ;
+  height: 30px;
+  /* margin-left: 20px; */
+}
+.footermainLogo{
+  width: 140px;
+  height: 30px;
+  display: flex;
+  background-image: url('../../public/images/logosmall.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .footerEmpty{
   width:100px ;
@@ -52,15 +59,31 @@
 .socialIconsSection {
   display: flex;
   justify-content: flex-start;
-  gap: 10px;
   margin-top: 10px;
 }
 
 .icon {
-  font-size: 24px;
-  cursor: pointer;
+  margin-left: 10px;
+  height: 25px;
+  width: 25px;
+  /* background: #000; */
 }
-
+.gitIcon{
+  height: 25px;
+  width: 25px;
+  background-image: url('../../public/images/gitHub.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.notionIcon{
+  height: 25px;
+  width: 25px;
+  background-image: url('../../public/images/notion.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
 .menuLink {
   color: #555;
