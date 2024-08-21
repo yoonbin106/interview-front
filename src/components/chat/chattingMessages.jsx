@@ -23,7 +23,7 @@ const ChattingMessages = ({ messages, userInfo }) => {
           <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
             <div className={styles.recieverAvatar} aria-hidden="true">
-              <Avatar sx={{width: 50, height: 50}}>Y</Avatar>
+              <Avatar sx={{width: 50, height: 50}}></Avatar>
             </div>
 
             <div className={styles.othersMessageInfo}>
@@ -38,49 +38,10 @@ const ChattingMessages = ({ messages, userInfo }) => {
                 </div>
               </div>
 
-
-
-
             </div>
-
-
-
-
-
-
-            {/* 
-
-            <div className={styles.othersMessageInfo}>
-              <div className={styles.recieverAvatar} aria-hidden="true">
-                <Avatar>Y</Avatar>
-              </div>
-              <div className={styles.othersMessageSender}>
-                {message.sender}
-              </div>
-            </div>
-
-            <div className={styles.messageContent}>
-              {message.text}
-            </div>
-
- */}
-
-
           </div>
-
         )
-
-        // <div key={index} className={`${styles.messageContainer} ${message.sender === userInfo.username ? styles.my : styles.others}`}>
-        //   {message.sender !== userInfo.username && <div className={styles.recieverAvatar} aria-hidden="true">
-        //   <Avatar>Y</Avatar>
-        //   {/* <div>{message.sender}</div> */}
-        //   </div>}
-        //   <div className={styles.messageContent}>
-        //     <p>{message.text}</p>
-
-        //   </div>
-        // </div>
-
+        
       ))}
 
       <div ref={messagesEndRef} />

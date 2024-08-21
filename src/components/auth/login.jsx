@@ -14,6 +14,8 @@ const Login = observer(() => {
   const { authStore, userStore } = useStores();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     if (!authStore) {
@@ -29,6 +31,30 @@ const Login = observer(() => {
     }
   }, [authStore, router]);
 
+  const validateForm = (formObject) => {
+    let isValid = true;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!formObject.email) {
+      setEmailError('* 이메일: 필수정보입니다');
+      isValid = false;
+    } else if (!emailPattern.test(formObject.email)) {
+      setEmailError('* 이메일 형식이 올바르지 않습니다');
+      isValid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (!formObject.password) {
+      setPasswordError('* 비밀번호: 필수정보입니다');
+      isValid = false;
+    } else {
+      setPasswordError('');
+    }
+
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -40,6 +66,11 @@ const Login = observer(() => {
       formObject[key] = value;
     });
     console.log(formObject);
+
+    if (!validateForm(formObject)) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await login(formObject, authStore, userStore);
@@ -68,7 +99,6 @@ const Login = observer(() => {
     objectFit: 'cover'
   };
 
-
   return (
     <div className={`${styles.container} d-flex justify-content-center align-items-center`}>
       <div className={styles.loginBox}>
@@ -77,10 +107,12 @@ const Login = observer(() => {
           <div className="mb-3">
             <label htmlFor="email" className="form-label">이메일</label>
             <input type="email" className="form-control" id="email" name="email" placeholder="이메일 입력"/>
+            {emailError && <p className={styles['alert-text']}>{emailError}</p>}
           </div>
           <div className="mb-3">
             <label htmlFor="password" className="form-label">비밀번호</label>
             <input type="password" className="form-control" id="password" name="password" placeholder="비밀번호 입력"/>
+            {passwordError && <p className={styles['alert-text']}>{passwordError}</p>}
           </div>
           <div>
             <div className="form-check mb-3">
@@ -96,12 +128,10 @@ const Login = observer(() => {
           <GoogleLogin/>
         </div>
         <div className="d-flex justify-content-between mt-3">
-          
           <a href="./auth/register" className={`${styles.link} text-decoration-none`}>회원가입</a>
-          
           <div>
-          <a href="/auth/findId" className={`${styles.link} text-decoration-none me-3`}>아이디 찾기</a>
-          <a href="/auth/findPassword" className={`${styles.link} text-decoration-none`}>비밀번호 찾기</a>
+            <a href="/auth/findId" className={`${styles.link} text-decoration-none me-3`}>아이디 찾기</a>
+            <a href="/auth/findPassword" className={`${styles.link} text-decoration-none`}>비밀번호 찾기</a>
           </div>
         </div>
       </div>

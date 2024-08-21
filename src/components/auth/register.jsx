@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '@/styles/login/register.module.css'; // Next.js에서의 경로 설정
 import { useRouter } from 'next/router';
 
-const Register = () => {
+const Register = ({ goToNext }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
@@ -22,7 +22,8 @@ const Register = () => {
       setShowAlert(true);
     } else {
       setShowAlert(false);
-      router.push('/auth/registerInput');
+      // router.push('/auth/registerInput');
+      goToNext();
     }
   };
 

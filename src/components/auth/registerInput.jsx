@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "@/styles/login/registerInput.module.css";
 import { useRouter } from "next/router";
-import { sendPhoneCode, verifyPhoneCode } from "../../api/phoneApi";
-import { sendEmailCode, verifyEmailCode } from "../../api/emailApi";
+import { sendPhoneCode, verifyPhoneCode } from "@/api/phoneApi";
+import { sendEmailCode, verifyEmailCode } from "@/api/emailApi";
 import {
   useLoadDaumPostcodeScript,
   openPostcodePopup,
-} from "../../api/getPostCode";
+} from "@/api/getPostCode";
 
-function SignupForm() {
+function SignupForm({ goToNext, goBack, formObject }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordAgain, setShowPasswordAgain] = useState(false);
   const [postcode, setPostcode] = useState('');
@@ -210,6 +210,38 @@ function SignupForm() {
     };
   }, []);
 
+  useEffect(() => {
+    // formObject에서 데이터 로드하여 상태 초기화
+    if (formObject) {
+      setFormState({
+        email: formObject.email || "",
+        phone: formObject.phone || "",
+        password: formObject.password || "",
+        passwordAgain: formObject.passwordAgain || "",
+        username: formObject.username || "",
+        birth: formObject.birth || "",
+        gender: formObject.gender || "",
+      });
+  
+      setValidationState({
+        isEmailVerified: formObject.isEmailVerified || false,
+        isPhoneVerified: formObject.isPhoneVerified || false,
+        emailCodeVisible: false,
+        phoneCodeVisible: false,
+        timer: 180,
+        phoneTimer: 180,
+        emailError: "",
+        passwordError: "",
+        passwordAgainError: "",
+        nameError: "",
+        birthError: "",
+        genderError: "",
+        phoneError: "",
+        postcodeError: "",
+      });
+    }
+  }, [formObject]);
+
   useLoadDaumPostcodeScript();
 
   const buttonStyle = (isSelected) => ({
@@ -269,6 +301,16 @@ function SignupForm() {
       handleValidationChange("passwordAgainError", "");
     }
 
+    if (formState.password !== formState.passwordAgain) {
+      handleValidationChange(
+        "passwordAgainError",
+        "* 비밀번호가 일치하지 않습니다."
+      );
+      hasError = true;
+    } else {
+      handleValidationChange("passwordAgainError", "");
+    }
+
     if (!formState.username) {
       handleValidationChange("nameError", "* 이름: 필수정보입니다");
       hasError = true;
@@ -321,10 +363,12 @@ function SignupForm() {
     console.log(formObject);
 
     // 페이지 이동
-    router.push({
-      pathname: "/auth/registerInputProfile",
-      query: formObject,
-    });
+    // router.push({
+    //   pathname: "/auth/registerInputProfile",
+    //   query: formObject,
+    // });
+    // 다음 단계로 이동 (router.push 대신)
+    goToNext(formObject);
   };
 
   return (
@@ -344,12 +388,12 @@ function SignupForm() {
                 <div className="input-group">
                   <input
                     type="email"
-                    className="form-control"
+                    className={`form-control ${validationState.isEmailVerified ? 'is-verified' : ''}`}
                     id="email"
                     name="email"
                     placeholder="이메일 입력"
                     value={formState.email}
-                    onChange={(e) => handleInputChange(e)}
+                    onChange={handleInputChange}
                     disabled={validationState.isEmailVerified} // 이메일 인증 시 입력 비활성화
                   />
                   {!validationState.isEmailVerified && (
@@ -570,7 +614,7 @@ function SignupForm() {
                 <div className="input-group">
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${validationState.isPhoneVerified ? 'is-verified' : ''}`}
                     id="phone"
                     name="phone"
                     placeholder="전화번호 입력"
@@ -688,9 +732,9 @@ function SignupForm() {
             </div>
 
             <div className="btn-group d-flex justify-content-between">
-              <a href="/auth/register" className="btn btn-primary me-2 rounded">
+              <button type="button" className="btn btn-primary me-2 rounded" onClick={goBack}>
                 이전
-              </a>
+              </button>
               <button type="submit" className="btn btn-secondary rounded">
                 다음
               </button>

@@ -1,6 +1,11 @@
 import React from 'react';
 
 const ResultsList = ({ results }) => {
+    // 결과가 0건이면 컴포넌트 전체를 렌더링하지 않음
+    if (results.length === 0) {
+        return null;
+    }
+
     return (
         <div>
             <h3>검색 결과 {results.length}개</h3>

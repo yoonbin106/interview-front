@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background-color: #b4b5b5;
+  background-color: #f7f7f7;
 }
 
 .loginBox {
@@ -14,4 +14,8 @@
 
 .errorMessage {
   margin-bottom: 20px;
+}
+
+.alert-text {
+  color: red;
 }

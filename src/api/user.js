@@ -68,3 +68,16 @@ export const getProfileImage = async (email, userStore) => {
     console.error("프로필 이미지를 불러오는 중 오류가 발생했습니다:", error);
   }
 };
+
+export const getAllUsers = async () => {
+  try {
+    const allUsers = await axios.get(`${baseUrl}/findAllUser`,{
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    return allUsers;
+  } catch (error) {
+    console.error("유저목록을 가져오는데 오류가 발생했습니다:", error);
+  }
+};

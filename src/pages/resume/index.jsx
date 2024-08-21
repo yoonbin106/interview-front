@@ -9,13 +9,22 @@ import styles from '@/styles/resume/resumeForm.module.css';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
 import proofreadStyles from '@/styles/resume/proofreadStyles.module.css';
 import { closestIndexTo } from 'date-fns';
+import {
+  useLoadDaumPostcodeScript,
+  openPostcodePopup,
+} from "@/api/getPostCode";
 
 function ResumeForm() {
   const router = useRouter();
 
+
   const [profileImage, setProfileImage] = useState(null);
   const [selfIntroduction, setSelfIntroduction] = useState('');
   const [motivation, setMotivation] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [address, setAddress] = useState('');
+  const [extraAddress, setExtraAddress] = useState('');
+  const [specificAddress, setSpecificAddress] = useState('');
 
   // 맞춤법 검사 결과를 저장할 상태 및 사이드바 열림 상태
   const [proofreadResult, setProofreadResult] = useState([]);
@@ -27,7 +36,7 @@ function ResumeForm() {
   const [awardFields, setAwardFields] = useState([{ contest_name: '', contest_award: '', contest_date: '' }]);
   const [certificateFields, setCertificateFields] = useState([{ certificate_name: '', certificate_issuer: '', certificate_date: '' }]);
   const [portfolioFields, setPortfolioFields] = useState([{ portfolio_description: '' }]);
-
+  const [isMilitaryExempt, setIsMilitaryExempt] = useState(false);
 
   const [formData, setFormData] = useState({
     resume_title: '',
@@ -166,6 +175,11 @@ function ResumeForm() {
     sectionsRef[section].current.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleMilitaryExemptChange = (e) => {
+    setIsMilitaryExempt(e.target.checked);
+  };
+
+  
   return (
     <div className={`${styles.body} ${styles.resumeForm}`}>
       <Modal
@@ -297,18 +311,65 @@ function ResumeForm() {
           </div>
           <div className={styles.formGroup} style={{ marginTop: '30px' }}>
             <label className={`${styles.label} ${styles.required}`}>우편번호</label>
-            <input type="text" className={`${styles.zipCodeInput} ${styles.input}`} placeholder="우편번호" readOnly />
+            <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className={styles.formControl}
+                  id="zipcode"
+                  placeholder="우편번호"
+                  value={postcode}
+                  readOnly
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() =>
+                    openPostcodePopup(setPostcode, setAddress, setExtraAddress)
+                  }
+                >
+                  우편번호 검색
+                </button>
+              </div>
+            
           </div>
-          <div className={styles.formInline}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>주소</label>
-              <input type="text" placeholder="주소" readOnly />
+          <div className={`form-group ${styles["form-group"]}`}>
+
+              <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="address"
+                  placeholder="주소"
+                  value={address}
+                  readOnly
+                />
+              </div>
+              <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className="form-control me-2 rounded"
+                  id="specificAddress"
+                  placeholder="상세주소"
+                  value={specificAddress}
+                  onChange={(e) => setSpecificAddress(e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="form-control rounded"
+                  id="extraAddress"
+                  placeholder="참고항목"
+                  value={extraAddress}
+                  readOnly
+                />
+              </div>
             </div>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>상세주소</label>
-              <input type="text" placeholder="상세주소" readOnly />
-            </div>
-          </div>
+          
+          {/*   우편번호 수정하자    */}
+
+         
+
+
+
 
           <hr className={styles.hr} />
 
@@ -680,56 +741,70 @@ function ResumeForm() {
 
           <hr className={styles.hr} />
 
-          <h2 className={styles.sectionHeader} ref={sectionsRef.military}>병역사항</h2>
-          <div className={`${styles.formGroupInline} ${styles.alignItemsCenter}`}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>복무구분</label>
-              <select
-                name="military_service_type"
-                className={styles.select}
-                value={formData.military_service_type}
-                onChange={handleChange}
-              >
-                <option value="">선택하세요</option>
-                <option value="activeDuty">현역</option>
-                <option value="publicService">공익</option>
-                <option value="exempted">면제</option>
-                <option value="other">기타</option>
-              </select>
-            </div>
-            <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>복무 시작</label>
-              <input
-                type="month"
-                name="military_start_date"
-                className={styles.input}
-                value={formData.military_start_date}
-                onChange={handleChange}
-              />
-            </div>
-            <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>복무 종료</label>
-              <input
-                type="month"
-                name="military_end_date"
-                className={styles.input}
-                value={formData.military_end_date}
-                onChange={handleChange}
-              />
-            </div>
-            <div className={styles.formGroup} style={{ marginLeft: '30px', width: '130px' }}>
-              <label className={styles.label}>계급(직급)</label>
-              <input
-                type="text"
-                placeholder="계급 입력"
-                name="military_rank"
-                className={styles.input}
-                value={formData.military_rank}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
+          <div className={styles.militaryHeader}>
+  <h2 className={styles.militarySectionHeader} ref={sectionsRef.military}>병역사항</h2>
+  <div className={styles.militaryCheckboxContainer}>
+    <label className={styles.checklabel}>해당 없음</label>
+    <input
+      type="checkbox"
+      className={styles.checkbox}
+      checked={isMilitaryExempt}
+      onChange={handleMilitaryExemptChange}
+    />
+  </div>
+</div>
+<div className={`${styles.formGroupInline} ${styles.alignItemsCenter}`}>
+  <div className={styles.formGroup}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>복무구분</label>
+    <select
+      name="military_service_type"
+      className={`${styles.militarySelect} ${isMilitaryExempt ? styles.disabledSelect : ''}`}
+      value={formData.military_service_type}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    >
+      <option value="">선택하세요</option>
+      <option value="activeDuty">현역</option>
+      <option value="publicService">공익</option>
+      <option value="exempted">면제</option>
+      <option value="other">기타</option>
+    </select>
+  </div>
+  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>복무 시작</label>
+    <input
+      type="month"
+      name="military_start_date"
+      className={styles.input}
+      value={formData.military_start_date}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    />
+  </div>
+  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>복무 종료</label>
+    <input
+      type="month"
+      name="military_end_date"
+      className={styles.input}
+      value={formData.military_end_date}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    />
+  </div>
+  <div className={styles.formGroup} style={{ marginLeft: '30px', width: '130px' }}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>계급(직급)</label>
+    <input
+      type="text"
+      placeholder="계급 입력"
+      name="military_rank"
+      className={styles.input}
+      value={formData.military_rank}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    />
+  </div>
+</div>
 
           <hr className={styles.hr} />
 

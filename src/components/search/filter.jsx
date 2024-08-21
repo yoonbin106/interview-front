@@ -28,7 +28,7 @@ const regions = {
 const sizes = ["미공개", "스타트업", "소기업", "중소기업", "대기업"];
 const salaries = ["연봉협의", "연봉 3000만원이상 6000만원 미만", "연봉 6000만원이상 1억 미만", "연봉 1억이상"];
 
-const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInputRef, setCorpNm }) => {
+const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInputRef, setCorpNm , setSearchTriggered}) => {
     const [selectedCategory, setSelectedCategory] = useState('지역');
     const [selectedRegion, setSelectedRegion] = useState('');
     const [selectedDistricts, setSelectedDistricts] = useState([]);
@@ -133,7 +133,7 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
 
     return (
         <div>
-            <SearchBox searchInputRef={searchInputRef} setCorpNm={setCorpNm} handleSearch={handleSearch}/>
+            <SearchBox searchInputRef={searchInputRef} setCorpNm={setCorpNm} handleSearch={handleSearch}  setSearchTriggered={setSearchTriggered} />
             <div className={stylesFilter['filter-container']} onKeyPress={handleKeyPress}>
                 <div className={stylesFilter['filter-categories']}>
                     {['지역', '규모', '연봉'].map((category) => (

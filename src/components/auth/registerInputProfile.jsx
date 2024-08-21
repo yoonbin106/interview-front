@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import styles from '@/styles/login/registerInputProfile.module.css';
 import { singUp } from '@/api/user';
 
-const SignUpProfile = () => {
+const SignUpProfile = ({ goToNext, goBack, formObject }) => {
   const router = useRouter();
-  const { query } = router;
+  // const { query } = router;
   const [fileName, setFileName] = useState('');
   const [preview, setPreview] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
@@ -41,7 +41,8 @@ const SignUpProfile = () => {
     const formData = new FormData();
     formData.append('profileImage', profileImage);
 
-    for (const [key, value] of Object.entries(query)) {
+    // formObject의 모든 키-값 쌍을 formData에 추가
+    for (const [key, value] of Object.entries(formObject)) {
       formData.append(key, value);
     }
 
@@ -53,7 +54,9 @@ const SignUpProfile = () => {
       });
 
       if (response.status === 200) {
-        router.push('/auth/registerEnd');
+        // 다음 단계로 이동 (router.push 대신)
+        goToNext(formObject);
+        // router.push('/auth/registerEnd');
       } else {
         alert('회원가입에 실패했습니다. 다시 시도해주세요.');
       }
@@ -85,7 +88,7 @@ const SignUpProfile = () => {
             <p className={styles.fileName}>{fileName || '미첨부시 기본 이미지'}</p>
           </div>
           <div className="btn-group d-flex justify-content-between">
-            <button type="button" className="btn btn-primary me-2 rounded" onClick={() => router.back()}>
+            <button type="button" className="btn btn-primary me-2 rounded" onClick={goBack}>
               이전
             </button>
             <button type="submit" className="btn btn-secondary rounded">

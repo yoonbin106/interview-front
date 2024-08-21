@@ -103,7 +103,7 @@ const FindPasswordInput = () => {
           </div>
           {error && <p className={styles['alert-text']}>{error}</p>}
           <div className="btn-group d-flex justify-content-between">
-            <a href="/auth" className="btn btn-primary me-2 rounded">이전</a>
+            <a href="/auth" className="btn btn-primary me-2 rounded">처음으로</a>
             <button type="submit" className="btn btn-secondary rounded">다음</button>
           </div>
         </form>
