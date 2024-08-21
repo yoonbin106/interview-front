@@ -9,13 +9,22 @@ import styles from '@/styles/resume/resumeForm.module.css';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
 import proofreadStyles from '@/styles/resume/proofreadStyles.module.css';
 import { closestIndexTo } from 'date-fns';
+import {
+  useLoadDaumPostcodeScript,
+  openPostcodePopup,
+} from "@/api/getPostCode";
 
 function ResumeForm() {
   const router = useRouter();
 
+
   const [profileImage, setProfileImage] = useState(null);
   const [selfIntroduction, setSelfIntroduction] = useState('');
   const [motivation, setMotivation] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [address, setAddress] = useState('');
+  const [extraAddress, setExtraAddress] = useState('');
+  const [specificAddress, setSpecificAddress] = useState('');
 
   // 맞춤법 검사 결과를 저장할 상태 및 사이드바 열림 상태
   const [proofreadResult, setProofreadResult] = useState([]);
@@ -297,18 +306,65 @@ function ResumeForm() {
           </div>
           <div className={styles.formGroup} style={{ marginTop: '30px' }}>
             <label className={`${styles.label} ${styles.required}`}>우편번호</label>
-            <input type="text" className={`${styles.zipCodeInput} ${styles.input}`} placeholder="우편번호" readOnly />
+            <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className={styles.formControl}
+                  id="zipcode"
+                  placeholder="우편번호"
+                  value={postcode}
+                  readOnly
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() =>
+                    openPostcodePopup(setPostcode, setAddress, setExtraAddress)
+                  }
+                >
+                  우편번호 검색
+                </button>
+              </div>
+            
           </div>
-          <div className={styles.formInline}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>주소</label>
-              <input type="text" placeholder="주소" readOnly />
+          <div className={`form-group ${styles["form-group"]}`}>
+
+              <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="address"
+                  placeholder="주소"
+                  value={address}
+                  readOnly
+                />
+              </div>
+              <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className="form-control me-2 rounded"
+                  id="specificAddress"
+                  placeholder="상세주소"
+                  value={specificAddress}
+                  onChange={(e) => setSpecificAddress(e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="form-control rounded"
+                  id="extraAddress"
+                  placeholder="참고항목"
+                  value={extraAddress}
+                  readOnly
+                />
+              </div>
             </div>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>상세주소</label>
-              <input type="text" placeholder="상세주소" readOnly />
-            </div>
-          </div>
+          
+          {/*   우편번호 수정하자    */}
+
+         
+
+
+
 
           <hr className={styles.hr} />
 
