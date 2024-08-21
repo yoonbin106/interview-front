@@ -102,10 +102,10 @@ const AdminUser = ({ allData }) => {
                     <TableHead className={styles.adminUserTableHead}>
                         <TableRow>
                             <TableCell align="center" className={styles.adminUserTableHeaderCell}>이름</TableCell>
+                            <TableCell align="center" className={styles.adminUserTableHeaderCell}>이메일</TableCell>
                             <TableCell align="center" className={styles.adminUserTableHeaderCell}>성별</TableCell>
                             <TableCell align="center" className={styles.adminUserTableHeaderCell}>생년월일</TableCell>
                             <TableCell align="center" className={styles.adminUserTableHeaderCell}>핸드폰번호</TableCell>
-                            <TableCell align="center" className={styles.adminUserTableHeaderCell}>이메일</TableCell>
                             <TableCell align="center" className={styles.adminUserTableHeaderCell}>회원정보</TableCell>
                         </TableRow>
                     </TableHead>
@@ -113,10 +113,10 @@ const AdminUser = ({ allData }) => {
                         {sortedResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((result, index) => (
                             <TableRow key={index}>
                                 <TableCell align="center" className={styles.adminUserTableBodyCell}>{result.name}</TableCell>
+                                <TableCell align="center" className={styles.adminUserTableBodyCell}>{result.email}</TableCell>
                                 <TableCell align="center" className={styles.adminUserTableBodyCell}>{result.gender}</TableCell>
                                 <TableCell align="center" className={styles.adminUserTableBodyCell}>{result.birth}</TableCell>
                                 <TableCell align="center" className={styles.adminUserTableBodyCell}>{result.phone}</TableCell>
-                                <TableCell align="center" className={styles.adminUserTableBodyCell}>{result.email}</TableCell>
                                 <TableCell align="center" className={styles.adminUserTableBodyCell}>
                                     <Button
                                         variant="contained"
