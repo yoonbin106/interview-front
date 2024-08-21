@@ -1,28 +1,29 @@
-.reportedPostTableContainer {
+.reportedFinPostTableContainer {
   margin-top: 20px;
+ 
 }
 
-.reportedPostHeaderCell {
+.reportedFinPostHeaderCell {
   font-weight: bold;
-  background-color: #4A90E2;
-  color: white;
+  background-color: #000000;
+  color: rgb(255, 255, 255);
   width: 150px;
   white-space:nowrap;
 }
 
-.reportedPostTableLink {
+.reportedFinPostTableLink {
   color: black;
   cursor: pointer;
   text-decoration: none;
 }
 
-.reportedPostTableLink:hover {
+.reportedFinPostTableLink:hover {
   text-decoration: underline;
 }
 
 
 
-.reportedPostContainer {
+.reportedFinPostContainer {
   display: flex;
   margin: 30px 30px 30px 30px;
   width: 100%;
@@ -30,14 +31,14 @@
   justify-content: center;
 }
 
-.reportedPostSidebar {
+.reportedFinPostSidebar {
   border: solid 2px;
   border-color: #DEFFF5;
   margin: 10px 20px 10px 10px;
   min-width: 200px;
 }
 
-.reportedPostContent {
+.reportedFinPostContent {
   background-color: white;
   padding: 20px;
   margin: 10px 10px 10px 10px;
@@ -53,41 +54,41 @@
 
 
 
-.reportedPostMainContainer {
+.reportedFinPostMainContainer {
   padding: 20px;
 }
 
-.reportedPostPageControlButtons {
+.reportedFinPostPageControlButtons {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.reportedPostSearchContainer {
+.reportedFinPostSearchContainer {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-.reportedPostStatusFilter, .reportedPostSearchCategory, .reportedPostSearchTerm {
+.reportedFinPostStatusFilter, .reportedFinPostSearchCategory, .reportedFinPostSearchTerm {
   width: 100%;
 }
 
-.reportedPostSearchButton {
+.reportedFinPostSearchButton {
   height: 56px;
   width: 100%;
-  background-color: #4A90E2;
+  background-color: #c9c9c9;
   color: white;
 }
 
-.reportedPostTitle {
+.reportedFinPostTitle {
   margin: 15px;
   white-space: nowrap;
   font-size: 40px;
 }
 
-.reportedPostTitleCell {
+.reportedFinPostTitleCell {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

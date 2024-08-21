@@ -1,19 +1,19 @@
-//adminReportedPostDetailsPage.jsx
+//adminReportedFinPostDetailsPage.jsx
 
 import React from 'react';
 import { useRouter } from 'next/router';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
-import AdminReportedPostDetails from '@/components/adminPage/adminReportedPostDetails';
+import AdminReportedFinPostDetails from '@/components/adminPage/adminReportedFinPostDetails';
 
-export default function AdminReportedPostDetailsPage() {
+export default function AdminReportedFinPostDetailsPage() {
     const router = useRouter();
 
     const handleDelete = () => {
         if (typeof window !== 'undefined') {
             if (window.confirm("게시글을 삭제하시겠습니까?")) {
                 alert("게시글 삭제가 완료되었습니다.");
-                router.push('/adminPage/adminReportedPostPage');
+                router.push('/adminPage/adminReportedFinPostPage');
             }
         }
     };
@@ -22,13 +22,13 @@ export default function AdminReportedPostDetailsPage() {
         if (typeof window !== 'undefined') {
             if (window.confirm("게시글을 숨기시겠습니까?")) {
                 alert("게시글 숨김이 완료되었습니다.");
-                router.push('/adminPage/adminReportedPostPage');
+                router.push('/adminPage/adminReportedFinPostPage');
             }
         }
     };
 
     const handleBack = () => {
-        router.push('/adminPage/adminReportedPostPage');
+        router.push('/adminPage/adminReportedFinPostPage');
     };
 
     // 하드코딩된 게시글 정보
@@ -51,7 +51,7 @@ export default function AdminReportedPostDetailsPage() {
                 <NestedList />
             </div>
             <div className={sidebar.content}>
-                <AdminReportedPostDetails
+                <AdminReportedFinPostDetails
                     post={post}  // 하드코딩된 게시글 정보 전달
                     onDelete={handleDelete}
                     onHide={handleHide}

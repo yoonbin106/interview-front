@@ -25,3 +25,9 @@
     box-sizing: border-box;
     overflow-y: auto;
   }
+
+  .title{
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 40px;
+  }

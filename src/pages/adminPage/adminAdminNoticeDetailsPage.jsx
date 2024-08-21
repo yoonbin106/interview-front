@@ -1,3 +1,6 @@
+//adminAdminNoticeDetailsPage.jsx
+
+
 import React from 'react';
 import AdminNoticeDetails from '@/components/adminPage/adminNoticeDetails';
 import { useRouter } from 'next/router';

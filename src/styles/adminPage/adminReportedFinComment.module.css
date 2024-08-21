@@ -1,13 +1,13 @@
-/*adminReportedFinCommentTable.module.css*/
+/*adminReportedFinComment.module.css*/
 
 .reportedFinCommentTableContainer {
     margin-top: 20px;
-    background-color: #ffffff; /* 테이블 배경색을 옅은 회색으로 설정 */
+    background-color: #ffffff; 
   }
   
-  .reportedFinCommentHeaderCell {
+  .reportedFinCommentTableHeaderCell {
     font-weight: bold;
-    background-color: #c9c9c9; /* 헤더 배경색을 검정으로 설정 */
+    background-color: black; /* 헤더 배경색을 검정으로 설정 */
     color: white; /* 헤더 글자를 흰색으로 설정 */
   }
   

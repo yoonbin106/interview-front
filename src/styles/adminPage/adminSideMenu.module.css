@@ -1,0 +1,23 @@
+/* 기본 리스트 스타일 */
+.list {
+    width: 100%;
+    max-width: 240px;
+    background-color: #ffffff;
+  }
+  
+  /* 서브헤더 스타일 (관리자 페이지 제목) */
+  .subheader {
+    font-size: 1.3rem;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  /* 중첩된 리스트 아이템의 padding 스타일 */
+  .nestedListItemButton {
+    padding-left: 16px;
+  }
+  
+  /* 커서 포인터 */
+  .cursorPointer {
+    cursor: pointer;
+  }

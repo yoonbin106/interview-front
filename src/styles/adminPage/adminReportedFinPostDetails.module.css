@@ -1,6 +1,6 @@
-/* adminReportedPostDetails.module.css */
+/* adminReportedFinPostDetails.module.css */
 
-.reportedPostDetailsWrapper {
+.reportedFinPostDetailsWrapper {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
@@ -10,33 +10,33 @@
 }
 
 /* 제목 및 날짜 스타일 */
-.reportedPostDetailsH2 {
+.reportedFinPostDetailsH2 {
     margin-bottom: 10px;
     font-size: 24px;
     font-weight: bold;
 }
 
-.reportedPostDetailsDate {
+.reportedFinPostDetailsDate {
     font-size: 14px;
     color: #888;
     margin-bottom: 20px;
 }
 
 /* 구분선 스타일 */
-.reportedPostDetailsHr {
+.reportedFinPostDetailsHr {
     margin: 20px 0;
     border: 0;
     border-top: 1px solid #ddd;
 }
 
 /* 게시글 내용 및 신고 사유 스타일 */
-.reportedPostDetailsContent {
+.reportedFinPostDetailsContent {
     font-size: 16px;
     line-height: 1.6;
     margin-bottom: 30px;
 }
 
-.reportedPostDetailsReasonInput {
+.reportedFinPostDetailsReasonInput {
     width: 100%;
     height: 80px;
     padding: 10px;
@@ -48,13 +48,13 @@
 }
 
 /* 버튼 컨테이너 및 버튼 스타일 */
-.reportedPostDetailsButtonContainer {
+.reportedFinPostDetailsButtonContainer {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
-.reportedPostDetailsDeleteButton {
+.reportedFinPostDetailsDeleteButton {
     background-color: #dc3545;
     color: white;
     padding: 10px 20px;
@@ -64,11 +64,11 @@
     cursor: pointer;
 }
 
-.reportedPostDetailsDeleteButton:hover {
+.reportedFinPostDetailsDeleteButton:hover {
     background-color: #c82333;
 }
 
-.reportedPostDetailsHideButton {
+.reportedFinPostDetailsHideButton {
     background-color: #ffc107;
     color: white;
     padding: 10px 20px;
@@ -78,11 +78,11 @@
     cursor: pointer;
 }
 
-.reportedPostDetailsHideButton:hover {
+.reportedFinPostDetailsHideButton:hover {
     background-color: #e0a800;
 }
 
-.reportedPostDetailsBackButton {
+.reportedFinPostDetailsBackButton {
     background-color: #007bff;
     color: white;
     padding: 10px 20px;
@@ -92,6 +92,6 @@
     cursor: pointer;
 }
 
-.reportedPostDetailsBackButton:hover {
+.reportedFinPostDetailsBackButton:hover {
     background-color: #0056b3;
 }

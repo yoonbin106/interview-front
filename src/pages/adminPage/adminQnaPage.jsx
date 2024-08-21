@@ -1,3 +1,5 @@
+//adminQnaPage.jsx
+
 import React from 'react';
 import AdminQna from '@/components/adminPage/adminQna';
 

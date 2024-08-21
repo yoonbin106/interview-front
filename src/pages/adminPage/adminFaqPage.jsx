@@ -1,3 +1,5 @@
+//adminFaqPage.jsx
+
 import React, { useState } from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';

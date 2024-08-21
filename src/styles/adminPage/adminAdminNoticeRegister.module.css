@@ -15,12 +15,7 @@
     margin-bottom: 10px;
 }
 
-/* 글꼴 크기 선택 및 아이콘 버튼 */
-.adminAdminNoticeRegisterFontControls {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
+
 
 .adminAdminNoticeRegisterFontControlItem {
     margin-right: 5px;
@@ -36,11 +31,6 @@
     margin-bottom: 10px;
 }
 
-/* 글자 수 텍스트 */
-.adminAdminNoticeRegisterCharCount {
-    text-align: right;
-    color: gray;
-}
 
 /* 파일 첨부 버튼 */
 .adminAdminNoticeRegisterFileAttachButton {
@@ -58,7 +48,7 @@
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #4A90E2;
     border: none;
     border-radius: 3px;
     cursor: pointer;

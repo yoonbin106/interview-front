@@ -7,7 +7,7 @@ import styles from '@/styles/adminPage/adminFaqRegister.module.css';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 
-const FaqRegisterPage = () => {
+const AdminFaqRegisterPage = () => {
     const router = useRouter();
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -31,4 +31,4 @@ const FaqRegisterPage = () => {
     );
 };
 
-export default FaqRegisterPage;
+export default AdminFaqRegisterPage;

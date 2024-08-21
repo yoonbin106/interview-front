@@ -1,3 +1,5 @@
+//adminNotice.jsx
+
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -19,6 +21,7 @@ import styles from '@/styles/adminPage/adminNotice.module.css'; // CSS 파일을
 const RegisterButton = ({ to }) => {
     const router = useRouter();
 
+    // 클릭 시 지정된 경로로 이동하는 함수
     const handleClick = () => {
         router.push(to);
     };
@@ -43,20 +46,7 @@ const AdminNotice = () => {
     const adminnotices = [
         { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
         { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        
-        // ... 나머지 공지사항 데이터
+        // 추가된 더미 데이터...
     ];
 
     // 검색 상태를 관리하기 위한 useState 훅
@@ -91,10 +81,10 @@ const AdminNotice = () => {
     };
 
     // 페이지 상태 관리
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [page, setPage] = useState(0); // 현재 페이지 상태
+    const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 표시할 행 수 상태
 
-    const totalPages = Math.ceil(filteredNotices.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredNotices.length / rowsPerPage); // 전체 페이지 수 계산
 
     // 페이지 변경 핸들러
     const handleChangePage = (newPage) => {
@@ -104,7 +94,7 @@ const AdminNotice = () => {
     // 페이지당 행 수 변경 핸들러
     const handleRowsPerPageChange = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); // 페이지를 0으로 초기화
+        setPage(0); // 페이지를 첫 페이지로 초기화
     };
 
     // 비어있는 행의 수 계산 (페이지에 표시될 행이 부족할 경우)
@@ -236,6 +226,7 @@ const AdminNotice = () => {
                             >
                                 마지막
                             </Button>
+                            {/* 페이지당 표시할 행 수 선택 */}
                             <Select
                                 value={rowsPerPage}
                                 onChange={handleRowsPerPageChange}

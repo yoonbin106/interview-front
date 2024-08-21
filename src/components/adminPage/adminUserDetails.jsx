@@ -1,9 +1,12 @@
+//adminUserDetails.jsx
+
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Paper, Avatar, TextField, Button } from '@mui/material';
 import styles from '@/styles/adminPage/adminUserDetails.module.css'; // 모듈 CSS 임포트
 
-const UserDetails = () => {
-  const [editMode, setEditMode] = useState(false);
+// UserDetails 컴포넌트: 사용자의 개인 정보를 표시하고 수정할 수 있는 페이지
+const AdminUserDetails = () => {
+  const [editMode, setEditMode] = useState(false); // 수정 모드 상태 관리
   const [user, setUser] = useState({
     email: "meezi_@naver.com",
     password: "ict1234",
@@ -17,34 +20,37 @@ const UserDetails = () => {
     updatedAt: "2024-08-02",
     deletedAt: "", // 회원 탈퇴일
     lastLogin: "2024-08-09 19:51",
-    profileImage: "",
+    profileImage: "", // 프로필 이미지 경로
   });
 
+  // 수정 모드 전환 핸들러
   const handleEditClick = () => {
     setEditMode(true);
   };
 
+  // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSaveClick = () => {
     setEditMode(false);
-    // 실제 데이터 저장 로직 추가
+    // 실제 데이터 저장 로직 추가 필요
   };
 
+  // 입력값 변경 핸들러
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...user, [name]: value }); // 상태 업데이트
   };
 
+  // 회원 탈퇴 버튼 클릭 시 호출되는 핸들러
   const handleDeleteAccount = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') { // 브라우저 환경 확인
       if(window.confirm("정말로 회원탈퇴를 하시겠습니까?")){
         alert("회원 탈퇴가 성공적으로 완료되었습니다.");
-        window.location.href = "http://localhost:3000/adminPage/adminUserPage";
+        window.location.href = "http://localhost:3000/adminPage/adminUserPage"; // 탈퇴 후 페이지 이동
       }
     }
   };
 
   return (
-      
     <Box className={styles.userDetailsContainer}>
       <Typography variant="h4" className={styles.userDetailsTitle}>개인 정보 수정</Typography>
       <Paper className={styles.userDetailsPaper}>
@@ -52,14 +58,14 @@ const UserDetails = () => {
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
             <Avatar
               className={styles.userAvatar}
-              src={user.profileImage}  // 프로필 이미지
+              src={user.profileImage}  // 프로필 이미지 경로
               alt="User Profile"
             />
-            
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" className={styles.userInfoTitle}>회원 정보</Typography>
           </Grid>
+          {/* 사용자 정보 입력 필드 */}
           <Grid item xs={6}>
             <TextField
               fullWidth
@@ -77,7 +83,7 @@ const UserDetails = () => {
               name="gender"
               value={user.gender}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -87,7 +93,7 @@ const UserDetails = () => {
               name="birth"
               value={user.birth}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -97,7 +103,7 @@ const UserDetails = () => {
               name="phone"
               value={user.phone}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={12}>
@@ -107,7 +113,7 @@ const UserDetails = () => {
               name="address"
               value={user.address}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -117,7 +123,7 @@ const UserDetails = () => {
               name="email"
               value={user.email}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -127,7 +133,7 @@ const UserDetails = () => {
               name="emailVerified"
               value={user.emailVerified}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -138,7 +144,7 @@ const UserDetails = () => {
               type="password"
               value={user.password}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -166,7 +172,7 @@ const UserDetails = () => {
               name="deletedAt"
               value={user.deletedAt}
               onChange={handleInputChange}
-              InputProps={{ readOnly: !editMode }}
+              InputProps={{ readOnly: !editMode }} // 수정 모드에 따라 읽기 전용 설정
             />
           </Grid>
           <Grid item xs={6}>
@@ -179,6 +185,7 @@ const UserDetails = () => {
             />
           </Grid>
 
+          {/* 버튼 컨트롤 (수정, 저장, 탈퇴) */}
           <Grid item xs={12} className={styles.userDetailsGridContainer}>
             <Button
               variant="contained"
@@ -186,7 +193,7 @@ const UserDetails = () => {
               onClick={editMode ? handleSaveClick : handleEditClick}
               className={styles.userDetailsButton}
             >
-              {editMode ? "회원정보저장" : "회원정보수정"}
+              {editMode ? "회원정보저장" : "회원정보수정"} {/* 버튼 텍스트 변경 */}
             </Button>
             {editMode && (
               <Button
@@ -204,4 +211,4 @@ const UserDetails = () => {
   );
 };
 
-export default UserDetails;
+export default AdminUserDetails;

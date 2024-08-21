@@ -1,4 +1,4 @@
-// adminNoticePage.jsx
+// adminAdminNoticePage.jsx
 
 import React from 'react';
 import AdminAdminNotice from 'components/adminPage/adminAdminNotice';

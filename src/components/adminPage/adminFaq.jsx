@@ -1,3 +1,5 @@
+//adminFaq.jsx
+
 import React from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, Select, MenuItem, Box, Button, InputLabel } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -6,6 +8,7 @@ import styles from '@/styles/adminPage/adminFaq.module.css';
 const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, totalPages, handleCategoryChange, selectedCategory }) => {
     return (
         <div className={styles.faqContainer}>
+            {/* 페이지 헤더: 제목과 새 FAQ 등록 버튼 */}
             <Box mb={3} className={styles.faqHeader}>
                 <Typography variant="h3" gutterBottom>
                     자주 묻는 질문 (FAQ)
@@ -14,6 +17,8 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                     새 FAQ 등록
                 </Button>
             </Box>
+
+            {/* 카테고리 검색 필터 */}
             <Box mb={3} className={styles.faqCategorySearch}>
                 <FormControl fullWidth variant="outlined">
                     <InputLabel>카테고리로 검색</InputLabel>
@@ -33,8 +38,10 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                     </Select>
                 </FormControl>
             </Box>
+
+            {/* FAQ 목록을 아코디언 형태로 렌더링 */}
             {faqs
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // 페이지에 맞게 FAQ를 슬라이싱
                 .map(faq => (
                     <Accordion key={faq.id}>
                         <AccordionSummary
@@ -88,6 +95,7 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                 >
                     마지막
                 </Button>
+                {/* 페이지당 표시할 행 수 선택 */}
                 <Select
                     value={rowsPerPage}
                     onChange={onRowsPerPageChange}

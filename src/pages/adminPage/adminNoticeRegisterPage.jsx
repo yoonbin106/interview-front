@@ -1,10 +1,12 @@
 //**adminNoticeRegisterPage.jsx
+
+
 import React from 'react';
 import { useRouter } from 'next/router';
-import CreatePost from '@/components/adminPage/adminCreatePost';
 import styles from '@/styles/adminPage/adminNoticeRegister.module.css';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
+import AdminNoticeRegister from 'components/adminPage/adminNoticeRegister';
 
 const AdminNoticeRegisterPage = () => {
     const router = useRouter();
@@ -22,7 +24,7 @@ const AdminNoticeRegisterPage = () => {
             <div className={sidebar.content}>
                 <div className={styles['adminNoticeRegisterContainer']}>
                     <h2 className={styles['adminNoticeRegisterTitle']}>전체 공지사항</h2>
-                    <CreatePost />
+                    <AdminNoticeRegister />
                     <button type="button" onClick={handleSubmit} className={styles['adminNoticeRegisterSubmitButton']}>등록하기</button>
                 </div>
             </div>

@@ -1,0 +1,23 @@
+.adminRefundContainer {
+    padding: 20px;
+    border-radius: 5px;
+    margin: 0 auto;
+    max-width: 1000px;
+    background-color: white;
+}
+
+.adminRefundContent {
+    width: 100%;
+}
+
+.adminRefundTitle {
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 40px;
+}
+
+.adminRefundTableHeader {
+    background-color: #4A90E2;
+    color: white;
+    font-weight: bold;
+}

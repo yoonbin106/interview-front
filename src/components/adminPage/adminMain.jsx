@@ -1,3 +1,5 @@
+//adminMain.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table } from 'react-bootstrap';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
@@ -5,19 +7,20 @@ import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminMain.module.css';
 
 const AdminMain = () => {
-    const [currentFormattedDate, setCurrentFormattedDate] = useState('');
-    const [announcements, setAnnouncements] = useState([]);
-    const [adminAnnouncements, setAdminAnnouncements] = useState([]);
+    const [currentFormattedDate, setCurrentFormattedDate] = useState(''); // 현재 날짜를 포맷팅하여 저장하는 상태 변수
+    const [announcements, setAnnouncements] = useState([]); // 전체 공지사항 데이터를 저장하는 상태 변수
+    const [adminAnnouncements, setAdminAnnouncements] = useState([]); // 관리자 공지사항 데이터를 저장하는 상태 변수
 
     // 날짜 포맷팅 및 초기화: 클라이언트 사이드에서만 실행
     useEffect(() => {
+        // 날짜를 포맷팅하는 함수
         const formatDate = (dateString) => {
             const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: 'numeric', minute: 'numeric' };
             return new Date(dateString).toLocaleDateString(undefined, options);
         };
 
-        const now = new Date();
-        setCurrentFormattedDate(formatDate(now.toISOString()));
+        const now = new Date(); // 현재 날짜와 시간을 가져옴
+        setCurrentFormattedDate(formatDate(now.toISOString())); // 포맷된 날짜를 상태로 설정
 
         // 하드코딩된 공지사항 데이터 설정
         const hardcodedAnnouncements = [
@@ -52,7 +55,7 @@ const AdminMain = () => {
                 noticeCreatedTime: '2024-08-05 T18:00:00Z',
             }
         ];
-        setAnnouncements(hardcodedAnnouncements);
+        setAnnouncements(hardcodedAnnouncements); // 전체 공지사항 데이터를 설정
 
         const hardcodedAdminAnnouncements = [
             {
@@ -86,22 +89,21 @@ const AdminMain = () => {
                 noticeCreatedTime: '2024-08-01 T18:00:00Z',
             }
         ];
-        setAdminAnnouncements(hardcodedAdminAnnouncements);
+        setAdminAnnouncements(hardcodedAdminAnnouncements); // 관리자 공지사항 데이터를 설정
 
     }, []);
 
     return (
         <div className={sidebar.container}>
             <div className={sidebar.sidebar}>
-                <NestedList />
+                <NestedList /> {/* 사이드 메뉴 컴포넌트 */}
             </div>
             <div className={sidebar.content}>
                 <Container fluid className={styles.adminMainContainerFluid}>
                     <Row className={styles.adminMainContent}>
-                    <h2 className={styles.adminMainTitle}>관리자페이지 홈</h2>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                        
-                    </div>
+                        <h2 className={styles.adminMainTitle}>관리자페이지 홈</h2>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                        </div>
                         <Col className={styles.adminMainColPadding}>
                             
                             {/* 사이트 종합 정보 카드 */}

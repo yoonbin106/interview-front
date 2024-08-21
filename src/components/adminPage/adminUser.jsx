@@ -1,3 +1,5 @@
+//adminUser.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, MenuItem, Select, FormControl, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -6,74 +8,82 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const AdminUser = ({ allData }) => {
-    const [searchCondition, setSearchCondition] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortedResults, setSortedResults] = useState([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5); // 페이지 당 10개의 항목 표시
-    const router = useRouter();
+    const [searchCondition, setSearchCondition] = useState(''); // 검색 조건 상태 관리
+    const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 관리
+    const [sortedResults, setSortedResults] = useState([]); // 정렬된 결과 상태 관리
+    const [page, setPage] = useState(0); // 현재 페이지 상태 관리
+    const [rowsPerPage, setRowsPerPage] = useState(5); // 페이지 당 표시할 항목 수 상태 관리
+    const router = useRouter(); // 페이지 이동을 위한 Next.js useRouter 사용
 
+    // 컴포넌트가 처음 렌더링될 때 데이터 정렬 및 초기화
     useEffect(() => {
         if (sortedResults.length === 0 && searchTerm === '') {
             const sortedDefaultResults = allData.sort((a, b) => a.name.localeCompare(b.name, 'ko-KR'));
-            setSortedResults(sortedDefaultResults);
+            setSortedResults(sortedDefaultResults); // 이름 기준으로 정렬된 초기 데이터 설정
         }
     }, [sortedResults, searchTerm, allData]);
 
+    // 검색 조건 변경 핸들러
     const handleConditionChange = (event) => {
         setSearchCondition(event.target.value);
     };
 
+    // 검색어 변경 핸들러
     const handleTermChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
+    // 검색 기능: 조건에 따라 데이터를 필터링
     const handleSearch = (searchCondition, searchTerm) => {
         const filteredResults = allData.filter((item) => {
             if (searchCondition === 'email') {
-                return item.email.includes(searchTerm);
+                return item.email.includes(searchTerm); // 이메일로 필터링
             } else if (searchCondition === 'phonelastnumber4') {
-                return item.phone.slice(-4) === searchTerm;
+                return item.phone.slice(-4) === searchTerm; // 핸드폰번호 마지막 4자리로 필터링
             }
             return false;
         });
-        setSortedResults(filteredResults);
+        setSortedResults(filteredResults); // 필터링된 결과 설정
         setPage(0); // 검색 후 첫 페이지로 이동
     };
 
+    // 검색 폼 제출 핸들러
     const handleSubmit = (event) => {
         event.preventDefault();
-        handleSearch(searchCondition, searchTerm);
+        handleSearch(searchCondition, searchTerm); // 검색 실행
     };
 
+    // 상세보기 버튼 클릭 시 페이지 이동 핸들러
     const handleViewDetails = (row) => {
-        router.push(`/adminPage/adminUserDetailsPage`);
+        router.push(`/adminPage/adminUserDetailsPage`); // 상세보기 페이지로 이동
     };
 
+    // 다음 페이지로 이동하는 핸들러
     const handleNextPage = () => {
         setPage((prevPage) => prevPage + 1);
     };
 
+    // 이전 페이지로 이동하는 핸들러
     const handlePreviousPage = () => {
         setPage((prevPage) => prevPage - 1);
     };
 
-    const totalPages = Math.ceil(sortedResults.length / rowsPerPage);
+    const totalPages = Math.ceil(sortedResults.length / rowsPerPage); // 전체 페이지 수 계산
 
     return (
-
         <Box className={styles.adminUserContainer}>
-        <Typography variant="h3" gutterBottom>
-            회원정보 검색
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit}>
-            <FormControl fullWidth sx={{ mb: 2, minWidth: 120 }}>
-                <InputLabel>검색 조건을 선택해주세요.</InputLabel>
-                <Select
-                    label="검색 조건"
-                    value={searchCondition}
-                    onChange={handleConditionChange}
-                >
+            <Typography variant="h3" gutterBottom>
+                회원정보 검색
+            </Typography>
+            {/* 검색 폼 */}
+            <Box component="form" onSubmit={handleSubmit}>
+                <FormControl fullWidth sx={{ mb: 2, minWidth: 120 }}>
+                    <InputLabel>검색 조건을 선택해주세요.</InputLabel>
+                    <Select
+                        label="검색 조건"
+                        value={searchCondition}
+                        onChange={handleConditionChange}
+                    >
                         <MenuItem value="email">이메일</MenuItem>
                         <MenuItem value="phonelastnumber4">핸드폰번호 마지막 4자리</MenuItem>
                     </Select>
@@ -97,6 +107,7 @@ const AdminUser = ({ allData }) => {
                 </Box>
             </Box>
 
+            {/* 회원정보 테이블 */}
             <TableContainer component={Paper} className={styles.adminUserTableContainer}>
                 <Table className={styles.adminUserTable}>
                     <TableHead className={styles.adminUserTableHead}>
@@ -132,7 +143,7 @@ const AdminUser = ({ allData }) => {
                 </Table>
             </TableContainer>
 
-            {/* Custom Pagination */}
+            {/* 커스텀 페이지네이션 */}
             <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
                 <IconButton onClick={handlePreviousPage} disabled={page === 0}>
                     <ArrowBackIcon />

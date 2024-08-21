@@ -1,0 +1,33 @@
+.adminPaymentContainer {
+    padding: 20px;
+    border-radius: 5px;
+    margin: 0 auto;
+    max-width: 1000px;
+    background-color: white;
+}
+
+.adminPaymentSidebar {
+    width: 240px;
+}
+
+.adminPaymentContent {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.adminPaymentTitle {
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 40px;
+}
+
+.adminPaymentTableHeader {
+    background-color: #4A90E2;
+    color: white;
+    font-weight: bold;
+}
+
+.adminPaymentCard {
+    width: 100%;
+    box-sizing: border-box; /* 패딩이나 마진을 포함하여 전체 너비를 100%로 유지 */
+}
