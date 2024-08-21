@@ -225,7 +225,7 @@ function Home() {
                 </div>
             </div>
             {/* 뉴스칸 */}
-            <div className={styles.container5}>
+            <div className={styles.container5} id='news'>
                 <div className={styles.newsFrameW}>
                     <div className={styles.newsFrameH}>
                         <div className={styles.newsFrame}>

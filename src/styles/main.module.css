@@ -463,9 +463,9 @@
 .ticketInfo{
   margin-top: 15px;
   width: 260px;
-  height: 335px;
+  height: 315px;
   border-radius: 8px;
-  border-color: #e7e7e7;
+  border-color: #f1f1f1;
   border-style: solid ;
   border-width: 1px;
   display: flex;
@@ -474,9 +474,14 @@
 }
 .ticketInfoIn{
   width: 230px;
-  height: 310px;
+  height: 290px;
 
   /* background-color: #946a6a; */
+}
+.ticketInfoTitle{
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 .ticketButtonFrame{
   margin-top: 15px;
@@ -552,4 +557,8 @@
 .newsTitle{
   font-size: 30px;
   font-weight: bold;
+}
+.ticketInfoTitleSub{
+  display: flex;
+  align-items: center;
 }
