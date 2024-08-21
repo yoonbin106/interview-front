@@ -85,14 +85,19 @@
 }
 
 .mainTitle {
+  height: 120px;
+  width: 500px;
   margin-bottom: 20px;
   font-size: 32px;
   font-weight: bold;
   color: white;
+  background-image: url('../../public/images/logoWH.png');
+  background-size: cover;
+  background-position: center;
 }
 
 .mainSubtitle {
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   font-size: 20px;
   color: #92b4fd;
 }
@@ -279,6 +284,19 @@
   border-radius: 16px;
   background-color: #ffffff;
 }
+.keyWordBoxWhiteImage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+   url('../../public/images/keyword2.png');
+  background-size: cover;
+  background-position: center;
+
+}
 .keyWordBoxHeight{
   display: flex;
   justify-content: center;
@@ -300,6 +318,10 @@
   height: 300px;
   border-radius: 16px;
   background-color: #5A8AF2;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+   url('../../public/images/keyword1.png');
+  background-size: cover;
+  background-position: center;
 }
 .keyWordTextWh{
   width: 240px;
@@ -315,6 +337,13 @@
   font-weight: bold;
   color: #444444;
 }
+.keyWordTextBlImage{
+  width: 240px;
+  height: 240px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+}
 .keyWordTextHeightBl{
   width: 240px;
   height: 570px;
@@ -329,6 +358,14 @@
   font-weight: bold;
   color: #ffffff;
 }
+.keyWordImages1{
+  background-image: url('../../public/images/keyword1.png');
+  background-size: cover;
+  background-position: center;
+}
+
+
+
 /* Progress Bar Wrapper 스타일 */
 .mainIntroProgress {
   display: flex; /* 진행 바를 가로로 배치 */
