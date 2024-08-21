@@ -36,7 +36,7 @@ function ResumeForm() {
   const [awardFields, setAwardFields] = useState([{ contest_name: '', contest_award: '', contest_date: '' }]);
   const [certificateFields, setCertificateFields] = useState([{ certificate_name: '', certificate_issuer: '', certificate_date: '' }]);
   const [portfolioFields, setPortfolioFields] = useState([{ portfolio_description: '' }]);
-
+  const [isMilitaryExempt, setIsMilitaryExempt] = useState(false);
 
   const [formData, setFormData] = useState({
     resume_title: '',
@@ -175,6 +175,11 @@ function ResumeForm() {
     sectionsRef[section].current.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleMilitaryExemptChange = (e) => {
+    setIsMilitaryExempt(e.target.checked);
+  };
+
+  
   return (
     <div className={`${styles.body} ${styles.resumeForm}`}>
       <Modal
@@ -736,56 +741,70 @@ function ResumeForm() {
 
           <hr className={styles.hr} />
 
-          <h2 className={styles.sectionHeader} ref={sectionsRef.military}>병역사항</h2>
-          <div className={`${styles.formGroupInline} ${styles.alignItemsCenter}`}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>복무구분</label>
-              <select
-                name="military_service_type"
-                className={styles.select}
-                value={formData.military_service_type}
-                onChange={handleChange}
-              >
-                <option value="">선택하세요</option>
-                <option value="activeDuty">현역</option>
-                <option value="publicService">공익</option>
-                <option value="exempted">면제</option>
-                <option value="other">기타</option>
-              </select>
-            </div>
-            <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>복무 시작</label>
-              <input
-                type="month"
-                name="military_start_date"
-                className={styles.input}
-                value={formData.military_start_date}
-                onChange={handleChange}
-              />
-            </div>
-            <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-              <label className={styles.label}>복무 종료</label>
-              <input
-                type="month"
-                name="military_end_date"
-                className={styles.input}
-                value={formData.military_end_date}
-                onChange={handleChange}
-              />
-            </div>
-            <div className={styles.formGroup} style={{ marginLeft: '30px', width: '130px' }}>
-              <label className={styles.label}>계급(직급)</label>
-              <input
-                type="text"
-                placeholder="계급 입력"
-                name="military_rank"
-                className={styles.input}
-                value={formData.military_rank}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
+          <div className={styles.militaryHeader}>
+  <h2 className={styles.militarySectionHeader} ref={sectionsRef.military}>병역사항</h2>
+  <div className={styles.militaryCheckboxContainer}>
+    <label className={styles.checklabel}>해당 없음</label>
+    <input
+      type="checkbox"
+      className={styles.checkbox}
+      checked={isMilitaryExempt}
+      onChange={handleMilitaryExemptChange}
+    />
+  </div>
+</div>
+<div className={`${styles.formGroupInline} ${styles.alignItemsCenter}`}>
+  <div className={styles.formGroup}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>복무구분</label>
+    <select
+      name="military_service_type"
+      className={`${styles.militarySelect} ${isMilitaryExempt ? styles.disabledSelect : ''}`}
+      value={formData.military_service_type}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    >
+      <option value="">선택하세요</option>
+      <option value="activeDuty">현역</option>
+      <option value="publicService">공익</option>
+      <option value="exempted">면제</option>
+      <option value="other">기타</option>
+    </select>
+  </div>
+  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>복무 시작</label>
+    <input
+      type="month"
+      name="military_start_date"
+      className={styles.input}
+      value={formData.military_start_date}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    />
+  </div>
+  <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>복무 종료</label>
+    <input
+      type="month"
+      name="military_end_date"
+      className={styles.input}
+      value={formData.military_end_date}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    />
+  </div>
+  <div className={styles.formGroup} style={{ marginLeft: '30px', width: '130px' }}>
+    <label className={`${styles.label} ${isMilitaryExempt ? styles.disabledLabel : ''}`}>계급(직급)</label>
+    <input
+      type="text"
+      placeholder="계급 입력"
+      name="military_rank"
+      className={styles.input}
+      value={formData.military_rank}
+      onChange={handleChange}
+      disabled={isMilitaryExempt} // 체크박스에 따라 비활성화
+    />
+  </div>
+</div>
 
           <hr className={styles.hr} />
 
