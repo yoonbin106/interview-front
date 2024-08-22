@@ -47,9 +47,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 }));
 
-
-
-
 const EditUserInfo = observer(() => {
   const { userStore } = useStores(); 
   const router = useRouter();
@@ -63,8 +60,10 @@ const EditUserInfo = observer(() => {
   const [specificAddress, setSpecificAddress] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-
-
+  const [fileName, setFileName] = useState('');
+  const [preview, setPreview] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const fileInputRef = useRef(null);  // 파일 입력 필드에 대한 참조 생성
 
   const [userInfo, setUserInfo] = useState({
     username: '',
@@ -126,6 +125,10 @@ const EditUserInfo = observer(() => {
     setAnchorEl(event.currentTarget);
   };
 
+  const triggerFileInput = () => {
+    fileInputRef.current.click(); // 파일 선택 창 열기
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? 'date-popover' : undefined;
 
@@ -141,6 +144,7 @@ const EditUserInfo = observer(() => {
       if (!findedUser.data.isGoogle && !findedUser.data.isKakao && !findedUser.data.isNaver) {
         const parsedAddress = parseAddress(findedUser.data.address || '');
         setBirthDate(findedUser.data.birth);
+        setPreview(userStore.profile);
         setUserInfo({
           username: findedUser.data.username || '',
           birth: findedUser.data.birth ? formatBirthDate(userStore.birth) : '',
@@ -176,10 +180,80 @@ const EditUserInfo = observer(() => {
     }
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const validImageTypes = ['image/jpeg', 'image/png'];
+      if (!validImageTypes.includes(file.type)) {
+        alert('사진파일(png, jpg 등)만 업로드 가능합니다.');
+        setFileName('');
+        setPreview(null);
+        setProfileImage(null);
+        return;
+      }
+      setFileName(file.name);
+      setProfileImage(file);  // 프로필 이미지를 상태로 저장
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFileName('');
+      setPreview(null);
+      setProfileImage(null);
+    }
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    const formData = new FormData();
+    formData.append('email', userInfo.email);  // 이 값은 수정 불가이므로 직접 상태에서 가져옵니다.
+    formData.append('username', document.getElementById('name').value);
+    formData.append('address', `${postcode} ${address} ${specificAddress} ${extraAddress}`);
+    formData.append('birth', birthDate);
+  
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/edituser', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (response.ok) {
+        // 서버로부터 성공적인 응답을 받으면 userStore 업데이트
+        const updatedUsername = document.getElementById('name').value;
+        const updatedAddress = `${postcode} ${address} ${specificAddress} ${extraAddress}`;
+        const updatedProfile = profileImage ? URL.createObjectURL(profileImage) : userStore.profile; // 프로필 이미지 URL 업데이트
+        
+        // userStore 값을 업데이트
+        userStore.setUsername(updatedUsername);
+        userStore.setAddress(updatedAddress);
+        userStore.setBirth(birthDate);
+        userStore.setProfile(updatedProfile);
+  
+        // 성공 처리
+        alert('유저 정보가 성공적으로 변경되었습니다.');
+        router.push('/myPage');
+      } else {
+        // 오류 처리
+        const errorMessage = await response.text();
+        alert(`오류 발생: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('유저 정보를 수정하는 중 오류가 발생했습니다:', error);
+      alert('유저 정보를 수정하는 중 오류가 발생했습니다.');
+    }
+  };
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
     setShowOverlay(false);
   };
+
+
   if (loading) {
     return (
       <Box
@@ -227,10 +301,18 @@ const EditUserInfo = observer(() => {
       <div className={styles.profileContainer}>
         <h1 className={styles.profileTitle}>나의 정보</h1>
         <div className={styles.profileImage} >
-          <Avatar src={userInfo.profile} sx={{ bgcolor: blue[200], width: '200px', height: '200px' }} />
+          <Avatar src={preview} sx={{ bgcolor: blue[200], width: '200px', height: '200px' }} />
           <div className={styles.editProfileIcon}>
-            <BorderColorIcon sx={{ alignItems: 'end' }} />
-          </div>
+          <IconButton onClick={triggerFileInput} sx={{ alignItems: 'end' }}>
+            <BorderColorIcon />
+          </IconButton>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+        </div>
         </div>
       </div>
       <div className={styles.userInfoContent}>
@@ -358,10 +440,18 @@ const EditUserInfo = observer(() => {
 
       </div>
       <div className={styles.buttonGroup}>
-        <button type="button" className={styles.button}>
+        <button
+            type="button"
+            className={styles.button}
+            onClick={() => router.push('/myPage')}
+          >
           <span className={styles.buttonText}>취소</span>
         </button>
-        <button type="submit" className={styles.button}>
+        <button
+            type="button"
+            className={styles.button}
+            onClick={handleSubmit}
+          >
           <span className={styles.buttonText}>수정</span>
         </button>
       </div>

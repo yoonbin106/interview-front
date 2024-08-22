@@ -76,6 +76,7 @@ export const getAllUsers = async () => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(allUsers);
     return allUsers;
   } catch (error) {
     console.error("유저목록을 가져오는데 오류가 발생했습니다:", error);
@@ -97,3 +98,8 @@ export const getUserByEmail = async (email) => {
     console.error("유저 정보를 가져오는 데 오류가 발생했습니다:", error);
   }
 };
+
+export const editUser = async (editUserData) => {
+  const res = await axios.post(baseUrl + "/edituser", editUserData);
+  return res;
+}
