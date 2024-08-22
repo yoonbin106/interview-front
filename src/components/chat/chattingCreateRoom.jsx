@@ -112,7 +112,7 @@ const ChattingCreateRoom = ({ onBack }) => {
                 {filteredUsers.map(user => (
                     <div key={user.id} className={styles.chattingCreateRoomUserItem}>
                         <div className={styles.chattingCreateRoomUserProfile}>
-                            <Avatar sx={{ width: 50, height: 50 }} />
+                            <Avatar src={user.profileImage} sx={{ width: 50, height: 50 }} />
                             {/* src={userProfiles[user.email]} */}
                         </div>
                         <div className={styles.chattingCreateRoomUserContent}>
