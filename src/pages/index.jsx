@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '@/styles/main.module.css';
+import MainEconomicNews from '../components/mainEconomicNews.jsx';//추인철추가
+
+
 
 function Home() {
     const [currentImage, setCurrentImage] = useState(0);
     const [progressInterval, setProgressInterval] = useState(0);
     const [timer, setTimer] = useState(null);
+    const slidesToShow = 4;  // 한 화면에 보여줄 슬라이드 개수
+    const slideWidth = 100 / slidesToShow;  // 슬라이드 하나의 너비 (퍼센트)
 
     useEffect(() => {
         setCurrentIndex(0);
@@ -224,24 +229,20 @@ function Home() {
                     </div>
                 </div>
             </div>
-            {/* 뉴스칸 */}
-            <div className={styles.container5} id='news'>
-                <div className={styles.newsFrameW}>
-                    <div className={styles.newsFrameH}>
-                        <div className={styles.newsFrame}>
-
-                            <div className={styles.newsTitleFrame}>
-                                <div className={styles.newsTitle}>news</div>
-                            </div>
-                            <div className={styles.newsInfoFrame}>
-                                <div>여기에 뉴스 스라이드</div>
-                            </div>
-
+          {/* 추인철 뉴스칸 */}
+        <div className={styles.container5} id='news'>
+            <div className={styles.newsFrameW}>
+                <div className={styles.newsFrameH}>
+                    <div className={styles.newsFrame}>
+                        <div className={styles.newsTitleFrame}>
+                            <div className={styles.newsTitle}></div>
                         </div>
+                        <MainEconomicNews />  {/* 뉴스 데이터를 표시할 컴포넌트를 여기에 삽입 */}
                     </div>
                 </div>
             </div>
-            {/* 뉴스칸 끝 */}
+        </div>
+        {/* 추인철 뉴스칸 끝 */}
         </div>
     );
 }
