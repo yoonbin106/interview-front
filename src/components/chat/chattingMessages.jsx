@@ -2,7 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import styles from '../../styles/chat/chattingMessages.module.css';
 
-const ChattingMessages = ({ messages, userInfo }) => {
+
+
+const ChattingMessages = ({ messages, userInfo, onBack }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -11,6 +13,9 @@ const ChattingMessages = ({ messages, userInfo }) => {
 
   return (
     <div className={styles.chattingMessages}>
+      
+      
+
       {messages.map((message, index) => (
 
         message.sender === userInfo.username ? (
@@ -23,7 +28,7 @@ const ChattingMessages = ({ messages, userInfo }) => {
           <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
             <div className={styles.recieverAvatar} aria-hidden="true">
-              <Avatar sx={{width: 50, height: 50}}></Avatar>
+              <Avatar sx={{ width: 50, height: 50 }}></Avatar>
             </div>
 
             <div className={styles.othersMessageInfo}>
@@ -41,7 +46,7 @@ const ChattingMessages = ({ messages, userInfo }) => {
             </div>
           </div>
         )
-        
+
       ))}
 
       <div ref={messagesEndRef} />

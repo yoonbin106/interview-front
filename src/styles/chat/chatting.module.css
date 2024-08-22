@@ -113,17 +113,18 @@
   color: #d1d5db;
 }
 
-.chattingBackButton {
-  position: fixed;
-  background-color: transparent;
-  border: none;
-  color: #007bff;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 8px 8px 8px 3px;
-  display: flex;
-  align-items: center;
+.chattingBackButtonWrapper {
+  position: absolute; /* 버튼의 위치를 절대적으로 설정 */
+  /* margin: 3px 0px 0px 3px; */
+  z-index: 1000;
 }
+
+.chattingBackButton {
+  color: #007bff;
+  cursor: pointer;
+  padding: 10px;
+}
+
 
 .chattingBackButton:hover {
   color: #0056b3;
