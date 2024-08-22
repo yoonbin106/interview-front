@@ -244,7 +244,7 @@ const EditUserInfo = observer(() => {
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>성별</StyledTableCell>
                 <StyledTableCell>
-                  <TextField required id="name" defaultValue={userInfo.gender} variant="standard" />
+                  <TextField required id="name" defaultValue={userInfo.gender} disabled variant="standard" />
                 </StyledTableCell>
                 </StyledTableRow>
                 <StyledTableRow>
@@ -299,7 +299,7 @@ const EditUserInfo = observer(() => {
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>연락처</StyledTableCell>
                 <StyledTableCell colSpan={5}>
-                  <TextField required id="name" defaultValue={userInfo.phone} variant="standard" InputProps={{ readOnly: true }}/>
+                  <TextField required id="name" disabled defaultValue={userInfo.phone} variant="standard" InputProps={{ readOnly: true }}/>
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
@@ -348,7 +348,7 @@ const EditUserInfo = observer(() => {
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이메일</StyledTableCell>
                 <StyledTableCell colSpan={5}>
-                  <TextField required id="name" defaultValue={userInfo.email} variant="standard" InputProps={{ readOnly: true, }}/>
+                  <TextField required id="name" defaultValue={userInfo.email} disabled variant="standard" InputProps={{ readOnly: true, }}/>
                 </StyledTableCell>
               </StyledTableRow>
             </TableBody>
