@@ -201,15 +201,15 @@
       } else {
         setFileName('');
         setPreview(null);
-        setProfileImage(null);
+        setProfileImage(userStore.profile);
       }
     };
     const handleSubmit = async (event) => {
       event.preventDefault();
-      // 유효성 검사
-      const username = document.getElementById('name').value;
-      const birth = birthDate;
-      const addressPostcode = postcode || userInfo.address.postalCode;
+
+      const username = document.getElementById('name').value || userStore.username;
+      const birth = birthDate || userStore.birth;
+      const addressPostcode = postcode || userInfo.address;
 
       const nameRegex = /^[가-힣]+$/; // 한글만 허용하는 정규식
       if (!nameRegex.test(username)) {
@@ -227,11 +227,11 @@
         return;
       }
       const formData = new FormData();
-      formData.append('email', userInfo.email);  // 이 값은 수정 불가이므로 직접 상태에서 가져옵니다.
-      formData.append('username', document.getElementById('name').value);
-      formData.append('address', `${postcode} ${address} ${specificAddress} ${extraAddress}`);
-      formData.append('birth', birthDate);
-    
+      formData.append('email', userInfo.email);
+      formData.append('username', username);
+      formData.append('address', `${postcode || userInfo.address.postalCode} ${address || userInfo.address.basicAddress} ${specificAddress || userInfo.address.extraDetail} ${extraAddress || userInfo.address.detail}`);
+      formData.append('birth', birthDate || userStore.birth);
+
       if (profileImage) {
         formData.append('profileImage', profileImage);
       }
@@ -244,14 +244,14 @@
     
         if (response.ok) {
           // 서버로부터 성공적인 응답을 받으면 userStore 업데이트
-          const updatedUsername = document.getElementById('name').value;
-          const updatedAddress = `${postcode} ${address} ${specificAddress} ${extraAddress}`;
+          const updatedUsername = document.getElementById('name').value || userStore.username;
+          const updatedAddress = `${postcode || userInfo.address.postalCode} ${address || userInfo.address.basicAddress} ${specificAddress || userInfo.address.extraDetail} ${extraAddress || userInfo.address.detail}`;
           const updatedProfile = profileImage ? URL.createObjectURL(profileImage) : userStore.profile; // 프로필 이미지 URL 업데이트
-          
+
           // userStore 값을 업데이트
           userStore.setUsername(updatedUsername);
           userStore.setAddress(updatedAddress);
-          userStore.setBirth(birthDate);
+          userStore.setBirth(birthDate || userStore.birth);
           userStore.setProfile(updatedProfile);
     
           // 성공 처리
@@ -264,7 +264,6 @@
         }
       } catch (error) {
         console.error('유저 정보를 수정하는 중 오류가 발생했습니다:', error);
-        alert('유저 정보를 수정하는 중 오류가 발생했습니다.');
       }
     };
     const handleCloseSnackbar = () => {
