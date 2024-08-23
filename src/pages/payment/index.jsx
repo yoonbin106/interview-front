@@ -1,5 +1,8 @@
 import styles from '@/styles/main.module.css';
 import { Icon } from '@mui/material';
+import BasicPaymentCheckoutPage from '@/components/payment/tossPayBasic';
+import PremiumPaymentCheckoutPage from '@/components/payment/tossPayPremium';
+
 const Payment = () => {
     return (
         <>
@@ -51,7 +54,7 @@ const Payment = () => {
                                 </div>
                                 <div className={styles.ticketButtonFrame}>
                                     <div>1,000 원</div>
-                                    <a href='#' className={styles.ticketbutton}>결제하기</a>
+                                    <BasicPaymentCheckoutPage/>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +94,7 @@ const Payment = () => {
                                 </div>
                                 <div className={styles.ticketButtonFrame}>
                                     <div>10,000 원</div>
-                                    <a href='#' className={styles.ticketbutton}>결제하기</a>
+                                    <PremiumPaymentCheckoutPage/>
                                 </div>
 
                             </div>
