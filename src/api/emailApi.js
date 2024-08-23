@@ -59,3 +59,33 @@ export const resetPassword = async (username, email, newPassword) => {
     }
   }
 };
+
+export const changePassword = async (username, email, newPassword, currentPassword) => {
+  try {
+    const response = await axios.post('http://localhost:8080/api/auth/changePassword', {
+      username,
+      email,
+      newPassword,
+      currentPassword
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      // 서버에서 응답이 온 경우
+      if (error.response.status === 512) {
+        throw new Error("이전 비밀번호는 사용할 수 없습니다.");
+      } else if (error.response.status === 514){
+        throw new Error("현재 비밀번호가 일치하지 않습니다.");
+      } else {
+        throw new Error(error.response.data);
+      }
+    } else {
+      // 서버에서 응답이 오지 않은 경우
+      throw new Error("비밀번호 재설정 중 오류가 발생했습니다.");
+    }
+  }
+};

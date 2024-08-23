@@ -12,7 +12,7 @@
   import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
   import TextField from '@mui/material/TextField';
   import BorderColorIcon from '@mui/icons-material/BorderColor';
-  import { getUserByEmail } from 'api/user';
+  import { getProfileImage, getUserByEmail } from 'api/user';
   import { useEffect } from 'react';
   import { observer } from 'mobx-react-lite';
   import { useStores } from '@/contexts/storeContext';
@@ -241,12 +241,12 @@
           method: 'POST',
           body: formData,
         });
-    
+        const changedProfile = await getProfileImage(userInfo.email, userStore);
         if (response.ok) {
           // 서버로부터 성공적인 응답을 받으면 userStore 업데이트
           const updatedUsername = document.getElementById('name').value || userStore.username;
           const updatedAddress = `${postcode || userInfo.address.postalCode} ${address || userInfo.address.basicAddress} ${specificAddress || userInfo.address.extraDetail} ${extraAddress || userInfo.address.detail}`;
-          const updatedProfile = profileImage ? URL.createObjectURL(profileImage) : userStore.profile; // 프로필 이미지 URL 업데이트
+          const updatedProfile = profileImage ? changedProfile : userStore.profile; // 프로필 이미지 URL 업데이트
 
           // userStore 값을 업데이트
           userStore.setUsername(updatedUsername);

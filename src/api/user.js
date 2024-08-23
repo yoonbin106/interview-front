@@ -63,6 +63,7 @@ export const getProfileImage = async (email, userStore) => {
     });
     if (response.status === 200) {
       userStore.setProfile(response.data); // 프로필 이미지를 userStore에 저장
+      return response.data;  // 성공시 profile URL 반환
     }
   } catch (error) {
     console.error("프로필 이미지를 불러오는 중 오류가 발생했습니다:", error);
