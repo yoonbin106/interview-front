@@ -60,6 +60,19 @@
     text-decoration: underline;
 }
 
+.time {
+    color: #98849e; /* 원하는 색깔로 변경 */
+}
+
+.title {
+    font-size: 22px; /* 글자 크기 조정 */
+    font-weight: bold; /* 굵은 글꼴 */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* 세련된 폰트 패밀리 */
+    color: #333; /* 글자 색상 */
+    margin-bottom: 10px; /* 아래 여백 추가 */
+}
+
+
 
 
 

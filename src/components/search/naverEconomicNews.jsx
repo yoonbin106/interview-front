@@ -41,14 +41,14 @@ function NaverEconomicNews() {
 
     return (
         <div className={styles.container}>
-            <h2>뉴스</h2>
+           <h2 className={styles.title}>뉴스</h2> {/* 뉴스 제목 스타일 적용 */}
             <ul>
                 {news.map((item, index) => (
                     <li key={index}>
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
                             {decodeHtmlEntity(item.title.replace(/<[^>]+>/g, ''))} {/* HTML 태그 제거 및 엔티티 디코딩 */}
                         </a>
-                        <p className="time">{new Date(item.pubDate).toLocaleString()}</p>
+                        <p className={styles.time}>{new Date(item.pubDate).toLocaleString()}</p>
                     </li>
                 ))}
             </ul>

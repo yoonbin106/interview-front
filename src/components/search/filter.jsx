@@ -36,6 +36,7 @@ const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInput
     const [selectedSalaries, setSelectedSalaries] = useState([]);
 
     useEffect(() => {
+        setSelectedRegion('서울');
         handleFilterChange();
     }, [selectedRegion, selectedDistricts, selectedSizes, selectedSalaries]);
 
