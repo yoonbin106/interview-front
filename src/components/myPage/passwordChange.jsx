@@ -44,7 +44,7 @@ const PasswordChangeForm = observer(() => {
     }
   
     if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-      newErrors.confirmPassword = "새 비밀번호 확인이 일치하지 않습니다";
+      newErrors.confirmPassword = "* 새 비밀번호 확인이 일치하지 않습니다";
       valid = false;
     }
   
@@ -64,9 +64,9 @@ const PasswordChangeForm = observer(() => {
       router.push('/myPage');
     } catch (err) {
       if (err.response && err.response.status === 512) {
-        setError({ newPassword: "이전 비밀번호는 사용할 수 없습니다" });
+        setError({ newPassword: "* 이전 비밀번호는 사용할 수 없습니다" });
       } else if (err.response && err.response.status === 514){
-        setError({ currentPassword: "현재 비밀번호가 일치하지 않습니다" });
+        setError({ currentPassword: "* 현재 비밀번호가 일치하지 않습니다" });
       } else{
         setError({ general: err.message });
       }
