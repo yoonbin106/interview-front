@@ -15,7 +15,7 @@ const PremiumPaymentCheckoutPage = observer(() => {
   const router = useRouter(); // useRouter 훅 사용
   const [amount] = useState({
     currency: "KRW",
-    value: 1000,
+    value: parseInt(process.env.NEXT_PUBLIC_API_TOSS_PREMIUM_AMOUNT, 10),
   });
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
@@ -48,9 +48,9 @@ const PremiumPaymentCheckoutPage = observer(() => {
       await payment.requestPayment({
         method: "CARD", // 카드 및 간편결제
         amount: amount,
-        orderId: "premiumPayment", // 고유 주문번호
+        orderId: uuidv4(), // 고유 주문번호
         orderName: "프리미엄 플랜",
-        successUrl: "http://localhost:3000", // 결제 요청이 성공하면 리다이렉트되는 URL
+        successUrl: "http://localhost:3000/payment/successPremiumPayment", // 결제 요청이 성공하면 리다이렉트되는 URL
         failUrl: "http://localhost:3000/auth", // 결제 요청이 실패하면 리다이렉트되는 URL
         customerEmail: userStore.email,
         customerName: userStore.username,
