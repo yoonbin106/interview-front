@@ -284,6 +284,29 @@
   border-radius: 16px;
   background-color: #ffffff;
 }
+.keyWordBoxWhite1{
+  background: linear-gradient(135deg, #5A8AF2 0%, #92b4fd 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+ 
+  font-weight: bold;
+  font-size: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+
+/* 중요한 단어 강조 */
+
+
+
+
+  
+
 .keyWordBoxWhiteImage{
   display: flex;
   justify-content: center;
@@ -295,8 +318,48 @@
    url('../../public/images/keyword2.png');
   background-size: cover;
   background-position: center;
-
+  position: relative; /* 텍스트 배치를 위해 필요 */
 }
+/* 추인철 에디션  */
+.aiText {
+  font-weight: bold; 
+  color: white;
+  line-height: 1.6; 
+  text-align: center; /* 텍스트를 중앙 정렬 */
+  position: relative;
+  z-index: 2; 
+}
+
+.boldText {
+  font-weight: bold;
+  font-size: 40px; /* "AI" 텍스트를 더 크게 설정 */
+  color: #1E90FF;
+}
+
+.line1 {
+  font-size: 29px; /* 첫 번째 줄 텍스트 크기 */
+  margin-left: 27px; /* 첫 번째 줄은 기본 위치 */
+  text-align: left; /* 왼쪽 정렬 */
+  
+}
+
+.line2 {
+  font-size: 29px; /* 두 번째 줄 텍스트 크기 */
+  margin-left: 27px;  /* 두 번째 줄은 첫 번째 줄보다 오른쪽으로 이동 */
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.line3 {
+  font-size: 29px; /* 세 번째 줄 텍스트 크기 */
+  margin-left: 27px;  /* 세 번째 줄은 두 번째 줄보다 더 오른쪽으로 이동 */
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+
+/* 추인철 에디션  */  
+ 
+
+
 .keyWordBoxHeight{
   display: flex;
   justify-content: center;
@@ -313,6 +376,7 @@
 .keyWordBoxWidth{
   display: flex;
   justify-content: center;
+  flex-direction: column; /* 세로로 배치 */
   align-items: center;
   width: 630px;
   height: 300px;
@@ -322,21 +386,71 @@
    url('../../public/images/keyword1.png');
   background-size: cover;
   background-position: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .keyWordTextWh{
+  margin-left: 30px;
   width: 240px;
   height: 240px;
   font-size: 30px;
   font-weight: bold;
   color: #ffffff;
 }
+/* 맨오른쪽아래칸 css  */
+.keyWordTextWh1 {
+  font-size: 28px; /* 텍스트 크기 */
+  font-weight: bold; /* 굵게 표시 */
+  color: #ffffff; /* 흰색 텍스트 */
+  padding: 20px; /* 내부 여백 추가 */
+  line-height: 1.5; /* 줄 간격 조정 */
+  white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
+  text-align: right;
+}
+/* 추인철추가맛도리 */
+.mainText {
+  font-size: 20px; /* 텍스트 크기 조정 */
+  font-weight: bold;
+  color: #ffffff;
+
+  margin-bottom: -150px; /* 작은 텍스트와의 간격 */
+  padding-right: 28px; /* 오른쪽 간격 조정 */
+  white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
+  line-height: 1.2; /* 줄 간격을 조절해보세요 */
+}
+
+/* 추인철추가맛도리 */
 .keyWordTextBl{
   width: 240px;
   height: 240px;
   font-size: 30px;
   font-weight: bold;
-  color: #444444;
+  color: #ffffff;
+  white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
+  line-height: 1.5; /* 줄 간격을 조절해보세요 */
+  text-align: left;
 }
+
+
+
+/* 중요한 단어 강조 */
+.highlightedText {
+  color: #00FFFF; /* 강조 색상 */
+  font-weight: bold;
+}
+
+.keyWordTextB2{
+  width: 240px;
+  height: 240px;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 20px; /* 내부 여백 추가 */
+  color: #444444;
+  line-height: 1.5; /* 줄 간격 조정 */
+  white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
+  margin-bottom: 50px;
+}
+
 .keyWordTextBlImage{
   width: 240px;
   height: 240px;
@@ -344,26 +458,63 @@
   font-weight: bold;
   color: #ffffff;
 }
+
+.keyWordTextHeightBl p {
+  margin-bottom: 15px; /* 각 문단(p) 사이의 간격을 설정합니다. 필요에 따라 값을 조정하세요 */
+}
+
 .keyWordTextHeightBl{
   width: 240px;
   height: 570px;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   color: #444444;
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+  
 }
-.keyWordTextWidthWh{
-  width: 570px;
-  height: 240px;
-  font-size: 30px;
+
+
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+.keyWordTextWidthWh {
+  font-size: 23px; /* 텍스트 크기를 더 작게 조정 */
   font-weight: bold;
   color: #ffffff;
+  text-align: center; /* 중앙 정렬 */
+  line-height: 1.3; /* 줄 간격을 조정하여 높이 안에 잘 들어가도록 설정 */
+  margin-bottom: 5px; /* 각 줄 사이의 간격을 좁혀서 공간 활용 */
+  padding: 0 10px; /* 텍스트와 이미지 가장자리 사이에 약간의 여백 추가 */
+  white-space: wrap; /* 줄바꿈 없이 한 줄에 표시되도록 설정 */
+  overflow: hidden; /* 텍스트 넘침 방지 */
+  
 }
+
+.highlight{
+  color: #1E90FF;; /* 파란색으로 강조 */
+  font-weight: bold;
+}
+
+
 .keyWordImages1{
   background-image: url('../../public/images/keyword1.png');
   background-size: cover;
   background-position: center;
 }
 
+/* 추인철이 추가하는 맛도리 ui */
+.logoIcon {
+  width: 24px; /* 적절한 크기로 설정 */
+  height: 24px;
+  vertical-align: middle; /* 텍스트와 수평으로 맞추기 */
+  margin: 0 4px; /* 텍스트와의 간격 */
+}
+
+/* 추인철이 추가하는 맛도리 ui */
 
 
 /* Progress Bar Wrapper 스타일 */
@@ -513,7 +664,7 @@
   align-items: center;
 }
 
-
+/* 메인화면 뉴스칸 이아래로 쭈욱입니다 */
 .newsSliderContainer {
   position: relative;
   width: 100%;
@@ -666,6 +817,7 @@
   justify-content: center;
   align-items: center;
 }
+
 
 
 .newsSliderControl.prev {

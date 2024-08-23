@@ -192,38 +192,69 @@ function Home() {
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxGrey}>
                             <div className={styles.keyWordTextWh}>면접 준비는 "FocusJob"</div>
+                            <div className={styles.mainText}>{"포커스잡. 언제 \n어디서나"}</div>
+                                    
                         </div>
                         <div className={styles.keyWordBoxWhiteImage}>
-                            <div className={styles.keyWordTextBlImage}>
-                                gd
+                            <div className={styles.aiText}>
+                                <div className={styles.line1}>다양한 <span className={styles.boldText}>AI</span> 면접</div>
+                                <div className={styles.line2}>편안한 환경에서</div>
+                                <div className={styles.line3}>실전처럼 준비하세요</div>
                             </div>
                         </div>
+
+
+
                     </div>
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxHeight}>
-                            <div className={styles.keyWordTextHeightBl}>장점 1</div>
+                        <div className={styles.keyWordTextHeightBl}>
+  <p><i className="fas fa-clock"></i> 시간과 장소에 구애받지 않는 면접 연습 지원</p>
+  <p><i className="fas fa-brain"></i> 상황별 연습과 답변 내용의 심층 분석을 제공하는 AI 면접 서비스</p>
+  <p><i className="fas fa-comments"></i> 면접과 취업 전반에 대한 조언을 제공하는 파인튜닝 챗봇 서비스</p>
+  <p><i className="fas fa-eye"></i> 보완점을 한눈에 파악할 수 있는 면접 결과 보고서</p>
+</div>
                         </div>
                     </div>
                     <div className={styles.keyWordFrames}>
-                        <div className={styles.keyWordBoxWhite}>
-                            <div className={styles.keyWordTextBl}>모의면접 키워드</div>
+                        <div className={styles.keyWordBoxWhite1}>
+                        <div className={styles.keyWordTextBl}>
+                        <span className={styles.highlightedText}>포커스잡</span>
+                        {" \n실전 대비 연습 "} 
+                        {"\n즉시 시작 가능 "} 
+                        {"\n실시간 피드백 "} 
+                        {"\n개인 맞춤형 연습"}
+                        </div>
                         </div>
                         <div className={styles.keyWordBoxWhite}>
                             <div className={styles.keyWordTextBl}>장점2</div>
                         </div>
                     </div>
                     <div className={styles.keyWordFramesWide}>
-                        <div className={styles.keyWordBoxWidth}>
-                            <div className={styles.keyWordTextWidthWh}>
-                                뿌힝
-                            </div>
+                    <div className={styles.keyWordBoxWidth}>
+                        <div className={styles.keyWordTextWidthWh}>
+                            포커스잡은 합격을 위한 AI <span className={styles.highlight}>면접</span> 연습을 지원합니다.
                         </div>
+                        <div className={styles.keyWordTextWidthWh}>
+                            AI 파트너와 함께, 실전보다 더 철저한 연습을 경험하세요.
+                        </div>
+                        <div className={styles.keyWordTextWidthWh}>
+                            채용 트렌드에 맞춘 완벽한 <span className={styles.highlight}>면접</span> 준비를
+                        </div>
+                        <div className={styles.keyWordTextWidthWh}>
+                            지금 시작하세요!
+                        </div>
+                    </div>
+
+
+
+
                         <div className={styles.keyWordBoxGroup}>
                             <div className={styles.keyWordBoxWhite}>
-                                <div className={styles.keyWordTextBl}>모의면접 키워드</div>
+                                <div className={styles.keyWordTextB2}>{"지금 가입하고\n 첫 번째\n 면접\n 연습을\n 무료로\n 체험하세요!"}</div>
                             </div>
                             <div className={styles.keyWordBoxGrey}>
-                                <div className={styles.keyWordTextWh}>" 나만의 방식으로 면접을 준비하세요! "</div>
+                                <div className={styles.keyWordTextWh1}>{"단계별로 완성하는\n면접 준비의\n모든 것,\n나만의\n방식으로\n따라오세요!"}</div>
                             </div>
                         </div>
                     </div>
