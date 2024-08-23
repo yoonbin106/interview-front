@@ -283,6 +283,21 @@
   height: 300px;
   border-radius: 16px;
   background-color: #ffffff;
+  
+}
+
+.keyWordBoxWhitex{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #073ff5;
+  background-image: url('/images/keyword3.png');
+  background-size: cover; /* 이미지가 div에 꽉 차도록 */
+  background-position: center; /* 이미지가 가운데에 위치하도록 */
+  
 }
 .keyWordBoxWhite1{
   background: linear-gradient(135deg, #5A8AF2 0%, #92b4fd 100%);
@@ -464,6 +479,7 @@
 }
 
 .keyWordTextHeightBl{
+  margin-top: 30px;
   width: 240px;
   height: 570px;
   font-size: 25px;
@@ -471,6 +487,9 @@
   color: #444444;
   opacity: 0;
   animation: fadeIn 2s forwards;
+  word-wrap: break-word; /* Ensure words don't overflow */
+  word-break: keep-all; /* Prevent words from breaking in the middle */
+  line-height: 1.5; /* Adjust line height for better readability */
   
 }
 

@@ -209,11 +209,11 @@ function Home() {
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxHeight}>
                         <div className={styles.keyWordTextHeightBl}>
-  <p><i className="fas fa-clock"></i> 시간과 장소에 구애받지 않는 면접 연습 지원</p>
-  <p><i className="fas fa-brain"></i> 상황별 연습과 답변 내용의 심층 분석을 제공하는 AI 면접 서비스</p>
-  <p><i className="fas fa-comments"></i> 면접과 취업 전반에 대한 조언을 제공하는 파인튜닝 챗봇 서비스</p>
-  <p><i className="fas fa-eye"></i> 보완점을 한눈에 파악할 수 있는 면접 결과 보고서</p>
-</div>
+                        <p><i className="fas fa-clock"></i> 시간과 장소에 구애받지 않는 면접 연습 지원</p>
+                        <p><i className="fas fa-brain"></i> 상황별 연습과 답변 내용의 심층 분석을 제공하는 AI 면접 서비스</p>
+                        <p><i className="fas fa-comments"></i> 면접과 취업 전반에 대한 조언을 제공하는 파인튜닝 챗봇 서비스</p>
+                        <p><i className="fas fa-eye"></i> 보완점을 한눈에 파악할 수 있는 면접 결과 보고서</p>
+                        </div>
                         </div>
                     </div>
                     <div className={styles.keyWordFrames}>
@@ -226,8 +226,8 @@ function Home() {
                         {"\n개인 맞춤형 연습"}
                         </div>
                         </div>
-                        <div className={styles.keyWordBoxWhite}>
-                            <div className={styles.keyWordTextBl}>장점2</div>
+                        <div className={styles.keyWordBoxWhitex}>
+                            
                         </div>
                     </div>
                     <div className={styles.keyWordFramesWide}>
