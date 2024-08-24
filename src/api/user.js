@@ -63,6 +63,7 @@ export const getProfileImage = async (email, userStore) => {
     });
     if (response.status === 200) {
       userStore.setProfile(response.data); // 프로필 이미지를 userStore에 저장
+      return response.data;  // 성공시 profile URL 반환
     }
   } catch (error) {
     console.error("프로필 이미지를 불러오는 중 오류가 발생했습니다:", error);
@@ -76,6 +77,7 @@ export const getAllUsers = async () => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(allUsers);
     return allUsers;
   } catch (error) {
     console.error("유저목록을 가져오는데 오류가 발생했습니다:", error);
@@ -97,3 +99,28 @@ export const getUserByEmail = async (email) => {
     console.error("유저 정보를 가져오는 데 오류가 발생했습니다:", error);
   }
 };
+
+export const editUser = async (editUserData) => {
+  const res = await axios.post(baseUrl + "/edituser", editUserData);
+  return res;
+}
+
+export const paymentCheck = async (orderId, paymentKey, amount) => {
+  const res = await axios.post(baseUrl + "/paymentCheck", null, {
+    params: {
+      orderId: orderId,
+      paymentKey: paymentKey,
+      amount: amount
+    }
+  });
+  return res;
+}
+
+export const cancelPayment = async (paymentKey) => {
+  const res = await axios.post(baseUrl + "/paymentCancel", null, {
+      params: {
+      paymentKey: paymentKey
+      }
+  });
+  return res;
+}

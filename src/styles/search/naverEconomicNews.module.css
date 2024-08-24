@@ -1,0 +1,102 @@
+.container {
+    background-color: #ffffff; /* 배경색을 하얀색으로 설정 */
+    border: 1px solid #dee2e6; /* 테두리 색상 */
+    border-radius: 5px; /* 둥근 모서리 */
+    padding: 15px; /* 내부 패딩 */
+    height: 50vh; /* 검색 결과와 동일한 높이 설정 */
+    overflow-y: auto; /* 스크롤 가능하도록 설정 */
+    box-sizing: border-box;
+}
+
+/* 스크롤바 디자인 */
+.container::-webkit-scrollbar {
+    width: 14px; /* 기존 두께 유지 */
+    height: 14px; /* 기존 두께 유지 */
+}
+
+.container::-webkit-scrollbar-track {
+    background: #ebebeb; /* 회색 트랙 배경색 */
+    border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: #007bff; /* 파란색 스크롤바 */
+    border-radius: 10px;
+    border: 2px solid #ebebeb; /* 스크롤바 테두리와 트랙의 색상을 일치시킴 */
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3; /* 호버 시 더 진한 파란색 */
+}
+
+.container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.container li {
+    border: 1px solid transparent; /* 기본적으로 투명한 테두리 */
+    border-radius: 5px; /* 둥근 모서리 유지 */
+    padding: 5px; /* 테두리 안쪽 여백 */
+    transition: border-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.container li:hover {
+    border-color: #007bff; /* 마우스 오버 시 파란색 테두리 */
+}
+
+.container a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap; /* 텍스트가 한 줄에 표시되도록 */
+    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 텍스트는 생략 기호로 표시 */
+    display: block;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}
+
+.time {
+    color: #98849e; /* 원하는 색깔로 변경 */
+}
+
+.title {
+    font-size: 22px; /* 글자 크기 조정 */
+    font-weight: bold; /* 굵은 글꼴 */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* 세련된 폰트 패밀리 */
+    color: #333; /* 글자 색상 */
+    margin-bottom: 10px; /* 아래 여백 추가 */
+}
+
+
+
+
+
+
+
+
+
+
+/* 반응형 디자인을 위한 미디어 쿼리 추가 */
+@media (max-width: 1200px) {
+    .container {
+        height: 50vh; /* 중간 크기의 화면에서는 동일한 높이 유지 */
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        height: 40vh; /* 작은 화면에서는 높이를 줄임 */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        height: 30vh; /* 아주 작은 화면에서는 높이를 더욱 줄임 */
+        padding: 5px; /* 패딩을 줄여서 공간을 더 확보 */
+    }
+}

@@ -34,7 +34,19 @@
 }
 
 
-
+.chattingBackToListButton {
+    position: absolute; /* 부모 요소를 기준으로 절대 위치 설정 */
+    margin: 15px 10px 10px 10px;
+    color: #007bff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .chattingBackToListButton:hover {
+    color: #0056b3;
+  }
+  
 
 
 

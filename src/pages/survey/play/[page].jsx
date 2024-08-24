@@ -51,10 +51,10 @@ const SurveyPlay = () => {
 
   const handleAnswerSelect = (index, answer) => {
     const answerValue = questions[index].answer01 === answer ? 1 : 2;
-
+  
     setSelectedAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [index]: answerValue,
+      [index]: answerValue,  // 1 또는 2를 그대로 저장
     }));
   };
 
@@ -95,7 +95,12 @@ const SurveyPlay = () => {
 
   const submitSurvey = async () => {
     const formattedAnswers = Object.entries(selectedAnswers)
-      .map(([key, value]) => `B${Number(key) + 1}=${value}`)
+      .map(([key, value]) => {
+        // key는 질문의 인덱스 (0부터 시작)
+        const baseValue = Number(key) * 2 + 1;
+        const adjustedValue = baseValue + (value - 1); // value가 1이면 baseValue, 2면 baseValue + 1
+        return `B${Number(key) + 1}=${adjustedValue}`;
+      })
       .join(' ');
 
     const postData = {

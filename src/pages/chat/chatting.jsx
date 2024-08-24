@@ -6,11 +6,11 @@ import ChattingInputArea from '../../components/chat/chattingInputArea';
 import mqtt from 'mqtt';
 import ChattingList from 'components/chat/chattingList';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import axios from 'axios';
 import { getAllUsers } from 'api/user';
+
 
 const Chatting = observer(({ closeChatting }) => {
     // const [isOpen, setIsOpen] = useState(false);
@@ -278,11 +278,16 @@ const Chatting = observer(({ closeChatting }) => {
                         <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} userStore={userStore} users={users} />
                     ) : (
                         <>
-                            <button className={styles.chattingBackButton} onClick={handleBackClick}>
-                                <ArrowBackIosNewRoundedIcon />
-                            </button>
+                            <div className={styles.chattingBackButtonWrapper}>
+                                <button className={styles.chattingBackButton} onClick={handleBackClick}>
+                                    <ArrowBackIosNewRoundedIcon />
+                                </button>
+                            </div>
                             <ChattingMessages messages={messages} userInfo={userInfo} />
                         </>
+
+
+
                     )}
                 </div>
                 {isChatOpen && (
