@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import styles from '@/styles/resume/resumeList.module.css';
@@ -26,16 +26,25 @@ const ResumeList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchText, setSearchText] = useState('');
   const [resumeToDelete, setResumeToDelete] = useState(null);
+  const accordionRefs = useRef([]); // 아코디언을 참조하기 위한 배열
+
+  useEffect(() => {
+    document.body.style.overflowY = 'scroll';
+    return () => {
+      document.body.style.overflowY = '';
+    };
+  }, []);
 
   useEffect(() => {
     fetchResumes();
   }, []);
 
   const fetchResumes = async () => {
-    const email = localStorage.getItem('email'); // 이메일을 로컬스토리지에서 가져옴
+    const email = localStorage.getItem('email');
     try {
       const response = await axios.get(`http://localhost:8080/api/resume/user-resumes?email=${email}`);
-      setResumes(response.data);
+      const sortedResumes = response.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      setResumes(sortedResumes);
     } catch (error) {
       console.error('이력서 데이터를 불러오는 중 오류 발생:', error);
     }
@@ -45,7 +54,8 @@ const ResumeList = () => {
     router.push(url);
   };
 
-  const handleDeleteClick = (resumeId) => {
+  const handleDeleteClick = (resumeId, event) => {
+    event.stopPropagation();
     setResumeToDelete(resumeId);
     setModalContent('삭제하시겠습니까?');
     setIsDeleteModalOpen(true);
@@ -57,13 +67,14 @@ const ResumeList = () => {
       setIsDeleteModalOpen(false);
       setModalContent('삭제가 완료되었습니다.');
       setIsConfirmModalOpen(true);
-      fetchResumes(); // 삭제 후 목록 갱신
+      fetchResumes();
     } catch (error) {
       console.error('이력서 삭제 중 오류 발생:', error);
     }
   };
 
-  const handleDownloadClick = async (resumeId) => {
+  const handleDownloadClick = async (resumeId, event) => {
+    event.stopPropagation();
     try {
       const response = await axios.get(`http://localhost:8080/api/resume/download/${resumeId}`, {
         responseType: 'blob',
@@ -95,6 +106,16 @@ const ResumeList = () => {
     setSearchTerm(searchText);
   };
 
+  const handleResetClick = () => {
+    setSearchText('');
+    setSearchTerm('');
+  };
+
+  const handleAIProofreadClick = (resumeId, event) => {
+    event.stopPropagation();
+    router.push('/resume/resumeForm2');
+  };
+
   const filteredResumes = resumes.filter((resume) =>
     resume.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -123,21 +144,19 @@ const ResumeList = () => {
     return `${year}.${month}.${day}`;
   };
 
-  
+  const handleAccordionChange = (index) => (event, isExpanded) => {
+    if (isExpanded) {
+      accordionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <div className={styles.resumecontainer}>
-      <div className={styles.h2}>이력서 관리</div>
-      <div className={styles.filteroptions}>
-        <span className={styles.filteroption}>
-          <DescriptionIcon sx={{ color: grey[400] }} />첨삭결과가 없는 이력서
-        </span>
-        <span className={styles.filteroption}>
-          <DescriptionIcon sx={{ color: '#5A8AF2' }} />첨삭결과가 있는 이력서
-        </span>
-      </div>
+      <div className={styles.h2}>내 이력서 관리</div>
+
       <div className={styles.newresumebutton}>
         <button onClick={() => handleButtonClick('/resume')}>
-          <ControlPointIcon sx={{ color: '#5A8AF2', marginLeft: '6px' }} className={styles.controlpointicon} />&nbsp; 새로운 이력서 등록
+          <ControlPointIcon sx={{ color: '#5A8AF2', marginLeft: '6px' }} className={styles.controlpointicon} style={{ marginTop: '2.5px' }} />&nbsp; 새로운 이력서 등록
         </button>
       </div>
 
@@ -145,21 +164,23 @@ const ResumeList = () => {
 
       <div className={styles.accordioncontainer}>
         {currentResumes.length > 0 ? (
-          currentResumes.map((resume) => (
+          currentResumes.map((resume, index) => (
             <Accordion
               key={resume.resumeId}
               className={styles.customaccordion}
               elevation={0}
+              ref={(el) => (accordionRefs.current[index] = el)}
+              onChange={handleAccordionChange(index)}
               sx={{
                 '&::before': {
                   backgroundColor: 'transparent',
                 },
                 '&:first-of-type': {
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 },
                 '&:last-of-type': {
-                  borderRadius: '8px'
-                }
+                  borderRadius: '8px',
+                },
               }}
             >
               <AccordionSummary
@@ -168,31 +189,41 @@ const ResumeList = () => {
                 id={`panel${resume.resumeId}-header`}
                 className={styles.accordionsummary}
               >
-                <DescriptionIcon sx={{ color: resume.proofreadDate ? '#5A8AF2' : grey[400] }} className={styles.resumeicon} /> &nbsp;
-                <span className={styles.resumetext}>{resume.title || 'Untitled'}</span>
-                <span className={styles.resumeright}>
-                <span className={styles.resumedate} style={{ marginRight: '10px' }}>
-                  {formatDate(resume.createdDate)}
-                </span>
-                  <span className={styles.resumeactions}>
-                    <Button onClick={() => handleDownloadClick(resume.resumeId)} className={styles.button}>이력서 다운로드(PDF) </Button>
-                    <Button onClick={() => handleDeleteClick(resume.resumeId)} className={styles.button}>삭제</Button>
-                  </span>
-                </span>
-              </AccordionSummary>
-              <AccordionDetails className={styles.accordiondetails}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                  <Button className={`${styles.subbutton} ${styles.button}`} onClick={() => handleButtonClick('/resume/proofReadResult1')}>첨삭하기</Button>
-                  {resume.proofreadDate && (
-                    <Button className={`${styles.subbutton} ${styles.resultbutton}`} onClick={() => handleButtonClick('/resume/proofReadResult2')}>첨삭결과</Button>
-                  )}
-                  {resume.proofreadDate && (
-                    <span className={styles.proofreaddate}>최근 첨삭일 {resume.proofreadDate}</span>
-                  )}
+                <div className={styles.resumeHeader}>
+                  <div className={styles.resumeTitleContainer}>
+                    <DescriptionIcon sx={{ color: '#959697' }} className={styles.resumeicon} />
+                    <span className={styles.resumetext}>{resume.title || 'Untitled'}</span>
+                  </div>
+                  <div className={styles.resumeDateContainer}>
+                    <span className={styles.resumedate}>
+                      {formatDate(resume.createdDate)}
+                    </span>
+                  </div>
                 </div>
-                <div className={styles.newbox}>
-                  <span>2024.07.25 모의면접(면접이름)</span>
-                  <div>등록완료</div>
+              </AccordionSummary>
+
+              <AccordionDetails className={styles.accordiondetails}>
+                <div className={styles.actionContainer}>
+                  <button
+                    onClick={(event) => handleAIProofreadClick(resume.resumeId, event)}
+                    className={styles.aiProofreadButton}
+                  >
+                    AI첨삭 테스트
+                  </button>
+                  <div className={styles.rightActions}>
+                    <button
+                      onClick={(event) => handleDownloadClick(resume.resumeId, event)}
+                      className={styles.downButton}
+                    >
+                      이력서 다운로드(PDF)
+                    </button>
+                    <button
+                      onClick={(event) => handleDeleteClick(resume.resumeId, event)}
+                      className={styles.deleteButton}
+                    >
+                      삭제
+                    </button>
+                  </div>
                 </div>
               </AccordionDetails>
             </Accordion>
@@ -204,7 +235,6 @@ const ResumeList = () => {
         )}
       </div>
 
-      {/* Pagination controls */}
       {totalResumes > 0 && (
         <div className={styles.pagination}>
           {pageNumbers.length > 0 && pageNumbers.map((number) => (
@@ -233,11 +263,11 @@ const ResumeList = () => {
               />
             </div>
             <button onClick={handleSearchClick} className={styles.searchButton}>검색</button>
+            <button onClick={handleResetClick} className={styles.resetButton}>초기화</button>
           </div>
         </div>
       </div>
 
-      {/* 삭제 확인 모달 */}
       <Modal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -260,7 +290,6 @@ const ResumeList = () => {
         </ModalContent>
       </Modal>
 
-      {/* 삭제 완료 모달 */}
       <Modal
         aria-labelledby="confirmation-modal-title"
         aria-describedby="confirmation-modal-description"
@@ -283,7 +312,6 @@ const ResumeList = () => {
   );
 };
 
-// MUI styled components for Modal
 const Backdrop = React.forwardRef(
   ({ open, className, ...other }, ref) => {
     return (

@@ -20,13 +20,11 @@ import { useStores } from '@/contexts/storeContext';  // MobX 스토어 사용
 function ResumeForm() {
   const router = useRouter();
   const { userStore } = useStores();
-
   const [profileImage, setProfileImage] = useState(null);
   const [postcode, setPostcode] = useState('');
   const [address, setAddress] = useState('');
   const [extraAddress, setExtraAddress] = useState('');
   const [specificAddress, setSpecificAddress] = useState('');
-  const [isProofreadSidebarOpen, setIsProofreadSidebarOpen] = useState(false);
   const [educationFields, setEducationFields] = useState([{ school_name: '', major: '', start_date: '', end_date: '', graduation_status: '' }]);
   const [careerFields, setCareerFields] = useState([{ company_name: '', join_date: '', leave_date: '', position: '', job_description: '' }]);
   const [languageFields, setLanguageFields] = useState([{ language: '', language_level: '', language_score: '' }]);
@@ -38,6 +36,10 @@ function ResumeForm() {
   const [isAwardExempt, setIsAwardExempt] = useState(false);
   const [isCertificateExempt, setIsCertificateExempt] = useState(false);
   const [isWorkConditionExempt, setIsWorkConditionExempt] = useState(false);
+  const [selfIntroduction, setSelfIntroduction] = useState('');
+  const [motivation, setMotivation] = useState('');
+  const [proofreadResult, setProofreadResult] = useState([]);
+  const [isProofreadSidebarOpen, setIsProofreadSidebarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
@@ -66,6 +68,8 @@ function ResumeForm() {
     certificates: useRef(null),
     military: useRef(null),
     workConditions: useRef(null),
+    selfIntroduction: useRef(null),
+    motivation: useRef(null)
   };
 
   useEffect(() => {
@@ -95,6 +99,46 @@ function ResumeForm() {
       [name]: value,
     });
   };
+
+  const handleSelfIntroductionChange = (e) => {
+    setSelfIntroduction(e.target.value);
+  };
+
+
+  const handleMotivationChange = (e) => {
+    setMotivation(e.target.value);
+  };
+
+  const handleProofread = async (text) => {
+    if (text.trim() === '') {
+      // 사용자가 아무것도 입력하지 않은 경우
+      setProofreadResult([]);
+      setIsProofreadSidebarOpen(true);
+      return;
+    }
+  
+    try {
+      const response = await axios.post('http://localhost:3001/check-spelling', {
+        sentence: text,
+      });
+  
+      if (response.data.length === 0) {
+        // 맞춤법 검사 결과가 없는 경우
+        setProofreadResult([]);
+      } else {
+        // 맞춤법 검사 결과가 있는 경우
+        setProofreadResult(response.data);
+      }
+      
+      setIsProofreadSidebarOpen(true); // 맞춤법 검사 결과가 있으면 사이드바 열기
+    } catch (error) {
+      console.error('맞춤법 검사 중 오류 발생:', error);
+      setProofreadResult([]);
+      setIsProofreadSidebarOpen(true);
+    }
+  };
+  
+
 
   const handleFieldChange = (index, e, fields, setFields) => {
     const { name, value } = e.target;
@@ -173,7 +217,12 @@ const generatePDF = async () => {
   const content = document.getElementById('resume-content');
   
   // scale 값을 크게 하여 고해상도로 캔버스를 생성
-  const canvas = await html2canvas(content, { scale: 1.5 });
+  const canvas = await html2canvas(content, { 
+    scale: 2,
+    useCORS: true, // CORS 문제 해결
+    scrollX: 0,
+    scrollY: 0,
+  });
   
   // 캔버스에서 생성된 이미지 데이터를 가져옵니다.
   const imgData = canvas.toDataURL('image/png');
@@ -208,11 +257,6 @@ const generatePDF = async () => {
 
   return pdfBlob;
 };
-
-
-
-
-
 
   const uploadPDF = async (pdfBlob) => {
     try {
@@ -277,6 +321,10 @@ const generatePDF = async () => {
     setIsWorkConditionExempt(e.target.checked);
   };
 
+
+  
+
+
   return (
   
     <div className={`${styles.body} ${styles.resumeForm}`}>
@@ -334,6 +382,8 @@ const generatePDF = async () => {
           <li onClick={() => handleSidebarClick('certificates')}>자격증</li>
           <li onClick={() => handleSidebarClick('military')}>병역사항</li>
           <li onClick={() => handleSidebarClick('workConditions')}>희망근무조건</li>
+          <li onClick={() => handleSidebarClick('selfIntroduction')}>자기소개</li>
+          <li onClick={() => handleSidebarClick('motivation')}>지원동기</li>
         </ul>
       </div>
       
@@ -342,7 +392,7 @@ const generatePDF = async () => {
       <div className={styles.formContainer} >
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.mb5}>
-            <div className={styles.inputWithIcon}>
+            <div className={styles.inputWithIconTitle}>
               <CreateIcon className={styles.icon} />
               <input
                 type="title"
@@ -1002,7 +1052,59 @@ const generatePDF = async () => {
               </div>
             </div>
             
+            <hr className={styles.hr} />
+
+            <div className={styles.formGroup} ref={sectionsRef.selfIntroduction}>
+            <div className={styles.sectionHeaderContainer}>
+              <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>자기소개</h2>
+              <span className={styles.subText}>AI 첨삭 기능</span>
+              <button
+                type="button"
+                className={proofreadStyles.proofreadButton}
+                onClick={() => handleProofread(selfIntroduction)}
+              >
+                맞춤법 검사
+              </button>
+            </div>
+            <div className={styles.textareaContainer}>
+              <textarea
+                placeholder="본인을 소개하는 글을 작성해주세요."
+                value={selfIntroduction}
+                onChange={handleSelfIntroductionChange}
+                maxLength="2000"
+              />
+              <div className={styles.charCounter}>{selfIntroduction.length}/2000</div>
+            </div>
+          </div>
+
+          <hr className={styles.hr} />
+
+          
+
+          <div className={styles.formGroup} ref={sectionsRef.motivation}>
+            <div className={styles.sectionHeaderContainer}>
+              <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>지원동기</h2>
+              <span className={styles.subText}>AI 첨삭 기능</span>
+              <button
+                type="button"
+                className={proofreadStyles.proofreadButton}
+                onClick={() => handleProofread(motivation)}
+              >
+                맞춤법 검사
+              </button>
+            </div>
+            <div className={styles.textareaContainer}>
+              <textarea
+                placeholder="회사에 지원하게된 동기를 작성해주세요."
+                value={motivation}
+                onChange={handleMotivationChange}
+                maxLength="2000"
+              />
+              <div className={styles.charCounter}>{motivation.length}/2000</div>
+            </div>
+          </div>
             
+    
 
 
             <div className={styles.centerButtons} style={{ marginTop: '30px' }}>
@@ -1018,8 +1120,7 @@ const generatePDF = async () => {
       </div>
       </div>
 
-      {/* 맞춤법 검사 사이드바 */}
-      {isProofreadSidebarOpen && (
+            {isProofreadSidebarOpen && (
         <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
           <div className={proofreadStyles.sidebarHeader}>
             <h3>맞춤법 검사 결과</h3>

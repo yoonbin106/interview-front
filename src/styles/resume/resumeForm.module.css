@@ -602,6 +602,33 @@
   
 }
 
+.inputWithIconTitle {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 5px; /* 기본 패딩 */
+  box-sizing: border-box;
+}
+
+.inputWithIconTitle:focus-within {
+  border-color: #000;
+  border-width: 2px;  /* 보더 두께를 2px로 증가 */
+  padding: 4px; /* 보더가 두꺼워지면 패딩을 줄여서 내부 내용이 움직이지 않도록 조정 */
+}
+
+.inputWithIconTitle input {
+  border: none;
+  outline: none;
+  flex: 1;
+}
+
+.inputWithIconTitle .icon {
+  margin-right: 5px;
+  color: #adb5bd;
+}
+
+
 .inputWithIcon input {
   border: none;
   outline: none;
