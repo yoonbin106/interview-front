@@ -163,40 +163,53 @@ function ResumeForm() {
 };
 
 
-  const generatePDF = async () => {
-    const content = document.getElementById('resume-content');
-    
-    // scale 값을 크게 하여 고해상도로 캔버스를 생성
-    const canvas = await html2canvas(content, { scale: 1.5 });
-    
-    // 캔버스에서 생성된 이미지 데이터를 가져옵니다.
-    const imgData = canvas.toDataURL('image/png');
-    
-    const pdf = new jsPDF('p', 'mm', 'a4', true);
-    
-    const imgWidth = 210; // PDF의 너비 (A4)
-    const pageHeight = 295; // PDF의 높이 (A4)
-    
-    // PDF의 전체 너비를 채우도록 이미지 높이 계산
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    let heightLeft = imgHeight;
-    let position = 0;
-    
-    // 첫 페이지에 이미지 추가
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-    
-    // 남은 컨텐츠를 추가 페이지로 나누기
-    while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-    }
-    
-    const pdfBlob = pdf.output('blob');
-    return pdfBlob;
+const generatePDF = async () => {
+  // 모든 버튼 요소들을 찾습니다
+  const buttons = document.querySelectorAll('button');
+  
+  // 버튼들을 숨깁니다
+  buttons.forEach(button => button.style.display = 'none');
+  
+  const content = document.getElementById('resume-content');
+  
+  // scale 값을 크게 하여 고해상도로 캔버스를 생성
+  const canvas = await html2canvas(content, { scale: 1.5 });
+  
+  // 캔버스에서 생성된 이미지 데이터를 가져옵니다.
+  const imgData = canvas.toDataURL('image/png');
+  
+  const pdf = new jsPDF('p', 'mm', 'a4', true);
+  
+  const imgWidth = 210; // PDF의 너비 (A4)
+  const pageHeight = 295; // PDF의 높이 (A4)
+  
+  // PDF의 전체 너비를 채우도록 이미지 높이 계산
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  let heightLeft = imgHeight;
+  let position = 0;
+  
+  // 첫 페이지에 이미지 추가
+  pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  heightLeft -= pageHeight;
+  
+  // 남은 컨텐츠를 추가 페이지로 나누기
+  while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+  }
+
+  // PDF Blob을 생성
+  const pdfBlob = pdf.output('blob');
+
+  // 숨겼던 버튼들을 다시 표시합니다
+  buttons.forEach(button => button.style.display = '');
+
+  return pdfBlob;
 };
+
+
 
 
 
@@ -325,6 +338,7 @@ function ResumeForm() {
       </div>
       
       <div id="resume-content">
+        
       <div className={styles.formContainer} >
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.mb5}>
@@ -988,9 +1002,10 @@ function ResumeForm() {
               </div>
             </div>
             
-            <hr className={styles.hr} />
             
-          <div className={styles.centerButtons} style={{ marginTop: '30px' }}>
+
+
+            <div className={styles.centerButtons} style={{ marginTop: '30px' }}>
             <div className={styles.formGroup}>
               <button type="button" className={`${styles.cancelBtn} ${styles.sameWidthBtn} ${styles.button}`} onClick={handleCancel}>취소</button>
             </div>
@@ -998,6 +1013,7 @@ function ResumeForm() {
               <button type="submit" className={`${styles.submitBtn} ${styles.sameWidthBtn} ${styles.button}`}>저장 후 다음</button>
             </div>
           </div>
+          
         </form>
       </div>
       </div>

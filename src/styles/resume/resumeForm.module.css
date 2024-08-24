@@ -378,9 +378,11 @@
 
 .submitBtn {
   background-color: #5A8AF2;
-  padding: 7px;
+  padding: 6.5px;
   width: 120px;
   font-size: 14px !important;
+  margin-top: 15.3px;
+ 
 }
 
 .button[type="cancel"],
@@ -389,6 +391,8 @@
   padding: 6px;
   width: 120px;
   font-size: 14px !important;
+  margin-top: 15px;
+  margin-right: 10px;
 
 }
 
