@@ -7,7 +7,7 @@ import { cancelPayment } from 'api/user';
 const Payment = () => {
 
     const cancelPayment2 = () => {
-        const paymentKey = "tviva202408232211599t7e4"; // 실제 paymentKey 값을 사용
+        const paymentKey = "tviva2024082418114390I53"; // 실제 paymentKey 값을 사용
         cancelPayment(paymentKey);
     };
 
@@ -102,7 +102,7 @@ const Payment = () => {
                                 <div className={styles.ticketButtonFrame}>
                                     <div>10,000 원</div>
                                     <PremiumPaymentCheckoutPage/>
-                                    {/* <button type="button" onClick={cancelPayment2}>취소</button> */}
+                                    <button type="button" onClick={cancelPayment2}>취소</button>
                                 </div>
 
                             </div>
