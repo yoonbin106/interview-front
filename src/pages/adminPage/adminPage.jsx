@@ -1,7 +1,7 @@
 //adminMainPage.jsx
 
 import React from 'react';
-import AdminMain from '@/components/adminPage/AdminMain'; // AdminMain 컴포넌트를 불러옵니다.
+import AdminMain from '@/components/adminPage/adminMain'; // AdminMain 컴포넌트를 불러옵니다.
 const AdminMainPage = () => {
     return (
         <div>

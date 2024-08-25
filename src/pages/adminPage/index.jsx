@@ -1,5 +1,5 @@
 import React from 'react';
-import AdminMain from './adminMainPage';
+import AdminMain from './adminPage';
 
 const Index = () => {
     return <>

@@ -5,6 +5,10 @@ import { Container, Row, Col, Card, Table } from 'react-bootstrap';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminMain.module.css';
+import dynamic from 'next/dynamic';
+
+// AdminMainCharts 컴포넌트를 동적 로딩으로 가져온다.
+const AdminMainCharts = dynamic(() => import('@/components/adminPage/adminMainCharts'),{ssr:false});
 
 const AdminMain = () => {
     const [currentFormattedDate, setCurrentFormattedDate] = useState(''); // 현재 날짜를 포맷팅하여 저장하는 상태 변수
@@ -102,8 +106,6 @@ const AdminMain = () => {
                 <Container fluid className={styles.adminMainContainerFluid}>
                     <Row className={styles.adminMainContent}>
                         <h2 className={styles.adminMainTitle}>관리자페이지 홈</h2>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                        </div>
                         <Col className={styles.adminMainColPadding}>
                             
                             {/* 사이트 종합 정보 카드 */}
@@ -114,18 +116,12 @@ const AdminMain = () => {
                                 <Card.Body>
                                     <div className={styles.infoTableContainer}>
                                         <div className={styles.infoTableColumn}>
-                                            <div>오늘의 가입회원</div>
-                                            <div>: 2000명</div>
+                                            <AdminMainCharts chartType="signup" />
                                         </div>
                                         <div className={styles.infoTableColumn}>
-                                            <div>현재 사이트 접속자 수</div>
-                                            <div>: 732명</div>
+                                            <AdminMainCharts chartType="activeUsers" />
                                         </div>
-                                        <div className={styles.infoTableColumn}>
-                                            <div>회원의 평균 체류 시간</div>
-                                            <div>: 78분</div>
                                         </div>
-                                    </div>
                                 </Card.Body>
                             </Card>
 

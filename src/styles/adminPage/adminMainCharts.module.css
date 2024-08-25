@@ -1,0 +1,27 @@
+.adminMainChartContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    padding: 10px;
+  }
+  
+  .adminMainChartTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .adminMainChart {
+    width: 100%;
+  }
+  
+  .adminMainChartContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  
