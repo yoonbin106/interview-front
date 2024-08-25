@@ -182,29 +182,41 @@ function ResumeForm() {
 
   const confirmAction = async () => {
     if (modalContent === '정보를 저장하고<br/>다음으로 넘어가시겠습니까?') {
-      try {
-        const pdfData = await generatePDF();
-        const formDataToSend = new FormData(); // 새로운 FormData 객체 생성
-        formDataToSend.append('file', pdfData);
-        formDataToSend.append('title', formData.resume_title);  // formData state에서 가져옴
-        formDataToSend.append('email', formData.email);         // formData state에서 가져옴
+        try {
+            const pdfData = await generatePDF();
+            const formDataToSend = new FormData();
+            formDataToSend.append('file', pdfData);
+            formDataToSend.append('title', formData.resume_title);
+            formDataToSend.append('email', formData.email);
+    
+            const uploadResponse = await axios.post('http://localhost:8080/api/resume/upload', formDataToSend, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
 
-        await axios.post('http://localhost:8080/api/resume/upload', formDataToSend, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+            const resumeId = uploadResponse.data.resumeId;  // 업로드 후 받은 resumeId가 있다고 가정
 
-        setIsModalOpen(false);
-        setIsConfirmationOpen(true);
-      } catch (error) {
-        console.error('에러 발생:', error);
-      }
+            // JSON 형태로 전송
+            await axios.post('http://localhost:8080/api/resume/proofread/save', {
+              resumeId: resumeId,
+              selfIntroduction: selfIntroduction,
+              motivation: motivation
+            });
+    
+            setIsModalOpen(false);
+            setIsConfirmationOpen(true);
+        } catch (error) {
+            console.error('에러 발생:', error);
+        }
     } else {
-      setIsModalOpen(false);
-      router.push('/resume/resumeList');
+        setIsModalOpen(false);
+        router.push('/resume/resumeList');
     }
 };
+
+  
+  
 
 
 const generatePDF = async () => {
@@ -391,15 +403,13 @@ const generatePDF = async () => {
         
       <div className={styles.formContainer} >
         <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.mb5}>
-            <div className={styles.inputWithIconTitle}>
-              <CreateIcon className={styles.icon} />
+        <div className={styles.formGroup}>
               <input
                 type="title"
                 placeholder="이력서 제목을 입력하세요"
-                className={styles.input}
                 name="resume_title"
                 value={formData.resume_title}
+                className={styles.input}
                 onChange={(e) => {
                   setFormData({ ...formData, resume_title: e.target.value });
                   if (e.target.value.trim() !== '') {
@@ -407,7 +417,7 @@ const generatePDF = async () => {
                   }
                 }}
               />
-            </div>
+      
             {showTitleError && (
               <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
                 ※ 이력서 제목을 입력하세요
@@ -1057,7 +1067,6 @@ const generatePDF = async () => {
             <div className={styles.formGroup} ref={sectionsRef.selfIntroduction}>
             <div className={styles.sectionHeaderContainer}>
               <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>자기소개</h2>
-              <span className={styles.subText}>AI 첨삭 기능</span>
               <button
                 type="button"
                 className={proofreadStyles.proofreadButton}
@@ -1084,7 +1093,6 @@ const generatePDF = async () => {
           <div className={styles.formGroup} ref={sectionsRef.motivation}>
             <div className={styles.sectionHeaderContainer}>
               <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>지원동기</h2>
-              <span className={styles.subText}>AI 첨삭 기능</span>
               <button
                 type="button"
                 className={proofreadStyles.proofreadButton}

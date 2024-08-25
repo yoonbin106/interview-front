@@ -267,6 +267,17 @@
   padding-left: 10px;
 }
 
+.input[type="title"]{
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #6c757d;
+  padding-left: 15px;
+  align-items: baseline !important;
+}
 
 .input[type="month"] {
   padding: 5px;
@@ -277,16 +288,6 @@
   box-sizing: border-box;
   color: #6c757d;
   padding-left: 10px;
-}
-
-.input[type="title"]{
-  padding: 5px;
-  font-size: 23px;
-  border: none;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #000000;
 }
 
 .input[type="file"] {
@@ -333,16 +334,13 @@
 .resulttextareacontainer textarea {
   width: 100%;
   padding: 10px;
-  font-size: 16px;
+  font-size: 13px;
   color: #343a40;
   border: 1px solid #ced4da;
   border-radius: 4px;
   resize: none;
   box-sizing: border-box;
-}
-
-.textareaContainer textarea {
-  height: 300px;
+  height: 580px;
 }
 
 .textareaContainer .charCounter {
@@ -355,6 +353,7 @@
 
 .input[type="text"]::placeholder,
 .input[type="email"]::placeholder,
+.input[type="title"]::placeholder,
 .textarea::placeholder,
 .input[type="month"]::placeholder { /* month 필드도 동일하게 적용 */
   color: #adb5bd !important;
@@ -583,61 +582,11 @@
   color: #adb5bd;
 }
 
-
-
-
 .centerButtons {
   display: flex;
   justify-content: center;
   gap: 8px;
   align-items: center;
-}
-
-.inputWithIcon {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  padding: 5px;
-  
-}
-
-.inputWithIconTitle {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  padding: 5px; /* 기본 패딩 */
-  box-sizing: border-box;
-}
-
-.inputWithIconTitle:focus-within {
-  border-color: #000;
-  border-width: 2px;  /* 보더 두께를 2px로 증가 */
-  padding: 4px; /* 보더가 두꺼워지면 패딩을 줄여서 내부 내용이 움직이지 않도록 조정 */
-}
-
-.inputWithIconTitle input {
-  border: none;
-  outline: none;
-  flex: 1;
-}
-
-.inputWithIconTitle .icon {
-  margin-right: 5px;
-  color: #adb5bd;
-}
-
-
-.inputWithIcon input {
-  border: none;
-  outline: none;
-  flex: 1;
-}
-
-.inputWithIcon .icon {
-  margin-right: 5px;
-  color: #adb5bd;
 }
 
 .react-datepicker__month {

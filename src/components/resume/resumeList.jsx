@@ -10,7 +10,6 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Button from '@mui/material/Button';
 import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
@@ -113,7 +112,7 @@ const ResumeList = () => {
 
   const handleAIProofreadClick = (resumeId, event) => {
     event.stopPropagation();
-    router.push('/resume/resumeForm2');
+    router.push(`/resume/resumeForm2?resumeId=${resumeId}`);
   };
 
   const filteredResumes = resumes.filter((resume) =>
