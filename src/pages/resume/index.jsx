@@ -172,7 +172,7 @@ function ResumeForm() {
       return;
     }
   
-    setModalContent('정보를 저장하고<br/>다음으로 넘어가시겠습니까?');
+    setModalContent('작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?');
     setIsModalOpen(true);
   };
 
@@ -181,7 +181,7 @@ function ResumeForm() {
   };
 
   const confirmAction = async () => {
-    if (modalContent === '정보를 저장하고<br/>다음으로 넘어가시겠습니까?') {
+    if (modalContent === '작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?') {
         try {
             const pdfData = await generatePDF();
             const formDataToSend = new FormData();
@@ -413,7 +413,7 @@ const generatePDF = async () => {
                 onChange={(e) => {
                   setFormData({ ...formData, resume_title: e.target.value });
                   if (e.target.value.trim() !== '') {
-                    setShowTitleError(false);  // 제목 입력 시 에러 메시지 숨기기
+                   setShowTitleError(false);  // 제목 입력 시 에러 메시지 숨기기
                   }
                 }}
               />
@@ -1120,7 +1120,7 @@ const generatePDF = async () => {
               <button type="button" className={`${styles.cancelBtn} ${styles.sameWidthBtn} ${styles.button}`} onClick={handleCancel}>취소</button>
             </div>
             <div className={styles.formGroup}>
-              <button type="submit" className={`${styles.submitBtn} ${styles.sameWidthBtn} ${styles.button}`}>저장 후 다음</button>
+              <button type="submit" className={`${styles.submitBtn} ${styles.sameWidthBtn} ${styles.button}`}>이력서 저장</button>
             </div>
           </div>
           

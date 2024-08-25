@@ -190,7 +190,7 @@ const ResumeList = () => {
               >
                 <div className={styles.resumeHeader}>
                   <div className={styles.resumeTitleContainer}>
-                    <DescriptionIcon sx={{ color: '#959697' }} className={styles.resumeicon} />
+                    <DescriptionIcon sx={{ color: '#5A8AF2' }} className={styles.resumeicon} />
                     <span className={styles.resumetext}>{resume.title || 'Untitled'}</span>
                   </div>
                   <div className={styles.resumeDateContainer}>

@@ -269,12 +269,12 @@
 
 .input[type="title"]{
   padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ced4da;
+  font-size: 20px;
+  border: 2px solid #ced4da;
   border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
-  color: #6c757d;
+  color: #0c0d0e;
   padding-left: 15px;
   align-items: baseline !important;
 }
@@ -300,6 +300,10 @@
   color: #6c757d;
   
 }
+
+
+
+
 
 .select{
   padding: 5px;
@@ -334,13 +338,13 @@
 .resulttextareacontainer textarea {
   width: 100%;
   padding: 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: #343a40;
   border: 1px solid #ced4da;
   border-radius: 4px;
   resize: none;
   box-sizing: border-box;
-  height: 580px;
+  height: 650px;
 }
 
 .textareaContainer .charCounter {
@@ -377,20 +381,19 @@
 
 .submitBtn {
   background-color: #5A8AF2;
-  padding: 6.5px;
+  padding: 8.25px;
   width: 120px;
   font-size: 14px !important;
   margin-top: 15.3px;
- 
 }
 
 .button[type="cancel"],
 .cancelBtn {
   background-color: #6c757d;
-  padding: 6px;
+  padding: 8.04px;
   width: 120px;
   font-size: 14px !important;
-  margin-top: 15px;
+  margin-top: 15.6px;
   margin-right: 10px;
 
 }
