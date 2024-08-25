@@ -1,8 +1,8 @@
-.qnaTableContainer {
+.adminQnaTableContainer {
   margin-top: 20px;
 }
 
-.qnaHeaderCell {
+.adminQnaHeaderCell {
   font-weight: bold;
   background-color: #4A90E2;
   color: white;
@@ -10,19 +10,19 @@
   white-space:nowrap;
 }
 
-.qnaTableLink {
+.adminQnaTableLink {
   color: black;
   cursor: pointer;
   text-decoration: none;
 }
 
-.qnaTableLink:hover {
+.adminQnaTableLink:hover {
   text-decoration: underline;
 }
 
 
 
-.qnaContainer {
+.adminQnaContainer {
   display: flex;
   margin: 30px 30px 30px 30px;
   width: 100%;
@@ -30,14 +30,14 @@
   justify-content: center;
 }
 
-.qnaSidebar {
+.adminQnaSidebar {
   border: solid 2px;
   border-color: #DEFFF5;
   margin: 10px 20px 10px 10px;
   min-width: 200px;
 }
 
-.qnaContent {
+.adminQnaContent {
   background-color: white;
   padding: 20px;
   margin: 10px 10px 10px 10px;
@@ -53,42 +53,74 @@
 
 
 
-.mainContainer {
+.adminQnaMainContainer {
   padding: 20px;
 }
 
-.pageControlButtons {
+.adminQnaPageControlButtons {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.searchContainer {
+.adminQnaSearchContainer {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-.statusFilter, .searchCategory, .searchTerm {
+.adminQnaStatusFilter, .adminQnaSearchCategory, .adminQnaSearchTerm {
   width: 100%;
 }
 
-.searchButton {
+.adminQnaSearchButton {
   height: 56px;
   width: 100%;
   background-color: #4A90E2;
   color: white;
 }
 
-.qnaTitle {
+.adminQnaTitle {
   margin: 15px;
   white-space: nowrap;
   font-size: 40px;
 }
 
-.qnaTitleCell {
+.adminQnaTitleCell {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* 페이지네이션 컨트롤 박스 스타일 */
+.adminQnaPaginationControl {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 버튼 스타일 */
+.adminQnaPaginationButton {
+  min-width: 60px;
+  text-align: center;
+  padding: 8px 16px;
+  margin: 0 4px;
+}
+
+.adminQnaPaginationButton:last-of-type {
+  margin-right: 0;
+  margin-left: 4px;
+}
+
+/* 현재 페이지와 전체 페이지 수를 표시하는 스타일 */
+.adminQnaPageIndicator {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+/* 페이지당 표시할 행 수 선택 스타일 */
+.adminQnaRowsPerPageSelect {
+  margin-left: 16px;
 }

@@ -11,16 +11,16 @@ const PaginationTableQna = ({ rows, page, rowsPerPage }) => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <TableContainer component={Paper} className={styles.qnaTableContainer}>
+    <TableContainer component={Paper} className={styles.adminQnaTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
             {/* 테이블 헤더 정의 */}
-            <TableCell align="center" className={styles.qnaHeaderCell}>글 번호</TableCell>
-            <TableCell align="center" className={styles.qnaHeaderCell}>카테고리</TableCell>
-            <TableCell align="center" className={styles.qnaHeaderCell}>제목</TableCell>
-            <TableCell align="center" className={styles.qnaHeaderCell}>작성자</TableCell>
-            <TableCell align="center" className={styles.qnaHeaderCell}>작성날짜</TableCell>
+            <TableCell align="center" className={styles.adminQnaHeaderCell}>글 번호</TableCell>
+            <TableCell align="center" className={styles.adminQnaHeaderCell}>카테고리</TableCell>
+            <TableCell align="center" className={styles.adminQnaHeaderCell}>제목</TableCell>
+            <TableCell align="center" className={styles.adminQnaHeaderCell}>작성자</TableCell>
+            <TableCell align="center" className={styles.adminQnaHeaderCell}>작성날짜</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -32,8 +32,8 @@ const PaginationTableQna = ({ rows, page, rowsPerPage }) => {
             <TableRow key={row.id}>
               <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">{`[${row.category}]`}</TableCell>
-              <TableCell align="center" className={styles.qnaTitleCell}>
-                <a href={`/adminPage/adminQnaDetailsPage`} className={styles.qnaTableLink}>
+              <TableCell align="center" className={styles.adminQnaTitleCell}>
+                <a href={`/adminPage/adminQnaDetailsPage`} className={styles.adminQnaTableLink}>
                   {row.title}
                 </a>
               </TableCell>
@@ -126,16 +126,16 @@ const AdminQna = () => {
     const totalPages = Math.ceil(filteredQna.length / rowsPerPage); // 전체 페이지 수 계산
 
     return (
-        <div className={styles.qnaContainer}>
-            <div className={styles.qnaSidebar}>
+        <div className={styles.adminQnaContainer}>
+            <div className={styles.adminQnaSidebar}>
                 <NestedList /> {/* 사이드 메뉴 컴포넌트 */}
             </div>
-            <div className={styles.qnaContent}>
-                <div className={styles.qnaMainContainer}>
+            <div className={styles.adminQnaContent}>
+                <div className={styles.adminQnaMainContainer}>
                     <div>
                         {/* 페이지 상단: 제목 */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2 className={styles.qnaTitle}>고객센터 문의사항</h2>
+                            <h2 className={styles.adminQnaTitle}>고객센터 문의사항</h2>
                         </div>
                             
                         {/* 필터링된 QnA를 테이블로 렌더링 */}
@@ -203,13 +203,13 @@ const AdminQna = () => {
                             </Grid>
                         </Grid> 
 
-                        {/* 페이지네이션 컨트롤 */}
-                        <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                       {/* 페이지네이션 컨트롤 */}
+                        <Box className={styles.adminQnaPaginationControl}>
                             <Button
                                 variant="outlined"
                                 onClick={() => handleChangePage(0)}
                                 disabled={page === 0}
-                                sx={{ marginRight: 2 }}
+                                className={styles.adminQnaPaginationButton}
                             >
                                 처음
                             </Button>
@@ -217,16 +217,16 @@ const AdminQna = () => {
                                 variant="outlined"
                                 onClick={() => handleChangePage(page - 1)}
                                 disabled={page === 0}
-                                sx={{ marginRight: 2 }}
+                                className={styles.adminQnaPaginationButton}
                             >
                                 이전
                             </Button>
-                            <span>{page + 1} / {totalPages}</span>
+                            <span className={styles.adminQnaPageIndicator}>{page + 1} / {totalPages}</span>
                             <Button
                                 variant="outlined"
                                 onClick={() => handleChangePage(page + 1)}
                                 disabled={page >= totalPages - 1}
-                                sx={{ marginLeft: 2 }}
+                                className={styles.adminQnaPaginationButton}
                             >
                                 다음
                             </Button>
@@ -234,7 +234,7 @@ const AdminQna = () => {
                                 variant="outlined"
                                 onClick={() => handleChangePage(totalPages - 1)}
                                 disabled={page >= totalPages - 1}
-                                sx={{ marginLeft: 2 }}
+                                className={styles.adminQnaPaginationButton}
                             >
                                 마지막
                             </Button>
@@ -242,7 +242,7 @@ const AdminQna = () => {
                             <Select
                                 value={rowsPerPage}
                                 onChange={handleRowsPerPageChange}
-                                sx={{ marginLeft: 2 }}
+                                className={styles.adminQnaRowsPerPageSelect}
                             >
                                 <MenuItem value={5}>5</MenuItem>
                                 <MenuItem value={10}>10</MenuItem>

@@ -1,0 +1,45 @@
+.bbsQnaRegisterPageContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .bbsQnaRegisterPageTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .bbsQnaRegisterFormContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .bbsQnaRegisterFormControl {
+    margin-bottom: 20px;
+  }
+  
+  .bbsQnaRegisterTextField {
+    margin-bottom: 20px;
+  }
+  
+  .bbsQnaRegisterCharacterCount {
+    font-size: 12px;
+    text-align: right;
+    margin-bottom: 20px;
+    color: #888;
+  }
+  
+  .bbsQnaRegisterSubmitButton {
+    background-color: #4A90E2;
+    color: white;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+  
+  .bbsQnaRegisterInfoText {
+    font-size: 14px;
+    color: #4A90E2;
+    line-height: 1.5;
+    margin-top: 20px;
+  }

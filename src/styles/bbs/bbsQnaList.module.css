@@ -1,0 +1,57 @@
+/* bbsQnaList.module.css */
+.bbsQnaListContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .bbsQnaListContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+  
+  .bbsQnaListIllustration {
+    width: 500px;
+    height: auto;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .bbsQnaListEmptyText {
+    font-size: 1.5rem;
+    color: #888;
+  }
+  
+  .bbsQnaListTableContainer {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .bbsQnaListHeaderCell {
+    font-weight: bold;
+    background-color: #4A90E2;
+    color: white;
+    white-space: nowrap;
+  }
+  
+  .bbsQnaListTitleCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .bbsQnaListTableLink {
+    color: black;
+    text-decoration: none;
+  }
+  
+  .bbsQnaListTableLink:hover {
+    text-decoration: underline;
+  }

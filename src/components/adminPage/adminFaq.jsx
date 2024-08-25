@@ -7,9 +7,9 @@ import styles from '@/styles/adminPage/adminFaq.module.css';
 
 const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, totalPages, handleCategoryChange, selectedCategory }) => {
     return (
-        <div className={styles.faqContainer}>
+        <div className={styles.adminFaqContainer}>
             {/* 페이지 헤더: 제목과 새 FAQ 등록 버튼 */}
-            <Box mb={3} className={styles.faqHeader}>
+            <Box mb={3} className={styles.adminFaqHeader}>
                 <Typography variant="h3" gutterBottom>
                     자주 묻는 질문 (FAQ)
                 </Typography>
@@ -19,9 +19,9 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
             </Box>
 
             {/* 카테고리 검색 필터 */}
-            <Box mb={3} className={styles.faqCategorySearch}>
+            <Box mb={3} className={styles.adminFaqCategorySearch}>
                 <FormControl fullWidth variant="outlined">
-                    <InputLabel>카테고리로 검색</InputLabel>
+                <InputLabel className={styles.adminFaqCategoryLabel}>카테고리를 선택하여 검색해보세요.</InputLabel>
                     <Select
                         value={selectedCategory}
                         onChange={handleCategoryChange}
@@ -30,11 +30,11 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                         <MenuItem value="">
                             <em>전체</em>
                         </MenuItem>
-                        <MenuItem value="계정 및 로그인" className={styles.faqMenuItem}>계정 및 로그인</MenuItem>
-                        <MenuItem value="AI 면접 준비" className={styles.faqMenuItem}>AI 면접 준비</MenuItem>
-                        <MenuItem value="기술 문제 해결" className={styles.faqMenuItem}>기술 문제 해결</MenuItem>
-                        <MenuItem value="결제 및 환불" className={styles.faqMenuItem}>결제 및 환불</MenuItem>
-                        <MenuItem value="기타" className={styles.faqMenuItem}>기타</MenuItem>
+                        <MenuItem value="계정 및 로그인" className={styles.adminFaqMenuItem}>계정 및 로그인</MenuItem>
+                        <MenuItem value="AI 면접 준비" className={styles.adminFaqMenuItem}>AI 면접 준비</MenuItem>
+                        <MenuItem value="기술 문제 해결" className={styles.adminFaqMenuItem}>기술 문제 해결</MenuItem>
+                        <MenuItem value="결제 및 환불" className={styles.adminFaqMenuItem}>결제 및 환불</MenuItem>
+                        <MenuItem value="기타" className={styles.adminFaqMenuItem}>기타</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
@@ -61,12 +61,12 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
             }
 
             {/* 페이지네이션 컨트롤 */}
-            <Box className={styles.faqPagination}>
+            <Box className={styles.adminFaqPaginationControl}>
                 <Button
                     variant="outlined"
                     onClick={() => onPageChange(0)}
                     disabled={page === 0}
-                    className={styles.faqPaginationButton}
+                    className={styles.adminFaqPaginationButton}
                 >
                     처음
                 </Button>
@@ -74,7 +74,7 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                     variant="outlined"
                     onClick={() => onPageChange(page - 1)}
                     disabled={page === 0}
-                    className={styles.faqPaginationButton}
+                    className={styles.adminFaqPaginationButton}
                 >
                     이전
                 </Button>
@@ -83,7 +83,7 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                     variant="outlined"
                     onClick={() => onPageChange(page + 1)}
                     disabled={page >= totalPages - 1}
-                    className={styles.faqPaginationButton}
+                    className={styles.adminFaqPaginationButton}
                 >
                     다음
                 </Button>
@@ -91,7 +91,7 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                     variant="outlined"
                     onClick={() => onPageChange(totalPages - 1)}
                     disabled={page >= totalPages - 1}
-                    className={styles.faqPaginationButton}
+                    className={styles.adminFaqPaginationButton}
                 >
                     마지막
                 </Button>
@@ -99,7 +99,7 @@ const AdminFaq = ({ faqs, onPageChange, onRowsPerPageChange, rowsPerPage, page, 
                 <Select
                     value={rowsPerPage}
                     onChange={onRowsPerPageChange}
-                    className={styles.faqRowsPerPageSelect}
+                    className={styles.adminFaqRowsPerPageSelect}
                 >
                     <MenuItem value={5}>5</MenuItem>
                     <MenuItem value={10}>10</MenuItem>

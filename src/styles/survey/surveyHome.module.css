@@ -5,6 +5,8 @@
     height: 1000px;
 }
 
+
+
 .surveyCenterFrameWidth {
     display: flex;
     justify-content: center;
@@ -166,3 +168,83 @@
     height: 80px; /* 로고 이미지의 높이도 고정 */
     object-fit: contain; /* 이미지의 크기를 조정하면서 왜곡 없이 표시 */
 }
+
+
+/* 여기는 설문조사결과페이지에서 아래 쪽 추가한것들입니다 돈터치  */
+
+.iframeContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: white;
+}
+
+.iframeContainer iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.iframeContainer button {
+    position: absolute;
+    top: 1px;
+    right: 19px;
+    padding: 10px 20px;
+    z-index: 1001;
+    background-color: #5A8AF2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.uploadButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #5A8AF2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+}
+
+.uploadButton:hover {
+    background-color: #3366CC;
+    border-color: #1E4B99;
+    box-shadow: 0 8px 20px rgba(0, 51, 204, 0.5);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.extractedTextContainer {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.extractedTextContainer h3 {
+    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.extractedTextContainer pre {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+    color: #333;
+}
+
+
