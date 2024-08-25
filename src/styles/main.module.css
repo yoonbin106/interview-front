@@ -266,6 +266,7 @@
   height: 630px;
 
 }
+/* 맨왼쪽위칸이랑 맨오른쪽 아래칸 공유  */
 .keyWordBoxGrey{
   display: flex;
   justify-content: center;
@@ -275,6 +276,7 @@
   border-radius: 16px;
   background-color: #5A8AF2;
 }
+/* 맨오른쪽아래칸 왼쪽칸  */
 .keyWordBoxWhite{
   display: flex;
   justify-content: center;
@@ -283,6 +285,7 @@
   height: 300px;
   border-radius: 16px;
   background-color: #ffffff;
+  padding-right: 23px;
   
 }
 
@@ -335,7 +338,7 @@
   background-position: center;
   position: relative; /* 텍스트 배치를 위해 필요 */
 }
-/* 추인철 에디션  */
+/* 맨왼쪽아래칸 글자  */
 .aiText {
   font-weight: bold; 
   color: white;
@@ -343,6 +346,7 @@
   text-align: center; /* 텍스트를 중앙 정렬 */
   position: relative;
   z-index: 2; 
+  margin-bottom: 18px;
 }
 
 .boldText {
@@ -351,30 +355,42 @@
   color: #1E90FF;
 }
 
+/* 맨왼쪽아래칸 글자 한줄한줄한줄 */
 .line1 {
   font-size: 29px; /* 첫 번째 줄 텍스트 크기 */
-  margin-left: 27px; /* 첫 번째 줄은 기본 위치 */
+  margin-left: 28px; /* 첫 번째 줄은 기본 위치 */
   text-align: left; /* 왼쪽 정렬 */
+  margin-right: 28px;
+  
   
 }
 
 .line2 {
   font-size: 29px; /* 두 번째 줄 텍스트 크기 */
-  margin-left: 27px;  /* 두 번째 줄은 첫 번째 줄보다 오른쪽으로 이동 */
+  margin-left: 28px;  /* 두 번째 줄은 첫 번째 줄보다 오른쪽으로 이동 */
   text-align: left; /* 왼쪽 정렬 */
+  margin-right: 28px;
 }
 
 .line3 {
   font-size: 29px; /* 세 번째 줄 텍스트 크기 */
-  margin-left: 27px;  /* 세 번째 줄은 두 번째 줄보다 더 오른쪽으로 이동 */
+  margin-left: 28px;  /* 세 번째 줄은 두 번째 줄보다 더 오른쪽으로 이동 */
   text-align: left; /* 왼쪽 정렬 */
+  margin-right: 28px;
+}
+
+.line4 {
+  font-size: 29px; /* 세 번째 줄 텍스트 크기 */
+  margin-left: 28px;  /* 세 번째 줄은 두 번째 줄보다 더 오른쪽으로 이동 */
+  text-align: left; /* 왼쪽 정렬 */
+  margin-right: 28px;
 }
 
 
-/* 추인철 에디션  */  
+
  
 
-
+/* 가장 긴칸 중앙 왼쪽   */  
 .keyWordBoxHeight{
   display: flex;
   justify-content: center;
@@ -388,6 +404,7 @@
   display: flex;
   justify-content: space-between;
 }
+/* 맨오른쪽칸 */
 .keyWordBoxWidth{
   display: flex;
   justify-content: center;
@@ -404,15 +421,18 @@
   padding: 20px;
   box-sizing: border-box;
 }
+
+/* 맨왼쪽칸위글자 css  */
 .keyWordTextWh{
   margin-left: 30px;
   width: 240px;
   height: 240px;
-  font-size: 30px;
+  font-size: 28px;
+  text-align: center;
   font-weight: bold;
   color: #ffffff;
 }
-/* 맨오른쪽아래칸 css  */
+/* 맨오른쪽아래칸글자 css  */
 .keyWordTextWh1 {
   font-size: 28px; /* 텍스트 크기 */
   font-weight: bold; /* 굵게 표시 */
@@ -422,19 +442,27 @@
   white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
   text-align: right;
 }
-/* 추인철추가맛도리 */
+/* 맨왼쪽칸 오른쪽아래 텍스트  */
 .mainText {
   font-size: 20px; /* 텍스트 크기 조정 */
   font-weight: bold;
   color: #ffffff;
-
+  text-align: center;
   margin-bottom: -150px; /* 작은 텍스트와의 간격 */
   padding-right: 28px; /* 오른쪽 간격 조정 */
   white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
   line-height: 1.2; /* 줄 간격을 조절해보세요 */
+ 
+  
+  
 }
 
-/* 추인철추가맛도리 */
+
+
+
+
+
+/* 중앙위작은칸 */
 .keyWordTextBl{
   width: 240px;
   height: 240px;
@@ -444,6 +472,7 @@
   white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
   line-height: 1.5; /* 줄 간격을 조절해보세요 */
   text-align: left;
+  margin-left: 28px;
 }
 
 
@@ -479,10 +508,11 @@
 }
 
 .keyWordTextHeightBl{
-  margin-top: 30px;
+  margin-top: 7px;
   width: 240px;
   height: 570px;
   font-size: 25px;
+  margin-left: 28px;
   font-weight: bold;
   color: #444444;
   opacity: 0;
@@ -510,6 +540,7 @@
   padding: 0 10px; /* 텍스트와 이미지 가장자리 사이에 약간의 여백 추가 */
   white-space: wrap; /* 줄바꿈 없이 한 줄에 표시되도록 설정 */
   overflow: hidden; /* 텍스트 넘침 방지 */
+ 
   
 }
 
