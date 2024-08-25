@@ -1,0 +1,64 @@
+/* 전체 컨테이너의 padding 설정 */
+.bbsFaqContainer {
+    padding: 20px;
+}
+
+
+/* 상단 제목과 버튼을 포함한 박스의 스타일 */
+.bbsFaqHeader {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 카테고리 검색을 위한 FormControl 스타일 */
+.bbsFaqCategorySearch {
+    margin-bottom: 24px;
+    background-color: #4A90E2;
+}
+
+/* 페이지네이션 컨트롤 박스의 스타일 */
+.bbsFaqPaginationControl {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 페이지네이션 컨트롤의 버튼 스타일 */
+.bbsFaqPaginationButton {
+    min-width: 60px;
+  text-align: center;
+  padding: 8px 16px;
+  margin: 0 4px;
+}
+
+.bbsFaqPaginationButton:last-of-type {
+    margin-right: 0;
+    margin-left: 4px;
+}
+
+/* 현재 페이지와 전체 페이지 수를 표시하는 스타일 */
+.bbsFaqPageIndicator {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+/* 페이지네이션 선택 메뉴 스타일 */
+.bbsFaqRowsPerPageSelect {
+    margin-left: 16px;
+}
+
+.bbsFaqMenuItem {
+    color: white;
+    background-color: #4A90E2; /* 필요 시 배경색도 설정 가능 */
+}
+
+.bbsFaqMenuItem:hover {
+    background-color: #3A78D2; /* hover 시 배경색 */
+}
+
+.bbsFaqCategoryLabel {
+    color: white;
+    font-weight: bold;
+}
