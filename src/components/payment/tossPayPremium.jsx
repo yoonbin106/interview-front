@@ -49,7 +49,7 @@ const PremiumPaymentCheckoutPage = observer(() => {
         method: "CARD", // 카드 및 간편결제
         amount: amount,
         orderId: uuidv4(), // 고유 주문번호
-        orderName: "프리미엄 플랜",
+        orderName: "프리미엄플랜",
         successUrl: "http://localhost:3000/payment/successPremiumPayment", // 결제 요청이 성공하면 리다이렉트되는 URL
         failUrl: "http://localhost:3000/payment", // 결제 요청이 실패하면 리다이렉트되는 URL
         customerEmail: userStore.email,

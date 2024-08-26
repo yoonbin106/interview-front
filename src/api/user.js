@@ -53,6 +53,7 @@ export const logout = async (authStore, userStore) => {
   });
 };
 
+
 export const getProfileImage = async (email, userStore) => {
   try {
     const response = await axios.get(`${baseUrl}/profile-image`, {

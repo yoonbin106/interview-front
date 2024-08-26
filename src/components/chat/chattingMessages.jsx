@@ -4,7 +4,7 @@ import styles from '../../styles/chat/chattingMessages.module.css';
 
 
 
-const ChattingMessages = ({ messages, userInfo, onBack }) => {
+const ChattingMessages = ({ messages, userStore, onBack }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const ChattingMessages = ({ messages, userInfo, onBack }) => {
 
       {messages.map((message, index) => (
 
-        message.sender === userInfo.username ? (
+        message.sender === userStore.username ? (
           <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
             <div className={styles.messageContent}>
               <p>{message.text}</p>
