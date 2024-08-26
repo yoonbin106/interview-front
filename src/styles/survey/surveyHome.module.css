@@ -5,6 +5,13 @@
     height: 1000px;
 }
 
+.surveyFrame1 {
+    display: flex;
+    justify-content: center;
+    background-color: #F3F3F3;
+    min-height: 100vh; /* 화면에 꽉 차도록 설정 */
+}
+
 
 
 .surveyCenterFrameWidth {
@@ -13,6 +20,8 @@
     align-items: center;
     width: 660px;
 }
+
+
 
 .surveyCenterFrameHeight {
     display: flex;
@@ -30,6 +39,17 @@
     height: 650px;
     padding: 20px;
     box-sizing: border-box;
+}
+
+.surveyCenterFrameHeightResult1 {
+    width: 660px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: visible; /* 끼릿! 콘텐츠가 넘치면 박스가 자동으로 늘어나게 설정 */
+    min-height: auto; /* 끼릿! 높이를 자동으로 조정 */
 }
 
 .surveyMain {
@@ -54,12 +74,21 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.surveyMainResult1 {
+    width: 100%;
+}
+
 .surveyMainSection {
     display: flex;
     justify-content: center;
     flex-direction: column;
     width: 540px;
     height: 380px;
+}
+
+.surveyMainSection1 {
+    display: flex;
+    flex-direction: column;
 }
 
 .surveyTitle {
@@ -78,6 +107,12 @@
     font-size: 16px;
     color: #868686;
     margin-bottom: 20px;
+}
+
+.surveySubTitleResultx {
+    font-size: 16px;
+    color: #868686;
+ 
 }
 
 .surveySubTitleLine {
@@ -111,6 +146,21 @@
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, border-color 0.3s;
 }
 .surveyStartButtonResult {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95px;
+    height: 32px;
+    color: white;
+    border-width: 1px;
+    border-radius: 8px;
+    background-color: #5A8AF2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+}
+
+.surveyStartButtonResultx {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -219,14 +269,14 @@
     background-color: #3366CC;
     border-color: #1E4B99;
     box-shadow: 0 8px 20px rgba(0, 51, 204, 0.5);
-    transform: translateY(-3px) scale(1.05);
+    
 }
 
 .extractedTextContainer {
-    margin-top: 40px;
+    margin-top: 30px;
     padding: 20px;
     background-color: #f8f9fa;
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
 .extractedTextContainer h3 {
@@ -238,7 +288,7 @@
 
 .extractedTextContainer pre {
     background-color: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     white-space: pre-wrap;
@@ -247,4 +297,44 @@
     color: #333;
 }
 
+/* 실험용 */
+
+
+.aiServiceContainer { /* 끼릿! */
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.aiServiceContainer h4 { /* 끼릿! */
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.aiServiceContainer p { /* 끼릿! */
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.directButton { /* 끼릿! */
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.directButton:hover { /* 끼릿! */
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
 
