@@ -7,7 +7,7 @@ import { cancelPayment } from 'api/user';
 const Payment = () => {
 
     const cancelPayment2 = () => {
-        const paymentKey = "tviva2024082418114390I53"; // 실제 paymentKey 값을 사용
+        const paymentKey = "tviva20240826084742TRaw4"; // 실제 paymentKey 값을 사용
         cancelPayment(paymentKey);
     };
 
@@ -43,7 +43,7 @@ const Payment = () => {
 
                         <div className={styles.ticketplansFrameIn}>
                             <div className={styles.ticketplansFrames}>
-                                <div className={styles.tickettitle}>베이직</div>
+                                <div className={styles.tickettitle}>베이직 10회</div>
                                 <div className={styles.ticketInfo}>
                                     <div className={styles.ticketInfoIn}>
                                         <div className={styles.ticketInfoTitle}>무료 플랜 평가에 추가로 아래기능들을 더 제공합니다</div>
@@ -68,7 +68,7 @@ const Payment = () => {
 
                         <div className={styles.ticketplansFrameIn}>
                             <div className={styles.ticketplansFrames}>
-                                <div className={styles.tickettitle}>프리미엄</div>
+                                <div className={styles.tickettitle}>프리미엄 20회 + 1회</div>
                                 <div className={styles.ticketInfo}>
                                     <div className={styles.ticketInfoIn}>
                                         <div className={styles.ticketInfoTitle}>베이직 플랜 평가에 추가로 아래기능들을 더 제공합니다</div>
