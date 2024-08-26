@@ -83,7 +83,7 @@ export default function NestedList() {
         <ListItemIcon>
           <QuestionAnswerIcon /> {/* 문의 관리 아이콘 */}
         </ListItemIcon>
-        <ListItemText primary="　문의관리" />
+        <ListItemText primary="문의관리" />
         {openItems.inquiry ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.inquiry} timeout="auto" unmountOnExit>
@@ -105,7 +105,7 @@ export default function NestedList() {
         <ListItemIcon>
           <PeopleIcon /> {/* 회원 관리 아이콘 */}
         </ListItemIcon>
-        <ListItemText primary="　회원관리" />
+        <ListItemText primary="회원관리" />
         {openItems.members ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.members} timeout="auto" unmountOnExit>
@@ -123,7 +123,7 @@ export default function NestedList() {
         <ListItemIcon>
           <WarningSharpIcon /> {/* 신고 관리 아이콘 */}
         </ListItemIcon>
-        <ListItemText primary="　신고관리" />
+        <ListItemText primary="신고관리" />
         {openItems.reports ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.reports} timeout="auto" unmountOnExit>
@@ -153,7 +153,7 @@ export default function NestedList() {
         <ListItemIcon>
           <PaymentIcon /> {/* 결제 관리 아이콘 */}
         </ListItemIcon>
-        <ListItemText primary="　결제관리" />
+        <ListItemText primary="결제관리" />
         {openItems.payments ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.payments} timeout="auto" unmountOnExit>
@@ -175,7 +175,7 @@ export default function NestedList() {
         <ListItemIcon>
           <ArticleIcon /> {/* 게시글 관리 아이콘 */}
         </ListItemIcon>
-        <ListItemText primary="　게시글관리" />
+        <ListItemText primary="게시글관리" />
         {openItems.posts ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.posts} timeout="auto" unmountOnExit>

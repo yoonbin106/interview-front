@@ -37,16 +37,7 @@ const AdminFaqPage = () => {
 
     const totalPages = Math.ceil(filteredFaqs.length / rowsPerPage);
 
-    const handleCategoryChange = (event) => {
-        const category = event.target.value;
-        setSelectedCategory(category);
-        if (category) {
-            setFilteredFaqs(faqs.filter(faq => faq.category === category));
-        } else {
-            setFilteredFaqs(faqs);
-        }
-        setPage(0);
-    };
+  
 
     const handleChangePage = (newPage) => {
         setPage(newPage);
@@ -70,7 +61,6 @@ const AdminFaqPage = () => {
                     rowsPerPage={rowsPerPage} 
                     page={page} 
                     totalPages={totalPages}
-                    handleCategoryChange={handleCategoryChange}
                     selectedCategory={selectedCategory}
                 />
             </div>
