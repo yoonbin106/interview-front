@@ -1,20 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { RiUserHeartFill } from "react-icons/ri";
 import styles from '../../styles/chat/chattingList.module.css';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { MessageSquareDiff, Settings } from 'lucide-react';
 import Avatar from '@mui/material/Avatar';
 import ChattingCreateRoom from './chattingCreateRoom';
 
-const ChattingList = ({ lists, onChatClick, userInfo, users }) => {
+const ChattingList = ({ onChatClick, userStore, users, chatRoomList, getChatroomList }) => {
 
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
-
+    
+    console.log('chatRoomList print: ', chatRoomList);
     const createRoomClick = () => {
         setIsCreatingRoom(true);
     };
 
     const backToChatList = () => {
+        getChatroomList();
         setIsCreatingRoom(false);
     };
 
@@ -36,14 +37,16 @@ const ChattingList = ({ lists, onChatClick, userInfo, users }) => {
                         </div>
                     </div>
 
-                    {lists.map((list) => (
+                    {chatRoomList.map((list) => (
                         <div className={styles.chattingList} key={list.id} onClick={() => onChatClick(list.id)}>
                             <div className={styles.chattingListProfile}>
-                                <Avatar src={userInfo.profile} sx={{ width: 50, height: 50 }} />
+                                <Avatar sx={{ width: 50, height: 50 }} /> 
+                                {/* src={userInfo.profile} */}
                             </div>
                             <div className={styles.chattingListContent}>
-                                <div className={styles.chattingRoomTitle}>{list.title}</div>
-                                <div className={styles.chattingRoomLastMessage}>{list.name} : {list.lastMessage}</div>
+                                <div className={styles.chattingRoomTitle}>{list.chatRoomTitle}</div>
+                                <div className={styles.chattingRoomLastMessage}>테스트 : 테스트 마지막 메세지</div>
+                                {/* {list.name} : {list.lastMessage} */}
                             </div>
                         </div>
                     ))}
@@ -53,7 +56,7 @@ const ChattingList = ({ lists, onChatClick, userInfo, users }) => {
                     <button className={styles.chattingBackToListButton} onClick={backToChatList}>
                         <ArrowBackIosNewRoundedIcon />
                     </button>
-                    <ChattingCreateRoom onBack={backToChatList} />
+                    <ChattingCreateRoom onBack={backToChatList} userStore={userStore}/>
                     {/* users={users} */}
                 </div>
 

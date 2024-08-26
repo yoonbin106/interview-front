@@ -18,47 +18,29 @@ const Chatting = observer(({ closeChatting }) => {
     const [inputMessage, setInputMessage] = useState('');
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [userInfo, setUserInfo] = useState({
-        username: '',
-        email: '',
-        profile: ''
-    });
-    const [chatRooms, setChatRooms] = useState([]);
+    // const [userInfo, setUserInfo] = useState({
+    //     username: '',
+    //     email: '',
+    //     profile: ''
+    // });
+    const [chatRoomList, setChatRoomList] = useState([]);
 
     const { authStore, userStore } = useStores();
 
-    const [users, setUsers] = useState([]);
-
+    const [users, setUsers] = useState([]); //getAllUsers()
 
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
 
-    const lists = [
-        { id: 1, name: '김길동', title: '2팀회의 방', lastMessage: '오류나요' },
-        { id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구' },
-    ]
-
-    const chatroomList = async () => {
+    const getChatroomList = async () => {
         try {
-            const response = await axios.get('/api/chat/chatroomList'); 
+            const response = await axios.get('http://localhost:8080/api/chat/chatroomList'); 
             // 그대로 갖고오지말고 user id (나의 id) 전달해서 chatroomUsers 테이블에서 chatroom_id로 접근. 가져와서 그 findByID(chatroom_id)
-            setChatRooms(response.data);
+            setChatRoomList(response.data);
         } catch (error) {
             console.error('Error fetching chat rooms:', error);
         }
     };
-
-
-    // const getUserList = async () => {
-    //     // try {
-    //     //     const response = await axios.get('http://localhost:8080/api/chat/users');
-    //     //     setUsers(response.data);
-    //     // } catch (error) {
-    //     //     console.error('Error:', error);
-    //     // }
-
-
-    // };
 
     const getUserList = async () => {
         try{
@@ -68,22 +50,17 @@ const Chatting = observer(({ closeChatting }) => {
         catch (error) {
             console.log('error: ', error);
         }
-        
     }
 
-
     useEffect(() => {
-        //나중에 지울 것
-        setUserInfo({
-            username: localStorage.getItem('username') || '',
-            email: localStorage.getItem('email') || '',
-            profile: localStorage.getItem('profile') || ''
-        });
 
+        //이전 채팅 로딩
         loadingPastChatting();
 
-        chatroomList();
+        //채팅방 목록 얻어오기
+        getChatroomList();
 
+        //모든 유저 목록 얻어오기
         getUserList();
 
 
@@ -106,7 +83,7 @@ const Chatting = observer(({ closeChatting }) => {
                 if (topic === 'python/mqtt') {
     
                     const receivedMessage = JSON.parse(message);
-                    if (message.sender !== userInfo.username) {
+                    if (message.sender !== userStore.username) {
                         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
                     }
     
@@ -201,6 +178,8 @@ const Chatting = observer(({ closeChatting }) => {
 
     const handleChatClick = () => {
         setIsChatOpen(true);
+        //채팅 하나하나 각각 눌렀을때 ?
+
     };
 
     const handleBackClick = () => {
@@ -220,10 +199,10 @@ const Chatting = observer(({ closeChatting }) => {
     const sendMessage = async () => {
         if (inputMessage.trim()) {
 
-            const userMessage = { text: inputMessage, sender: userInfo.username };
+            const userMessage = { text: inputMessage, sender: userStore.username };
             // setMessages(prev => [...prev, userMessage]);
 
-            client.publish('python/mqtt', JSON.stringify({ text: inputMessage, sender: userInfo.username, timestamp: new Date() }));
+            client.publish('python/mqtt', JSON.stringify({ text: inputMessage, sender: userStore.username, timestamp: new Date() }));
 
 
             // client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
@@ -293,7 +272,12 @@ const Chatting = observer(({ closeChatting }) => {
                 <div className={styles.chatContent}>
 
                     {!isChatOpen ? (
-                        <ChattingList lists={lists} chatRooms={chatRooms} onChatClick={handleChatClick} userInfo={userInfo} userStore={userStore} users={users} />
+                        <ChattingList 
+                            chatRoomList={chatRoomList} 
+                            onChatClick={handleChatClick} 
+                            userStore={userStore} 
+                            users={users}
+                            getChatroomList={getChatroomList} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>
@@ -301,7 +285,7 @@ const Chatting = observer(({ closeChatting }) => {
                                     <ArrowBackIosNewRoundedIcon />
                                 </button>
                             </div>
-                            <ChattingMessages messages={messages} userInfo={userInfo} />
+                            <ChattingMessages messages={messages} userStore={userStore} />
                         </>
 
 

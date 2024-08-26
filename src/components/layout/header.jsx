@@ -14,6 +14,7 @@ import Badge from '@mui/joy/Badge';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import { logout } from '@/api/user';  // 로그아웃 API 임포트
+import { logout2 } from 'api/user';
 
 const Header = observer(() => {
   const [hover, setHover] = useState(false);
@@ -43,6 +44,19 @@ const Header = observer(() => {
 
     requestAnimationFrame(animation);
   };
+
+  // const storeReset = () => {
+  //   localStorage.clear(); // 로컬 스토리지 비우기
+  //   authStore.setLoggedIn(false);
+  //   userStore.setEmail('');
+  //   userStore.setUsername('');
+  //   userStore.setAddress('');
+  //   userStore.setGender('');
+  //   userStore.setBirth('');
+  //   userStore.setPhone('');
+  //   userStore.setProfile('');
+  //   userStore.setId('');
+  // }
 
   const handleTicketClick = (e, sectionId) => {
     e.preventDefault();
@@ -141,6 +155,7 @@ const Header = observer(() => {
               <a href="#" className={styles.navLink}>AI 서비스</a>
               <a href="#" className={styles.navLink}>커뮤니티</a>
               <a href="#" className={styles.navLink}>고객센터</a>
+              {/* <button href="#" onClick={storeReset()} className={styles.navLink}>스토어초기화</button> */}
             </nav>
             <div>
               <div className={styles.userMenu}>
