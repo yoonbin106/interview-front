@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';
-import NestedList from '@/components/adminPage/adminSideMenu';
-import AdminFaq from '@/components/adminPage/adminFaq';
+import BbsQnaSideMenu from 'components/bbs/bbsQnaSideMenu';
+import BbsFaq from 'components/bbs/bbsFaq';
 
 const BbsFaqPage = () => {
     const [filteredFaqs, setFilteredFaqs] = useState([]);
@@ -38,10 +38,10 @@ const BbsFaqPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
-                <NestedList />
+                <BbsQnaSideMenu />
             </div>
             <div className={styles.content}>
-                <AdminFaq 
+                <BbsFaq 
                     faqs={filteredFaqs}
                     onPageChange={handleChangePage} 
                     onRowsPerPageChange={handleRowsPerPageChange}
