@@ -51,7 +51,7 @@ const PremiumPaymentCheckoutPage = observer(() => {
         orderId: uuidv4(), // 고유 주문번호
         orderName: "프리미엄 플랜",
         successUrl: "http://localhost:3000/payment/successPremiumPayment", // 결제 요청이 성공하면 리다이렉트되는 URL
-        failUrl: "http://localhost:3000/auth", // 결제 요청이 실패하면 리다이렉트되는 URL
+        failUrl: "http://localhost:3000/payment", // 결제 요청이 실패하면 리다이렉트되는 URL
         customerEmail: userStore.email,
         customerName: userStore.username,
         customerMobilePhone: userStore.phone,
@@ -64,7 +64,7 @@ const PremiumPaymentCheckoutPage = observer(() => {
       });
     } catch (error) {
       console.error("Error requesting payment:", error);
-      router.push("/auth");
+      router.push("/payment");
     }
   }
 

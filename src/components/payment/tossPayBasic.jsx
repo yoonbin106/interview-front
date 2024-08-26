@@ -13,6 +13,7 @@ const BasicPaymentCheckoutPage = observer(() => {
   const { authStore, userStore } = useStores();
   const [payment, setPayment] = useState(null);
   const router = useRouter(); // useRouter 훅 사용
+  
   const [amount] = useState({
     currency: "KRW",
     value: parseInt(process.env.NEXT_PUBLIC_API_TOSS_BASIC_AMOUNT, 10),
@@ -40,7 +41,7 @@ const BasicPaymentCheckoutPage = observer(() => {
 
   async function requestPayment() {
     if (!authStore.loggedIn) {
-      router.push("/auth");
+      router.push("/payment");
       return;
     }
 
@@ -50,7 +51,7 @@ const BasicPaymentCheckoutPage = observer(() => {
         amount: amount,
         orderId: uuidv4(), // 고유 주문번호
         orderName: "베이직 플랜",
-        successUrl: "http://localhost:3000/payment/successBasicPayment", // 결제 요청이 성공하면 리다이렉트되는 URL
+        successUrl: `http://localhost:3000/payment/successBasicPayment`, // 결제 요청이 성공하면 리다이렉트되는 URL
         failUrl: "http://localhost:3000/auth", // 결제 요청이 실패하면 리다이렉트되는 URL
         customerEmail: userStore.email,
         customerName: userStore.username,
@@ -64,7 +65,7 @@ const BasicPaymentCheckoutPage = observer(() => {
       });
     } catch (error) {
       console.error("Error requesting payment:", error);
-      router.push("/auth");
+      router.push("/payment");
     }
   }
 

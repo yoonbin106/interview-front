@@ -7,23 +7,24 @@ import { paymentCheck } from 'api/user';
 const successBasicPayment = observer(() => {
     const router = useRouter();
     const { authStore, userStore } = useStores();
-
+    
     useEffect(() => {
         async function fetchData() {
             if (!router.isReady) return;
     
             const { orderId, paymentKey, amount } = router.query;
+            const id = userStore.id;
     
             if (amount == parseInt(process.env.NEXT_PUBLIC_API_TOSS_BASIC_AMOUNT, 10)) {
                 alert('결제 값 일치!');
                 console.log(orderId);
                 console.log(paymentKey);
                 console.log(amount);
-    
+                console.log(id);
                 try {
-                    const response = await paymentCheck(orderId, paymentKey, amount);
+                    const response = await paymentCheck(orderId, paymentKey, amount, id);
                     if (response.status === 200) {
-                        router.push('/');
+                        router.push('/payment');
                     }
                 } catch (error) {
                     console.error('결제 결과 확인 중 오류:', error);

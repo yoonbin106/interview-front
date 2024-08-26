@@ -105,12 +105,13 @@ export const editUser = async (editUserData) => {
   return res;
 }
 
-export const paymentCheck = async (orderId, paymentKey, amount) => {
+export const paymentCheck = async (orderId, paymentKey, amount, id) => {
   const res = await axios.post(baseUrl + "/paymentCheck", null, {
     params: {
       orderId: orderId,
       paymentKey: paymentKey,
-      amount: amount
+      amount: amount,
+      id: id
     }
   });
   return res;
