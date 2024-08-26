@@ -6,31 +6,9 @@ import { getAllUsers, getProfileImage } from 'api/user';
 
 const ChattingCreateRoom = ({ onBack }) => {
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [selectedUserIds, setSelectedUserIds] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
-
-    const [filteredUsers, setFilteredUsers] = useState([]);
-    const [userProfiles, setUserProfiles] = useState({});
-
-    const getProfileImage = async (email) => {
-        try {
-            const response = await axios.get('/api/auth/profile-image', {
-                params: { email },
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            if (response.status === 200) {
-                setUserProfiles((prevProfiles) => ({
-                    ...prevProfiles,
-                    [email]: response.data, // 이메일을 키로, 이미지 URL을 값으로 저장
-                }));
-            }
-        } catch (error) {
-            console.error("프로필 이미지를 불러오는 중 오류가 발생했습니다:", error);
-        }
-    };
-
 
     const getAllUserList = async () => {
         try{
@@ -95,7 +73,7 @@ const ChattingCreateRoom = ({ onBack }) => {
             return;
         }
 
-        console.log('profile: ', users[0].profile);
+        // console.log('profile: ', users[0].profile);
 
         //여기에 채팅방 생성 ~~ 로직을 넣어야함 id값을 전달 (selectedUserIds)
         try {
@@ -136,10 +114,10 @@ const ChattingCreateRoom = ({ onBack }) => {
                             <div className={styles.chattingCreateRoomCheckBox}>
                                 <input
                                     type="checkbox"
-                                    checked={selectedUserIds.includes(user.email)}
-                                    onChange={() => userListSelect(user.email)}
+                                    checked={selectedUserIds.includes(user.id)}
+                                    onChange={() => userListSelect(user.id)}
                                     disabled={
-                                        !selectedUserIds.includes(user.email) && selectedUserIds.length >= 10
+                                        !selectedUserIds.includes(user.id) && selectedUserIds.length >= 10
                                     }
                                 />
                             </div>
