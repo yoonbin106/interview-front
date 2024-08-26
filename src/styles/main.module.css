@@ -606,113 +606,7 @@
   transition: width 5s linear; 
 }
 
-.container4 {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 800px;
-  background-color: #f0f0f0;
-}
 
-.ticketheader {
-  margin-bottom: 10px;
-  font-size: 35px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.ticketSubheader {
-  margin-bottom: 20px;
-  font-size: 20px;
-  text-align: center;
-  color: #5A8AF2;
-}
-
-.ticketplansFrame {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 1000px;
-  height: 470px;
-  /* background-color: #946a6a; */
-}
-.ticketplansFrameIn{
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 8px;
-  /* border-color: #d3d3d3; */
-  width: 300px;
-  height: 470px;
-  background-color: rgb(255, 255, 255);
-}
-.ticketplansFrames{
-  display: flex;
-  width: 260px;
-  flex-direction: column;
-}
-
-.tickettitle{
-  display: flex;
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 15px;
-}
-.ticketInfo{
-  margin-top: 15px;
-  width: 260px;
-  height: 315px;
-  border-radius: 8px;
-  border-color: #f1f1f1;
-  border-style: solid ;
-  border-width: 1px;
-  display: flex;
-  align-items: center;
-    justify-content: center;
-}
-.ticketInfoIn{
-  width: 230px;
-  height: 290px;
-
-  /* background-color: #946a6a; */
-}
-.ticketInfoTitle{
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-.ticketButtonFrame{
-  margin-top: 15px;
-  display: flex;
-  justify-content: flex-end;
-    align-items: center;
-
-}
-
-.ticketbutton {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: white;
-  background-color: #5A8AF2;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 10px;
-  text-decoration: none;
-
-}
-
-.ticketbutton:hover {
-  background-color: #86aaf8;
-}
-
-.ticketInfoTitleSub{
-  display: flex;
-  align-items: center;
-}
 
 /* 메인화면 뉴스칸 이아래로 쭈욱입니다 */
 .newsSliderContainer {
@@ -882,4 +776,198 @@
 
 .newsSliderControl:hover {
   background: rgba(0, 0, 0, 0.7);
+}
+
+
+
+
+
+.container4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  background-color: #f0f0f0;
+}
+
+.ticketheader {
+  margin-bottom: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(to right, #000000, #333333);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.ticketSubheader {
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+  background: linear-gradient(to right, #5A8AF2, #86aaf8);
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: 0.5px;
+  animation: slideIn 1.5s ease-in-out;
+}
+
+.ticketplansFrame {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 1000px;
+  height: 470px;
+  margin-bottom: 20px;
+}
+
+.ticketplansFrameIn {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 8px;
+  width: 300px;
+  height: 470px;
+  transition: transform 0.2s;
+  animation: fadeIn 1.5s ease-in-out;
+  background: linear-gradient(to bottom, #ffffff, #ffffff);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1)
+  
+ 
+}
+
+.ticketplansFrameIn:hover {
+  transform: translateY(-10px);
+}
+
+.ticketplansFrames {
+  display: flex;
+  width: 260px;
+  flex-direction: column;
+}
+
+.tickettitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.ticketInfo {
+  margin-top: 15px;
+  width: 260px;
+  height: 315px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ticketInfoIn {
+  width: 230px;
+  height: 290px;
+}
+
+.ticketInfoTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.ticketButtonFrame {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* 버튼 프레임이 카드 전체 너비에 맞게 확장되도록 설정 */
+  
+}
+
+.ticketbutton {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #5A8AF2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+.ticketbutton:hover {
+  background-color: #86aaf8;
+}
+
+.price {
+  font-size: 22px;
+  font-weight: bold;
+  color: #5A8AF2;
+  margin-right: 10px; /* 가격이 오른쪽에 고정되도록 설정 */
+  margin-left: auto; /* 가격이 왼쪽으로 밀리도록 설정 */
+}
+
+.recommendedPlan {
+  position: relative;
+  background-color: #f9f9f9;
+}
+
+
+
+.recommendedPlan .ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+}
+
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+  padding: 15px 0;
+  background-color: #ff6347;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  transform: rotate(45deg);
+  top: 30px;
+  right: -65px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+.ticketInfoTitleSub {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px; /* 각 항목 사이의 간격을 조정 */
+}
+
+.ticketInfoTitleSub Icon {
+  margin-right: 8px; /* 아이콘과 텍스트 사이의 간격을 조정 */
 }
