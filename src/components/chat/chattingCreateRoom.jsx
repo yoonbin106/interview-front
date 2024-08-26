@@ -33,11 +33,17 @@ const ChattingCreateRoom = ({ onBack }) => {
 
 
     const getAllUserList = async () => {
-        const response = await getAllUsers();
-        setUsers(response.data);
-        console.log('테스트얌: ', response.data);
-        console.log('테스트얌: ', response.data.profileImage);
-        setFilteredUsers(response.data);
+        try{
+            const response = await getAllUsers();
+            setUsers(response.data);
+            console.log('테스트얌: ', response.data);
+            console.log('테스트얌: ', response.data.profileImage);
+            setFilteredUsers(response.data);
+        }
+        catch (error) {
+            console.log('Error: ', error);
+        }
+        
     }
 
     useEffect(() => {
@@ -83,7 +89,7 @@ const ChattingCreateRoom = ({ onBack }) => {
         }
     };
 
-    const createChattingRoom = () => {
+    const createChattingRoom = async () => {
         if (selectedUserIds.length === 0) {
             setErrorMessage('최소 한 명 이상의 대화 상대를 선택해야 합니다.');
             return;
@@ -91,7 +97,15 @@ const ChattingCreateRoom = ({ onBack }) => {
 
         console.log('profile: ', users[0].profile);
 
-        //여기에 채팅방 생성 ~~ 로직을 넣어야함 id값을 전달할지 email을 전달할지 고민고민 id가 나을듯 ㅎ
+        //여기에 채팅방 생성 ~~ 로직을 넣어야함 id값을 전달 (selectedUserIds)
+        try {
+            const response = await axios.post('http://localhost:8080/api/chat/createChatroom', {
+                userIds: selectedUserIds
+            });
+            console.log('Chatroom created:', response.data);
+        } catch (error) {
+            console.error('Error creating chatroom:', error);
+        }
 
         console.log('Selected User Ids:', selectedUserIds); //emails 값 얻어오기, selectedUserEmails에 저장돼있음
         onBack();

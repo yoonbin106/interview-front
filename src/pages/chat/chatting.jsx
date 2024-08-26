@@ -23,6 +23,7 @@ const Chatting = observer(({ closeChatting }) => {
         email: '',
         profile: ''
     });
+    const [chatRooms, setChatRooms] = useState([]);
 
     const { authStore, userStore } = useStores();
 
@@ -37,6 +38,16 @@ const Chatting = observer(({ closeChatting }) => {
         { id: 2, name: '최길동', title: '채팅방 제목2', lastMessage: '어쩌구 저쩌구' },
     ]
 
+    const chatroomList = async () => {
+        try {
+            const response = await axios.get('/api/chat/chatroomList'); 
+            // 그대로 갖고오지말고 user id (나의 id) 전달해서 chatroomUsers 테이블에서 chatroom_id로 접근. 가져와서 그 findByID(chatroom_id)
+            setChatRooms(response.data);
+        } catch (error) {
+            console.error('Error fetching chat rooms:', error);
+        }
+    };
+
 
     // const getUserList = async () => {
     //     // try {
@@ -50,8 +61,14 @@ const Chatting = observer(({ closeChatting }) => {
     // };
 
     const getUserList = async () => {
-        const response = await getAllUsers();
-        setUsers(response.data);
+        try{
+            const response = await getAllUsers();
+            setUsers(response.data);
+        } 
+        catch (error) {
+            console.log('error: ', error);
+        }
+        
     }
 
 
@@ -65,46 +82,60 @@ const Chatting = observer(({ closeChatting }) => {
 
         loadingPastChatting();
 
+        chatroomList();
+
         getUserList();
 
 
+        // mqtt 연결을 ChatMessage 쪽으로 옮기고 그곳에서 ChatroomList 안에 있는 id 값을 받아와서 그걸로 topic 설정해주기
+        //topic을 chatroom의 id로 해주고 
+        //chatroomList 도 다 출력하면 안되고 자기가 속해있는 ChatroomUsers 에서 판단... findByUserId...
+
         // MQTT 브로커에 연결
-        const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884'); // 또는 'ws://broker.hivemq.com:8000/mqtt' (웹소켓 사용 시)
+        try{
+            const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884'); // 또는 'ws://broker.hivemq.com:8000/mqtt' (웹소켓 사용 시)
 
-        mqttClient.on('connect', () => {
-            console.log('Connected to MQTT broker');
-            setIsConnected(true);
-            mqttClient.subscribe('python/mqtt'); // 토픽
-        });
-
-        mqttClient.on('message', (topic, message) => {
-            console.log('Received message:', message.toString());
-            if (topic === 'python/mqtt') {
-
-                const receivedMessage = JSON.parse(message);
-                if (message.sender !== userInfo.username) {
-                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+            mqttClient.on('connect', () => {
+                console.log('Connected to MQTT broker');
+                setIsConnected(true);
+                mqttClient.subscribe('python/mqtt'); // 토픽
+            });
+    
+            mqttClient.on('message', (topic, message) => {
+                console.log('Received message:', message.toString());
+                if (topic === 'python/mqtt') {
+    
+                    const receivedMessage = JSON.parse(message);
+                    if (message.sender !== userInfo.username) {
+                        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                    }
+    
                 }
+            });
+    
+            mqttClient.on('error', (err) => {
+                console.error('Connection error:', err);
+            });
+    
+            mqttClient.on('close', () => {
+                console.log('Disconnected from MQTT broker');
+                setIsConnected(false);
+            });
+    
+            setClient(mqttClient);
+    
+            return () => {
+                if (mqttClient) {
+                    mqttClient.end();
+                }
+            };
+        }
+        catch (error) {
+            console.log('mqtt.connect Error: ', error);
+        }
+        
 
-            }
-        });
-
-        mqttClient.on('error', (err) => {
-            console.error('Connection error:', err);
-        });
-
-        mqttClient.on('close', () => {
-            console.log('Disconnected from MQTT broker');
-            setIsConnected(false);
-        });
-
-        setClient(mqttClient);
-
-        return () => {
-            if (mqttClient) {
-                mqttClient.end();
-            }
-        };
+        
 
         // ========================================================================================
 
@@ -139,20 +170,13 @@ const Chatting = observer(({ closeChatting }) => {
     //         setBotStartTime(new Date(response.data.createdTime));
     //         setBotEndTime(null);
 
-    //         const greetingMessage = "안녕하세요! VIP 고객님을 위한 챗봇 서비스입니다. 무엇을 도와드릴까요?";
+    //         const greetingMessage = "안녕하세요!";
     //         setMessages([{ text: greetingMessage, sender: 'bot' }]);
     //     } catch (error) {
     //         console.error('Error starting new chat:', error);
     //         setMessages([{ text: "채팅 시작 중 오류가 발생했습니다.", sender: 'system' }]);
     //     }
     // }, [tempId]);
-
-    // useEffect(() => {
-    //     if (isOpen && !currentBotId) {
-    //         console.log("Starting new chat");
-    //         startNewBot();
-    //     }
-    // }, [isOpen, currentBotId, startNewBot]);
 
     // const saveJsonFile = async () => {
     //     try {
@@ -193,10 +217,6 @@ const Chatting = observer(({ closeChatting }) => {
         ));
     }
 
-    const createChatRoom = async () => {
-
-    }
-
     const sendMessage = async () => {
         if (inputMessage.trim()) {
 
@@ -207,8 +227,6 @@ const Chatting = observer(({ closeChatting }) => {
 
 
             // client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
-
-            // client.publish('python/mqtt', 'ws connection demo...!');
 
             // // Received
             // client.on('message', (topic, inputMessage, packet) => {
@@ -275,7 +293,7 @@ const Chatting = observer(({ closeChatting }) => {
                 <div className={styles.chatContent}>
 
                     {!isChatOpen ? (
-                        <ChattingList lists={lists} onChatClick={handleChatClick} userInfo={userInfo} userStore={userStore} users={users} />
+                        <ChattingList lists={lists} chatRooms={chatRooms} onChatClick={handleChatClick} userInfo={userInfo} userStore={userStore} users={users} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>
