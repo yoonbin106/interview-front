@@ -3,6 +3,10 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import styles from '@/styles/survey/surveyHome.module.css';
 import axios from 'axios';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
 const SurveyResult = () => {
   const router = useRouter();
@@ -104,12 +108,14 @@ const SurveyResult = () => {
                 </div>
 
                 <div className={styles.surveyStartButtonFrame}>
-                  <button 
+                  <Button 
                     onClick={handleShowIframe}
+                    variant="contained"
+                    color="primary"
                     className={styles.surveyStartButtonResult}
                   >
                     결과보기
-                  </button>
+                  </Button>
                 </div>
 
                 <div className={styles.surveyNotice}>
@@ -129,21 +135,30 @@ const SurveyResult = () => {
                       src={validUrl}
                       allowFullScreen
                     ></iframe>
-                    <button 
+                    <Button 
                       onClick={() => setShowIframe(false)} 
+                      variant="contained"
+                      
                     >
                       닫기
-                    </button>
+                    </Button>
                   </div>
                 )}
 
                 <div className={styles.surveyRecommendFrame}>
                   <div className={styles.surveySubTitleLineThank}>다음 파일을 서버에 업로드하세요:</div>
                   <p>다운로드된 파일 이름 (예시): <strong>{fileName}</strong></p>
-                  <div className={styles.surveySubTitleResultx}>다운로드한 파일을 선택한 후 서버에 업로드하세요. </div>
-                  <button onClick={handleManualFileSelect} className={styles.uploadButton}>
+                  <div className={styles.surveySubTitleResultx} style={{ marginBottom: '16px' }}>
+                    다운로드한 파일을 선택한 후 서버에 업로드하세요.
+                  </div>
+
+                  <Button 
+                    onClick={handleManualFileSelect} 
+                    variant="outlined"
+                    className={styles.uploadButton}
+                  >
                     파일선택
-                  </button>
+                  </Button>
                   <input 
                     type="file" 
                     id="fileInput" 
@@ -153,34 +168,84 @@ const SurveyResult = () => {
                   />
                   {file && (
                     <div>
-                      <p>선택된 파일: {file.name}</p>
-                      <button onClick={handleFileUpload} className={styles.uploadButton}>
-                        서버 업로드
-                      </button>
+                    <p style={{ marginTop: '16px', marginBottom: '16px' }}>
+                      선택된 파일: <strong>{file.name}</strong>
+                    </p>
+
+                      <Button 
+                        onClick={handleFileUpload} 
+                        variant="contained"
+                        color="primary"
+                        className={styles.uploadButton}
+                      >
+                        서버업로드
+                      </Button>
                     </div>
                   )}
                 </div>
 
                 {extractedText && (
-                  <div className={styles.extractedTextContainer}>
-                    <h3>{userName}님의 회사 추천 결과입니다:</h3>
-                    <p>{extractedText}</p>
-
-                    {/* 끼릿! 추가된 섹션 */}
-                    <div className={styles.aiServiceContainer}>
-                        <h4>AI 면접 및 이력서 첨삭 서비스로 한 발 더 나아가세요!</h4>
-                        <p>
-                            저희는 단순한 직업 추천을 넘어, 여러분이 취업 준비 과정에서 최고의 성과를 낼 수 있도록 돕고자 합니다.
-                            AI 면접 시뮬레이션과 전문적인 이력서 첨삭 서비스를 통해 지원하는 회사에서 돋보일 수 있도록 도와드립니다.
-                            지금 바로 아래 버튼을 클릭하여, 취업 성공의 길로 한 걸음 더 나아가세요.
-                        </p>
-                        <button onClick={() => router.push('/resume')} className={styles.directButton}>
-                            AI 면접 및 이력서 첨삭 서비스로 이동하기
-                        </button>
-                    </div>
-                    {/* 끼릿! 섹션 끝 */}
-                  </div>
+                 <Card sx={{ 
+                  marginTop: 3, 
+                  border: '1px solid #ddd',  // 카드 테두리 색상 및 두께 설정
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',  // 부드러운 그림자 효과
+                  borderRadius: '8px'  // 모서리를 둥글게 설정하여 부드러운 느낌
+                }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom className={styles.surveySubTitleLineThank}>
+                      {userName}님의 회사 추천 결과입니다:
+                    </Typography>
+                
+                    {extractedText.split('\n').map((line, index) => (
+                      <Typography 
+                        key={index} 
+                        variant="body1" 
+                        paragraph 
+                        sx={{ 
+                          color: '#868686',  // 사이트의 주요 텍스트 색상과 일치하게 설정
+                          fontFamily: 'Arial, sans-serif',  // 적절한 폰트 스타일 적용
+                          lineHeight: '1.3'  // 읽기 쉽게 줄 간격 설정
+                        }}
+                      >
+                        {line}
+                      </Typography>
+                    ))}
+                  </CardContent>
+                </Card>
+                
                 )}
+
+                              {/* 추가된 AI 서비스 섹션 */}
+              {extractedText && (
+                <>
+                  <Typography 
+                  variant="h6" 
+                  gutterBottom 
+                  sx={{ textAlign: 'center', marginTop: '16px' }} 
+                  className={styles.surveySubTitleLineThank}
+                >
+                  AI 면접 및 이력서 첨삭 서비스로 한 발 더 나아가세요!
+                </Typography>
+
+
+                  <Typography variant="body2" paragraph className={styles.surveySubTitleResultx}>
+                    저희는 단순한 직업 추천을 넘어, 여러분이 취업 준비 과정에서 최고의 성과를 낼 수 있도록 돕고자 합니다.
+                    AI 면접 시뮬레이션과 전문적인 이력서 첨삭 서비스를 통해 지원하는 회사에서 돋보일 수 있도록 도와드립니다.
+                    지금 바로 아래 버튼을 클릭하여, 취업 성공의 길로 한 걸음 더 나아가세요.
+                  </Typography>
+
+                  <Button 
+                    onClick={() => router.push('/resume')} 
+                    variant="contained"
+                    color="primary"
+                    className={styles.directButton}
+                  >
+                    AI 면접 및 이력서 첨삭 서비스로 이동하기
+                  </Button>
+                </>
+              )}
+              {/* 추가된 AI 서비스 섹션 끝 */}
+
               </section>
             </div>
           </div>
@@ -191,4 +256,3 @@ const SurveyResult = () => {
 };
 
 export default SurveyResult;
-

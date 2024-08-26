@@ -179,7 +179,7 @@
     background-color: #3366CC;
     border-color: #1E4B99;
     box-shadow: 0 8px 20px rgba(0, 51, 204, 0.5);
-    transform: translateY(-3px) scale(1.05);
+    
 }
 
 .surveyRecommendFrame {
@@ -254,7 +254,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 95px;
+    width: 99directButtonpx;
     height: 32px;
     color: white;
     border-width: 1px;
@@ -324,17 +324,21 @@
     display: inline-block;
     padding: 10px 20px;
     color: white;
-    background-color: #007bff;
+    background-color:  #5A8AF2;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
     font-size: 16px;
     transition: background-color 0.3s, transform 0.3s;
+    width: 100%;
+  
+   
 }
 
 .directButton:hover { /* 끼릿! */
-    background-color: #0056b3;
-    transform: translateY(-2px);
+    background-color: #3366CC;
+    border-color: #1E4B99;
+    box-shadow: 0 8px 20px rgba(0, 51, 204, 0.5);
 }
 
