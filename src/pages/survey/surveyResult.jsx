@@ -221,7 +221,7 @@ const SurveyResult = () => {
                   <Typography 
                   variant="h6" 
                   gutterBottom 
-                  sx={{ textAlign: 'center', marginTop: '16px' }} 
+                  sx={{ textAlign: 'center', marginTop: '24px' }} 
                   className={styles.surveySubTitleLineThank}
                 >
                   AI 면접 및 이력서 첨삭 서비스로 한 발 더 나아가세요!
@@ -234,14 +234,16 @@ const SurveyResult = () => {
                     지금 바로 아래 버튼을 클릭하여, 취업 성공의 길로 한 걸음 더 나아가세요.
                   </Typography>
 
-                  <Button 
-                    onClick={() => router.push('/resume')} 
-                    variant="contained"
-                    color="primary"
-                    className={styles.directButton}
-                  >
-                    AI 면접 및 이력서 첨삭 서비스로 이동하기
-                  </Button>
+                                <Button 
+                onClick={() => router.push('/resume')} 
+                variant="contained"
+                color="primary"
+                className={styles.directButton}
+                sx={{ marginBottom: '16px' }}  // margin-bottom 추가
+              >
+                AI 면접 및 이력서 첨삭 서비스로 이동하기
+              </Button>
+
                 </>
               )}
               {/* 추가된 AI 서비스 섹션 끝 */}
