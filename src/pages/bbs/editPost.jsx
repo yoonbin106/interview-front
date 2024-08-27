@@ -13,8 +13,6 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import sidebar from '@/styles/bbs/bbsPage.module.css';
 import styles from '@/styles/bbs/bbsCreatePost.module.css';
 import NestedList from '@/components/bbs/bbsSidebar';
-
-
 const EditPost = () => {
   const router = useRouter();
   const { id } = router.query; // useRouter를 통해 동적 파라미터 사용
@@ -26,9 +24,7 @@ const EditPost = () => {
   const [textDecoration, setTextDecoration] = useState('none');
   const [textAlign, setTextAlign] = useState('left');
   const [loading, setLoading] = useState(true); // 로딩 상태
-  const handleFileChange = (event) => {
-    setFiles(event.target.files);
-  };
+
   useEffect(() => {
     if(id){
     const fetchPost = async () => {
@@ -52,7 +48,9 @@ const EditPost = () => {
   const toggleFontWeight = () => setFontWeight(fontWeight === 'normal' ? 'bold' : 'normal');
   const toggleTextDecoration = () => setTextDecoration(textDecoration === 'none' ? 'underline' : 'none');
   const handleTextAlign = (align) => setTextAlign(align);
-
+  const handleFileChange = (event) => {
+    setFiles(event.target.files);
+  };
   const handleSave = async (e) => {
     e.preventDefault();
     const updatedPost = {
@@ -196,6 +194,7 @@ const EditPost = () => {
         </div>
     </div>
   );
+
 };
 
 export default EditPost;

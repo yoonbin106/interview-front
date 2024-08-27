@@ -1,6 +1,6 @@
 import React from 'react';
 
-import BoardTable from '@/components/bbs/boardTable';
+import BoardTable from '@/components/bbs/bbsPage';
 import styles from '@/styles/bbs/bbsPage.module.css';
 
 

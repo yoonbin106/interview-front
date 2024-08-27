@@ -68,10 +68,7 @@ const Notice = () => {
                 <div style={{ width: '90%' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 공지사항</h2>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                            {/* 공지사항 등록 버튼 */}
-                            <RegisterButton to="/bbs/bbsNoticeRegisterPage" />
-                        </div>
+                        
                     </div>
                     {/* 필터링된 공지사항을 테이블로 렌더링 */}
                     <PaginationTable rows={filteredNotices} />

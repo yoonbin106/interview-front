@@ -35,6 +35,11 @@ const NoticeDetails=()=> {
         }));
     };
 
+    // 목록 버튼 클릭 핸들러
+    const handleGoToList = () => {
+        router.push('/bbs/noticePage'); // 공지사항 목록 페이지로 리다이렉트
+    };
+
     return (
         <div className={sidebar.container}>
         <div className={sidebar.sidebar}>
@@ -83,6 +88,12 @@ const NoticeDetails=()=> {
                 <div className={styles.noticeDetailsNavButtons}>
                     <Button>&lt; 이전글</Button>
                     <Button>다음글 &gt;</Button>
+                </div>
+                {/* 목록 버튼 추가 */}
+                <div className={styles.noticeDetailsListButton}>
+                    <Button variant="contained" color="primary" onClick={handleGoToList}>
+                        목록
+                    </Button>
                 </div>
             </Paper>
         </div>

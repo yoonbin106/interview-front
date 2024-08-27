@@ -49,3 +49,8 @@
     display: flex;
     justify-content: space-between;
 }
+.noticeDetailsListButton {
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    margin-top: 20px; /* 버튼 상단에 여유 공간 추가 */
+}
