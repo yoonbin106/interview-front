@@ -1,7 +1,5 @@
-//adminFaqRegister.jsx
-
-import React, { useState } from 'react';
-import { Grid, Button, TextField, Select, MenuItem, IconButton, Typography } from '@mui/material';
+import React, { useState} from 'react';
+import { Grid, TextField, Select, MenuItem, IconButton, Typography, Card, CardContent, CardActions, Button } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -9,142 +7,181 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import styles from '@/styles/adminPage/adminFaqRegister.module.css';
+import axios from 'axios';
 
 const AdminFaqRegister = () => {
-    // 글꼴 속성들을 관리하는 상태 변수들
-    const [fontSize, setFontSize] = useState(15); // 글꼴 크기 상태
-    const [fontStyle, setFontStyle] = useState('normal'); // 글꼴 스타일 (일반 또는 기울임꼴) 상태
-    const [fontWeight, setFontWeight] = useState('normal'); // 글꼴 굵기 상태
-    const [textDecoration, setTextDecoration] = useState('none'); // 텍스트 꾸밈 (밑줄) 상태
-    const [textAlign, setTextAlign] = useState('left'); // 텍스트 정렬 상태
+    const [fontSize, setFontSize] = useState(15);
+    const [fontStyle, setFontStyle] = useState('normal');
+    const [fontWeight, setFontWeight] = useState('normal');
+    const [textDecoration, setTextDecoration] = useState('none');
+    const [textAlign, setTextAlign] = useState('left');
+    const [content, setContent] = useState('');
+    const [title, setTitle] = useState('');
+    const [category, setCategory] = useState(''); //카테고리 상태 추가
+    
+    //미리 지정된 카테고리 목록
+    const categories = [
+        '계정 및 로그인',
+        'AI면접 준비',
+        '기술 문제 해결',
+        '결제 및 환불',
+        '기타'
+    ];
 
-    // 글꼴 크기 변경 핸들러
     const handleFontSizeChange = (e) => setFontSize(e.target.value);
-
-    // 글꼴 스타일 토글 핸들러 (일반 <-> 기울임꼴)
     const toggleFontStyle = () => setFontStyle(fontStyle === 'normal' ? 'italic' : 'normal');
-
-    // 글꼴 굵기 토글 핸들러 (일반 <-> 굵게)
     const toggleFontWeight = () => setFontWeight(fontWeight === 'normal' ? 'bold' : 'normal');
-
-    // 텍스트 밑줄 토글 핸들러 (밑줄 <-> 없음)
     const toggleTextDecoration = () => setTextDecoration(textDecoration === 'none' ? 'underline' : 'none');
-
-    // 텍스트 정렬 변경 핸들러 (왼쪽, 가운데, 오른쪽, 양쪽 정렬)
     const handleTextAlign = (align) => setTextAlign(align);
 
+    const handleSubmit = async () => {
+        if (!title.trim() || !content.trim() || !category) {
+            alert('제목, 내용 및 카테고리를 모두 입력해주세요.');
+            return;
+        }
+        const faqData = {
+            faqQuestion: title,
+            faqAnswer : content,
+            faqCategory : category,
+            faqCreatedTime: new Date(),
+            faqEditedTime : new Date(),
+        };
+        console.log(faqData);
+
+        try {
+            await axios.post('http://localhost:8080/api/faq', faqData);
+            alert('FAQ가 성공적으로 등록되었습니다.');
+        }catch (error){
+            console.error('Error submitting FAQ:',error);
+            alert('FAQ 등록에 실패했습니다.');
+        }
+    };
+
     return (
-        <Grid container spacing={2} className={styles.faqRegisterContainer}>
-            {/* 페이지 제목 */}
-            <Grid item xs={12}>
-                <Typography variant="h5" gutterBottom className={styles.faqRegisterTitle}>글 작성하기</Typography>
-            </Grid>
-            {/* 제목 입력 필드 */}
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    placeholder="제목을 입력하세요"
-                />
-            </Grid>
-            {/* 글꼴 스타일 조정 컨트롤 */}
-            <Grid item container spacing={1} xs={12} alignItems="center">
-                <Grid item>
-                    <Typography variant="body1">글꼴 크기:</Typography>
-                </Grid>
-                <Grid item>
-                    <Select
-                        value={fontSize}
-                        onChange={handleFontSizeChange}
-                        variant="outlined"
-                        size="small"
-                        className={styles.faqRegisterFontSizeSelect}
-                    >
-                        {/* 10에서 39까지의 글꼴 크기 옵션 생성 */}
-                        {[...Array(30).keys()].map(i => (
-                            <MenuItem key={i} value={i + 10}>{i + 10}</MenuItem>
-                        ))}
-                    </Select>
-                </Grid>
-                {/* 글꼴 굵기 버튼 */}
-                <Grid item>
-                    <IconButton onClick={toggleFontWeight}>
-                        <FormatBoldIcon />
-                    </IconButton>
-                </Grid>
-                {/* 글꼴 기울임 버튼 */}
-                <Grid item>
-                    <IconButton onClick={toggleFontStyle}>
-                        <FormatItalicIcon />
-                    </IconButton>
-                </Grid>
-                {/* 밑줄 버튼 */}
-                <Grid item>
-                    <IconButton onClick={toggleTextDecoration}>
-                        <FormatUnderlinedIcon />
-                    </IconButton>
-                </Grid>
-                {/* 텍스트 정렬 버튼들 */}
-                <Grid item>
-                    <IconButton onClick={() => handleTextAlign('left')}>
-                        <FormatAlignLeftIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item>
-                    <IconButton onClick={() => handleTextAlign('center')}>
-                        <FormatAlignCenterIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item>
-                    <IconButton onClick={() => handleTextAlign('right')}>
-                        <FormatAlignRightIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item>
-                    <IconButton onClick={() => handleTextAlign('justify')}>
-                        <FormatAlignJustifyIcon />
-                    </IconButton>
-                </Grid>
-            </Grid>
-            {/* 내용 입력 필드 */}
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    placeholder="내용을 입력하세요"
-                    multiline
-                    rows={8}
-                    className={styles.faqRegisterTextField}
-                    style={{
-                        '--font-size': `${fontSize}px`,
-                        '--font-style': fontStyle,
-                        '--font-weight': fontWeight,
-                        '--text-decoration': textDecoration,
-                        '--text-align': textAlign,
-                    }}
-                />
-                <Typography variant="body2" className={styles.faqRegisterCharacterCount}>0/2000</Typography>
-            </Grid>
-            {/* 파일 첨부 버튼 */}
-            <Grid item xs={12}>
-                <Grid container justifyContent="space-between" alignItems="center">
-                    <Grid item>
-                        <Button
-                            variant="contained"
-                            component="label"
-                            startIcon={<AttachFileIcon />}
-                            className={styles.faqRegisterFileAttachButton}
-                        >
-                            파일첨부
-                            <input type="file" hidden />
-                        </Button>
-                        <Typography variant="body2" className={styles.faqRegisterFileSizeInfo}>0/10MB</Typography>
+        <Card className={styles.faqRegisterCard}>
+            <CardContent>
+                <Grid container spacing={2} className={styles.faqRegisterContainer}>
+                    <Grid item xs={12}>
+                        <Typography variant="h5" gutterBottom className={styles.faqRegisterTitle}>FAQ 작성하기</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            placeholder="제목을 입력하세요"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </Grid>
+                    {/*카테고리 선택 드롭다운*/}
+                    <Grid item xs={12}>
+                        <Select
+                            fullWidth
+                            variant="outlined"
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            displayEmpty>
+                                <MenuItem value="" disabled>
+                                    카테고리를 선택하세요
+                                </MenuItem>
+                                {categories.map((cat,index)=>(
+                                    <MenuItem key={index} value={cat}>
+                                        {cat}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                    </Grid>
+                    <Grid item container spacing={1} xs={12} alignItems="center">
+                        <Grid item>
+                            <Typography variant="body1">글꼴 크기:</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Select
+                                value={fontSize}
+                                onChange={handleFontSizeChange}
+                                variant="outlined"
+                                size="small"
+                                className={styles.faqRegisterFontSizeSelect}
+                            >
+                                {[...Array(30).keys()].map(i => (
+                                    <MenuItem key={i} value={i + 10}>{i + 10}</MenuItem>
+                                ))}
+                            </Select>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={toggleFontWeight}>
+                                <FormatBoldIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={toggleFontStyle}>
+                                <FormatItalicIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={toggleTextDecoration}>
+                                <FormatUnderlinedIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={() => handleTextAlign('left')}>
+                                <FormatAlignLeftIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={() => handleTextAlign('center')}>
+                                <FormatAlignCenterIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={() => handleTextAlign('right')}>
+                                <FormatAlignRightIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton onClick={() => handleTextAlign('justify')}>
+                                <FormatAlignJustifyIcon />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <div
+                            contentEditable
+                            className={styles.faqRegisterTextField}
+                            style={{
+                                fontSize: `${fontSize}px`,
+                                fontStyle: fontStyle,
+                                fontWeight: fontWeight,
+                                textDecoration: textDecoration,
+                                textAlign: textAlign,
+                                border: '1px solid #ccc',
+                                padding: '10px',
+                                minHeight: '150px',
+                            }}
+                            onBlur={(e) => setContent(e.currentTarget.textContent)}
+                            placeholder="내용을 입력하세요"
+                        ></div>
+                        <Typography variant="body2" className={styles.faqRegisterCharacterCount}>{content.length}/2000</Typography>
                     </Grid>
                 </Grid>
-            </Grid>
-        </Grid>
+            </CardContent>
+            <CardActions>
+                <Grid item xs={12}>
+                    <Grid container justifyContent="space-between" alignItems="center">
+                        <Grid item>
+                            <Button 
+                                variant="contained" 
+                                color="primary"
+                                onClick={handleSubmit}
+                            >
+                                등록하기
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </CardActions>
+        </Card>
     );
 };
 

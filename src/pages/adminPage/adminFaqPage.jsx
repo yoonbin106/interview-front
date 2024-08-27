@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import AdminFaq from '@/components/adminPage/adminFaq';
+import axios from 'axios';
 
 const AdminFaqPage = () => {
+    const [faqs,setFaqs] = useState([]);//FAQ데이터를 담는 상태
     const [filteredFaqs, setFilteredFaqs] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [page, setPage] = useState(0);
@@ -23,7 +25,16 @@ const AdminFaqPage = () => {
 
         fetchFaqs();
     }, []);
-
+    
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+        if (category) {
+            setFilteredFaqs(faqs.filter(faq => faq.faqCategory === category));
+        } else {
+            setFilteredFaqs(faqs);
+        }
+        setPage(0);
+    };
     const handleChangePage = (newPage) => {
         setPage(newPage);
     };
@@ -49,8 +60,7 @@ const AdminFaqPage = () => {
                     page={page}
                     totalPages={totalPages} // 여기에 totalPages를 전달
                     selectedCategory={selectedCategory}
-                    setFilteredFaqs={setFilteredFaqs} // 카테고리 필터링을 위해 함수 전달
-                    setSelectedCategory={setSelectedCategory} // 카테고리 상태를 위해 함수 전달
+                    onCategoryChange={handleCategoryChange} //카테고리 필터링 핸들러 전달
                 />
             </div>
         </div>
