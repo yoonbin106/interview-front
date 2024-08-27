@@ -416,8 +416,8 @@
   background-color: #ffffff;
   background-image:  
    url('../../public/images/keyword0.png');
-   background-position: right 558px bottom 660px ; /* 이미지를 왼쪽으로 10px 이동 */
-   background-size: 91%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+   background-position: right 593px bottom 615px ; /* 이미지를 왼쪽으로 10px 이동 */
+   background-size: 100%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
 }
 .keyWordBoxGroup{
   display: flex;
