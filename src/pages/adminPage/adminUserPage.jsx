@@ -11,11 +11,11 @@ const AdminUserPage = () => {
         const userList = await getAllUsers();
         
         const data = userList.data.map(user => ({
-            name: user.username,
+            name: user.username || '이름이 없습니다',
             gender: user.gender === "men" ? "남" : user.gender === "women" ? "여" : "미정",
-            phone: user.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'), // 핸드폰 번호 형식을 '010-XXXX-XXXX'로 변환
-            email: user.email,
-            birth: user.birth
+            phone: user.phone ? user.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : '핸드폰번호가 없습니다', // 핸드폰 번호 형식을 '010-XXXX-XXXX'로 변환
+            email: user.email || '이메일이 없습니다',
+            birth: user.birth || '생일이 없습니다'
         }));
     
         setProcessedData(data); // 상태 업데이트

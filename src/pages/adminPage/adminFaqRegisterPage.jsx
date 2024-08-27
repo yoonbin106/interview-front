@@ -22,9 +22,7 @@ const AdminFaqRegisterPage = () => {
             </div>
             <div className={sidebar.content}>
                 <div className={styles['faqPostNoticeRegisterContainer']}>
-                    <h2 className={styles['faqPostNoticeRegisterTitle']}>자주 묻는 질문</h2>
                     <FaqRegister />
-                    <button type="button" onClick={handleSubmit} className={styles['FaqRegisterSubmitButton']}>등록하기</button>
                 </div>
             </div>
         </div>

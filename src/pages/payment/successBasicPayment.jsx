@@ -6,7 +6,7 @@ import { paymentCheck } from 'api/user';
 
 const successBasicPayment = observer(() => {
     const router = useRouter();
-    const { authStore, userStore } = useStores();
+    const { payStore, userStore } = useStores();
     
     useEffect(() => {
         async function fetchData() {
@@ -16,7 +16,6 @@ const successBasicPayment = observer(() => {
             const id = userStore.id;
     
             if (amount == parseInt(process.env.NEXT_PUBLIC_API_TOSS_BASIC_AMOUNT, 10)) {
-                alert('결제 값 일치!');
                 console.log(orderId);
                 console.log(paymentKey);
                 console.log(amount);
@@ -24,6 +23,14 @@ const successBasicPayment = observer(() => {
                 try {
                     const response = await paymentCheck(orderId, paymentKey, amount, id);
                     if (response.status === 200) {
+                        payStore.setPayApproved(response.data.approvedAt);
+                        payStore.setOrderId(response.data.orderId);
+                        payStore.setOrderName(response.data.orderName);
+                        payStore.setPayMethod(response.data.payMethod);
+                        payStore.setPrice(response.data.price);
+                        payStore.setUseCount(response.data.useCount);
+                        payStore.setUserId(response.data.userId.id);
+                        payStore.setPaySecret(response.data.paySecret);
                         router.push('/payment');
                     }
                 } catch (error) {

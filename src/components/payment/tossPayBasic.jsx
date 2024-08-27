@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 const clientKey = process.env.NEXT_PUBLIC_API_TOSS_CLIENT_ID;
 const customerKey = uuidv4();
 
-const BasicPaymentCheckoutPage = observer(() => {
+const BasicPaymentCheckoutPage = observer(({ disabled }) => {
   const { authStore, userStore } = useStores();
   const [payment, setPayment] = useState(null);
   const router = useRouter(); // useRouter 훅 사용
@@ -41,7 +41,7 @@ const BasicPaymentCheckoutPage = observer(() => {
 
   async function requestPayment() {
     if (!authStore.loggedIn) {
-      router.push("/payment");
+      router.push("/auth");
       return;
     }
 
@@ -52,7 +52,7 @@ const BasicPaymentCheckoutPage = observer(() => {
         orderId: uuidv4(), // 고유 주문번호
         orderName: "베이직플랜",
         successUrl: `http://localhost:3000/payment/successBasicPayment`, // 결제 요청이 성공하면 리다이렉트되는 URL
-        failUrl: "http://localhost:3000/auth", // 결제 요청이 실패하면 리다이렉트되는 URL
+        failUrl: "http://localhost:3000/payment", // 결제 요청이 실패하면 리다이렉트되는 URL
         customerEmail: userStore.email,
         customerName: userStore.username,
         customerMobilePhone: userStore.phone,
@@ -70,7 +70,11 @@ const BasicPaymentCheckoutPage = observer(() => {
   }
 
   return (
-    <button className={styles.ticketbutton} onClick={() => requestPayment()}>
+    <button
+      className={`${styles.ticketbutton} ${disabled ? styles.disabledButton : ''}`}
+      onClick={requestPayment}
+      disabled={disabled}
+    >
       결제하기
     </button>
   );

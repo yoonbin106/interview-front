@@ -89,11 +89,11 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                             aria-controls={`panel${faq.faqId}-content`}
                             id={`panel${faq.faqId}-header`}
                         >
-                            <Typography variant="h6">{faq.faqCategory}: {faq.question}</Typography>
+                            <Typography variant="h6">{faq.faqCategory}: {faq.faqQuestion}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
-                                {faq.answer}
+                                {faq.faqAnswer}
                             </Typography>
                         </AccordionDetails>
                     </Accordion>
