@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styles from '@/styles/main.module.css';
+import { BorderBottom } from '@mui/icons-material';
 
 const MainEconomicNews = () => {
     const [news, setNews] = useState([]);
@@ -65,7 +66,7 @@ const MainEconomicNews = () => {
     return (
         <div className={styles.newsSliderContainer}>
             <div className={styles.newsTitleFrame}>
-                <div className={styles.newsTitle}>News</div>
+                <div className={styles.newsTitle}  style={{ borderBottom: '5px solid black', paddingBottom: '5px', width: '125px' }}>News</div>
             </div>
             <div className={styles.newsSlider}>
                 <button className={`${styles.newsSliderControl} ${styles.prev}`} onClick={prevSlide}>
@@ -83,7 +84,7 @@ const MainEconomicNews = () => {
                         <div key={index} className={styles.newsSlide}>
                             <a href={item.link} target="_blank" rel="noopener noreferrer">
                                 <div className={styles.newsSlideContent}>
-                                    <p className={styles.subTitle}>주요 소식</p>
+                                    <p className={styles.subTitle} style={{ borderBottom: '3px solid black', paddingBottom: '5px', width: '69px', paddingLeft:'1.5px', marginBottom:'30px' }}>주요 소식</p>
                                     <strong className={styles.newsSlideTitle}>{item.title}</strong>
                                     <div className={styles.newsSlideInfo}>
                                         <div className={styles['invisible-space']}></div>

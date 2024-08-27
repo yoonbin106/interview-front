@@ -14,7 +14,6 @@ import Badge from '@mui/joy/Badge';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import { logout } from '@/api/user';  // 로그아웃 API 임포트
-import { logout2 } from 'api/user';
 
 const Header = observer(() => {
   const [hover, setHover] = useState(false);

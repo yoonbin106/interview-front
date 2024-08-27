@@ -15,10 +15,10 @@ import ThreeDPentagonIcon from '@/pages/payment/ThreeDPentagonIcon'; // 새로 �
 
 const Payment = () => {
 
-    const cancelPayment2 = () => {
-        const paymentKey = "tviva20240826084742TRaw4"; // 실제 paymentKey 값을 사용
-        cancelPayment(paymentKey);
-    };
+    // const cancelPayment2 = () => {
+    //     const paymentKey = "tviva20240826084742TRaw4"; // 실제 paymentKey 값을 사용
+    //     cancelPayment(paymentKey);
+    // };
 
     return (
         <>

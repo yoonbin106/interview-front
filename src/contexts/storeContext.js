@@ -3,6 +3,7 @@ import React, { createContext, useContext } from 'react';
 import authStore from '@/stores/authStore';
 import userStore from '@/stores/userStore';
 import reduxStore from '@/redux/store';
+import payStore from '@/stores/payStore';
 
 const StoreContext = createContext(null);
 
@@ -11,6 +12,7 @@ export const StoreProvider = ({ children }) => {
     authStore,
     userStore,
     reduxStore,
+    payStore,
   };
   return (
     <StoreContext.Provider value={stores}>

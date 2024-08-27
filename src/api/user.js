@@ -126,3 +126,19 @@ export const cancelPayment = async (paymentKey) => {
   });
   return res;
 }
+
+export const getPayInfoByUserId = async (id) => {
+  try {
+    const user = await axios.get(`${baseUrl}/findPaymentInfoById`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      params: {
+        id: id  // 아이디를 쿼리 파라미터로 전달
+      }
+    });
+    return user;
+  } catch (error) {
+    console.error("결제 정보를 가져오는 데 오류가 발생했습니다:", error);
+  }
+};
