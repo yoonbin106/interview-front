@@ -68,10 +68,10 @@ const PaymentHistory = observer(() => {
                     <span className={styles.infoLabel}>안내</span>
                 </div>
                 <p className={styles.infoContent}>
-                    ㅁㄴㅇㅁㄴㅇ <br /> <br />
-                    - ㅁㄴㅇㅁㄴㅇ <br />
-                    - ㅁㄴㅇㅁㄴㅇ <br />
-                    - ㅁㄴㅇㅁㄴㅇ
+                    결제하신 내역을 보실 수 있습니다. <br /> <br />
+                    - 결제를 취소하고 싶으시면 문의사항에 문의해주시길 바랍니다. <br />
+                    - 횟수를 1번이라도 사용하시면 환불이 불가능한점 유의해주시길 바랍니다. <br />
+                    - 환불문의시 주문번호, 상품명, 이메일 적어주시면 환불처리 도와드립니다.
                 </p>
             </section>
 
