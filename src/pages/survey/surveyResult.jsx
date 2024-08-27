@@ -7,6 +7,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import LoadingSpinner from '@/components/search/LoadingSpinner'; // Import your spinner component
 
 const SurveyResult = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const SurveyResult = () => {
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');  
   const [extractedText, setExtractedText] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('email');
@@ -54,6 +56,7 @@ const SurveyResult = () => {
       formData.append('email', email);
 
       try {
+        setLoading(true); // Start loading
         const response = await axios.post('http://localhost:8080/api/files/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -61,19 +64,18 @@ const SurveyResult = () => {
         });
         console.log('File uploaded successfully:', response.data);
 
-        // GPT에게 보낼 직업 리스트
         const jobList = response.data.split('\n').map(item => item.trim()).filter(item => item);
 
-        // GPT에 요청
         const gptResponse = await axios.post('http://localhost:8080/api/survey/chatgpt', {
           jobList: jobList,
           userName: userName  
         });
 
-        // GPT의 응답을 화면에 표시
         setExtractedText(gptResponse.data);
       } catch (error) {
         console.error('Error uploading file:', error);
+      } finally {
+        setLoading(false); // End loading
       }
     } else {
       alert('Please select a file to upload and ensure user is logged in.');
@@ -184,6 +186,8 @@ const SurveyResult = () => {
                   )}
                 </div>
 
+                {loading && <LoadingSpinner />} {/* Show spinner while loading */}
+
                 {extractedText && (
                  <Card sx={{ 
                   marginTop: 3, 
@@ -215,8 +219,7 @@ const SurveyResult = () => {
                 
                 )}
 
-                              {/* 추가된 AI 서비스 섹션 */}
-              {extractedText && (
+                {extractedText && (
                 <>
                   <Typography 
                   variant="h6" 
@@ -226,7 +229,6 @@ const SurveyResult = () => {
                 >
                   AI 면접 및 이력서 첨삭 서비스로 한 발 더 나아가세요!
                 </Typography>
-
 
                   <Typography variant="body2" paragraph className={styles.surveySubTitleResultx}>
                     저희는 단순한 직업 추천을 넘어, 여러분이 취업 준비 과정에서 최고의 성과를 낼 수 있도록 돕고자 합니다.
