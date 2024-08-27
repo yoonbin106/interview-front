@@ -62,3 +62,14 @@
     color: white;
     font-weight: bold;
 }
+
+/* 삭제 버튼 스타일 */
+.adminFaqDeleteButton {
+    margin-top: 20px;
+    background-color: #ff5252;
+    color: white;
+}
+
+.adminFaqDeleteButton:hover {
+    background-color: #ff1744;
+}

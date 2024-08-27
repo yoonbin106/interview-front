@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, Select, MenuItem, Box, Button, InputLabel } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
 import styles from '@/styles/adminPage/adminFaq.module.css';
 
 const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
+    //FAQ 데이터와 필터링된 FAQ 데이터를 관리하는 state
     const [faqs, setFaqs] = useState([]);
     const [filteredFaqs, setFilteredFaqs] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -13,9 +15,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
-                console.log("Fetching FAQs...");
                 const response = await axios.get('http://localhost:8080/api/faq/all');
-                console.log(response.data);
                 setFaqs(response.data);
                 setFilteredFaqs(response.data);
             } catch (error) {
@@ -24,8 +24,24 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         };
 
         fetchFaqs();
-    }, []);
+    }, []);//빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때만 호출되도록 함
 
+    //특정 FAQ 항목을 삭제하는 함수
+    const handleDeleteFaq = async (faqId) => {
+        const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+        if(confirmDelete) {
+            try{
+                await axios.delete(`http://localhost:8080/api/faq/delete/${faqId}`); //DELETE 요청을 서버로 전송
+                //삭제된 항목을 제외한 새로운 FAQ 목록으로 상태 업데이트
+                setFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
+                setFilteredFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
+                window.location.href = 'http://localhost:3000/adminPage/adminFaqPage';
+            } catch(error){
+                console.error('Error deleting FAQ:',error);
+            }
+        }
+    };
+    
     // totalPages 계산
     const totalPages = Math.ceil(filteredFaqs.length / rowsPerPage);
 
@@ -95,6 +111,16 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                             <Typography>
                                 {faq.faqAnswer}
                             </Typography>
+                            {/*삭제 버튼 추가*/}
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                startIcon={<DeleteIcon />}
+                                onClick={() => handleDeleteFaq(faq.faqId)}
+                                className={styles.adminFaqDeleteButton}
+                                >
+                                    삭제
+                                </Button>
                         </AccordionDetails>
                     </Accordion>
                 ))

@@ -5,7 +5,6 @@ import PaginationTable from '@/components/bbs/bbsNoticeTable';
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/noticePage.module.css';
-import NestedList from '@/components/bbs/bbsSidebar';
 
 const Notice = () => {
     // 하드코딩된 공지사항 데이터
@@ -59,9 +58,6 @@ const Notice = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.sidebar}>
-                <NestedList/>
-            </div>
         <div className={styles.content}>
         <div className="main-container">
             <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
