@@ -41,7 +41,7 @@ const BasicPaymentCheckoutPage = observer(() => {
 
   async function requestPayment() {
     if (!authStore.loggedIn) {
-      router.push("/payment");
+      router.push("/auth");
       return;
     }
 
