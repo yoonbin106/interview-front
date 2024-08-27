@@ -286,7 +286,9 @@
   border-radius: 16px;
   background-color: #ffffff;
   padding-right: 23px;
-  
+  background-image: url('/images/keyword4.png');
+  background-size: 108%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-position: left 312px top 314px; /* 이미지가 가운데에 위치하도록 */
 }
 
 .keyWordBoxWhitex{
@@ -299,7 +301,7 @@
   background-color: #073ff5;
   background-image: url('/images/keyword3.png');
   background-size: cover; /* 이미지가 div에 꽉 차도록 */
-  background-position: center; /* 이미지가 가운데에 위치하도록 */
+  background-position: left 360px top 300px; /* 이미지가 가운데에 위치하도록 */
   
 }
 .keyWordBoxWhite1{
@@ -399,10 +401,15 @@
   height: 630px;
   border-radius: 16px;
   background-color: #ffffff;
+  background-image:  
+   url('../../public/images/keyword0.png');
+   background-position: right 619px bottom 650px ; /* 이미지를 왼쪽으로 10px 이동 */
+   background-size: 105%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
 }
 .keyWordBoxGroup{
   display: flex;
   justify-content: space-between;
+  
 }
 /* 맨오른쪽칸 */
 .keyWordBoxWidth{
@@ -414,7 +421,7 @@
   height: 300px;
   border-radius: 16px;
   background-color: #5A8AF2;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+  background-image:  
    url('../../public/images/keyword1.png');
   background-size: cover;
   background-position: center;
