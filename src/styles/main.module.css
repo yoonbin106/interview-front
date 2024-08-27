@@ -827,6 +827,8 @@
   animation: fadeIn 1.5s ease-in-out;
 }
 
+
+
 .ticketSubheader {
   margin-bottom: 20px;
   font-size: 20px;
@@ -854,14 +856,19 @@
   flex-direction: column;
   border-radius: 8px;
   width: 300px;
-  height: 470px;
+  height: 455px;
   transition: transform 0.2s;
   animation: fadeIn 1.5s ease-in-out;
   background: linear-gradient(to bottom, #ffffff, #ffffff);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1)
-  
  
+  
 }
+
+
+
+
+
 
 .ticketplansFrameIn:hover {
   transform: translateY(-10px);
@@ -877,6 +884,7 @@
   font-size: 24px;
   font-weight: bold;
   margin-top: 15px;
+  
 }
 
 .ticketInfo {
@@ -901,13 +909,40 @@
 }
 
 .ticketButtonFrame {
-  margin-top: 15px;
+  margin-top: 7px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%; /* 버튼 프레임이 카드 전체 너비에 맞게 확장되도록 설정 */
+  width: 100%;
+  border-top: 3px dashed #5A8AF2; /* 점선을 추가하는 부분 */
+  padding-top: 10px; /* 점선과 버튼 사이에 간격을 추가 */
+  position: relative; /* 가상 요소의 위치 고정을 위해 설정 */
   
 }
+
+.ticketButtonFrame::before,
+.ticketButtonFrame::after {
+  content: '';
+  position: absolute;
+  top: -15px; /* 점선과 수직으로 맞추기 */
+  width: 30px;
+  height: 30px;
+  background-color: #f0f0f0; /* 배경색과 맞추기 */
+  border: 3px solid #f0f0f0; /* 점선 색과 동일 */
+  border-radius: 50%; /* 완전한 원 모양 */
+  
+  
+}
+
+.ticketButtonFrame::before {
+  left: -35px; /* 왼쪽 반원 위치 */
+}
+
+.ticketButtonFrame::after {
+  right: -35px; /* 오른쪽 반원 위치 */
+}
+
+
 
 .ticketbutton {
   padding: 10px 20px;
@@ -921,6 +956,33 @@
   text-decoration: none;
   transition: background-color 0.3s ease; /* 배경색 전환 효과 추가 */
 }
+.ticketplansFrameIn {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 8px;
+  width: 300px;
+  height: 465px;
+  transition: transform 0.2s;
+  animation: main_fadeIn__Ey3mV 1.5s ease-in-out;
+  background: linear-gradient(to bottom, #ffffff, #ffffff);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titleLines {
+ 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.line {
+  width: 300PX; /* 줄의 길이 */
+  height: 2px; /* 줄의 두께 */
+  background-color: #5A8AF2; /* 줄의 색상 */
+  margin: 2px 0; /* 두 줄 사이의 간격 */
+}
+
 
 .ticketbutton:hover {
   background-color: #86aaf8;
@@ -941,9 +1003,13 @@
   font-size: 22px;
   font-weight: bold;
   color: #5A8AF2;
-  margin-right: 10px; /* 가격이 오른쪽에 고정되도록 설정 */
-  margin-left: auto; /* 가격이 왼쪽으로 밀리도록 설정 */
+  margin-right: 10px;
+  margin-left: auto;
+
+
 }
+
+
 
 .recommendedPlan {
   position: relative;
@@ -1007,3 +1073,14 @@
 .ticketInfoTitleSub Icon {
   margin-right: 8px; /* 아이콘과 텍스트 사이의 간격을 조정 */
 }
+
+.paymentWarning {
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: -24px;
+  text-align: center;
+  margin-bottom: 3px;
+  
+}
+
