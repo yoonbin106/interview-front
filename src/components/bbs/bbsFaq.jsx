@@ -48,6 +48,9 @@ const BbsFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 <Typography variant="h3" gutterBottom>
                     자주 묻는 질문 (FAQ)
                 </Typography>
+                <Button variant="contained" color="primary" href="/adminPage/adminFaqRegisterPage">
+                    새 FAQ 등록
+                </Button>
             </Box>
 
             {/* 카테고리 검색 필터 */}
@@ -86,11 +89,11 @@ const BbsFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                             aria-controls={`panel${faq.faqId}-content`}
                             id={`panel${faq.faqId}-header`}
                         >
-                            <Typography variant="h6">{faq.faqCategory}: {faq.question}</Typography>
+                            <Typography variant="h6">{faq.faqCategory}: {faq.faqQuestion}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
-                                {faq.answer}
+                                {faq.faqAnswer}
                             </Typography>
                         </AccordionDetails>
                     </Accordion>

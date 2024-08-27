@@ -275,6 +275,17 @@
   height: 300px;
   border-radius: 16px;
   background-color: #5A8AF2;
+  
+}
+.keyWordBoxGrey2{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #5A8AF2;
+  background-image: url('/images/keyword6.png');
 }
 /* 맨오른쪽아래칸 왼쪽칸  */
 .keyWordBoxWhite{
@@ -286,7 +297,9 @@
   border-radius: 16px;
   background-color: #ffffff;
   padding-right: 23px;
-  
+  background-image: url('/images/keyword4.png');
+  background-size: 123%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-position: left 338px top 328px; /* 이미지가 가운데에 위치하도록 */
 }
 
 .keyWordBoxWhitex{
@@ -299,7 +312,7 @@
   background-color: #073ff5;
   background-image: url('/images/keyword3.png');
   background-size: cover; /* 이미지가 div에 꽉 차도록 */
-  background-position: center; /* 이미지가 가운데에 위치하도록 */
+  background-position: left 360px top 300px; /* 이미지가 가운데에 위치하도록 */
   
 }
 .keyWordBoxWhite1{
@@ -315,6 +328,8 @@
   font-weight: bold;
   font-size: 24px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-image: url('/images/keyword5.png');
+  background-position: left 337px top 330px; /* 이미지가 가운데에 위치하도록 */
  
 }
 
@@ -399,10 +414,15 @@
   height: 630px;
   border-radius: 16px;
   background-color: #ffffff;
+  background-image:  
+   url('../../public/images/keyword0.png');
+   background-position: right 593px bottom 615px ; /* 이미지를 왼쪽으로 10px 이동 */
+   background-size: 100%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
 }
 .keyWordBoxGroup{
   display: flex;
   justify-content: space-between;
+  
 }
 /* 맨오른쪽칸 */
 .keyWordBoxWidth{
@@ -414,7 +434,7 @@
   height: 300px;
   border-radius: 16px;
   background-color: #5A8AF2;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+  background-image:  
    url('../../public/images/keyword1.png');
   background-size: cover;
   background-position: center;
@@ -448,10 +468,11 @@
   font-weight: bold;
   color: #ffffff;
   text-align: center;
-  margin-bottom: -150px; /* 작은 텍스트와의 간격 */
-  padding-right: 28px; /* 오른쪽 간격 조정 */
+  margin-bottom: -190px; /* 작은 텍스트와의 간격 */
+
   white-space: pre-wrap; /* 줄바꿈과 공백을 그대로 인식하여 출력 */
-  line-height: 1.2; /* 줄 간격을 조절해보세요 */
+  line-height: 1.3; /* 줄 간격을 조절해보세요 */
+  width: 200px;
  
   
   
@@ -898,10 +919,22 @@
   cursor: pointer;
   margin-left: 10px;
   text-decoration: none;
+  transition: background-color 0.3s ease; /* 배경색 전환 효과 추가 */
 }
 
 .ticketbutton:hover {
   background-color: #86aaf8;
+}
+
+.ticketbutton:disabled,
+.ticketbutton.disabledButton {
+  background-color: #B0B0B0; /* 비활성화 상태에서 버튼 색상을 회색으로 변경 */
+  cursor: not-allowed; /* 비활성화 상태에서 커서 모양 변경 */
+}
+
+.ticketbutton:disabled:hover,
+.ticketbutton.disabledButton:hover {
+  background-color: #B0B0B0; /* 비활성화 상태에서는 호버 시 색상 변화가 없도록 설정 */
 }
 
 .price {

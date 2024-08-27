@@ -8,7 +8,6 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import { getPayInfoByUserId } from 'api/user';
@@ -37,7 +36,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const PaymentHistory = observer(() => {
     const { userStore } = useStores();
-    const [rows, setRows] = useState([]);
     useEffect(() => {
         const fetchPaymentInfo = async () => {
             try {
