@@ -36,6 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const PaymentHistory = observer(() => {
     const { userStore } = useStores();
+    const [rows, setRows] = useState([]);
     useEffect(() => {
         const fetchPaymentInfo = async () => {
             try {
