@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import CreateIcon from '@mui/icons-material/Create';
 import CloseIcon from '@mui/icons-material/Close';
-import ClearIcon from '@mui/icons-material/Clear';  // ClearIcon 추가
+import ClearIcon from '@mui/icons-material/Clear';
 import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
 import styles from '@/styles/resume/resumeForm.module.css';
@@ -15,7 +14,7 @@ import {
 } from "@/api/getPostCode";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { useStores } from '@/contexts/storeContext';  // MobX 스토어 사용
+import { useStores } from '@/contexts/storeContext';
 
 function ResumeForm() {
   const router = useRouter();
@@ -38,12 +37,15 @@ function ResumeForm() {
   const [isWorkConditionExempt, setIsWorkConditionExempt] = useState(false);
   const [selfIntroduction, setSelfIntroduction] = useState('');
   const [motivation, setMotivation] = useState('');
+  const [aiProofreadResult, setAiProofreadResult] = useState([]);
   const [proofreadResult, setProofreadResult] = useState([]);
   const [isProofreadSidebarOpen, setIsProofreadSidebarOpen] = useState(false);
+  const [isAiProofreadSidebarOpen, setIsAiProofreadSidebarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
-  const [showTitleError, setShowTitleError] = useState(false); // 유효성 검사 상태 추가
+  const [showTitleError, setShowTitleError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     resume_title: '',
@@ -72,19 +74,84 @@ function ResumeForm() {
     motivation: useRef(null)
   };
 
-  useEffect(() => {
-    // 사용자 정보를 userStore에서 가져와 formData를 초기화
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      name: userStore.username || '',
-      email: userStore.email || ''
-    }));
-  }, [userStore.username, userStore.email]);  // userStore의 username과 email이 변경될 때마다 실행
+  // MUI styled components for Modal
+const Backdrop = React.forwardRef(
+  ({ open, className, ...other }, ref) => {
+    return (
+      <div
+        className={closestIndexTo({ 'base-Backdrop-open': open }, className)}
+        ref={ref}
+        {...other}
+      />
+    );
+  }
+);
 
-  const scrollToSection = (section) => {
-    sectionsRef[section].current.scrollIntoView({ behavior: 'smooth' });
-  };
+const grey = {
+  50: '#F3F6F9',
+  100: '#E5EAF2',
+  200: '#DAE2ED',
+  300: '#C7D0DD',
+  400: '#B0B8C4',
+  500: '#9DA8B7',
+  600: '#6B7A90',
+  700: '#434D5B',
+  800: '#303740',
+  900: '#1C2025',
+};
 
+const Modal = styled(BaseModal)`
+  position: fixed;
+  z-index: 1300;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledBackdrop = styled(Backdrop)`
+  z-index: -1;
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.5);
+  -webkit-tap-highlight-color: transparent;
+`;
+
+const ModalContent = styled('div')(
+  ({ theme }) => css`
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    justify-content: center; 
+    align-items: center; 
+    background-color: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+    border-radius: 8px;
+    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+    box-shadow: 0 4px 12px
+      ${theme.palette.mode === 'dark' ? 'rgb(0 0 0 / 0.5)' : 'rgb(0 0 0 / 0.2)'};
+    padding: 24px;
+    color: ${theme.palette.mode === 'dark' ? grey[50] : grey[900]};
+
+    & .modal-title {
+      margin: 0;
+      line-height: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    & .modal-description {
+      margin: 0;
+      line-height: 1.5rem;
+      font-weight: 400;
+      color: ${theme.palette.mode === 'dark' ? grey[400] : grey[800]};
+      margin-bottom: 4px;
+    }
+  `,
+);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -111,26 +178,15 @@ function ResumeForm() {
 
   const handleProofread = async (text) => {
     if (text.trim() === '') {
-      // 사용자가 아무것도 입력하지 않은 경우
       setProofreadResult([]);
       setIsProofreadSidebarOpen(true);
       return;
     }
   
     try {
-      const response = await axios.post('http://localhost:3001/check-spelling', {
-        sentence: text,
-      });
-  
-      if (response.data.length === 0) {
-        // 맞춤법 검사 결과가 없는 경우
-        setProofreadResult([]);
-      } else {
-        // 맞춤법 검사 결과가 있는 경우
-        setProofreadResult(response.data);
-      }
-      
-      setIsProofreadSidebarOpen(true); // 맞춤법 검사 결과가 있으면 사이드바 열기
+      const response = await axios.post('http://localhost:3001/check-spelling', {sentence: text,});
+      if (response.data.length === 0) {setProofreadResult([]);} else {setProofreadResult(response.data);}
+      setIsProofreadSidebarOpen(true);
     } catch (error) {
       console.error('맞춤법 검사 중 오류 발생:', error);
       setProofreadResult([]);
@@ -164,11 +220,9 @@ function ResumeForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // 이력서 제목이 입력되지 않은 경우
     if (formData.resume_title.trim() === '') {
-      setShowTitleError(true);  // 에러 메시지 표시
-      window.scrollTo(0, 0); // 페이지 맨 위로 스크롤
+      setShowTitleError(true);
+      window.scrollTo(0, 0);
       return;
     }
   
@@ -179,6 +233,7 @@ function ResumeForm() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+ 
 
   const confirmAction = async () => {
     if (modalContent === '작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?') {
@@ -195,9 +250,8 @@ function ResumeForm() {
               },
             });
 
-            const resumeId = uploadResponse.data.resumeId;  // 업로드 후 받은 resumeId가 있다고 가정
+            const resumeId = uploadResponse.data.resumeId;
 
-            // JSON 형태로 전송
             await axios.post('http://localhost:8080/api/resume/proofread/save', {
               resumeId: resumeId,
               selfIntroduction: selfIntroduction,
@@ -220,75 +274,38 @@ function ResumeForm() {
 
 
 const generatePDF = async () => {
-  // 모든 버튼 요소들을 찾습니다
   const buttons = document.querySelectorAll('button');
-  
-  // 버튼들을 숨깁니다
   buttons.forEach(button => button.style.display = 'none');
-  
   const content = document.getElementById('resume-content');
-  
-  // scale 값을 크게 하여 고해상도로 캔버스를 생성
   const canvas = await html2canvas(content, { 
     scale: 2,
-    useCORS: true, // CORS 문제 해결
+    useCORS: true,
     scrollX: 0,
     scrollY: 0,
   });
   
-  // 캔버스에서 생성된 이미지 데이터를 가져옵니다.
+
   const imgData = canvas.toDataURL('image/png');
-  
   const pdf = new jsPDF('p', 'mm', 'a4', true);
-  
-  const imgWidth = 210; // PDF의 너비 (A4)
-  const pageHeight = 295; // PDF의 높이 (A4)
-  
-  // PDF의 전체 너비를 채우도록 이미지 높이 계산
+  const imgWidth = 210;
+  const pageHeight = 295;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
   let heightLeft = imgHeight;
   let position = 0;
   
-  // 첫 페이지에 이미지 추가
   pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
   heightLeft -= pageHeight;
   
-  // 남은 컨텐츠를 추가 페이지로 나누기
   while (heightLeft >= 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
   }
-
-  // PDF Blob을 생성
   const pdfBlob = pdf.output('blob');
-
-  // 숨겼던 버튼들을 다시 표시합니다
   buttons.forEach(button => button.style.display = '');
-
   return pdfBlob;
 };
-
-  const uploadPDF = async (pdfBlob) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', pdfBlob, 'resume.pdf');
-
-      const response = await axios.post('http://localhost:8080/api/resume/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log('PDF 업로드 성공:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('PDF 업로드 중 오류 발생:', error);
-      throw error;
-    }
-  };
-
 
   const closeConfirmationModal = () => {
     setIsConfirmationOpen(false);
@@ -302,8 +319,6 @@ const generatePDF = async () => {
   const closeProofreadSidebar = () => {
     setIsProofreadSidebarOpen(false);
   };
-
-  
 
   const handleSidebarClick = (section) => {
     sectionsRef[section].current.scrollIntoView({ behavior: 'smooth' });
@@ -333,9 +348,76 @@ const generatePDF = async () => {
     setIsWorkConditionExempt(e.target.checked);
   };
 
+  useEffect(() => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      name: userStore.username || '',
+      email: userStore.email || ''
+    }));
+  }, [userStore.username, userStore.email]);
 
-  
+  const handleAiProofread = async (text) => {
+    if (text.trim() === '') {
+        setAiProofreadResult([{ message: "입력된 텍스트가 없습니다." }]);
+        setIsAiProofreadSidebarOpen(true);
+        return;
+    }
 
+    setLoading(true); // 로딩 시작
+
+    try {
+        const response = await axios.post('http://localhost:8080/api/chatgpt', {
+            text,
+        });
+
+        if (response.data) {
+            const formattedText = response.data.split('▶').map((item, index) => {
+                if (index > 0) {
+                    return (
+                        <div key={index} style={{ marginTop: '16px' }}>
+                            <span style={{ fontSize: '6px', position: 'relative', top: '-3.5px'}}>●</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span dangerouslySetInnerHTML={applyColorToQuotes(item)} />
+                        </div>
+                    );
+                }
+                return <span key={index} dangerouslySetInnerHTML={applyColorToQuotes(item)} />;
+            });
+
+            setAiProofreadResult([{ message: formattedText }]);
+        } else {
+            setAiProofreadResult([{ message: "AI 첨삭 결과를 불러오지 못했습니다." }]);
+        }
+
+        setIsAiProofreadSidebarOpen(true);
+    } catch (error) {
+        console.error('AI 첨삭 중 오류 발생:', error);
+        setAiProofreadResult([{ message: "AI 첨삭 중 오류가 발생했습니다." }]);
+        setIsAiProofreadSidebarOpen(true);
+    } finally {
+        setLoading(false); // 로딩 종료
+    }
+};
+
+const applyColorToQuotes = (text) => {
+  // 텍스트가 문자열이 아닌 경우를 처리
+  if (typeof text !== 'string') {
+      return text;
+  }
+
+  // ## 안의 텍스트에 색상 적용
+  const coloredText = text.replace(/##([^#]+)##/g, "<span style='color:#5A8AF2;'>$&</span>");
+
+  return { __html: coloredText };
+};
+
+
+
+
+
+
+  const closeAiProofreadSidebar = () => {
+    setIsAiProofreadSidebarOpen(false);
+  };
 
   return (
   
@@ -383,7 +465,21 @@ const generatePDF = async () => {
         </ModalContent>
       </Modal>
 
-
+      <Modal
+          aria-labelledby="loading-modal-title"
+          aria-describedby="loading-modal-description"
+          open={loading}
+          onClose={() => {}}
+          slots={{ backdrop: StyledBackdrop }}
+          disableScrollLock
+        >
+          <ModalContent sx={{ width: 300 }}>
+            <div className={modalStyles.spinner}></div> {/* 스피너 추가 */}
+            <h2 id="loading-modal-title" className={modalStyles.modalText}>
+              AI 첨삭 중입니다
+            </h2>
+          </ModalContent>
+        </Modal>
       <div className={styles.sidebar}>
         <ul>
           <li onClick={() => handleSidebarClick('personalInfo')}>인적사항</li>
@@ -413,7 +509,7 @@ const generatePDF = async () => {
                 onChange={(e) => {
                   setFormData({ ...formData, resume_title: e.target.value });
                   if (e.target.value.trim() !== '') {
-                   setShowTitleError(false);  // 제목 입력 시 에러 메시지 숨기기
+                   setShowTitleError(false);
                   }
                 }}
               />
@@ -1064,27 +1160,35 @@ const generatePDF = async () => {
             
             <hr className={styles.hr} />
 
-            <div className={styles.formGroup} ref={sectionsRef.selfIntroduction}>
-            <div className={styles.sectionHeaderContainer}>
-              <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>자기소개</h2>
-              <button
-                type="button"
-                className={proofreadStyles.proofreadButton}
-                onClick={() => handleProofread(selfIntroduction)}
-              >
-                맞춤법 검사
-              </button>
-            </div>
-            <div className={styles.textareaContainer}>
-              <textarea
-                placeholder="본인을 소개하는 글을 작성해주세요."
-                value={selfIntroduction}
-                onChange={handleSelfIntroductionChange}
-                maxLength="2000"
-              />
-              <div className={styles.charCounter}>{selfIntroduction.length}/2000</div>
-            </div>
-          </div>
+             <div className={styles.formGroup} ref={sectionsRef.selfIntroduction}>
+        <div className={styles.sectionHeaderContainer}>
+          <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>자기소개</h2>
+          <button
+            type="button"
+            className={proofreadStyles.proofreadButton}
+            onClick={() => handleProofread(selfIntroduction)}
+          >
+            맞춤법 검사
+          </button>
+          <button
+            type="button"
+            className={proofreadStyles.aiproofreadButton}
+            onClick={() => handleAiProofread(selfIntroduction)}
+            style={{ marginLeft: '10px' }} // 버튼 간격 조정
+          >
+            AI 첨삭 실행
+          </button>
+        </div>
+        <div className={styles.textareaContainer}>
+          <textarea
+            placeholder="본인을 소개하는 글을 작성해주세요."
+            value={selfIntroduction}
+            onChange={handleSelfIntroductionChange}
+            maxLength="2000"
+          />
+          <div className={styles.charCounter}>{selfIntroduction.length}/2000</div>
+        </div>
+      </div>
 
           <hr className={styles.hr} />
 
@@ -1129,9 +1233,10 @@ const generatePDF = async () => {
       </div>
 
             {isProofreadSidebarOpen && (
-        <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
+         <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
           <div className={proofreadStyles.sidebarHeader}>
-            <h3>맞춤법 검사 결과</h3>
+          <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>맞춤법 검사 결과</h3>
+
             <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
               <CloseIcon />
             </button>
@@ -1153,96 +1258,35 @@ const generatePDF = async () => {
           </div>
         </div>
       )}
+     {isAiProofreadSidebarOpen && (
+         <div className={`${proofreadStyles.aiproofreadSidebar} aiProofreadSidebar ${isAiProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
+          <div className={proofreadStyles.sidebarHeader}>
+            <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>AI 첨삭 결과</h3>
+            <button className={proofreadStyles.closeButton} onClick={closeAiProofreadSidebar}>
+              <CloseIcon />
+            </button>
+          </div>
+          <div className={proofreadStyles.sidebarContent}>
+            {aiProofreadResult.length > 0 ? (
+              <ul>
+                {aiProofreadResult.map((item, index) => (
+                  <li key={index} className={proofreadStyles.resultItem}>
+                    <p>{applyColorToQuotes(item.message)}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>AI 첨삭 결과가 없습니다.</p>
+            )}
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
 }
 
-// MUI styled components for Modal
-const Backdrop = React.forwardRef(
-  ({ open, className, ...other }, ref) => {
-    return (
-      <div
-        className={closestIndexTo({ 'base-Backdrop-open': open }, className)}
-        ref={ref}
-        {...other}
-      />
-    );
-  }
-);
 
-const blue = {
-  200: '#99CCFF',
-  300: '#66B2FF',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  700: '#0066CC',
-};
-
-const grey = {
-  50: '#F3F6F9',
-  100: '#E5EAF2',
-  200: '#DAE2ED',
-  300: '#C7D0DD',
-  400: '#B0B8C4',
-  500: '#9DA8B7',
-  600: '#6B7A90',
-  700: '#434D5B',
-  800: '#303740',
-  900: '#1C2025',
-};
-
-const Modal = styled(BaseModal)`
-  position: fixed;
-  z-index: 1300;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledBackdrop = styled(Backdrop)`
-  z-index: -1;
-  position: fixed;
-  inset: 0;
-  background-color: rgb(0 0 0 / 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const ModalContent = styled('div')(
-  ({ theme }) => css`
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 500;
-    text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-    justify-content: center; 
-    align-items: center; 
-    background-color: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-    border-radius: 8px;
-    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-    box-shadow: 0 4px 12px
-      ${theme.palette.mode === 'dark' ? 'rgb(0 0 0 / 0.5)' : 'rgb(0 0 0 / 0.2)'};
-    padding: 24px;
-    color: ${theme.palette.mode === 'dark' ? grey[50] : grey[900]};
-
-    & .modal-title {
-      margin: 0;
-      line-height: 1.5rem;
-      margin-bottom: 8px;
-    }
-
-    & .modal-description {
-      margin: 0;
-      line-height: 1.5rem;
-      font-weight: 400;
-      color: ${theme.palette.mode === 'dark' ? grey[400] : grey[800]};
-      margin-bottom: 4px;
-    }
-  `,
-);
 
 export default ResumeForm;

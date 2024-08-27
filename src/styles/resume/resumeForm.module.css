@@ -365,7 +365,6 @@
 }
 
 .button {
-  
   padding: 4px 8px;
   font-size: 10px !important;
   color: #fff;
@@ -387,7 +386,10 @@
   margin-top: 15.3px;
 }
 
-.button[type="cancel"],
+.submitBtn:hover{
+  background-color: #0056b3;
+}
+
 .cancelBtn {
   background-color: #6c757d;
   padding: 8.04px;
@@ -397,7 +399,9 @@
   margin-right: 10px;
 
 }
-
+.cancelBtn:hover{
+  background-color: #5a6268;
+}
 
 .add {
   
@@ -406,7 +410,9 @@
   font-size: 14px !important;
   margin-top: 20px;
 }
-
+.add:hover{
+  background-color: #0056b3;
+}
 .zipCodeInput {
   width: 20% !important;
   max-width: 300px;
@@ -495,10 +501,6 @@
   border-radius: 4px;
 }
 
-.plusButton {
-  font-size: 30px;
-  color: #5A8AF2;
-}
 
 .hiddenFileInput {
   display: none;

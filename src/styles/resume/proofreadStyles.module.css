@@ -2,17 +2,37 @@
   background-color: #5A8AF2;
   color: white;
   padding: 8px 16px;
-  border: none;
   border-radius: 4px;
   font-size: 14px !important;
   cursor: pointer;
-  margin-left: 530px;
   margin-bottom: 15px;
-  
+  align-items: end;
+  margin-left: 550px;
+  width: 118px;
+  height: 40px;
 }
 
 .proofreadButton:hover {
-  background-color: #5A8AF2;
+  background-color: #0056b3;
+}
+
+.aiproofreadButton {
+  background-color: white;
+  color: #5A8AF2;
+  padding: 8px 16px;
+  border: 2px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px !important;
+  font-weight: bold;
+  cursor: pointer;
+  width: 110px;
+  
+  
+}
+
+.aiproofreadButton:hover {
+  background-color: #0056b3;
+  color: white;
 }
 
 .proofreadSidebar {
@@ -28,10 +48,36 @@
   padding: 16px;
 }
 
+.proofreadSidebar {
+  position: fixed;
+  right: -300px;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background-color: #f8f9fa;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 16px;
+}
+.aiproofreadSidebar {
+  position: fixed;
+  right: -300px;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background-color: #f8f9fa;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 16px;
+}
 .proofreadSidebar.open {
   right: 0;
 }
-
+.aiproofreadSidebar.open {
+  right: 0;
+}
 .sidebarHeader {
   
   display: flex;
@@ -55,8 +101,8 @@
   cursor: pointer;
   color: #343a40;
   padding-left: 80px;
-  padding-top: 13px;
-  margin-bottom: 12px;
+  padding-top: 5px;
+  margin-bottom: 10px;
 }
 
 .sidebarContent {
@@ -66,6 +112,7 @@
   margin-bottom: 15px;
   margin-left: 15px;
   font-weight: lighter !important;
+  white-space: pre-wrap; /* 줄 바꿈을 유지하기 위해 추가 */
 }
 .resultItem {
   padding: 10px 0;
@@ -88,7 +135,8 @@
   margin-bottom: 15px; /* 마지막 문장에는 간격을 추가하지 않음 */
 }
 
-.resultItem p:first-of-type::before {
+/* 맞춤법 검사 결과에만 동그라미 기호 추가 */
+.proofreadSidebar .resultItem p:first-of-type::before {
   content: "•";
   color: black;
   font-size: 20px;
@@ -96,4 +144,10 @@
   left: 0;
   top: 0;
   transform: translateY(4px); /* 텍스트 높이에 맞게 동그라미 위치 조정 */
+}
+.aiproofreadSidebar .resultItem p:first-of-type::before {
+  content: none;
+}
+.aiproofreadSidebar .resultItem p {
+  margin-left: 5px; /* 동그라미 크기만큼 왼쪽 여백 추가 */
 }
