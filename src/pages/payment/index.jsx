@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '@/styles/main.module.css';
 import { Icon } from '@mui/material';
 import BasicPaymentCheckoutPage from '@/components/payment/tossPayBasic';
 import PremiumPaymentCheckoutPage from '@/components/payment/tossPayPremium';
-import { cancelPayment } from 'api/user';
+import { cancelPayment, getPayInfoByUserId } from 'api/user';
 import FaceIcon from '@mui/icons-material/Face'; // 표정 분석
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'; // 음성 분석
 import SearchIcon from '@mui/icons-material/Search'; // 키워드 분석
@@ -12,18 +12,36 @@ import VisibilityIcon from '@mui/icons-material/Visibility'; // 시선 처리
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'; // 성격 특성
 import AssessmentIcon from '@mui/icons-material/Assessment'; // 성격 분석
 import ThreeDPentagonIcon from '@/pages/payment/ThreeDPentagonIcon'; // 새로 만든 3D 오각형 아이콘
+import { useStores } from 'contexts/storeContext';
+import { observer } from 'mobx-react-lite';
 
-const Payment = () => {
+const Payment = observer(() => {
+    const { userStore } = useStores();
+    const [isBasicDisabled, setIsBasicDisabled] = useState(false);
+    const [isPremiumDisabled, setIsPremiumDisabled] = useState(false);
 
-    // const cancelPayment2 = () => {
-    //     const paymentKey = "tviva20240826084742TRaw4"; // 실제 paymentKey 값을 사용
-    //     cancelPayment(paymentKey);
-    // };
+    useEffect(() => {
+        const fetchPaymentInfo = async () => {
+            try {
+                const paymentInfo = await getPayInfoByUserId(userStore.id);
+                paymentInfo.data.forEach((payment) => {
+                    if (payment.orderName === '베이직플랜' && payment.useCount > 0) {
+                        setIsBasicDisabled(true);
+                    }
+                    if (payment.orderName === '프리미엄플랜' && payment.useCount > 0) {
+                        setIsPremiumDisabled(true);
+                    }
+                });
+            } catch (error) {
+                console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
+            }
+        };
+        fetchPaymentInfo();
+    }, [userStore]);
 
     return (
         <>
             <div>
-
                 {/* 요금제 섹션들 */}
                 <div className={styles.container4} id="tickets">
                     <div className={styles.ticketheader}>플랜 안내</div>
@@ -31,7 +49,6 @@ const Payment = () => {
 
                     {/* 요금제 플랜 */}
                     <div className={styles.ticketplansFrame}>
-
                         {/* 무료 플랜 */}
                         <div className={`${styles.ticketplansFrameIn}`}>
                             <div className={styles.ticketplansFrames}>
@@ -49,7 +66,7 @@ const Payment = () => {
                                     </div>
                                 </div>
                                 <div className={styles.ticketButtonFrame}>
-                                    <a href='#' className={styles.ticketbutton}>가입하기</a>
+                                    <a href='/auth' className={styles.ticketbutton}>가입하기</a>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +95,7 @@ const Payment = () => {
                                 </div>
                                 <div className={styles.ticketButtonFrame}>
                                     <div className={styles.price}>1,000 원</div>
-                                    <BasicPaymentCheckoutPage />
+                                    <BasicPaymentCheckoutPage disabled={isBasicDisabled} />
                                 </div>
                             </div>
                         </div>
@@ -123,7 +140,7 @@ const Payment = () => {
                                 </div>
                                 <div className={styles.ticketButtonFrame}>
                                     <div className={styles.price}>9,500 원</div>
-                                    <PremiumPaymentCheckoutPage />
+                                    <PremiumPaymentCheckoutPage disabled={isPremiumDisabled} />
                                 </div>
                             </div>
                         </div>
@@ -136,6 +153,6 @@ const Payment = () => {
 
         </>
     );
-};
+});
 
 export default Payment;

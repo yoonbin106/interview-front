@@ -898,10 +898,22 @@
   cursor: pointer;
   margin-left: 10px;
   text-decoration: none;
+  transition: background-color 0.3s ease; /* 배경색 전환 효과 추가 */
 }
 
 .ticketbutton:hover {
   background-color: #86aaf8;
+}
+
+.ticketbutton:disabled,
+.ticketbutton.disabledButton {
+  background-color: #B0B0B0; /* 비활성화 상태에서 버튼 색상을 회색으로 변경 */
+  cursor: not-allowed; /* 비활성화 상태에서 커서 모양 변경 */
+}
+
+.ticketbutton:disabled:hover,
+.ticketbutton.disabledButton:hover {
+  background-color: #B0B0B0; /* 비활성화 상태에서는 호버 시 색상 변화가 없도록 설정 */
 }
 
 .price {
