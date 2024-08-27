@@ -11,7 +11,13 @@ import TimerIcon from '@mui/icons-material/Timer'; // 답변시간 분석
 import VisibilityIcon from '@mui/icons-material/Visibility'; // 시선 처리
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'; // 성격 특성
 import AssessmentIcon from '@mui/icons-material/Assessment'; // 성격 분석
-import ThreeDPentagonIcon from '@/pages/payment/ThreeDPentagonIcon'; // 새로 만든 3D 오각형 아이콘
+import GradeIcon from '@mui/icons-material/Grade'; // 전체 등급
+import InsightsIcon from '@mui/icons-material/Insights'; // 종합 평가
+import RecommendIcon from '@mui/icons-material/Recommend'; // 추천 지수
+import LeaderboardIcon from '@mui/icons-material/Leaderboard'; // 평가 항목별 점수
+import AddIcon from '@mui/icons-material/Add'; // 플러스 아이콘
+
+
 import { useStores } from 'contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 
@@ -53,16 +59,32 @@ const Payment = observer(() => {
                         <div className={`${styles.ticketplansFrameIn}`}>
                             <div className={styles.ticketplansFrames}>
                                 <div className={styles.tickettitle}>
-                                    <ThreeDPentagonIcon sx={{ fontSize: 24, marginRight: '8px' }} mainColor="#CD7F32" shadowColor="#8B4513" />
+                                   
                                     무료
+                                    <div className={styles.titleLines}>
+                                        <div className={styles.line}></div>
+                                        <div className={styles.line}></div>
+                                    </div>
                                 </div>
                                 <div className={styles.ticketInfo}>
                                     <div className={styles.ticketInfoIn}>
                                         <div className={styles.ticketInfoTitle}>평가 항목</div>
-                                        <div>전체 등급</div>
-                                        <div>총합 평가</div>
-                                        <div>추천 지수</div>
-                                        <div>평가 항목별 점수</div>
+                                        <div>
+        <GradeIcon sx={{ fontSize: 20, marginRight: '8px', color: '#5A8AF2' }} />
+        전체 등급
+    </div>
+    <div>
+        <InsightsIcon sx={{ fontSize: 20, marginRight: '8px', color: '#5A8AF2' }} />
+        종합 평가
+    </div>
+    <div>
+        <RecommendIcon sx={{ fontSize: 20, marginRight: '8px', color: '#5A8AF2' }} />
+        추천 지수
+    </div>
+    <div>
+        <LeaderboardIcon sx={{ fontSize: 20, marginRight: '8px', color: '#5A8AF2' }} />
+        평가 항목별 점수
+    </div>
                                     </div>
                                 </div>
                                 <div className={styles.ticketButtonFrame}>
@@ -75,19 +97,25 @@ const Payment = observer(() => {
                         <div className={`${styles.ticketplansFrameIn}`}>
                             <div className={styles.ticketplansFrames}>
                                 <div className={styles.tickettitle}>
-                                    <ThreeDPentagonIcon sx={{ fontSize: 24, marginRight: '8px' }} mainColor="#C0C0C0" shadowColor="#A9A9A9" />  
+                                   
                                     베이직 10회
+                                    <div className={styles.titleLines}>
+                                        <div className={styles.line}></div>
+                                        <div className={styles.line}></div>
+                                    </div>
                                 </div>
                                 <div className={styles.ticketInfo}>
                                     <div className={styles.ticketInfoIn}>
                                         <div className={styles.ticketInfoTitle}>무료 플랜 평가에 추가로 아래 기능들을 더 제공합니다</div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <EmojiPeopleIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             성격 특성
                                         </div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <AssessmentIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             성격 분석
                                         </div>
@@ -105,34 +133,43 @@ const Payment = observer(() => {
                             <div className={styles.ribbon}><span>추천</span></div>
                             <div className={styles.ticketplansFrames}>
                                 <div className={styles.tickettitle}>
-                                    <ThreeDPentagonIcon sx={{ fontSize: 24, marginRight: '8px' }} mainColor="#FFD700" shadowColor="#B8860B" />
+                                   
                                     프리미엄 20회
+                                    <div className={styles.titleLines}>
+                                        <div className={styles.line}></div>
+                                        <div className={styles.line}></div>
+                                    </div>
                                 </div>
                                 <div className={styles.ticketInfo}>
                                     <div className={styles.ticketInfoIn}>
                                         <div className={styles.ticketInfoTitle}>베이직 플랜 평가에 추가로 아래 기능들을 더 제공합니다</div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <VisibilityIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             시선 처리
                                         </div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <FaceIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             표정 분석
                                         </div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <VolumeUpIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             음성 분석
                                         </div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <SearchIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             키워드 분석
                                         </div>
                                         <div className={styles.ticketInfoTitleSub}>
-                                            <Icon baseClassName="fas" className="fa-plus-circle" sx={{ color: '#2C3E50', fontSize: 16, marginRight: '8px' }} />
+                                        <AddIcon sx={{ color: '#2C3E50', fontSize: 16, marginRight: '4px' }} />
+
                                             <TimerIcon sx={{ color: '#5A8AF2', fontSize: 20, marginLeft: '8px' }} />
                                             답변시간 분석
                                         </div>
@@ -142,13 +179,17 @@ const Payment = observer(() => {
                                     <div className={styles.price}>9,500 원</div>
                                     <PremiumPaymentCheckoutPage disabled={isPremiumDisabled} />
                                 </div>
+      
                             </div>
                         </div>
 
                     </div>
 
                 </div>
-
+                           {/* 결제 불가 안내 메시지 */}
+                           <div className={styles.paymentWarning}>
+        * 결제 내역이 남아있다면 결제가 불가능합니다
+    </div>
             </div>
 
         </>

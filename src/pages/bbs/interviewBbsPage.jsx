@@ -1,40 +1,42 @@
-
-
-import React, { useState } from 'react';
-import PaginationTable from '@/components/bbs/bbsTable';
+import React, { useEffect, useState } from 'react';
+import PaginationTableNotice from '@/components/bbs/bbsTable'; // PaginationTableNotice로 변경
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/BoardTable.module.css';
 import NestedList from '@/components/bbs/bbsSidebar';
+import axios from 'axios'; // axios import 추가
 
-const boardTable = () => {
-    // 하드코딩된 공지사항 데이터
-    const notices = [
-        { bbs_id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15', hitcount: 13, likes: 20 },
-        { bbs_id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10', hitcount: 15, likes: 10 },
-        { bbs_id: 13, title: '신규 기능 업데이트 예정', author: 'admin1107', date: '2024-07-05', hitcount: 17, likes: 30 },
-        { bbs_id: 12, title: '고객센터 운영 시간 변경 안내', author: 'admin123', date: '2024-07-01', hitcount: 15, likes: 15 },
-        { bbs_id: 11, title: '긴급 서버 점검 안내 (7월 3일)', author: 'admin1004', date: '2024-06-28', hitcount: 13, likes: 20 },
-        { bbs_id: 10, title: '6월 결산 보고서', author: 'admin1107', date: '2024-06-25', hitcount: 13, likes: 20 },
-        { bbs_id: 9, title: '고객 설문조사 이벤트 당첨자 발표', author: 'admin123', date: '2024-06-20', hitcount: 13, likes: 20 },
-        { bbs_id: 8, title: '보안 강화 관련 정책 변경 안내', author: 'admin1004', date: '2024-06-15', hitcount: 13, likes: 20 },
-        { bbs_id: 7, title: '6월의 우수 고객 혜택 안내', author: 'admin1107', date: '2024-06-10', hitcount: 13, likes: 20 },
-        { bbs_id: 6, title: '서비스 이용약관 변경 안내', author: 'admin123', date: '2024-06-05', hitcount: 13, likes: 20 },
-        { bbs_id: 5, title: '회원 등급별 혜택 안내', author: 'admin1004', date: '2024-06-01', hitcount: 13, likes: 20 },
-        { bbs_id: 4, title: '5월의 우수 고객 혜택 안내', author: 'admin1107', date: '2024-05-25', hitcount: 13, likes: 20 },
-        { bbs_id: 3, title: '5월 결산 보고서', author: 'admin123', date: '2024-05-20', hitcount: 13, likes: 20 },
-        { bbs_id: 2, title: '시스템 업데이트 공지 (5월 18일)', author: 'admin1004', date: '2024-05-15', hitcount: 13, likes: 20 },
-        { bbs_id: 1, title: '개인정보 처리방침 변경 안내', author: 'admin1107', date: '2024-05-10', hitcount: 13, likes: 20 },
-    ];
+const BoardTable = () => {
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const [searchCategory, setSearchCategory] = useState(''); // 검색 카테고리 상태 관리
-    const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 관리
-    const [filteredNotices, setFilteredNotices] = useState(notices); // 필터링된 공지사항 상태 관리
+    const [searchCategory, setSearchCategory] = useState(''); 
+    const [searchTerm, setSearchTerm] = useState(''); 
+    const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물 상태 관리
+    const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 게시물 개수
+    const [page, setPage] = useState(0); // 현재 페이지 상태
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/bbs');
+                setPosts(response.data);
+                setFilteredPosts(response.data); // 필터링된 게시물에 처음 데이터 설정
+                setLoading(false);
+            } catch (error) {
+                setError(error);
+                setLoading(false);
+            }
+        };
+
+        fetchPosts();
+    }, []);
 
     // 검색 카테고리 변경 핸들러
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
-        setSearchTerm(''); // 카테고리 변경 시 검색어 초기화
+        setSearchTerm('');
     };
 
     // 검색어 변경 핸들러
@@ -45,7 +47,7 @@ const boardTable = () => {
     // 검색 버튼 클릭 핸들러
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
-        const filteredData = notices.filter(item => {
+        const filteredData = posts.filter(item => {
             if (searchCategory === 'title') {
                 return item.title.toLowerCase().includes(lowercasedFilter);
             }
@@ -54,78 +56,144 @@ const boardTable = () => {
             }
             return false;
         });
-        setFilteredNotices(filteredData);
+        setFilteredPosts(filteredData);
+        setPage(0); // 검색 시 페이지를 첫 페이지로 초기화
     };
+
+    // 페이지당 게시물 개수 변경 핸들러
+    const handleRowsPerPageChange = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0); // 페이지 개수 변경 시 첫 페이지로 초기화
+    };
+
+    // 페이지 변경 핸들러
+    const handleChangePage = (newPage) => {
+        setPage(newPage);
+    };
+
+    const totalPages = Math.ceil(filteredPosts.length / rowsPerPage); // 전체 페이지 계산
 
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
-                <NestedList/>
+                <NestedList />
             </div>
-        <div className={styles.content}>
-        <div className={"main-container"}>
-            <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '90%' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>면접자 게시판</h2>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                            {/* 게시판 등록 버튼 */}
-                            <RegisterButton to="/bbs/bbsRegisterPage" />
+            <div className={styles.content}>
+                <div className={"main-container"}>
+                    <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ width: '90%' }}>
+                            {/* 게시판 헤더 */}
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>면접자 게시판</h2>
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                                    <RegisterButton to="/bbs/interviewBbsRegisterPage" />
+                                </div>
+                            </div>
+                            <div className={styles.boardHeader}>
+                                <div className={styles.info}>
+                                    000 키워드로 검색된 글 <br /> {filteredPosts.length}개의 글
+                                </div>
+                                <div className={styles.boardHeaderControl}>
+                                    <input type="checkbox" id="pinned" name="pinned" />
+                                    <label htmlFor="pinned">공지사항 숨기기</label>
+                                    <select onChange={handleRowsPerPageChange} value={rowsPerPage}>
+                                        <option value={10}>10개씩</option>
+                                        <option value={20}>20개씩</option>
+                                        <option value={30}>30개씩</option>
+                                    </select>
+                                </div>
+                            </div>
+                            {/* 필터링된 공지사항을 테이블로 렌더링 */}
+                            <PaginationTableNotice rows={filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)} />
+
+                            {/* 검색 필터 */}
+                            <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
+                                <Grid item xs={3}>
+                                    <FormControl fullWidth variant="outlined">
+                                        <InputLabel id="search-category-label">검색 기준</InputLabel>
+                                        <Select
+                                            labelId="search-category-label"
+                                            id="search-category"
+                                            value={searchCategory}
+                                            onChange={handleCategoryChange}
+                                            label="검색 기준"
+                                        >
+                                            <MenuItem value="">선택</MenuItem>
+                                            <MenuItem value="title">제목</MenuItem>
+                                            <MenuItem value="author">작성자</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={7}>
+                                    <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        placeholder="검색어를 입력하세요"
+                                        value={searchTerm}
+                                        onChange={handleSearchChange}
+                                        disabled={!searchCategory}
+                                        style={{ height: '56px' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        onClick={handleSearch}
+                                        sx={{
+                                            backgroundColor: '#4A90E2',
+                                            '&:hover': { backgroundColor: '#357ABD' },
+                                            height: '56px'
+                                        }}
+                                    >
+                                        검색
+                                    </Button>
+                                </Grid>
+                            </Grid>
+
+                            {/* 페이지네이션 */}
+                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(0)}
+                                    disabled={page === 0}
+                                    style={{ marginRight: '8px' }}
+                                >
+                                    처음
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(page - 1)}
+                                    disabled={page === 0}
+                                    style={{ marginRight: '8px' }}
+                                >
+                                    이전
+                                </Button>
+                                <span>{page + 1} / {totalPages}</span>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(page + 1)}
+                                    disabled={page >= totalPages - 1}
+                                    style={{ marginLeft: '8px' }}
+                                >
+                                    다음
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleChangePage(totalPages - 1)}
+                                    disabled={page >= totalPages - 1}
+                                    style={{ marginLeft: '8px' }}
+                                >
+                                    마지막
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                    {/* 필터링된 공지사항을 테이블로 렌더링 */}
-                    <PaginationTable rows={filteredNotices} />
-                    <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
-    <Grid item xs={3}>  
-        {/* 드롭다운 리스트 */}
-        <FormControl fullWidth variant="outlined">
-            <InputLabel id="search-category-label">검색 기준</InputLabel>
-            <Select
-                labelId="search-category-label"
-                id="search-category"
-                value={searchCategory}
-                onChange={handleCategoryChange}
-                label="검색 기준"
-            >
-                <MenuItem value="">선택</MenuItem>
-                <MenuItem value="title">제목</MenuItem>
-                <MenuItem value="author">작성자</MenuItem>
-            </Select>
-        </FormControl>
-    </Grid>
-    <Grid item xs={7}> {/* 검색어 입력 필드 */}
-        <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="검색어를 입력하세요"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            disabled={!searchCategory}
-            style={{ height: '56px' }}
-        />
-    </Grid>
-    <Grid item xs={2}> 
-        <Button
-            fullWidth
-            variant="contained"
-            onClick={handleSearch}
-            sx={{
-                backgroundColor: '#4A90E2',
-                '&:hover': { backgroundColor: '#357ABD'},
-                height: '56px'
-            }}
-        >
-            검색
-        </Button>
-    </Grid>
-</Grid>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     );
 };
 
-export default boardTable
-;
+export default BoardTable;

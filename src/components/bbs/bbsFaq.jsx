@@ -13,7 +13,6 @@ const BbsFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
-                console.log("Fetching FAQs...");
                 const response = await axios.get('http://localhost:8080/api/faq/all');
                 console.log(response.data);
                 setFaqs(response.data);

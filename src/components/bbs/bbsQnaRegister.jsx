@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import {useRouter} from 'next/router';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/bbsQnaRegister.module.css';
+import axios from 'axios';
+import { observer } from 'mobx-react-lite';
+import { useStores } from '@/contexts/storeContext';
 
-const BbsQnaRegister = () => {
+const BbsQnaRegister = observer(() => {
+  const { userStore } = useStores();
   const [category, setCategory] = useState('계정 및 로그인');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -21,12 +25,31 @@ const BbsQnaRegister = () => {
     setContent(event.target.value);
   };
 
-  const handleSubmit = () => {
-    // 하드코딩된 데이터를 사용하여 제출 처리
-    alert('문의가 등록되었습니다.');
-    router.push('/bbs/bbsQnaListPage');
-  };
+  const handleSubmit = async() => {
+    if (!title || !content) {
+      alert('제목과 내용을 모두 입력해주세요.');
+      return;
+    }
 
+    const qnaData = {
+      category: category, //선택된 카테고리 (String 값)
+      qnaQuestion: title,
+      qnaContent: content,
+      id: userStore.id
+    };
+
+    try{
+      await axios.post('http://localhost:8080/api/qna',qnaData);
+      
+      alert('문의가 성공적으로 등록되었습니다.');
+
+      window.location.href = 'http://localhost:3000/bbs/bbsQnaListPage';
+    }catch (error) {
+      console.error('문의 등록 중 오류 발생:',error);
+      alert('문의 등록에 실패했습니다.');
+    }
+  };
+  
   return (
     <div className={styles.bbsQnaRegisterFormContainer}>
       <FormControl variant="outlined" fullWidth className={styles.bbsQnaRegisterFormControl}>
@@ -88,6 +111,6 @@ const BbsQnaRegister = () => {
       </div>
     </div>
   );
-};
+});
 
 export default BbsQnaRegister;

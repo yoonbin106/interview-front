@@ -11,6 +11,8 @@ import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import styles from '@/styles/bbs/bbsTable.module.css';
+import axios from 'axios';
+import { useStores } from '@/contexts/storeContext';
 
 export default function PaginationTableNotice({ rows }) {
   const [page, setPage] = React.useState(0);
@@ -19,6 +21,9 @@ export default function PaginationTableNotice({ rows }) {
   const [loading, setLoading] = React.useState(true);
   const totalPages = Math.ceil(rows.length / rowsPerPage);
   const [error, setError] = React.useState(null);
+  const [usernames, setUsernames] = React.useState({});
+
+  const { userStore } = useStores(); // Get userStore from context
   const handleChangePage = (newPage) => {
     setPage(newPage);
   };
@@ -28,12 +33,12 @@ export default function PaginationTableNotice({ rows }) {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - posts.length) : 0;
  
   React.useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/bbs/board');
+        const response = await axios.get('http://localhost:8080/bbs');
         setPosts(response.data);
         setLoading(false);
       } catch (error) {
@@ -46,6 +51,7 @@ export default function PaginationTableNotice({ rows }) {
   }, []);
 
   return (
+    
     <TableContainer component={Paper} className={styles.bbsTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
@@ -60,20 +66,20 @@ export default function PaginationTableNotice({ rows }) {
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.bbs_id} >
-              <TableCell align="center">{row.bbs_id}</TableCell>
+            ? posts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : posts
+          ).map((post) => (
+            <TableRow key={post.bbs_id} >
+              <TableCell align="center">{post.bbs_id}</TableCell>
               <TableCell align="center">
-                <a href={`/bbs/PostView`} style={{textDecoration:'none',color:'black'}}>
-                {row.title}
+                <a href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
+                {post.title}
                 </a>
               </TableCell>
-              <TableCell align="center">{row.author}</TableCell>
-              <TableCell align="center">{row.date}</TableCell>
-              <TableCell align="center">{row.hitcount}</TableCell>
-              <TableCell align="center">{row.likes}</TableCell>
+              <TableCell align="center">{post.username || userStore.username}</TableCell>
+              <TableCell align="center">{post.createdAt}</TableCell>
+              <TableCell align="center">{post.hitcount}</TableCell>
+              <TableCell align="center">{post.likes}</TableCell>
             </TableRow>
           ))}
         {emptyRows > 0 && (

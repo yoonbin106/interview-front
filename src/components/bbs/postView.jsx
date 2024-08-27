@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styles from '@/styles/bbs/postView.module.css';
+import axios from 'axios';
 
 const PostView = () => {
   const [comments, setComments] = useState([
@@ -11,26 +12,28 @@ const PostView = () => {
   ]);
   const router = useRouter();
   const { id } = router.query;  // URL 파라미터에서 ID를 가져옴
-  const [post, setPost] = useState(null); // 포스트 데이터를 저장할 상태
+  const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
 
   useEffect(() => {
-    if (id) {
-      const fetchPost = async () => {
-        try {
-          const response = await fetch(`/bbs/${id}`); // 서버의 포스트 API 호출
-          const data = await response.json();
-          setPost(data);
-        } catch (error) {
-          console.error('Failed to fetch post:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
+  if (id) {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`/bbs/${id}`); // 서버의 포스트 API 호출
+        console.log("리스폰스 찍기", response);
+        
+        setPost(response.data);
+      } catch (error) {
+        console.error('Failed to axios post:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchPost();
-    }
-  }, [id]);
+    fetchPost();
+  }
+}, [id]);
+
 
   if (loading) {
     return <div>Loading...</div>; // 로딩 상태 표시
@@ -67,14 +70,14 @@ const PostContent = ({ post }) => {
   };
 
   const handleEdit = () => {
-    router.push(`/bbs/edit/${id}`);
+    router.push(`/bbs/editPost?id=${id}`);
     handleClose();
   };
 
   const handleDelete = async () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        const response = await fetch(`/bbs/${id}`, {
+        const response = await fetch(`http://localhost:8080/bbs/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -94,12 +97,12 @@ const PostContent = ({ post }) => {
   return (
     <div className={styles.postContent}>
       <h2>{post.title}</h2>
-      <div className={styles.author}>용김동</div>
+      <div className={styles.author}>{post.author}</div>
       <section className={styles.postMeta}>
         <div className={styles.postInfo}>
           <span>❤️ 5</span>
           <span>조회 13</span>
-          <span>2024.07.23</span>
+          <span>{post.date}</span>
           <IconButton
             size="large"
             aria-label="display more actions"
