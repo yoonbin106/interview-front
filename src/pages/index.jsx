@@ -192,7 +192,7 @@ function Home() {
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxGrey}>
                             <div className={styles.keyWordTextWh}>면접 준비는 "FocusJob"</div>
-                            <div className={styles.mainText}>{"포커스잡.언제  \n어디서나  "}</div>
+                            <div className={styles.mainText}>{"포커스잡 \n 언제  \n어디서나  "}</div>
 
                                     
                         </div>
@@ -215,13 +215,7 @@ function Home() {
                     </div>
                     <div className={styles.keyWordFrames}>
                         <div className={styles.keyWordBoxWhite1}>
-                        <div className={styles.keyWordTextBl}>
-                        <span className={styles.highlightedText}>포커스잡</span>
-                        {" \n실전 대비 연습 "} 
-                        {"\n즉시 시작 가능 "} 
-                        {"\n실시간 피드백 "} 
-                        {"\n개인 맞춤형 연습"}
-                        </div>
+                        
                         </div>
                         <div className={styles.keyWordBoxWhitex}>
                             
@@ -239,8 +233,8 @@ function Home() {
                             <div className={styles.keyWordBoxWhite}>
                                
                             </div>
-                            <div className={styles.keyWordBoxGrey}>
-                                <div className={styles.keyWordTextWh1}>{"단계별로 완성하는\n면접 준비의\n모든 것,\n나만의\n방식으로\n따라오세요!"}</div>
+                            <div className={styles.keyWordBoxGrey2}>
+                             
                             </div>
                         </div>
                     </div>
