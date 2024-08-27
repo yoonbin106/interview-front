@@ -52,6 +52,7 @@ const AdminFaqRegister = () => {
         try {
             await axios.post('http://localhost:8080/api/faq', faqData);
             alert('FAQ가 성공적으로 등록되었습니다.');
+            window.location.href = 'http://localhost:3000/adminPage/adminFaqPage';
         }catch (error){
             console.error('Error submitting FAQ:',error);
             alert('FAQ 등록에 실패했습니다.');

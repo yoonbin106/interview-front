@@ -35,13 +35,12 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 //삭제된 항목을 제외한 새로운 FAQ 목록으로 상태 업데이트
                 setFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
                 setFilteredFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
-                window.location.href = 'http://localhost:3000/adminPage/adminFaqPage';
             } catch(error){
                 console.error('Error deleting FAQ:',error);
             }
         }
     };
-    
+
     // totalPages 계산
     const totalPages = Math.ceil(filteredFaqs.length / rowsPerPage);
 

@@ -5,6 +5,7 @@ import PaginationTable from '@/components/bbs/bbsNoticeTable';
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/noticePage.module.css';
+import BbsQnaSideMenu from 'components/bbs/bbsQnaSideMenu';
 
 const Notice = () => {
     // 하드코딩된 공지사항 데이터
@@ -58,68 +59,77 @@ const Notice = () => {
 
     return (
         <div className={styles.container}>
-        <div className={styles.content}>
-        <div className="main-container">
-            <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '90%' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 공지사항</h2>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                            {/* 공지사항 등록 버튼 */}
-                            <RegisterButton to="/bbs/bbsNoticeRegisterPage" />
+            {/* 사이드 메뉴 추가 */}
+            <Grid container>
+                <Grid item xs={2}>
+                    <BbsQnaSideMenu /> {/* 사이드 메뉴 컴포넌트 */}
+                </Grid>
+                <Grid item xs={10}>
+                    <div className={styles.content}>
+                        <div className="main-container">
+                            <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
+                                <div style={{ width: '90%' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 공지사항</h2>
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                                            {/* 공지사항 등록 버튼 */}
+                                            <RegisterButton to="/bbs/bbsNoticeRegisterPage" />
+                                        </div>
+                                    </div>
+                                    {/* 필터링된 공지사항을 테이블로 렌더링 */}
+                                    <PaginationTable rows={filteredNotices} />
+                                    <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
+                                        <Grid item xs={3}>
+                                            {/* 드롭다운 리스트 */}
+                                            <FormControl fullWidth variant="outlined">
+                                                <InputLabel id="search-category-label">검색 기준</InputLabel>
+                                                <Select
+                                                    labelId="search-category-label"
+                                                    id="search-category"
+                                                    value={searchCategory}
+                                                    onChange={handleCategoryChange}
+                                                    label="검색 기준"
+                                                >
+                                                    <MenuItem value="">선택</MenuItem>
+                                                    <MenuItem value="title">제목</MenuItem>
+                                                    <MenuItem value="author">작성자</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            {/* 검색어 입력 필드 */}
+                                            <TextField
+                                                fullWidth
+                                                variant="outlined"
+                                                placeholder="검색어를 입력하세요"
+                                                value={searchTerm}
+                                                onChange={handleSearchChange}
+                                                disabled={!searchCategory}
+                                                style={{ height: '56px' }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Button
+                                                fullWidth
+                                                variant="contained"
+                                                onClick={handleSearch}
+                                                sx={{
+                                                    backgroundColor: '#4A90E2',
+                                                    '&:hover': { backgroundColor: '#357ABD' },
+                                                    height: '56px'
+                                                }}
+                                            >
+                                                검색
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    {/* 필터링된 공지사항을 테이블로 렌더링 */}
-                    <PaginationTable rows={filteredNotices} />
-                    <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
-    <Grid item xs={3}>  
-        {/* 드롭다운 리스트 */}
-        <FormControl fullWidth variant="outlined">
-            <InputLabel id="search-category-label">검색 기준</InputLabel>
-            <Select
-                labelId="search-category-label"
-                id="search-category"
-                value={searchCategory}
-                onChange={handleCategoryChange}
-                label="검색 기준"
-            >
-                <MenuItem value="">선택</MenuItem>
-                <MenuItem value="title">제목</MenuItem>
-                <MenuItem value="author">작성자</MenuItem>
-            </Select>
-        </FormControl>
-    </Grid>
-    <Grid item xs={7}> {/* 검색어 입력 필드 */}
-        <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="검색어를 입력하세요"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            disabled={!searchCategory}
-            style={{ height: '56px' }}
-        />
-    </Grid>
-    <Grid item xs={2}> 
-        <Button
-            fullWidth
-            variant="contained"
-            onClick={handleSearch}
-            sx={{
-                backgroundColor: '#4A90E2',
-                '&:hover': { backgroundColor: '#357ABD'},
-                height: '56px'
-            }}
-        >
-            검색
-        </Button>
-    </Grid>
-</Grid>
-                    </div>
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         </div>
-    </div>
     );
 };
 
