@@ -118,10 +118,11 @@ export const paymentCheck = async (orderId, paymentKey, amount, id) => {
   return res;
 }
 
-export const cancelPayment = async (paymentKey) => {
+export const cancelPayment = async (selectedPaymentKey, refundReason) => {
   const res = await axios.post(baseUrl + "/paymentCancel", null, {
       params: {
-      paymentKey: paymentKey
+        paymentKey: selectedPaymentKey,
+        cancelReason: refundReason
       }
   });
   return res;

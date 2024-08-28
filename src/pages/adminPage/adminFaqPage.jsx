@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';
-
-import BbsFaq from '@/components/bbs/bbsFaq';
 import axios from 'axios';
-import BbsQnaSideMenu from 'components/bbs/bbsQnaSideMenu';
+import NestedList from 'components/adminPage/adminSideMenu';
+import AdminFaq from 'components/adminPage/adminFaq';
 
-const BbsFaqPage = () => {
+
+const AdminFaqPage = () => {
     const [faqs,setFaqs] = useState([]);//FAQ데이터를 담는 상태
     const [filteredFaqs, setFilteredFaqs] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -50,10 +50,10 @@ const BbsFaqPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
-                <BbsQnaSideMenu />
+                <NestedList />
             </div>
             <div className={styles.content}>
-                <BbsFaq 
+                <AdminFaq 
                     faqs={filteredFaqs}
                     onPageChange={handleChangePage} 
                     onRowsPerPageChange={handleRowsPerPageChange}
@@ -68,4 +68,4 @@ const BbsFaqPage = () => {
     );
 };
 
-export default BbsFaqPage;
+export default AdminFaqPage;
