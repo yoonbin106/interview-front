@@ -3,7 +3,7 @@ import PaginationTableNotice from '@/components/bbs/bbsTable'; // PaginationTabl
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/BoardTable.module.css';
-import NestedList from '@/components/bbs/bbsSidebar';
+
 import axios from 'axios'; // axios import 추가
 
 const BoardTable = () => {
@@ -21,6 +21,7 @@ const BoardTable = () => {
         const fetchPosts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/bbs');
+                console.log(response);
                 setPosts(response.data);
                 setFilteredPosts(response.data); // 필터링된 게시물에 처음 데이터 설정
                 setLoading(false);
@@ -75,9 +76,7 @@ const BoardTable = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.sidebar}>
-                <NestedList />
-            </div>
+           
             <div className={styles.content}>
                 <div className={"main-container"}>
                     <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
@@ -85,7 +84,7 @@ const BoardTable = () => {
                             {/* 게시판 헤더 */}
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>전체 게시판</h2>
+                                <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>자유 게시판</h2>
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                                     <RegisterButton to="/bbs/bbsRegisterPage" />
                                 </div>
@@ -95,8 +94,8 @@ const BoardTable = () => {
                                     000 키워드로 검색된 글 <br /> {filteredPosts.length}개의 글
                                 </div>
                                 <div className={styles.boardHeaderControl}>
-                                    <input type="checkbox" id="pinned" name="pinned" />
-                                    <label htmlFor="pinned">공지사항 숨기기</label>
+                                    
+                                    
                                     <select onChange={handleRowsPerPageChange} value={rowsPerPage}>
                                         <option value={10}>10개씩</option>
                                         <option value={20}>20개씩</option>
