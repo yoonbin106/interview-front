@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Card, CardContent } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Card, CardContent, Modal } from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import styles from '@/styles/adminPage/adminPayment.module.css';
-import { getAllPayInfo } from 'api/user';
+import { cancelPayment, getAllPayInfo } from 'api/user';
+import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from 'next/router';
 
 const theme = createTheme({
     palette: {
@@ -24,6 +26,10 @@ export default function AdminPayment() {
     const [endDate, setEndDate] = useState(null); 
     const [planType, setPlanType] = useState('베이직'); 
     const [searchQuery, setSearchQuery] = useState(''); 
+    const [open, setOpen] = useState(false);
+    const [refundReason, setRefundReason] = useState('');
+    const [selectedPaymentKey, setSelectedPaymentKey] = useState(null);
+    const router = useRouter();
 
     useEffect(() => {
         async function fetchPaymentData() {
@@ -35,10 +41,11 @@ export default function AdminPayment() {
                     paymentId: item.orderId,
                     email: item.userId.email,
                     paymentDate: dayjs(item.approvedAt).format('YYYY-MM-DD'),
-                    amount: `₩${item.price.toLocaleString()}`,
+                    amount: `${item.useCount.toLocaleString()}`,
                     status: item.isCanceled === 1 ? '환불' : '승인',
                     planType: item.orderName,
                     isRefundable: item.isCanceled === 0,
+                    paymentKey: item.paymentKey,
                 }));
 
                 const sortedData = [...processedData].sort((a, b) => dayjs(b.paymentDate) - dayjs(a.paymentDate));
@@ -76,6 +83,36 @@ export default function AdminPayment() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0); 
+    };
+
+    const handleOpenModal = (paymentKey) => {
+        setSelectedPaymentKey(paymentKey);
+        setOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpen(false);
+        setRefundReason('');
+    };
+
+    const handleRefund = async () => {
+        console.log('Payment Key:', selectedPaymentKey);
+        console.log('Refund Reason:', refundReason);
+        try {
+            const refundResponse = await cancelPayment(selectedPaymentKey, refundReason);
+    
+            // HTTP 상태 코드가 200일 경우
+            if (refundResponse.status === 200) {
+                router.push('/adminPage/adminRefundPage');
+            } else {
+                // 상태 코드가 200이 아닌 경우 오류 메시지 출력
+                alert(`오류 발생: ${refundResponse.data}`);
+            }
+        } catch (error) {
+            // 요청 중 예외가 발생한 경우 오류 메시지 출력
+            alert(`오류 발생: ${error.response?.data || error.message}`);
+        }
+        handleCloseModal();
     };
 
     return (
@@ -138,7 +175,7 @@ export default function AdminPayment() {
                         </Card>
                     </ThemeProvider>
 
-                    <Box sx={{ width: '100%', mt: 4 }}>
+                    <Box sx={{ width: '100%', mt: 4}}>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -146,9 +183,9 @@ export default function AdminPayment() {
                                         <TableCell className={styles.adminPaymentTableHeader}>결제번호</TableCell>
                                         <TableCell className={styles.adminPaymentTableHeader}>이메일</TableCell>
                                         <TableCell className={styles.adminPaymentTableHeader}>결제일</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>금액</TableCell>
+                                        <TableCell className={styles.adminPaymentTableHeader}>남은횟수</TableCell>
                                         <TableCell className={styles.adminPaymentTableHeader}>요금제 유형</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>상태</TableCell>
+                                        <TableCell className={styles.adminPaymentTableHeader}>결제취소</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -163,7 +200,8 @@ export default function AdminPayment() {
                                             <Button 
                                                 variant="outlined" 
                                                 color="secondary"
-                                                disabled={!row.isRefundable}  // 환불이 이미 처리된 경우 비활성화
+                                                disabled={!row.isRefundable}  
+                                                onClick={() => handleOpenModal(row.paymentKey)} 
                                             >
                                                 {row.isRefundable ? '환불하기' : '환불 완료'}
                                             </Button>
@@ -217,6 +255,55 @@ export default function AdminPayment() {
                                 <MenuItem value={10}>10</MenuItem>
                                 <MenuItem value={25}>25</MenuItem>
                             </Select>
+                            {/* 환불 모달 */}
+                            <Modal
+                                open={open}
+                                onClose={(event, reason) => {
+                                    if (reason !== "backdropClick") {
+                                        handleCloseModal();
+                                    }
+                                }}
+                                aria-labelledby="refund-modal-title"
+                                aria-describedby="refund-modal-description"
+                            >
+                                <Box sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: 400,
+                                    bgcolor: 'background.paper',
+                                    border: '2px solid #000',
+                                    boxShadow: 24,
+                                    p: 4,
+                                    position: 'relative'
+                                }}>
+                                    <Button 
+                                        onClick={handleCloseModal} 
+                                        sx={{ position: 'absolute', top: 8, right: 8 }}
+                                    >
+                                        <CloseIcon />
+                                    </Button>
+                                    <h2 id="refund-modal-title">환불사유를 입력해주세요</h2>
+                                    <TextField
+                                        fullWidth
+                                        placeholder="환불사유를 입력해주세요"
+                                        value={refundReason}
+                                        onChange={(e) => setRefundReason(e.target.value)}
+                                        multiline
+                                        rows={4}
+                                        sx={{ mt: 2 }}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleRefund}
+                                        sx={{ mt: 2, display: 'block', marginLeft: 'auto' }}
+                                    >
+                                        환불처리하기
+                                    </Button>
+                                </Box>
+                            </Modal>
                         </Box>
                     </Box>
                 </div>
