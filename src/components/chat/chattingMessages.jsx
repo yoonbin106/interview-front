@@ -1,20 +1,41 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import styles from '../../styles/chat/chattingMessages.module.css';
+import { getAllUsers } from 'api/user';
 
 
-
-const ChattingMessages = ({ messages, userStore, onBack }) => {
+const ChattingMessages = ({ messages, userStore }) => {
   const messagesEndRef = useRef(null);
+  const [users, setUsers] = useState([]);
+
+  const getAllUserList = async () => {
+    try {
+      const response = await getAllUsers();
+      setUsers(response.data);
+    }
+    catch (error) {
+      console.log('Error: ', error);
+    }
+  }
+
+  const getSenderProfileImage = (senderId) => {
+    const user = users.find((user) => user.id == senderId);
+    // return user ? user.profileImage : '';
+    // console.log('user: ', user);
+    return user ? user.profileImage : '';
+  };
+
+  useEffect(() => {
+    getAllUserList()
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+
   return (
     <div className={styles.chattingMessages}>
-      
-      
 
       {messages.map((message, index) => (
 
@@ -28,7 +49,8 @@ const ChattingMessages = ({ messages, userStore, onBack }) => {
           <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
             <div className={styles.recieverAvatar} aria-hidden="true">
-              <Avatar sx={{ width: 50, height: 50 }}></Avatar>
+              <Avatar src={getSenderProfileImage(message.senderId)} sx={{ width: 50, height: 50 }}></Avatar>
+              {/* 보내는 사람 아이디: {message.senderId} */}
             </div>
 
             <div className={styles.othersMessageInfo}>
