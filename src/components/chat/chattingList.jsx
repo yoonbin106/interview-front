@@ -5,7 +5,7 @@ import { MessageSquareDiff, Settings } from 'lucide-react';
 import Avatar from '@mui/material/Avatar';
 import ChattingCreateRoom from './chattingCreateRoom';
 
-const ChattingList = ({ onChatClick, userStore, users, chatRoomList, getChatroomList }) => {
+const ChattingList = ({ onChatClick, userStore, users, chatRoomList, getAllChatroomList }) => {
 
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
     
@@ -15,7 +15,7 @@ const ChattingList = ({ onChatClick, userStore, users, chatRoomList, getChatroom
     };
 
     const backToChatList = () => {
-        getChatroomList();
+        getAllChatroomList();
         setIsCreatingRoom(false);
     };
 
@@ -36,20 +36,49 @@ const ChattingList = ({ onChatClick, userStore, users, chatRoomList, getChatroom
                             </button>
                         </div>
                     </div>
-
+                    {chatRoomList.length === 0 ? (
+                        <div className={styles.noChatroom}>
+                            참가 중인 채팅방이 존재하지 않습니다.
+                        </div>
+                    ) : (
+                        chatRoomList.map((list) => (
+                            <div 
+                                className={styles.chattingList} 
+                                key={list.id} 
+                                onClick={() => onChatClick(list.id)}
+                            >
+                                <div className={styles.chattingListProfile}>
+                                    <Avatar sx={{ width: 50, height: 50 }} /> 
+                                </div>
+                                <div className={styles.chattingListContent}>
+                                    <div className={styles.chattingRoomTitle}>{list.chatRoomTitle}</div>
+                                    <div className={styles.chattingRoomLastMessage}>테스트 : 테스트 마지막 메세지</div>
+                                    {/* 마지막 메세지는 json으로 저장해야하나 했는데 그냥 메세지 하나하나 보낼때마다... 
+                                    마지막 메세지의 id 값을 chatroomList의 last_message에 저장하고 출력해올때마다 스프링에서 또 받아오게........?
+                                    그러면 뭔가 더 복잡해지나? chatroom 정보 가져올때 lastMessage의 id 값으로 chat_message 테이블을 또 조회해야하니까..
+                                    id로 하지말고 값을 그냥 저장해야하나
+                                     ? ?  ? ?  */}
+                                </div>
+                            </div>
+                        ))
+                    )}
+                    {/* 
                     {chatRoomList.map((list) => (
                         <div className={styles.chattingList} key={list.id} onClick={() => onChatClick(list.id)}>
                             <div className={styles.chattingListProfile}>
                                 <Avatar sx={{ width: 50, height: 50 }} /> 
-                                {/* src={userInfo.profile} */}
+                                
                             </div>
                             <div className={styles.chattingListContent}>
                                 <div className={styles.chattingRoomTitle}>{list.chatRoomTitle}</div>
                                 <div className={styles.chattingRoomLastMessage}>테스트 : 테스트 마지막 메세지</div>
-                                {/* {list.name} : {list.lastMessage} */}
+                                
                             </div>
                         </div>
                     ))}
+                     */}
+                    {/* src={userInfo.profile} */}
+                    {/* {list.name} : {list.lastMessage} */}
                 </>
             ) : (
                 <div>
