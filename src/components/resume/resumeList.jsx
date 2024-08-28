@@ -12,7 +12,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
+
 
 const ResumeList = () => {
   const router = useRouter();
@@ -214,7 +216,8 @@ const ResumeList = () => {
                       onClick={(event) => handleDownloadClick(resume.resumeId, event)}
                       className={styles.downButton}
                     >
-                      이력서 다운로드(PDF)
+                      이력서(PDF)
+                      <FileDownloadIcon sx={{ marginLeft: '8px',paddingTop:'3px', marginRight:'-8px' }} />
                     </button>
                     <button
                       onClick={(event) => handleDeleteClick(resume.resumeId, event)}

@@ -3,7 +3,7 @@ import styles from '@/styles/bbs/PostView.module.css';
 import sidebar from '@/styles/bbs/bbsPage.module.css';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NestedList from '@/components/bbs/bbsSidebar';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -16,7 +16,8 @@ const PostView = () => {
   const { id } = router.query;  // URL 파라미터에서 ID를 가져옴
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
-
+  
+  
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
@@ -97,28 +98,32 @@ const PostView = () => {
     }
     handleClose();
   };
+  
+
   return (
 
         <div className={styles.postContainer}>
           
           <h2>{post.title}</h2>
           <div className={styles.postMeta}>
-            <div className={styles.author}>{post.author}</div>
+            <div className={styles.author}>{post.username}</div>
             <div className={styles.postInfo}>
               
               <span>❤️ 5</span>
               <span>조회 13</span>
               <span>{post.date}</span>
-              <IconButton
-                size="large"
-                aria-label="display more actions"
-                edge="end"
-                color="inherit"
-                style={{ color: 'black', fontSize: '24px' }}
-                onClick={handleClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
+              
+                <IconButton
+                  size="large"
+                  aria-label="display more actions"
+                  edge="end"
+                  color="inherit"
+                  style={{ color: 'black', fontSize: '24px' }}
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}

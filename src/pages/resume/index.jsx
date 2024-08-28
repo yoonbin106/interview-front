@@ -46,6 +46,7 @@ function ResumeForm() {
   const [modalContent, setModalContent] = useState('');
   const [showTitleError, setShowTitleError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
 
   const [formData, setFormData] = useState({
     resume_title: '',
@@ -57,7 +58,11 @@ function ResumeForm() {
     desired_start_date: '',
     gender: '',
     name: userStore.username || '',
-    email: userStore.email || ''
+    email: userStore.email || '',
+    phone: userStore.phone || '',
+    gender: userStore.gender || '',
+    birth: userStore.birth || '',
+    address: userStore.address || ''
   });
 
 
@@ -74,6 +79,41 @@ function ResumeForm() {
     motivation: useRef(null)
   };
 
+  const checkAndSetExemptions = () => {
+      
+    // 경력 섹션
+    const isCareerEmpty = careerFields.every(field =>
+      !field.company_name && !field.join_date && !field.leave_date && !field.position && !field.job_description
+    );
+    setIsCareerExempt(isCareerEmpty);
+  
+    // 외국어 섹션
+    const isLanguageEmpty = languageFields.every(field =>
+      !field.language && !field.language_level && !field.language_score
+    );
+    setIsLanguageExempt(isLanguageEmpty);
+  
+    // 입상경력 섹션
+    const isAwardEmpty = awardFields.every(field =>
+      !field.contest_name && !field.contest_award && !field.contest_date
+    );
+    setIsAwardExempt(isAwardEmpty);
+  
+    // 자격증 섹션
+    const isCertificateEmpty = certificateFields.every(field =>
+      !field.certificate_name && !field.certificate_issuer && !field.certificate_date
+    );
+    setIsCertificateExempt(isCertificateEmpty);
+  
+    // 병역 섹션
+    const isMilitaryEmpty = !formData.military_service_type && !formData.military_start_date && !formData.military_end_date && !formData.military_rank;
+    setIsMilitaryExempt(isMilitaryEmpty);
+  
+    // 희망 근무조건 섹션
+    const isWorkConditionEmpty = !formData.desired_salary && !formData.desired_start_date;
+    setIsWorkConditionExempt(isWorkConditionEmpty);
+  };
+  
   // MUI styled components for Modal
 const Backdrop = React.forwardRef(
   ({ open, className, ...other }, ref) => {
@@ -225,7 +265,9 @@ const ModalContent = styled('div')(
       window.scrollTo(0, 0);
       return;
     }
-  
+    
+    checkAndSetExemptions();
+
     setModalContent('작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?');
     setIsModalOpen(true);
   };
@@ -238,30 +280,33 @@ const ModalContent = styled('div')(
   const confirmAction = async () => {
     if (modalContent === '작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?') {
         try {
+            setLoadingSave(true); // 저장 시작 시 로딩 모달 표시
             const pdfData = await generatePDF();
             const formDataToSend = new FormData();
             formDataToSend.append('file', pdfData);
             formDataToSend.append('title', formData.resume_title);
             formDataToSend.append('email', formData.email);
-    
+
             const uploadResponse = await axios.post('http://localhost:8080/api/resume/upload', formDataToSend, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
 
             const resumeId = uploadResponse.data.resumeId;
 
             await axios.post('http://localhost:8080/api/resume/proofread/save', {
-              resumeId: resumeId,
-              selfIntroduction: selfIntroduction,
-              motivation: motivation
+                resumeId: resumeId,
+                selfIntroduction: selfIntroduction,
+                motivation: motivation
             });
-    
+
             setIsModalOpen(false);
             setIsConfirmationOpen(true);
         } catch (error) {
             console.error('에러 발생:', error);
+        } finally {
+            setLoadingSave(false); // 저장 완료 후 로딩 모달 숨기기
         }
     } else {
         setIsModalOpen(false);
@@ -398,6 +443,47 @@ const generatePDF = async () => {
     }
 };
 
+const handleAiProofreadMotivation = async (text) => {
+  if (text.trim() === '') {
+      setAiProofreadResult([{ message: "입력된 텍스트가 없습니다." }]);
+      setIsAiProofreadSidebarOpen(true);
+      return;
+  }
+
+  setLoading(true); // 로딩 시작
+
+  try {
+      const response = await axios.post('http://localhost:8080/api/chatgpt-motivation', { text });
+
+      if (response.data) {
+          const formattedText = response.data.split('▶').map((item, index) => {
+              if (index > 0) {
+                  return (
+                      <div key={index} style={{ marginTop: '16px' }}>
+                          <span style={{ fontSize: '6px', position: 'relative', top: '-3.5px'}}>●</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                          <span dangerouslySetInnerHTML={applyColorToQuotes(item)} />
+                      </div>
+                  );
+              }
+              return <span key={index} dangerouslySetInnerHTML={applyColorToQuotes(item)} />;
+          });
+
+          setAiProofreadResult([{ message: formattedText }]);
+      } else {
+          setAiProofreadResult([{ message: "AI 첨삭 결과를 불러오지 못했습니다." }]);
+      }
+
+      setIsAiProofreadSidebarOpen(true);
+  } catch (error) {
+      console.error('AI 첨삭 중 오류 발생:', error);
+      setAiProofreadResult([{ message: "AI 첨삭 중 오류가 발생했습니다." }]);
+      setIsAiProofreadSidebarOpen(true);
+  } finally {
+      setLoading(false); // 로딩 종료
+  }
+};
+
+
 const applyColorToQuotes = (text) => {
   // 텍스트가 문자열이 아닌 경우를 처리
   if (typeof text !== 'string') {
@@ -410,60 +496,76 @@ const applyColorToQuotes = (text) => {
   return { __html: coloredText };
 };
 
-
-
-
-
-
   const closeAiProofreadSidebar = () => {
     setIsAiProofreadSidebarOpen(false);
   };
 
+
   return (
   
     <div className={`${styles.body} ${styles.resumeForm}`}>
-      <Modal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
-        open={isModalOpen}
-        onClose={closeModal}
-        slots={{ backdrop: StyledBackdrop }}
-        disableScrollLock
-      >
-        <ModalContent sx={{ width: 450 }}>
-        <h2 id="unstyled-modal-title" className={modalStyles.modalText}>
-          <span dangerouslySetInnerHTML={{ __html: modalContent }} />
-        </h2>
-        <div className={modalStyles.modalButtons}>
-          <button onClick={closeModal} className={modalStyles.modalCancelButton}>
-            취소
-          </button>
-          <button onClick={confirmAction} className={modalStyles.modalConfirmButton}>
-            확인
-          </button>
-        </div>
-      </ModalContent>
-      </Modal>
+     {!loadingSave && (
+  <Modal
+    aria-labelledby="unstyled-modal-title"
+    aria-describedby="unstyled-modal-description"
+    open={isModalOpen}
+    onClose={closeModal}
+    slots={{ backdrop: StyledBackdrop }}
+    disableScrollLock
+  >
+    <ModalContent sx={{ width: 450 }}>
+      <h2 id="unstyled-modal-title" className={modalStyles.modalText}>
+        <span dangerouslySetInnerHTML={{ __html: modalContent }} />
+      </h2>
+      <div className={modalStyles.modalButtons}>
+        <button onClick={closeModal} className={modalStyles.modalCancelButton}>
+          취소
+        </button>
+        <button onClick={confirmAction} className={modalStyles.modalConfirmButton}>
+          확인
+        </button>
+      </div>
+    </ModalContent>
+  </Modal>
+)}
 
-      <Modal
-        aria-labelledby="confirmation-modal-title"
-        aria-describedby="confirmation-modal-description"
-        open={isConfirmationOpen}
-        onClose={closeConfirmationModal}
-        slots={{ backdrop: StyledBackdrop }}
-        disableScrollLock
-      >
-        <ModalContent sx={{ width: 450 }}>
-          <h2 id="confirmation-modal-title" className={modalStyles.modalText}>
-            이력서 등록이 완료되었습니다
-          </h2>
-          <div className={modalStyles.modalButtons}>
-            <button onClick={navigateToResumeList} className={modalStyles.modalListButton}>
-              이력서 관리
-            </button>
-          </div>
-        </ModalContent>
-      </Modal>
+<Modal
+    aria-labelledby="loading-save-modal-title"
+    aria-describedby="loading-save-modal-description"
+    open={loadingSave}
+    onClose={() => {}}
+    slots={{ backdrop: StyledBackdrop }}
+    disableScrollLock
+>
+    <ModalContent sx={{ width: 300 }}>
+        <div className={modalStyles.spinner}></div> 
+        <h2 id="loading-save-modal-title" className={modalStyles.modalText}>
+            저장 중입니다...
+        </h2>
+    </ModalContent>
+  </Modal>
+
+      {!loadingSave && (
+  <Modal
+    aria-labelledby="confirmation-modal-title"
+    aria-describedby="confirmation-modal-description"
+    open={isConfirmationOpen}
+    onClose={closeConfirmationModal}
+    slots={{ backdrop: StyledBackdrop }}
+    disableScrollLock
+  >
+    <ModalContent sx={{ width: 450 }}>
+      <h2 id="confirmation-modal-title" className={modalStyles.modalText}>
+        이력서 등록이 완료되었습니다
+      </h2>
+      <div className={modalStyles.modalButtons}>
+        <button onClick={navigateToResumeList} className={modalStyles.modalListButton}>
+          이력서 관리
+        </button>
+      </div>
+    </ModalContent>
+  </Modal>
+)}
 
       <Modal
           aria-labelledby="loading-modal-title"
@@ -476,7 +578,7 @@ const applyColorToQuotes = (text) => {
           <ModalContent sx={{ width: 300 }}>
             <div className={modalStyles.spinner}></div> {/* 스피너 추가 */}
             <h2 id="loading-modal-title" className={modalStyles.modalText}>
-              AI 첨삭 중입니다
+              AI 첨삭 중...
             </h2>
           </ModalContent>
         </Modal>
@@ -549,11 +651,11 @@ const applyColorToQuotes = (text) => {
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
                   <label className={`${styles.label} ${styles.required}`}>생년월일</label>
-                  <input type="text" placeholder="생년월일" />
+                  <input type="text" placeholder="생년월일" value={formData.birth} />
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
                   <label className={`${styles.label} ${styles.required}`}>성별</label>
-                  <select name="gender" value={formData.gender} onChange={handleChange} className={`${styles.genderSelect} ${styles.select}`}>
+                  <select name="gender" onChange={handleChange} className={`${styles.genderSelect} ${styles.select}`}>
                     <option value="">선택하세요</option>
                     <option value="male">남자</option>
                     <option value="female">여자</option>
@@ -568,7 +670,7 @@ const applyColorToQuotes = (text) => {
                 </div>
                 <div className={styles.formGroup}>
                   <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
-                  <input type="text" className={styles.phoneNumInput} placeholder="휴대전화번호" />
+                  <input type="text" className={styles.phoneNumInput} placeholder="휴대전화번호" value={formData.phone} />
                 </div>
               </div>
             </div>
@@ -583,7 +685,6 @@ const applyColorToQuotes = (text) => {
                   className={styles.formControl}
                   id="zipcode"
                   placeholder="우편번호"
-                  value={postcode}
                   readOnly
                 />
                 <button
@@ -1195,26 +1296,34 @@ const applyColorToQuotes = (text) => {
           
 
           <div className={styles.formGroup} ref={sectionsRef.motivation}>
-            <div className={styles.sectionHeaderContainer}>
-              <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>지원동기</h2>
-              <button
-                type="button"
-                className={proofreadStyles.proofreadButton}
-                onClick={() => handleProofread(motivation)}
-              >
-                맞춤법 검사
-              </button>
-            </div>
-            <div className={styles.textareaContainer}>
-              <textarea
-                placeholder="회사에 지원하게된 동기를 작성해주세요."
-                value={motivation}
-                onChange={handleMotivationChange}
-                maxLength="2000"
-              />
-              <div className={styles.charCounter}>{motivation.length}/2000</div>
-            </div>
-          </div>
+        <div className={styles.sectionHeaderContainer}>
+          <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>지원동기</h2>
+          <button
+            type="button"
+            className={proofreadStyles.proofreadButton}
+            onClick={() => handleProofread(motivation)}
+          >
+            맞춤법 검사
+          </button>
+          <button
+            type="button"
+            className={proofreadStyles.aiproofreadButton}
+            onClick={() => handleAiProofreadMotivation(motivation)}
+            style={{ marginLeft: '10px' }} // 버튼 간격 조정
+          >
+            AI 첨삭 실행
+          </button>
+        </div>
+        <div className={styles.textareaContainer}>
+          <textarea
+            placeholder="회사에 지원하게된 동기를 작성해주세요."
+            value={motivation}
+            onChange={handleMotivationChange}
+            maxLength="2000"
+          />
+          <div className={styles.charCounter}>{motivation.length}/2000</div>
+        </div>
+      </div>
             
     
 
@@ -1236,6 +1345,7 @@ const applyColorToQuotes = (text) => {
          <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
           <div className={proofreadStyles.sidebarHeader}>
           <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>맞춤법 검사 결과</h3>
+
 
             <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
               <CloseIcon />
