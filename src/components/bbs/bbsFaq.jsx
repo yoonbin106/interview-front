@@ -47,9 +47,6 @@ const BbsFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 <Typography variant="h3" gutterBottom>
                     자주 묻는 질문 (FAQ)
                 </Typography>
-                <Button variant="contained" color="primary" href="/adminPage/adminFaqRegisterPage">
-                    새 FAQ 등록
-                </Button>
             </Box>
 
             {/* 카테고리 검색 필터 */}
