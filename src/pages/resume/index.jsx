@@ -1346,6 +1346,7 @@ const applyColorToQuotes = (text) => {
           <div className={proofreadStyles.sidebarHeader}>
           <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>맞춤법 검사 결과</h3>
 
+
             <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
               <CloseIcon />
             </button>

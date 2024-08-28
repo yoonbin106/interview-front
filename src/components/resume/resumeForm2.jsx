@@ -180,7 +180,7 @@ function ResumeForm2() {
           <form className={styles.form}>
             <div className={styles.formGroup}>
               <div className={styles.sectionHeaderContainer}>
-                <h2 className={styles.sectionHeader}>자기소개</h2>
+                <h2 className={styles.sectionHeader} >자기소개</h2>
                 <button
                   type="button"
                   className={proofreadStyles.proofreadButton}
@@ -255,8 +255,8 @@ function ResumeForm2() {
 
       {isProofreadSidebarOpen && (
         <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
-          <div className={proofreadStyles.sidebarHeader}>
-            <h3>맞춤법 검사 결과</h3>
+          <div className={proofreadStyles.sidebarHeader} >
+          <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>맞춤법 검사 결과</h3>
             <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
               <CloseIcon />
             </button>
@@ -282,7 +282,7 @@ function ResumeForm2() {
       {isAiProofreadSidebarOpen && (
         <div className={`${proofreadStyles.aiproofreadSidebar} ${isAiProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
           <div className={proofreadStyles.sidebarHeader}>
-            <h3>AI 첨삭 결과</h3>
+          <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>AI 첨삭 결과</h3>
             <button className={proofreadStyles.closeButton} onClick={closeAiProofreadSidebar}>
               <CloseIcon />
             </button>
