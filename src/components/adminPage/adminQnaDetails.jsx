@@ -1,22 +1,41 @@
-//adminQnaDetails.jsx
-
-import React, { useState } from 'react';
-import { TextField, Button, Paper, Typography, Grid, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Paper, Typography, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/adminPage/adminQnaDetails.module.css';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
-const AdminQnaDetails = ({ qnaDetail, onSubmit }) => {
+const AdminQnaDetails = ({ onSubmit }) => {
+    const router = useRouter();
+    const { qnaId } = router.query; // URL에서 qnaId를 가장 먼저 가져옴
+
+    const [qnaDetail, setQnaDetail] = useState(null); // QnA 상세 정보를 저장할 상태
     const [response, setResponse] = useState(''); // 관리자가 작성할 답변을 위한 상태
-    const [file, setFile] = useState(null); // 첨부할 파일 상태
-    const [category, setCategory] = useState(qnaDetail.category); // 문의 카테고리 상태
+    const [category, setCategory] = useState(''); // 문의 카테고리 상태
+
+    useEffect(() => {
+        console.log('qnaId:', qnaId);
+        const fetchQnaDetail = async () => {
+            try {
+                // qnaId가 존재하는지 확인
+                if (qnaId) {
+                    const response = await axios.get(`http://localhost:8080/api/qna/${qnaId}`);
+                    console.log('응답이에요:', response);
+                    setQnaDetail(response.data);
+                    setCategory(response.data.qnaCategory);
+                } else {
+                    console.log('qnaId is undefined, API call skipped.');
+                }
+            } catch (error) {
+                console.error('Error fetching QnA details:', error);
+            }
+        };
+    
+        fetchQnaDetail(); // 컴포넌트가 마운트될 때 QnA 세부사항을 가져옴
+    }, [qnaId]);
 
     // 답변 입력 핸들러
     const handleResponseChange = (event) => {
         setResponse(event.target.value);
-    };
-
-    // 파일 선택 핸들러
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]); // 선택한 파일을 상태에 저장
     };
 
     // 카테고리 변경 핸들러
@@ -26,31 +45,50 @@ const AdminQnaDetails = ({ qnaDetail, onSubmit }) => {
 
     // 답변 제출 핸들러
     const handleSubmit = () => {
-        onSubmit(response, file, category); // onSubmit 함수 호출, 답변 및 파일, 카테고리 전달
-        alert(`답변을 등록하였습니다. 카테고리가 '${category}'(으)로 변경되었습니다.`); // 답변 등록 후 알림 표시
+        const updateQna = {
+            qnaAnswer: response,
+            qnaCategory: category,
+        };
+
+        axios.put(`http://localhost:8080/api/qna/${qnaId}`, updateQna)
+            .then(() => {
+                alert(`답변을 등록하였습니다. 카테고리가 '${category}'(으)로 변경되었습니다.`);
+            })
+            .catch(error => {
+                console.error('Error updating QnA:', error);
+                alert('답변 등록 중 오류가 발생했습니다.');
+            });
     };
+
+    if (!qnaDetail) {
+        return <div>Loading...</div>; // 데이터를 불러올 때까지 로딩 상태를 표시
+    }
 
     return (
         <div className={styles.qnaDetailsContainer}>
             <Paper elevation={3} className={styles.qnaDetailsPaper}>
-                {/* QnA 세부 사항 출력 */}
                 <Typography variant="h6" gutterBottom className={styles.qnaDetailsGrayText}>
                     [1:1 문의내역]
                 </Typography>
                 <Typography variant="h5" gutterBottom>
-                    {qnaDetail.title} {/* 문의 제목 */}
+                    {qnaDetail.qnaTitle} {/* 문의 제목 */}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                    작성자: {qnaDetail.author} | 날짜: {qnaDetail.date} | 카테고리: {category}
+                    작성자: {qnaDetail.user.username} | 날짜: {new Date(qnaDetail.qnaCreatedTime).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })} | 카테고리: {category}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    {qnaDetail.content} {/* 문의 내용 */}
+                    {qnaDetail.qnaQuestion} {/* 문의 내용 */}
                 </Typography>
             </Paper>
 
             <Box mt={4}>
                 <Paper elevation={3} className={styles.qnaDetailsPaper}>
-                    {/* 관리자 답변 입력 섹션 */}
                     <Typography variant="h6" gutterBottom>
                         관리자 답변
                     </Typography>
@@ -63,19 +101,6 @@ const AdminQnaDetails = ({ qnaDetail, onSubmit }) => {
                         value={response}
                         onChange={handleResponseChange} // 답변 입력 핸들러
                     />
-                    <Grid container spacing={2} alignItems="center" className={styles.qnaDetailsGrid}>
-                        {/* 파일 첨부 버튼 및 파일 이름 표시 */}
-                        <Grid item>
-                            <Button variant="contained" component="label" className={styles.qnaDetailsSubmitButton}>
-                                파일 첨부
-                                <input type="file" hidden onChange={handleFileChange} /> {/* 파일 선택 핸들러 */}
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            {file && <Typography>{file.name}</Typography>} {/* 선택된 파일 이름 표시 */}
-                        </Grid>
-                    </Grid>
-                    {/* 카테고리 변경 섹션 */}
                     <FormControl fullWidth variant="outlined" className={styles.qnaDetailsFormControl}>
                         <InputLabel id="category-label">카테고리 변경</InputLabel>
                         <Select
@@ -85,12 +110,11 @@ const AdminQnaDetails = ({ qnaDetail, onSubmit }) => {
                             onChange={handleCategoryChange} // 카테고리 변경 핸들러
                             label="카테고리 변경"
                         >
-                            <MenuItem value="대기">대기</MenuItem>
-                            <MenuItem value="진행중">진행중</MenuItem>
-                            <MenuItem value="완료">완료</MenuItem>
+                            <MenuItem value="N">대기</MenuItem>
+                            <MenuItem value="T">진행중</MenuItem>
+                            <MenuItem value="P">완료</MenuItem>
                         </Select>
                     </FormControl>
-                    {/* 답변 등록 버튼 */}
                     <Button
                         variant="contained"
                         onClick={handleSubmit} // 답변 제출 핸들러
