@@ -242,6 +242,7 @@
   align-items: center;
   justify-content: center;
   background: rgb(223, 223, 223);
+  
 }
 .keyWordFrame{
   display: flex;
@@ -249,6 +250,7 @@
   width: 1640px;
   height: 630px;
   /* background-color: #e7e7e7; */
+  margin-right: 50px;
 }
 .keyWordFrames{
   display: flex;
@@ -264,6 +266,7 @@
   flex-direction: column;
   width: 1640px;
   height: 630px;
+  margin-right: 110px;
 
 }
 /* 맨왼쪽위칸이랑 맨오른쪽 아래칸 공유  */
@@ -277,6 +280,20 @@
   background-color: #5A8AF2;
   
 }
+.keyWordBoxGrey_first{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #5A8AF2;
+  margin-right: 40px;
+  margin-left: 220px;
+  background-size: 102%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-image: url('/images/keyword6.png');
+  background-position: left -1px top 290px; /* 이미지가 가운데에 위치하도록 */
+}
 .keyWordBoxGrey2{
   display: flex;
   justify-content: center;
@@ -286,6 +303,21 @@
   border-radius: 16px;
   background-color: #5A8AF2;
   background-image: url('/images/keyword6.png');
+}
+
+.keyWordBoxWhiteImage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-image: 
+   url('../../public/images/keyword2.png');
+  background-size: cover;
+  background-size: 150%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-position: left -11px top 300px; /* 이미지가 가운데에 위치하도록 */
+  margin-left: 220px;
 }
 /* 맨오른쪽아래칸 왼쪽칸  */
 .keyWordBoxWhite{
@@ -298,8 +330,8 @@
   background-color: #ffffff;
   padding-right: 23px;
   background-image: url('/images/keyword4.png');
-  background-size: 123%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
-  background-position: left 338px top 328px; /* 이미지가 가운데에 위치하도록 */
+  background-size: 110%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-position: left 323px top 309px; /* 이미지가 가운데에 위치하도록 */
 }
 
 .keyWordBoxWhitex{
@@ -312,7 +344,7 @@
   background-color: #073ff5;
   background-image: url('/images/keyword3.png');
   background-size: cover; /* 이미지가 div에 꽉 차도록 */
-  background-position: left 360px top 300px; /* 이미지가 가운데에 위치하도록 */
+  background-position: left 5px top 14px; /* 이미지가 가운데에 위치하도록 */
   
 }
 .keyWordBoxWhite1{
@@ -329,7 +361,8 @@
   font-size: 24px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-image: url('/images/keyword5.png');
-  background-position: left 337px top 330px; /* 이미지가 가운데에 위치하도록 */
+  background-size: 115%;
+  background-position: left 332px top 313px; /* 이미지가가운데에 위치하도록 */
  
 }
 
@@ -340,19 +373,7 @@
 
   
 
-.keyWordBoxWhiteImage{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 300px;
-  border-radius: 16px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-   url('../../public/images/keyword2.png');
-  background-size: cover;
-  background-position: center;
-  position: relative; /* 텍스트 배치를 위해 필요 */
-}
+
 /* 맨왼쪽아래칸 글자  */
 .aiText {
   font-weight: bold; 
@@ -570,12 +591,6 @@
   font-weight: bold;
 }
 
-
-.keyWordImages1{
-  background-image: url('../../public/images/keyword1.png');
-  background-size: cover;
-  background-position: center;
-}
 
 /* 추인철이 추가하는 맛도리 ui */
 .logoIcon {

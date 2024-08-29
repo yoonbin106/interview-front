@@ -190,55 +190,27 @@ function Home() {
             <div className={styles.container3}>
                 <div className={styles.keyWordFrame}>
                     <div className={styles.keyWordFrames}>
-                        <div className={styles.keyWordBoxGrey}>
-                            <div className={styles.keyWordTextWh}>면접 준비는 "FocusJob"</div>
-                            <div className={styles.mainText}>{"포커스잡 \n 언제  \n어디서나  "}</div>
-
-                                    
-                        </div>
-                        <div className={styles.keyWordBoxWhiteImage}>
-                            <div className={styles.aiText}>
-                                <div className={styles.line1}>다양한 <span className={styles.boldText}>AI</span> 면접</div>
-                                <div className={styles.line2}>편안한 환경에서</div>
-                                <div className={styles.line3}>실전처럼 </div>
-                                <div className={styles.line4}> 준비하세요</div>
-                            </div>
-                        </div>
+                        <div className={styles.keyWordBoxGrey_first}/>
+                                            
+                        <div className={styles.keyWordBoxWhiteImage}/>
+                          
+                        
 
 
 
                     </div>
                     <div className={styles.keyWordFrames}>
-                        <div className={styles.keyWordBoxHeight}>
-                        
-                        </div>
-                    </div>
-                    <div className={styles.keyWordFrames}>
-                        <div className={styles.keyWordBoxWhite1}>
-                        
-                        </div>
-                        <div className={styles.keyWordBoxWhitex}>
-                            
-                        </div>
+                        <div className={styles.keyWordBoxHeight}/>         
                     </div>
                     <div className={styles.keyWordFramesWide}>
-                    <div className={styles.keyWordBoxWidth}>
-                
-                    </div>
-
-
-
-
-                        <div className={styles.keyWordBoxGroup}>
-                            <div className={styles.keyWordBoxWhite}>
-                               
+                        
+                            <div className={styles.keyWordBoxGroup}>
+                                <div className={styles.keyWordBoxWhite}/>
+                                <div className={styles.keyWordBoxWhite1}/>
                             </div>
-                            <div className={styles.keyWordBoxGrey2}>
-                             
-                            </div>
+                            <div className={styles.keyWordBoxWidth}/>
                         </div>
                     </div>
-                </div>
             </div>
           {/* 추인철 뉴스칸 */}
         <div className={styles.container5} id='news'>
