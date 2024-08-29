@@ -242,6 +242,7 @@
   align-items: center;
   justify-content: center;
   background: rgb(223, 223, 223);
+  
 }
 .keyWordFrame{
   display: flex;
@@ -249,6 +250,7 @@
   width: 1640px;
   height: 630px;
   /* background-color: #e7e7e7; */
+  margin-right: 50px;
 }
 .keyWordFrames{
   display: flex;
@@ -264,6 +266,7 @@
   flex-direction: column;
   width: 1640px;
   height: 630px;
+  margin-right: 110px;
 
 }
 /* 맨왼쪽위칸이랑 맨오른쪽 아래칸 공유  */
@@ -277,6 +280,20 @@
   background-color: #5A8AF2;
   
 }
+.keyWordBoxGrey_first{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-color: #5A8AF2;
+  margin-right: 40px;
+  margin-left: 220px;
+  background-size: 102%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-image: url('/images/keyword6.png');
+  background-position: left -1px top 290px; /* 이미지가 가운데에 위치하도록 */
+}
 .keyWordBoxGrey2{
   display: flex;
   justify-content: center;
@@ -286,6 +303,21 @@
   border-radius: 16px;
   background-color: #5A8AF2;
   background-image: url('/images/keyword6.png');
+}
+
+.keyWordBoxWhiteImage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 16px;
+  background-image: 
+   url('../../public/images/keyword2.png');
+  background-size: cover;
+  background-size: 150%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-position: left -11px top 300px; /* 이미지가 가운데에 위치하도록 */
+  margin-left: 220px;
 }
 /* 맨오른쪽아래칸 왼쪽칸  */
 .keyWordBoxWhite{
@@ -298,8 +330,8 @@
   background-color: #ffffff;
   padding-right: 23px;
   background-image: url('/images/keyword4.png');
-  background-size: 123%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
-  background-position: left 338px top 328px; /* 이미지가 가운데에 위치하도록 */
+  background-size: 110%; /* 이미지의 크기를 박스에 맞게 조정하면서 비율을 유지 */
+  background-position: left 323px top 309px; /* 이미지가 가운데에 위치하도록 */
 }
 
 .keyWordBoxWhitex{
@@ -312,7 +344,7 @@
   background-color: #073ff5;
   background-image: url('/images/keyword3.png');
   background-size: cover; /* 이미지가 div에 꽉 차도록 */
-  background-position: left 360px top 300px; /* 이미지가 가운데에 위치하도록 */
+  background-position: left 5px top 14px; /* 이미지가 가운데에 위치하도록 */
   
 }
 .keyWordBoxWhite1{
@@ -329,7 +361,8 @@
   font-size: 24px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-image: url('/images/keyword5.png');
-  background-position: left 337px top 330px; /* 이미지가 가운데에 위치하도록 */
+  background-size: 115%;
+  background-position: left 332px top 313px; /* 이미지가가운데에 위치하도록 */
  
 }
 
@@ -340,19 +373,7 @@
 
   
 
-.keyWordBoxWhiteImage{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 300px;
-  border-radius: 16px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-   url('../../public/images/keyword2.png');
-  background-size: cover;
-  background-position: center;
-  position: relative; /* 텍스트 배치를 위해 필요 */
-}
+
 /* 맨왼쪽아래칸 글자  */
 .aiText {
   font-weight: bold; 
@@ -571,12 +592,6 @@
 }
 
 
-.keyWordImages1{
-  background-image: url('../../public/images/keyword1.png');
-  background-size: cover;
-  background-position: center;
-}
-
 /* 추인철이 추가하는 맛도리 ui */
 .logoIcon {
   width: 24px; /* 적절한 크기로 설정 */
@@ -696,7 +711,6 @@
   align-items: flex-start; /* 텍스트와 콘텐츠를 슬라이드 안에서 왼쪽으로 정렬 */
   justify-content: flex-start;
   min-height: 240px;
-  
   box-shadow: none;
   padding: 15px; /* 슬라이드 내부 패딩 추가 */
 }
@@ -714,13 +728,13 @@
 
 .newsSlideTitle {
   font-size: 20px; /* 글자 크기를 약간 줄임 */
-  margin-bottom: 15px;
+  margin-bottom: 25px;
   color: #333;
   font-weight: bold;
   text-align: left;
   white-space: normal;
   line-height: 1.4;
-  min-height: 48px; /* 제목의 최소 높이 설정 */
+  min-height: 75px; /* 제목의 최소 높이 설정 */
 }
 
 
@@ -730,6 +744,7 @@
   padding-top: 10px;
   position: relative;
   text-align: left;
+  
 }
 
 .newsSlideTime {
@@ -749,15 +764,28 @@
   height: 3px;
   background: #000000; /* 선의 색상 */
   margin: 10px 0; /* 선의 위치를 통일하기 위한 여백 */
-  transform: scaleX(0); /* 초기에는 보이지 않도록 설정 */
+  transform: scaleX(1); /* 초기 상태에서 선이 보이도록 설정 */
   transform-origin: left; /* 왼쪽에서 오른쪽으로 확장 */
-  transition: transform 0.3s ease;
+
 }
 
 .newsSlide:hover .newsSlideLine {
-  transform: scaleX(1); /* 호버 시 선이 나타남 */
+  opacity: 0; /* 선이 잠시 사라짐 */
+  transform: scaleX(0); /* 선이 축소됨 */
+  transition: none; /* 즉시 사라지도록 설정 */
+  animation: slideLine 0.5s forwards;
 }
 
+@keyframes slideLine {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
 /* 보이지 않는 요소를 위한 CSS */
 .invisible-space {
   width: 100%;

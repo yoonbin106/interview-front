@@ -747,10 +747,19 @@ const applyColorToQuotes = (text) => {
     {index > 0 && (
       
       <ClearIcon
-        className={styles.clearIcon} 
-        onClick={() => removeField(index, educationFields, setEducationFields)} 
-        style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }} // X 버튼 위치 조정
-      />
+    className={styles.clearIcon}
+    onClick={() => removeField(index, educationFields, setEducationFields)}
+    style={{
+    position: 'absolute',
+    right: '-15px',
+    top: '10px',
+    cursor: 'pointer',
+    color: '#6c757d',
+    padding: '13px', // 클릭 가능한 영역을 넓히기 위해 padding 추가
+    boxSizing: 'content-box', // padding이 실제 크기에 추가되도록 설정
+  }}
+/>
+
     )}
 
     {index > 0 && <div className={styles.formGroupSeparator}></div>}
