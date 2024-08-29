@@ -195,26 +195,36 @@ const SurveyResult = () => {
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',  // 부드러운 그림자 효과
                   borderRadius: '8px'  // 모서리를 둥글게 설정하여 부드러운 느낌
                 }}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom className={styles.surveySubTitleLineThank}>
-                      {userName}님의 회사 추천 결과입니다:
-                    </Typography>
-                
-                    {extractedText.split('\n').map((line, index) => (
-                      <Typography 
-                        key={index} 
-                        variant="body1" 
-                        paragraph 
-                        sx={{ 
-                          color: '#868686',  // 사이트의 주요 텍스트 색상과 일치하게 설정
-                          fontFamily: 'Arial, sans-serif',  // 적절한 폰트 스타일 적용
-                          lineHeight: '1.3'  // 읽기 쉽게 줄 간격 설정
-                        }}
-                      >
-                        {line}
-                      </Typography>
-                    ))}
-                  </CardContent>
+                 <CardContent>
+  <Typography 
+    variant="h6" 
+    gutterBottom 
+    className={styles.surveySubTitleLineThank}
+  >
+    {userName}님의 회사 추천 결과입니다:
+  </Typography>
+
+  {extractedText.split('\n').map((line, index) => {
+    // 특정 텍스트에만 색상 적용
+    const isHighlighted = line.includes("직업 이름 6개") || line.includes("각 직업에 대한 회사 추천 목록");
+    
+    return (
+      <Typography 
+        key={index} 
+        variant="body1" 
+        paragraph 
+        sx={{ 
+          color: isHighlighted ? '#5A8AF2' : '#868686',  // 특정 텍스트만 색상 적용
+          fontFamily: 'Arial, sans-serif',
+          lineHeight: '1.3'
+        }}
+      >
+        {line}
+      </Typography>
+    );
+  })}
+</CardContent>
+
                 </Card>
                 
                 )}
