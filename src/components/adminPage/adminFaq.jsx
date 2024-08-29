@@ -6,12 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styles from '@/styles/adminPage/adminFaq.module.css';
 
 const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
-    //FAQ 데이터와 필터링된 FAQ 데이터를 관리하는 state
     const [faqs, setFaqs] = useState([]);
     const [filteredFaqs, setFilteredFaqs] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
 
-    // useEffect를 사용해 컴포넌트가 마운트될 때 FAQ 데이터를 가져옴
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
@@ -24,27 +22,20 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         };
 
         fetchFaqs();
-    }, []);//빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때만 호출되도록 함
+    }, []);
 
-    //특정 FAQ 항목을 삭제하는 함수
     const handleDeleteFaq = async (faqId) => {
-        const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
-        if(confirmDelete) {
-            try{
-                await axios.delete(`http://localhost:8080/api/faq/delete/${faqId}`); //DELETE 요청을 서버로 전송
-                //삭제된 항목을 제외한 새로운 FAQ 목록으로 상태 업데이트
-                setFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
-                setFilteredFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
-            } catch(error){
-                console.error('Error deleting FAQ:',error);
-            }
+        try {
+            await axios.delete(`http://localhost:8080/api/faq/${faqId}`);
+            setFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
+            setFilteredFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
+        } catch (error) {
+            console.error('Error deleting FAQ:', error);
         }
     };
 
-    // totalPages 계산
     const totalPages = Math.ceil(filteredFaqs.length / rowsPerPage);
 
-    // 카테고리 변경 시 필터링
     const handleCategoryChangeInternal = (event) => {
         const category = event.target.value;
         setSelectedCategory(category);
@@ -53,12 +44,11 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         } else {
             setFilteredFaqs(faqs);
         }
-        onPageChange(0); // 카테고리 변경 시 페이지를 0으로 초기화
+        onPageChange(0);
     };
 
     return (
         <div className={styles.adminFaqContainer}>
-            {/* 페이지 헤더: 제목과 새 FAQ 등록 버튼 */}
             <Box mb={3} className={styles.adminFaqHeader}>
                 <Typography variant="h3" gutterBottom>
                     자주 묻는 질문 (FAQ)
@@ -68,15 +58,18 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 </Button>
             </Box>
 
-            {/* 카테고리 검색 필터 */}
             <Box mb={3} className={styles.adminFaqCategorySearch}>
                 <FormControl fullWidth variant="outlined">
-                    <InputLabel className={styles.adminFaqCategoryLabel}>카테고리를 선택하여 검색해보세요.</InputLabel>
                     <Select
                         value={selectedCategory}
                         onChange={handleCategoryChangeInternal}
-                        label="카테고리로 검색"
-                    >
+                        displayEmpty
+                        renderValue={
+                            selectedCategory !== ""
+                            ? undefined
+                            : () => <Typography color="textSecondary">카테고리를 선택하여 검색해보세요.</Typography>
+                        }
+                        >
                         <MenuItem value="">
                             <em>전체</em>
                         </MenuItem>
@@ -94,9 +87,8 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 </FormControl>
             </Box>
 
-            {/* FAQ 목록을 아코디언 형태로 렌더링 */}
             {filteredFaqs
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // 페이지에 맞게 FAQ를 슬라이싱
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(faq => (
                     <Accordion key={faq.faqId}>
                         <AccordionSummary
@@ -110,22 +102,20 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                             <Typography>
                                 {faq.faqAnswer}
                             </Typography>
-                            {/*삭제 버튼 추가*/}
                             <Button
                                 variant="outlined"
                                 color="secondary"
                                 startIcon={<DeleteIcon />}
                                 onClick={() => handleDeleteFaq(faq.faqId)}
                                 className={styles.adminFaqDeleteButton}
-                                >
-                                    삭제
-                                </Button>
+                            >
+                                삭제
+                            </Button>
                         </AccordionDetails>
                     </Accordion>
                 ))
             }
 
-            {/* 페이지네이션 컨트롤 */}
             <Box className={styles.adminFaqPaginationControl}>
                 <Button
                     variant="outlined"
@@ -160,7 +150,6 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 >
                     마지막
                 </Button>
-                {/* 페이지당 표시할 행 수 선택 */}
                 <Select
                     value={rowsPerPage}
                     onChange={onRowsPerPageChange}

@@ -45,7 +45,6 @@ const AdminFaqRegister = () => {
             faqAnswer : content,
             faqCategory : category,
             faqCreatedTime: new Date(),
-            faqEditedTime : new Date(),
         };
         console.log(faqData);
 
