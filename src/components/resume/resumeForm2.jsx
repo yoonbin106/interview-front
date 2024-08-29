@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import styles from '@/styles/resume/resumeForm.module.css';
+import styles from '@/styles/resume/resumeForm2.module.css';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
 import proofreadStyles from '@/styles/resume/proofreadStyles.module.css';
 import CloseIcon from '@mui/icons-material/Close';

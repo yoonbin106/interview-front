@@ -1,0 +1,686 @@
+.body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: auto;
+  }
+  
+  .page {
+    background-color: #f2f3f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px !important;
+  }
+  
+  .mainsectionheader {
+    color: #343a40;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 0;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1300px;
+    margin-bottom: 20px;
+  }
+  
+  .separator {
+    width: 100%;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 20px 0;
+  }
+  
+  .sectionheader {
+    color: #343a40;
+    font-size: 40px !important;
+  }
+  .calendarIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #adb5bd !important;
+  }
+  
+  .genderButtons {
+    display: flex;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 300px;
+  }
+  
+  .genderSelect {
+    width: 80%; /* 너비를 조절해서 박스 사이즈를 줄입니다 */
+    max-width: 200px; /* 원하는 최대 너비를 설정합니다 */
+    color: #78838d !important;
+    height: 37.25px;
+  }
+  
+  .genderButton {
+    flex: 1;
+    padding: 4px;
+    font-size: 0.7em;
+    cursor: pointer;
+    text-align: center;
+    background-color: #fff;
+    border-right: 1px solid #ced4da;
+  }
+  
+  .genderButton:last-child {
+    border-right: none;
+  }
+  
+  .genderButton.selected {
+    background-color: #5A8AF2;
+    color: #fff;
+  }
+  
+  .genderButton:not(.selected):hover {
+    background-color: #f1f1f1;
+  }
+  
+  .resumeForm {
+    display: flex;
+    flex-direction: row;
+    background-color: #f2f3f5;
+    padding: 10px;
+    margin: 0 auto;
+    font-size: 22px;
+    justify-content: center;
+    overflow:visible;
+  }
+  
+  .sidebar {
+    width: 180px;
+    border-radius: 8px;
+    background-color: #fff;
+    border-right: 1px solid #e9ecef;
+    padding: 20px;
+    height: fit-content;
+    margin-top: 30px;
+    position: sticky;
+    top: 60px;
+  }
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    padding: 6px 0 6px 10px;
+    cursor: pointer;
+    color: #929292;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 2px;
+  }
+  
+  .sidebar li:hover,
+  .sidebar li.active {
+    color: #5A8AF2;
+    display: flex;
+    align-items: center;
+    background-color: #e7f3ff;
+    border-radius: 8px;
+  }
+  
+  .formContainer {
+    background-color: #fff;
+    padding: 40px;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    max-width: 1000px;
+    /* width: 100%; */
+    width: 1000px;
+    box-sizing: border-box;
+    margin-left: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    transform: scale(1); /* 비율을 90%로 줄임 */
+    transform-origin: top left; /* 축소가 왼쪽 위에서 시작되도록 설정 */
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    font-size: 1.0em;
+  
+  }
+  .formGroup_address {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    font-size: 1.0em;
+  
+  }
+  
+  .formGroupInlineVertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .formInline {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .personalInfo {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 170px;
+    justify-content: space-between;
+  }
+  
+  .formInline .formGroup {
+    flex: 1;
+    min-width: 110px;
+  }
+  
+  .formInline .formGroup.fullWidth {
+    flex: 0 0 100%;
+  }
+  
+  .formGroupInline {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+    margin: 4px 0;
+    margin-top: 5px;
+  }
+  
+  .formGroupInline_address {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+    margin: 4px 0;
+    margin-top: 5px;
+  }
+  
+  
+  .formGroupInlineCareer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 0;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
+    position: relative;
+    font-size: 0.7em;
+    left: 3px;
+  }
+  
+  .required::after {
+    content: '*' !important;
+    position: absolute;
+    top: 0;
+    color: red;
+    font-size: 0.9em !important;
+  }
+  
+  .requiredTwo::after {
+    content: '*' !important;
+    position: absolute;
+    top: 0;
+    color: red;
+    font-size: 0.5em !important;
+  }
+  
+  .input[type="text"],
+  .input[type="email"],
+  .formInline input[type="text"],
+  .formInline .react-datepicker-wrapper {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #6c757d;
+    padding-left: 10px;
+  }
+  
+  .input[type="title"]{
+    padding: 10px;
+    font-size: 20px;
+    border: 2px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #0c0d0e;
+    padding-left: 15px;
+    align-items: baseline !important;
+  }
+  
+  .input[type="month"] {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 218px;
+    box-sizing: border-box;
+    color: #6c757d;
+    padding-left: 10px;
+  }
+  
+  .input[type="file"] {
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #6c757d;
+    
+  }
+  
+  
+  
+  
+  
+  .select{
+    padding: 5px;
+    font-size: 16px !important;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  
+  }
+  .militarySelect{
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 134px;
+    box-sizing: border-box;
+    color: #6c757d;
+    padding-left: 10px;
+    height: 37.2px;
+  
+  }
+  
+  
+  .textareaContainer,
+  .resulttextareacontainer {
+    position: relative;
+    margin-top: 5px;
+  }
+  
+  .textareaContainer textarea,
+  .resulttextareacontainer textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    color: #343a40;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    resize: none;
+    box-sizing: border-box;
+    height: 650px;
+  }
+  
+  .textareaContainer .charCounter {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 16px;
+    color: #adb5bd;
+  }
+  
+  .input[type="text"]::placeholder,
+  .input[type="email"]::placeholder,
+  .input[type="title"]::placeholder,
+  .textarea::placeholder,
+  .input[type="month"]::placeholder { /* month 필드도 동일하게 적용 */
+    color: #adb5bd !important;
+    font-size: 0.9em;
+  }
+  
+  .button {
+    padding: 4px 8px;
+    font-size: 10px !important;
+    color: #fff;
+    border: none;
+    background-color: #5A8AF2;
+    border-radius: 6px !important;
+    cursor: pointer;
+    width: 100%;
+    max-width: 120px;
+    margin-bottom: 10px;
+  }
+  
+  
+  .submitBtn {
+    background-color: #5A8AF2;
+    padding: 8.25px;
+    width: 120px;
+    font-size: 14px !important;
+    margin-top: 15.3px;
+  }
+  
+  .submitBtn:hover{
+    background-color: #0056b3;
+  }
+  
+  .cancelBtn {
+    background-color: #6c757d;
+    padding: 8.04px;
+    width: 120px;
+    font-size: 14px !important;
+    margin-top: 15.6px;
+    margin-right: 10px;
+  
+  }
+  .cancelBtn:hover{
+    background-color: #5a6268;
+  }
+  
+  .add {
+    
+    padding: 7px;
+    margin-bottom: 10px;
+    font-size: 14px !important;
+    margin-top: 20px;
+  }
+  .add:hover{
+    background-color: #0056b3;
+  }
+  .zipCodeInput {
+    width: 20% !important;
+    max-width: 300px;
+  }
+  
+  .emailInput {
+    width:100% !important;
+    max-width: 300px;
+  }
+  .formControl{
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 150px;
+    box-sizing: border-box;
+    color: #6c757d;
+    padding-left: 10px;
+  }
+  .formControl_address{
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #6c757d;
+    padding-left: 10px;
+  }
+  .phoneNumInput {
+    width:100% !important;
+    max-width: 300px;
+  }
+  
+  .react-datepicker-wrapper {
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .formColumn {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    padding-right: 20px;
+  }
+  
+  .mt5 {
+    margin-top: 5px;
+  }
+  
+  .mb5 {
+    margin-bottom: 5px;
+  }
+  
+  .profileSection {
+    display: flex;
+    align-items: center; /* 중앙 정렬을 위한 속성 추가 */
+    gap: 60px;
+  }
+  
+  .profileImageUpload {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 60px !important;
+  }
+  
+  .profileImageBox {
+    width: 160px;
+    height: 160px;
+    border: 1px dashed #ced4da;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 10px !important;
+  }
+  
+  .profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  
+  .hiddenFileInput {
+    display: none;
+  }
+  
+  .alignItemsCenter {
+    align-items: center;
+  }
+  
+  .sectionHeader {
+    position: relative;
+    padding-left: 15px;
+    font-size: 26px ;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 10px;
+  }
+  .sectionHeader_personal {
+    position: relative;
+    padding-left: 15px;
+    font-size: 26px ;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 30px;
+  }
+  
+  .sectionHeader_education {
+    position: relative;
+    padding-left: 15px;
+    font-size: 26px ;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 25px;
+  }
+  
+  .sectionHeader_education::before {
+    content: '';
+    position: absolute;
+    left: 1px;
+    top: 22%;
+    bottom: 0;
+    width: 6px;
+    height: 20px;
+    background-color: #5A8AF2;
+  }
+  
+  .sectionHeader_personal::before {
+    content: '';
+    position: absolute;
+    left: 1px;
+    top: 22%;
+    bottom: 0;
+    width: 6px;
+    height: 20px;
+    background-color: #5A8AF2;
+  }
+  
+  .sectionHeaderContainer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  
+  .sectionHeader::before {
+    content: '';
+    position: absolute;
+    left: 1px;
+    top: 18%;
+    bottom: 0;
+    width: 6px;
+    height: 20px;
+    background-color: #5A8AF2;
+  }
+  
+  .subText {
+    font-size: 0.8em;
+    color: #adb5bd;
+    margin-left: 10px;
+  }
+  
+  .charCounter {
+    text-align: right;
+    font-size: 0.9em;
+    color: #adb5bd;
+  }
+  
+  .centerButtons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .react-datepicker__month {
+    margin: 0.9erm;
+  }
+  
+  .react-datepicker__month .react-datepicker__month-text {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  
+  .formGroupSeparator {
+    border-bottom: 1px dashed #ced4da;
+    margin: 15px 0;
+  }
+  
+  .hr {
+    margin-top: 30px;
+    margin-bottom: 25px;
+    border: none; /* 원하는 대로 변경 가능 */
+    border-top: 1px solid #8d8d8d; /* hr의 선 스타일을 지정 */
+  }
+  .disabledLabel {
+    color: #adb5bd !important;
+  }
+  
+  .input[disabled] {
+    background-color: #e9ecef !important;
+    color: #adb5bd !important;
+    cursor: not-allowed;
+  }
+  
+  .checkbox {
+    width: 13px;
+    height: 13px;
+    margin-bottom: 21px;
+    cursor: pointer;
+  }
+  
+  .checklabel{
+    margin-left: 5px;
+    margin-bottom: 18px;
+    font-weight: bold;
+    color: #495057;
+    position: relative;
+    font-size: 0.6em;
+    left: 3px;
+    height: 23px;
+    
+  
+  }
+  .militaryHeader {
+    display: block;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+  }
+  
+  .militaryCheckboxContainer {
+    
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-bottom: 7px;
+  }
+  
+  .disabledSelect {
+    background-color: #e9ecef !important;
+    color: #adb5bd !important;
+    cursor: not-allowed;
+  }
+  .militarySectionHeader{
+    position: relative;
+    padding-left: 15px;
+    font-size: 26px ;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 25px;
+    margin-top: 15px;
+    height: 15px;
+  }
+  .militarySectionHeader::before{
+    content: '';
+    position: absolute;
+    left: 1px;
+    top: 40%;
+    bottom: 0;
+    width: 6px;
+    height: 20px;
+    background-color: #5A8AF2;
+  }

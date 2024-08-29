@@ -326,16 +326,14 @@
   height: 37.2px;
 
 }
-
-
-.textareaContainer,
-.resulttextareacontainer {
-  position: relative;
-  margin-top: 5px;
+.textareaContainer {
+  position: relative; /* 이 컨테이너가 charCounter의 위치를 정할 수 있도록 설정 */
+  margin-bottom: 20px; /* 필요에 따라 조정 */
 }
 
-.textareaContainer textarea,
-.resulttextareacontainer textarea {
+
+.textareaContainer pre,
+.resulttextareacontainer pre {
   width: 100%;
   padding: 10px;
   font-size: 14px;
@@ -345,6 +343,10 @@
   resize: none;
   box-sizing: border-box;
   height: 650px;
+  white-space: pre-wrap;
+  overflow: auto;
+  position:relative;
+  outline: none;
 }
 
 .textareaContainer .charCounter {
@@ -353,15 +355,25 @@
   right: 10px;
   font-size: 16px;
   color: #adb5bd;
+  z-index: 10;
 }
 
 .input[type="text"]::placeholder,
 .input[type="email"]::placeholder,
 .input[type="title"]::placeholder,
-.textarea::placeholder,
 .input[type="month"]::placeholder { /* month 필드도 동일하게 적용 */
   color: #adb5bd !important;
   font-size: 0.9em;
+}
+
+.textareaContainer .placeholder {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #adb5bd;
+  pointer-events: none;
+  user-select: none;
+  font-size: 14px;
 }
 
 .button {
