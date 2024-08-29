@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import axios from 'axios';
 import styles from '@/styles/bot/bot.module.css';
 import BotHeader from '@/components/bot/botHeader';
@@ -7,6 +7,7 @@ import InputArea from '@/components/bot/inputArea';
 import { useChat } from '@/contexts/chatContext';
 import { useBotActions } from '@/hooks/useBotAction';
 import { useMessageHandling } from '@/hooks/useMessageHandling';
+import { Snackbar } from '@mui/material';
 
 const Bot = () => {
   const {
@@ -26,6 +27,9 @@ const Bot = () => {
     toggleDarkMode
   } = useChat();
 
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
   const { startNewBot, endBot } = useBotActions(
     setMessages,
     setCurrentBotId,
@@ -34,18 +38,23 @@ const Bot = () => {
     currentBotId,
     messages,
     botStartTime,
-    closeBot // Changed from setIsOpen to closeBot
+    closeBot
   );
 
   const {
     inputMessage,
     setInputMessage,
     isListening,
-    sendMessage,
+    sendMessage: originalSendMessage,
     handleKeyPress,
     startListening
   } = useMessageHandling(setMessages, currentBotId);
 
+  const sendMessage = useCallback(async () => {
+    setIsGenerating(true);
+    await originalSendMessage();
+    setIsGenerating(false);
+  }, [originalSendMessage]);
 
   const tempId = useCallback(() => {
     const timestamp = Date.now().toString();
@@ -63,15 +72,19 @@ const Bot = () => {
   const addFeedback = async (answerId, isLike) => {
     if (answerId === undefined || answerId === null || isNaN(answerId)) {
       console.error('Invalid answerId:', answerId);
-      showNotification('유효하지 않은 답변 ID입니다.', 'error');
+      setSnackbar({ open: true, message: '유효하지 않은 답변 ID입니다.', severity: 'error' });
+      return;
+    }
+    if (feedbacks[answerId]) {
+      setSnackbar({ open: true, message: '이미 피드백을 주셨습니다.', severity: 'info' });
       return;
     }
     try {
-      const response = await axios.post('/api/bot/feedback', null, {
+      const response = await axios.post('http://localhost:8080/api/bot/feedback', null, {
         params: { answerId, isLike }
       });
       console.log('Feedback added:', response.data);
-      showNotification('피드백이 성공적으로 추가되었습니다.', 'success');
+      setSnackbar({ open: true, message: '피드백이 성공적으로 추가되었습니다.', severity: 'success' });
       updateMessageFeedback(answerId, isLike);
       setFeedbacks(prev => ({
         ...prev,
@@ -79,12 +92,8 @@ const Bot = () => {
       }));
     } catch (error) {
       console.error('Error adding feedback:', error.response?.data || error.message);
-      showNotification('피드백 추가 중 오류가 발생했습니다.', 'error');
+      setSnackbar({ open: true, message: '피드백 추가 중 오류가 발생했습니다.', severity: 'error' });
     }
-  };
-
-  const showNotification = (message, type) => {
-    console.log(`${type.toUpperCase()}: ${message}`);
   };
 
   const updateMessageFeedback = (answerId, isLike) => {
@@ -95,6 +104,14 @@ const Bot = () => {
       return msg;
     }));
   };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+
   if (!isOpen) return null; // 챗봇이 닫혀있을 때는 아무것도 렌더링하지 않음
 
   return (
@@ -103,13 +120,18 @@ const Bot = () => {
       <div className={styles.botContent}>
         {botStartTime && (
           <div className={styles.botInfo}>
-            Started: {botStartTime.toLocaleString()}
+            {botStartTime.toLocaleString()}
           </div>
         )}
-        <BotMessages messages={messages} feedbacks={feedbacks} addFeedback={addFeedback} />
+        <BotMessages 
+          messages={messages} 
+          feedbacks={feedbacks} 
+          addFeedback={addFeedback} 
+          isGenerating={isGenerating} 
+        />
         {botEndTime && (
           <div className={styles.botInfo}>
-            Ended: {botEndTime.toLocaleString()}
+            {botEndTime.toLocaleString()}
           </div>
         )}
       </div>
@@ -121,8 +143,17 @@ const Bot = () => {
           startListening={startListening}
           isListening={isListening}
           handleKeyPress={handleKeyPress}
+          isDarkMode={isDarkMode}
         />
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} // 위치 변경
+      />
     </div>
   );
 };

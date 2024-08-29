@@ -44,6 +44,7 @@ const Chatting = observer(({ closeChatting }) => {
         }
     };
 
+    //getChatroomList
     const getChatroomList = async () => {
         try {
             const userId = userStore.id;
@@ -113,7 +114,7 @@ const Chatting = observer(({ closeChatting }) => {
 
     useEffect(() => {
         if (client && currentChatRoomId) {
-            const topic = `python/mqtt/${currentChatRoomId}`;
+            const topic = `mqtt/chat/${currentChatRoomId}`;
             client.subscribe(topic);
             console.log(`Subscribed to topic: ${topic}`);
 
@@ -143,14 +144,14 @@ const Chatting = observer(({ closeChatting }) => {
     //         mqttClient.on('connect', () => {
     //             console.log('Connected to MQTT broker');
     //             setIsConnected(true);
-    //             mqttClient.subscribe('python/mqtt'); // 토픽
-    //             // mqttClient.subscribe(`python/mqtt/${currentChatRoomId}`);
+    //             mqttClient.subscribe('mqtt/chat'); // 토픽
+    //             // mqttClient.subscribe(`mqtt/chat/${currentChatRoomId}`);
     //         });
     
     //         mqttClient.on('message', (topic, message) => {
     //             console.log('Received message:', message.toString());
-    //             // if (topic === 'python/mqtt') {
-    //             // if (topic === `python/mqtt/83}`) {
+    //             // if (topic === 'mqtt/chat') {
+    //             // if (topic === `mqtt/chat/83}`) {
     
     //                 const receivedMessage = JSON.parse(message);
     //                 if (message.sender !== userStore.username) {
@@ -259,7 +260,9 @@ const Chatting = observer(({ closeChatting }) => {
     const onChatClick = (chatRoomId) => {
         setCurrentChatRoomId(chatRoomId); // 선택된 채팅방 ID 저장
         // console.log('onChatClick() - currentChatRoomId: ', currentChatRoomId);
-        setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
+
+        // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
+
         setIsChatOpen(true);
         //채팅 하나하나 각각 눌렀을때 ?
 
@@ -267,12 +270,27 @@ const Chatting = observer(({ closeChatting }) => {
 
     const handleBackClick = () => {
         setIsChatOpen(false);
-        setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
+        // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
     };
+
+
+
+    //currentChatRoomId : 선택된 채팅방 ID 값 저장돼있듬
+
+    // const getPastChatting = async () => {
+    //     try {
+    //         const response = await axios.get('http://localhost:8080/api/chat/getPastChatting', currentChatRoomId }
+    //         );
+    //         setChatRoomList(response.data);
+    //     } catch (error) {
+    //         console.error('Error get past chatting history:', error);
+    //     }
+    // };
+
 
     const loadingPastChatting = () => {
         const pastMessages = [
-            { text: '테스트용 첫 채팅', sender: '김길동', timestamp: new Date() },
+            { text: '테스트용 첫 채팅', sender: '김길동', timestamp: new Date(), senderId: 1 },
         ]
 
         pastMessages.map((pastMessage, index) => (
@@ -280,14 +298,27 @@ const Chatting = observer(({ closeChatting }) => {
         ));
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     const sendMessage = async () => {
         if (inputMessage.trim()) {
 
             const userMessage = { text: inputMessage, sender: userStore.username };
             // setMessages(prev => [...prev, userMessage]);
 
-            // client.publish('python/mqtt', JSON.stringify({ text: inputMessage, sender: userStore.username, timestamp: new Date() }));
-            client.publish(`python/mqtt/${currentChatRoomId}`, 
+            // client.publish('mqtt/chat', JSON.stringify({ text: inputMessage, sender: userStore.username, timestamp: new Date() }));
+            client.publish(`mqtt/chat/${currentChatRoomId}`, 
                 JSON.stringify({ 
                     text: inputMessage, 
                     sender: userStore.username, 
@@ -295,7 +326,7 @@ const Chatting = observer(({ closeChatting }) => {
                     senderId: userStore.id
                 }));
 
-            // const topic = `python/mqtt/${currentChatRoomId}`;
+            // const topic = `mqtt/chat/${currentChatRoomId}`;
             // client.publish(topic, JSON.stringify({
             //     text: inputMessage,
             //     sender: userStore.username,
@@ -311,20 +342,20 @@ const Chatting = observer(({ closeChatting }) => {
             // })
 
             // mqttClient.on('connect', () => {
-            //     const topic = 'python/mqtt'
+            //     const topic = 'mqtt/chat'
             //     mqttClient.subscribe(topic, (err) => {
             //         if (!err) {
-            //             mqttClient.publish('python/mqtt', JSON.stringify(userMessage))
+            //             mqttClient.publish('mqtt/chat', JSON.stringify(userMessage))
             //         }
             //     });
             // });
 
             // MQTT를 통해 메시지 전송
-            // mqttClient.publish('python/mqtt', JSON.stringify(userMessage), (err) => {
+            // mqttClient.publish('mqtt/chat', JSON.stringify(userMessage), (err) => {
             //     if (err) {
             //         console.error('MQTT publish error:', err);
             //     } else {
-            //         console.log('Message sent to python/mqtt');
+            //         console.log('Message sent to mqtt/chat');
             //     }
             // });
 
