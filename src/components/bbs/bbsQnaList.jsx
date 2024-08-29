@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Box, Typography } from '@mui/material';
 import axios from 'axios';
 import styles from '@/styles/bbs/bbsQnaList.module.css';
 
@@ -12,6 +12,7 @@ const BbsQnaList = () => {
     const fetchQnaData = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/qna');
+        const sortedData = response.data.sort((a,b) => new Date(b.qnaCreatedTime)-new Date(a.qnaCreatedTime));
         setQnaData(response.data);
       } catch (error) {
         setError('데이터를 가져오는 중 오류가 발생했습니다.');
@@ -30,6 +31,7 @@ const BbsQnaList = () => {
   }
 
   return (
+    
     <div className={styles.bbsQnaListContainer}>
       {qnaData.length === 0 ? (
         <div className={styles.bbsQnaListEmptyStateContainer}>
@@ -41,6 +43,7 @@ const BbsQnaList = () => {
           <p className={styles.bbsQnaListEmptyText}>문의하신 내역이 없습니다.</p>
         </div>
       ) : (
+
         <TableContainer component={Paper} className={styles.bbsQnaListTableContainer}>
           <Table>
             <TableHead>
@@ -71,6 +74,7 @@ const BbsQnaList = () => {
         </TableContainer>
       )}
     </div>
+   
   );
 };
 
