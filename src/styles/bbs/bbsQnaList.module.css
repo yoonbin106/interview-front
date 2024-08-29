@@ -1,17 +1,7 @@
 /* bbsQnaList.module.css */
-.bbsQnaListContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
   .bbsQnaListContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     text-align: center;
     padding: 40px;
