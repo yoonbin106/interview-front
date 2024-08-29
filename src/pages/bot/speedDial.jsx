@@ -56,8 +56,8 @@ const SpeedDial = () => {
         {showTooltip && (
           <div className={styles.botTooltip}>
             <HiLightBulb className={styles.tooltipIcon} />
-            <span className={styles.tooltipText}>Tip:</span> 궁금하신 점이 있으면 버튼을 클릭해주세요!
-            <div className={styles.tooltipSubtext}>VIP 챗봇이 친절히 답변해 드립니다.</div>
+            <span className={styles.tooltipText}>Tip:</span> 궁금하신 점이 있으면 클릭!
+            <div className={styles.tooltipSubtext}>포커스잡 챗봇 force가 친절히 답변해 드립니다.</div>
           </div>
         )}
         {isChatOpen && <Chatting closeChatting={closeChatting} />}

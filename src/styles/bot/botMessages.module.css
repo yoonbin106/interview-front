@@ -65,6 +65,14 @@
   padding: 10px;
 }
 
+/* .generating 상태에서 messageContent의 스타일을 조정합니다 */
+.messageContainer.bot .messageContent.generating {
+  padding: 0.5rem 1rem;
+  width: 50%; /* 전체 너비 사용 */
+  box-sizing: border-box; /* padding을 포함한 전체 너비 계산 */
+  overflow: hidden; /* 텍스트가 삐져나오지 않도록 설정 */
+}
+
 .dot {
   width: 8px;
   height: 8px;
