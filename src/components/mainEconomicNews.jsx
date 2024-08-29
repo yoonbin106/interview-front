@@ -84,7 +84,7 @@ const MainEconomicNews = () => {
                         <div key={index} className={styles.newsSlide}>
                             <a href={item.link} target="_blank" rel="noopener noreferrer">
                                 <div className={styles.newsSlideContent}>
-                                    <p className={styles.subTitle} style={{ borderBottom: '3px solid black', paddingBottom: '5px', width: '69px', paddingLeft:'1.5px', marginBottom:'30px' }}>주요 소식</p>
+                                    <p className={styles.subTitle} style={{ borderBottom: '2px solid black', paddingBottom: '3px', width: '69px', paddingLeft:'1.5px', marginBottom:'30px' }}>주요 소식</p>
                                     <strong className={styles.newsSlideTitle}>{item.title}</strong>
                                     <div className={styles.newsSlideInfo}>
                                         <div className={styles['invisible-space']}></div>

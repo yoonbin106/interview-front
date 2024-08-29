@@ -729,7 +729,7 @@
 
 .newsSlideTitle {
   font-size: 20px; /* 글자 크기를 약간 줄임 */
-  margin-bottom: 15px;
+  margin-bottom: 25px;
   color: #333;
   font-weight: bold;
   text-align: left;
@@ -745,6 +745,7 @@
   padding-top: 10px;
   position: relative;
   text-align: left;
+  
 }
 
 .newsSlideTime {
@@ -764,15 +765,28 @@
   height: 3px;
   background: #000000; /* 선의 색상 */
   margin: 10px 0; /* 선의 위치를 통일하기 위한 여백 */
-  transform: scaleX(0); /* 초기에는 보이지 않도록 설정 */
+  transform: scaleX(1); /* 초기 상태에서 선이 보이도록 설정 */
   transform-origin: left; /* 왼쪽에서 오른쪽으로 확장 */
-  transition: transform 0.3s ease;
+
 }
 
 .newsSlide:hover .newsSlideLine {
-  transform: scaleX(1); /* 호버 시 선이 나타남 */
+  opacity: 0; /* 선이 잠시 사라짐 */
+  transform: scaleX(0); /* 선이 축소됨 */
+  transition: none; /* 즉시 사라지도록 설정 */
+  animation: slideLine 0.5s forwards;
 }
 
+@keyframes slideLine {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
 /* 보이지 않는 요소를 위한 CSS */
 .invisible-space {
   width: 100%;
