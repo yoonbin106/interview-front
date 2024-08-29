@@ -711,7 +711,6 @@
   align-items: flex-start; /* 텍스트와 콘텐츠를 슬라이드 안에서 왼쪽으로 정렬 */
   justify-content: flex-start;
   min-height: 240px;
-  
   box-shadow: none;
   padding: 15px; /* 슬라이드 내부 패딩 추가 */
 }
@@ -735,7 +734,7 @@
   text-align: left;
   white-space: normal;
   line-height: 1.4;
-  min-height: 48px; /* 제목의 최소 높이 설정 */
+  min-height: 75px; /* 제목의 최소 높이 설정 */
 }
 
 
