@@ -24,9 +24,6 @@ const BbsQnaList = () => {
     fetchQnaData();
   }, []);
 
-  if (loading) {
-    return <p>로딩 중...</p>; // 데이터를 로드하는 동안 표시될 UI
-  }
 
   if (error) {
     return <p>{error}</p>; // 오류가 발생했을 때 표시될 UI
@@ -53,8 +50,6 @@ const BbsQnaList = () => {
                 <TableCell align="center" className={styles.bbsQnaListHeaderCell}>제목</TableCell>
                 <TableCell align="center" className={styles.bbsQnaListHeaderCell}>내용</TableCell> 
                 <TableCell align="center" className={styles.bbsQnaListHeaderCell}>작성날짜</TableCell>
-                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>진행상황</TableCell> 
-                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>답변</TableCell> 
               </TableRow>
             </TableHead>
             <TableBody>
@@ -68,10 +63,7 @@ const BbsQnaList = () => {
                     </a>
                   </TableCell>
                   <TableCell align="center">{row.qnaQuestion}</TableCell> {/* 수정: 문의 내용 표시 */}
-                  <TableCell align="center">{row.user.name}</TableCell> {/* 작성자 이름 표시 */}
                   <TableCell align="center">{row.qnaCreatedTime}</TableCell> {/* 작성 날짜 표시 */}
-                  <TableCell align="center">{row.qnaStatus}</TableCell> {/* 수정: 진행상황 표시 */}
-                  <TableCell align="center">{row.qnaAnswer || '답변 대기 중'}</TableCell> {/* 수정: 답변 내용 표시 */}
                 </TableRow>
               ))}
             </TableBody>
