@@ -76,10 +76,10 @@ export default function PaginationTableNotice({ posts }) {
                 {post.title}
                 </a>
               </TableCell>
-              <TableCell align="center">{post.username || userStore.username}</TableCell>
+              <TableCell align="center">{post.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
-              <TableCell align="center">{post.hitcount}</TableCell>
-              <TableCell align="center">{post.likes}</TableCell>
+              <TableCell align="center">13</TableCell>
+              <TableCell align="center">10</TableCell>
             </TableRow>
           ))}
         {emptyRows > 0 && (

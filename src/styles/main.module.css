@@ -718,8 +718,6 @@
 
 .newsSlideContent {
   padding: 15px 20px 30px 20px;
-  border: 1px solid rgb(216, 216, 216);
-  border-radius: 5px;
   text-align: left;
   position: relative;
   flex-grow: 1;

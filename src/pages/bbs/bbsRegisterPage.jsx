@@ -67,7 +67,7 @@ const BbsRegister = observer(() => {
             </div>
             <div className={sidebar.content}>
                 <div className={styles['CreatePostbbsRegisterContainer']}>
-                    <h2 className={styles['CreatePostbbsRegisterTitle']}>전체 게시판</h2>
+                    <h2 className={styles['CreatePostbbsRegisterTitle']}>자유 게시판</h2>
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>

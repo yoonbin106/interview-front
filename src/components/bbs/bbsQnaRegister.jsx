@@ -33,8 +33,8 @@ const BbsQnaRegister = observer(() => {
 
     const qnaData = {
       category: category, //선택된 카테고리 (String 값)
-      qnaQuestion: title,
-      qnaContent: content,
+      qnaTitle: title,
+      qnaQuestion: content,
       id: userStore.id
     };
 
