@@ -34,15 +34,15 @@ const Chatting = observer(({ closeChatting }) => {
 
     const [currentChatRoomId, setCurrentChatRoomId] = useState(null); // 현재 선택된 채팅방의 ID
 
-    const getAllChatroomList = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/chat/allChatroomList'); 
-            // 그대로 갖고오지말고 user id (나의 id) 전달해서 chatroomUsers 테이블에서 chatroom_id로 접근. 가져와서 그 findByID(chatroom_id)
-            setChatRoomList(response.data);
-        } catch (error) {
-            console.error('Error fetching chat rooms:', error);
-        }
-    };
+    // const getAllChatroomList = async () => {
+    //     try {
+    //         const response = await axios.get('http://localhost:8080/api/chat/allChatroomList'); 
+    //         // 그대로 갖고오지말고 user id (나의 id) 전달해서 chatroomUsers 테이블에서 chatroom_id로 접근. 가져와서 그 findByID(chatroom_id)
+    //         setChatRoomList(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching chat rooms:', error);
+    //     }
+    // };
 
     //getChatroomList
     const getChatroomList = async () => {
@@ -257,10 +257,13 @@ const Chatting = observer(({ closeChatting }) => {
         setIsDarkMode(prev => !prev);
     };
 
-    const onChatClick = (chatRoomId) => {
+    //chatroomList 전체를 클릭하든 케밥메뉴 클릭하든 아무튼 chatRoomId 얻어오기
+    const getChatroomId = (chatRoomId) => {
         setCurrentChatRoomId(chatRoomId); // 선택된 채팅방 ID 저장
         // console.log('onChatClick() - currentChatRoomId: ', currentChatRoomId);
+    }
 
+    const onChatClick = () => {
         // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
 
         setIsChatOpen(true);
@@ -404,9 +407,11 @@ const Chatting = observer(({ closeChatting }) => {
                         <ChattingList 
                             chatRoomList={chatRoomList} 
                             onChatClick={onChatClick} 
+                            getChatroomId={getChatroomId}
+                            getChatroomList={getChatroomList}
                             userStore={userStore} 
-                            users={users}
-                            getAllChatroomList={getAllChatroomList} />
+                            users={users} 
+                            currentChatRoomId={currentChatRoomId} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>

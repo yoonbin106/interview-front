@@ -5,7 +5,7 @@ import SearchBar from './searchBar';
 import { getAllUsers } from 'api/user';
 import axios from 'axios';
 
-const ChattingCreateRoom = ({ onBack, userStore }) => {
+const ChattingCreateRoom = ({ onBack, userStore, getChatroomList }) => {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [selectedUserIds, setSelectedUserIds] = useState([]);
@@ -86,6 +86,7 @@ const ChattingCreateRoom = ({ onBack, userStore }) => {
         }
 
         console.log('Selected User Ids:', selectedUserIds); //emails 값 얻어오기, selectedUserEmails에 저장돼있음
+        getChatroomList();
         onBack();
     };
 
