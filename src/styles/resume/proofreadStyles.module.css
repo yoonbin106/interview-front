@@ -43,20 +43,7 @@
   height: 100%;
   background-color: #f8f9fa;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease;
-  z-index: 1000;
-  padding: 16px;
-}
-
-.proofreadSidebar {
-  position: fixed;
-  right: -300px;
-  top: 0;
-  width: 400px;
-  height: 100%;
-  background-color: #f8f9fa;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease;
+  transition: right 0.3s ease, height 0.3s ease; /* 높이 전환 추가 */
   z-index: 1000;
   padding: 16px;
 }
@@ -64,13 +51,18 @@
   position: fixed;
   right: -300px;
   top: 0;
-  width: 565px;
+  width: 600px;
   height: 100%;
   background-color: #f8f9fa;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease;
+  transition: right 0.3s ease, height 0.3s ease; /* 높이 전환 추가 */
   z-index: 1000;
   padding: 16px;
+}
+
+.proofreadSidebar.collapsed, .aiproofreadSidebar.collapsed {
+  height: 80px; /* 축소된 상태일 때 높이 */
+  
 }
 .proofreadSidebar.open {
   right: 0;

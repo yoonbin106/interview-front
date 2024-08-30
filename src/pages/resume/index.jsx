@@ -9,12 +9,14 @@ import styles from '@/styles/resume/resumeForm.module.css';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
 import proofreadStyles from '@/styles/resume/proofreadStyles.module.css';
 import { closestIndexTo } from 'date-fns';
-import {
+import {useLoadDaumPostcodeScript,
   openPostcodePopup,
 } from "@/api/getPostCode";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useStores } from '@/contexts/storeContext';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 function ResumeForm() {
   const router = useRouter();
@@ -47,6 +49,8 @@ function ResumeForm() {
   const [showTitleError, setShowTitleError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
 
   const [formData, setFormData] = useState({
     resume_title: '',
@@ -65,6 +69,30 @@ function ResumeForm() {
     address: userStore.address || ''
   });
 
+  const toggleSidebarHeight = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+
+    const pasteText = (e.clipboardData || window.clipboardData).getData('text');
+
+    // 현재 텍스트에 붙여넣기를 더해도 2000자를 넘지 않게 함
+    const currentText = e.target.innerText;
+    const remainingLength = 2000 - currentText.length;
+    const textToPaste = pasteText.substring(0, remainingLength);
+
+    document.execCommand('insertText', false, textToPaste);
+};
+
+const handleAccordionChange = (panel) => (event, isExpanded) => {
+  if (panel === 'proofread') {
+    setExpandedProofread(isExpanded);
+  } else if (panel === 'aiProofread') {
+    setExpandedAiProofread(isExpanded);
+  }
+};
 
   const sectionsRef = {
     personalInfo: useRef(null),
@@ -208,12 +236,45 @@ const ModalContent = styled('div')(
   };
 
   const handleSelfIntroductionChange = (e) => {
-    setSelfIntroduction(e.target.value);
-  };
+    let text = e.target.innerText;
+
+    // 최대 길이를 초과하지 않도록 체크
+    if (text.length > 2000) {
+        // 2000자를 초과할 경우, 초과된 부분을 제거
+        text = text.substring(0, 2000);
+        e.target.innerText = text;
+
+        // 캐럿(커서)을 텍스트 끝으로 이동
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(e.target);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    setSelfIntroduction(text);
+};
+
 
 
   const handleMotivationChange = (e) => {
-    setMotivation(e.target.value);
+    let text = e.target.innerText;
+    // 최대 길이를 초과하지 않도록 체크
+    if (text.length > 2000) {
+      // 2000자를 초과할 경우, 초과된 부분을 제거
+      text = text.substring(0, 2000);
+      e.target.innerText = text;
+
+      // 캐럿(커서)을 텍스트 끝으로 이동
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(e.target);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+  }
+    setMotivation(text);
   };
 
   const handleProofread = async (text) => {
@@ -332,7 +393,7 @@ const generatePDF = async () => {
 
   const imgData = canvas.toDataURL('image/png');
   const pdf = new jsPDF('p', 'mm', 'a4', true);
-  const imgWidth = 210;
+  const imgWidth = 207;
   const pageHeight = 295;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
   let heightLeft = imgHeight;
@@ -420,7 +481,7 @@ const generatePDF = async () => {
                 if (index > 0) {
                     return (
                         <div key={index} style={{ marginTop: '16px' }}>
-                            <span style={{ fontSize: '6px', position: 'relative', top: '-3.5px'}}>●</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style={{ fontSize: '6px', position: 'relative', top: '-3.5px',color:'#5A8AF2'}}>●</span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <span dangerouslySetInnerHTML={applyColorToQuotes(item)} />
                         </div>
                     );
@@ -489,16 +550,23 @@ const applyColorToQuotes = (text) => {
   if (typeof text !== 'string') {
       return text;
   }
+  let coloredText = text.replace(/##([^#]+)##/g, "<span style='color:#5A8AF2;'>$&</span>");
 
-  // ## 안의 텍스트에 색상 적용
-  const coloredText = text.replace(/##([^#]+)##/g, "<span style='color:#5A8AF2;'>$&</span>");
-
+  // "첨삭 결과는 다음과 같습니다."와 "수정 부분은 다음과 같습니다." 부분에 주황색과 볼드 처리 적용
+  coloredText = coloredText.replace(/첨삭 결과는 다음과 같습니다\./g, "<span style='color:#5A8AF2;'>첨삭 결과는 다음과 같습니다.</span><br>");
+  coloredText = coloredText.replace(/첨삭 결과는 다음과 같습니다\:/g, "<span style='color:#5A8AF2;'>첨삭 결과는 다음과 같습니다.</span><br>");
+  coloredText = coloredText.replace(/수정 부분은 다음과 같습니다\./g, "<span style='color:#5A8AF2;'>수정 부분은 다음과 같습니다.</span>");
+  coloredText = coloredText.replace(/수정 부분은 다음과 같습니다\:/g, "<span style='color:#5A8AF2;'>수정 부분은 다음과 같습니다.</span>");
+  coloredText = coloredText.replace(/(-)/g, "<br><br>$1");
   return { __html: coloredText };
 };
 
   const closeAiProofreadSidebar = () => {
     setIsAiProofreadSidebarOpen(false);
   };
+
+  useLoadDaumPostcodeScript();
+  
 
 
   return (
@@ -540,7 +608,7 @@ const applyColorToQuotes = (text) => {
     <ModalContent sx={{ width: 300 }}>
         <div className={modalStyles.spinner}></div> 
         <h2 id="loading-save-modal-title" className={modalStyles.modalText}>
-            저장 중입니다...
+            저장중...
         </h2>
     </ModalContent>
   </Modal>
@@ -685,7 +753,8 @@ const applyColorToQuotes = (text) => {
                   className={styles.formControl}
                   id="zipcode"
                   placeholder="우편번호"
-                  readOnly
+                  value={postcode}
+                  
                 />
                 <button
                   type="button"
@@ -1290,10 +1359,15 @@ const applyColorToQuotes = (text) => {
           </button>
         </div>
         <div className={styles.textareaContainer}>
-          <textarea
-            placeholder="본인을 소개하는 글을 작성해주세요."
+           {/* placeholder를 조건부로 표시 */}
+      {selfIntroduction.length === 0 && (
+        <div className={styles.placeholder}>본인을 소개하는 글을 작성해주세요.</div>
+      )}
+          <pre
+            contenteditable="true"
             value={selfIntroduction}
-            onChange={handleSelfIntroductionChange}
+            onInput={handleSelfIntroductionChange}
+            onPaste={handlePaste} 
             maxLength="2000"
           />
           <div className={styles.charCounter}>{selfIntroduction.length}/2000</div>
@@ -1324,12 +1398,19 @@ const applyColorToQuotes = (text) => {
           </button>
         </div>
         <div className={styles.textareaContainer}>
-          <textarea
-            placeholder="회사에 지원하게된 동기를 작성해주세요."
-            value={motivation}
-            onChange={handleMotivationChange}
+          {/* placeholder를 조건부로 표시 */}
+          {motivation.length === 0 && (
+            <div className={styles.placeholder}>회사에 지원하게 된 동기를 작성해주세요.</div>
+          )}
+          <pre
+            contentEditable="true"
+            onInput={handleMotivationChange} // onChange 대신 onInput 사용
             maxLength="2000"
-          />
+            onPaste={handlePaste}
+            value={motivation}
+          >
+              {/* pre 태그 안에 상태값을 직접 넣기 */}
+          </pre>
           <div className={styles.charCounter}>{motivation.length}/2000</div>
         </div>
       </div>
@@ -1351,15 +1432,20 @@ const applyColorToQuotes = (text) => {
       </div>
 
             {isProofreadSidebarOpen && (
-         <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
+         <div className={`${proofreadStyles.proofreadSidebar} ${isProofreadSidebarOpen ? proofreadStyles.open : ''} ${isSidebarCollapsed ? proofreadStyles.collapsed : ''}`}>
           <div className={proofreadStyles.sidebarHeader}>
           <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>맞춤법 검사 결과</h3>
-
-
-            <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
-              <CloseIcon />
-            </button>
-          </div>
+              <div className={proofreadStyles.sidebarIcons}>
+      {isSidebarCollapsed ? (
+        <KeyboardArrowDownIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'65px',marginTop:'10px' }} />
+      ) : (
+        <KeyboardArrowUpIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'65px',marginTop:'10px' }} />
+      )}
+      <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
+        <CloseIcon style={{marginTop:'5px' }} />
+      </button>
+    </div>
+  </div>
           <div className={proofreadStyles.sidebarContent}>
             {proofreadResult.length > 0 ? (
               <ul>
@@ -1378,12 +1464,19 @@ const applyColorToQuotes = (text) => {
         </div>
       )}
      {isAiProofreadSidebarOpen && (
-         <div className={`${proofreadStyles.aiproofreadSidebar} aiProofreadSidebar ${isAiProofreadSidebarOpen ? proofreadStyles.open : ''}`}>
+         <div className={`${proofreadStyles.aiproofreadSidebar} aiProofreadSidebar ${isAiProofreadSidebarOpen ? proofreadStyles.open : ''} ${isSidebarCollapsed ? proofreadStyles.collapsed : ''}`}>
           <div className={proofreadStyles.sidebarHeader}>
             <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>AI 첨삭 결과</h3>
-            <button className={proofreadStyles.closeButton} onClick={closeAiProofreadSidebar}>
-              <CloseIcon />
-            </button>
+            <div className={proofreadStyles.sidebarIcons}>
+              {isSidebarCollapsed ? (
+                <KeyboardArrowDownIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'300px',marginTop:'10px' }} />
+              ) : (
+                <KeyboardArrowUpIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'300px',marginTop:'10px' }} />
+              )}
+              <button className={proofreadStyles.closeButton} onClick={closeAiProofreadSidebar}>
+                <CloseIcon style={{marginTop:'5px' }} />
+              </button>
+            </div>
           </div>
           <div className={proofreadStyles.sidebarContent}>
             {aiProofreadResult.length > 0 ? (

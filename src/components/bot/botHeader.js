@@ -9,7 +9,7 @@ const BotHeader = ({ endBot, isDarkMode, toggleDarkMode }) => {
     <div className={styles.botHeader}>
       <span className='botIcon'>
         <PiWechatLogoBold /> 
-      </span>VIP Chatbot 
+      </span>focusjob Chatbot 
       <span>
       <button onClick={toggleDarkMode} className={styles.darkModeButton}>
           {isDarkMode ? <FaSun /> : <FaMoon />}

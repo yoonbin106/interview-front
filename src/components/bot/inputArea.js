@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaMicrophoneLines } from "react-icons/fa6";
+import { FaMicrophoneLines, FaMicrophoneSlash } from "react-icons/fa6";
 import { BsSendFill } from "react-icons/bs";
 import styles from '@/styles/bot/inputArea.module.css';
 
-const InputArea = ({ inputMessage, setInputMessage, isListening, startListening, sendMessage, isDarkMode }) => {
+const InputArea = ({ inputMessage, setInputMessage, isListening, startListening, stopListening, sendMessage, isDarkMode }) => {
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -11,14 +11,22 @@ const InputArea = ({ inputMessage, setInputMessage, isListening, startListening,
     }
   };
 
+  const toggleListening = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
+
   return (
-    <div className={`${styles.inputArea} ${isDarkMode ? 'styles.dark' : ''}`}>
+    <div className={`${styles.inputArea} ${isDarkMode ? styles.dark : ''}`}>
       <textarea
         className={styles.inputTextarea}
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
         onKeyPress={handleKeyPress}
-        placeholder="메시지를 입력하세요..."
+        placeholder="궁금한 사항이 있으면 여기에 입력해주세요.."
       />
       <button 
         className={styles.sendButton}
@@ -27,10 +35,10 @@ const InputArea = ({ inputMessage, setInputMessage, isListening, startListening,
         <BsSendFill />
       </button>
       <button 
-        className={`${styles.micButton} ${isListening ? 'styles.listening' : ''}`}
-        onClick={startListening}
+        className={`${styles.micButton} ${isListening ? styles.listening : ''}`}
+        onClick={toggleListening}
       >
-        <FaMicrophoneLines />
+        {isListening ? <FaMicrophoneSlash /> : <FaMicrophoneLines />}
       </button>
     </div>
   );

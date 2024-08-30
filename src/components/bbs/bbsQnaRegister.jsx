@@ -12,7 +12,7 @@ const BbsQnaRegister = observer(() => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const router = useRouter();
-
+  
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };

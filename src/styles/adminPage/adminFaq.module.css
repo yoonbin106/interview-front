@@ -50,7 +50,7 @@
 }
 
 .adminFaqMenuItem {
-    color: white;
+    color: black;
     background-color: #4A90E2; /* 필요 시 배경색도 설정 가능 */
 }
 
@@ -59,7 +59,7 @@
 }
 
 .adminFaqCategoryLabel {
-    color: white;
+    color: black;
     font-weight: bold;
 }
 

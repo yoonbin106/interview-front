@@ -3,7 +3,6 @@ import React from 'react';
 import BbsQnaList from '@/components/bbs/bbsQnaList';
 import BbsQnaSideMenu from '@/components/bbs/bbsQnaSideMenu';
 import styles from '@/styles/adminPage/adminPage.module.css';
-import { Box, Typography } from '@mui/material';
 
 
 const BbsQnaListPage = () => {

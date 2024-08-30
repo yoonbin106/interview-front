@@ -29,11 +29,13 @@
 .qnaDetailsSubmitButton{
     margin-top: 20px;
     background-color: #4A90E2;
+    color: white; 
 }
 
-.qnaDetailsBackButton{
-    margin-top:20px;
-    margin-left:10px;
+.qnaDetailsBackButton {
+    margin-top: 20px;
+    margin-left: 10px;
     background-color: #4A90E2;
+    color: white; 
     
 }
