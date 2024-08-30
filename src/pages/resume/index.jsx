@@ -481,7 +481,7 @@ const generatePDF = async () => {
                 if (index > 0) {
                     return (
                         <div key={index} style={{ marginTop: '16px' }}>
-                            <span style={{ fontSize: '6px', position: 'relative', top: '-3.5px'}}>●</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style={{ fontSize: '6px', position: 'relative', top: '-3.5px',color:'#5A8AF2'}}>●</span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <span dangerouslySetInnerHTML={applyColorToQuotes(item)} />
                         </div>
                     );
@@ -550,10 +550,14 @@ const applyColorToQuotes = (text) => {
   if (typeof text !== 'string') {
       return text;
   }
+  let coloredText = text.replace(/##([^#]+)##/g, "<span style='color:#5A8AF2;'>$&</span>");
 
-  // ## 안의 텍스트에 색상 적용
-  const coloredText = text.replace(/##([^#]+)##/g, "<span style='color:#5A8AF2;'>$&</span>");
-
+  // "첨삭 결과는 다음과 같습니다."와 "수정 부분은 다음과 같습니다." 부분에 주황색과 볼드 처리 적용
+  coloredText = coloredText.replace(/첨삭 결과는 다음과 같습니다\./g, "<span style='color:#5A8AF2;'>첨삭 결과는 다음과 같습니다.</span><br>");
+  coloredText = coloredText.replace(/첨삭 결과는 다음과 같습니다\:/g, "<span style='color:#5A8AF2;'>첨삭 결과는 다음과 같습니다.</span><br>");
+  coloredText = coloredText.replace(/수정 부분은 다음과 같습니다\./g, "<span style='color:#5A8AF2;'>수정 부분은 다음과 같습니다.</span>");
+  coloredText = coloredText.replace(/수정 부분은 다음과 같습니다\:/g, "<span style='color:#5A8AF2;'>수정 부분은 다음과 같습니다.</span>");
+  coloredText = coloredText.replace(/(-)/g, "<br><br>$1");
   return { __html: coloredText };
 };
 
