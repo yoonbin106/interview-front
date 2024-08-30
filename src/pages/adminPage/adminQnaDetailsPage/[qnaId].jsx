@@ -59,14 +59,6 @@ const AdminQnaDetailsPage = () => {
             </div>
             <div className={sidebar.content}>
                 <AdminQnaDetails qnaDetail={qnaDetail} /> {/* qnaDetail을 전달합니다 */}
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleBackToList}
-                    className={styles.qnaDetailsBackButton}
-                >
-                    목록
-                </Button>
             </div>
         </div>
     );

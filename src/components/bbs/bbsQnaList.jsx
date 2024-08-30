@@ -103,10 +103,12 @@ const BbsQnaList = () => {
                           <Typography variant="body1">
                             <strong>작성날짜:　</strong>{row.qnaCreatedTime}
                           </Typography>
+                          <br/>
                           <Typography variant="body1">
                             <strong>문의내역:　</strong>
                             {row.qnaQuestion}
                           </Typography>
+                          <br/>
                           <Box marginTop={2} padding={2} style={{ backgroundColor: '#f9f9f9', border: '1px solid #ddd' }}>
                             <Typography variant="body1" style={{ fontWeight: 'bold' }}>
                               관리자 확인 상태:
@@ -114,10 +116,12 @@ const BbsQnaList = () => {
                             <Typography variant="body1" style={{ marginLeft: '8px' }}>
                               {getStatusText(row.qnaStatus)}
                             </Typography>
+                            <br/>
                             <Typography variant="body1" style={{ fontWeight: 'bold', marginTop: '16px' }}>
                               답변:
                             </Typography>
-                            <Typography variant="body1" color="textSecondary" style={{ marginLeft: '8px' }}>
+                            <Typography variant="body1" 
+                            style={{ marginLeft: '8px',color: row.qnaAnswer ? 'black' : 'gray', }}>
                               {row.qnaAnswer ? row.qnaAnswer : '최대한 빠른 시일 내에 답변 드리겠습니다.'}
                             </Typography>
                           </Box>
