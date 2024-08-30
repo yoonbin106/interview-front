@@ -13,7 +13,7 @@ import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import sidebar from '@/styles/bbs/bbsPage.module.css';
 import styles from '@/styles/bbs/bbsCreatePost.module.css';
-import NestedList from '@/components/bbs/bbsSidebar';
+
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 
@@ -23,6 +23,7 @@ const BbsRegister = observer(() => {
     const [title, setTitle] = useState(''); // 제목 상태
     const [content, setContent] = useState(''); // 내용 상태
     const [files, setFiles] = useState([]); // 파일 상태
+    const [fileNames, setFileNames] = useState([]);
     const [fontSize, setFontSize] = useState(15);
     const [fontStyle, setFontStyle] = useState('normal');
     const [fontWeight, setFontWeight] = useState('normal');
@@ -36,7 +37,9 @@ const BbsRegister = observer(() => {
     const toggleTextDecoration = () => setTextDecoration(textDecoration === 'none' ? 'underline' : 'none');
     const handleTextAlign = (align) => setTextAlign(align);
     const handleFileChange = (event) => {
-        setFiles(event.target.files);
+        const selectedFiles = Array.from(event.target.files);
+        setFiles(selectedFiles);
+        setFileNames(selectedFiles.map(file => file.name));
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -45,9 +48,9 @@ const BbsRegister = observer(() => {
         formData.append('title', title);
         formData.append('content', content);
         formData.append('id', id);
-        for (let i = 0; i < files.length; i++) {
-            formData.append('files', files[i]); // 파일 추가
-        }
+        files.forEach(file => {
+            formData.append('files', file); // 여러 파일 추가
+        });
         try {
             const response = await axios.post('http://localhost:8080/bbs', formData);
             
@@ -62,9 +65,7 @@ const BbsRegister = observer(() => {
 
     return (
         <div className={sidebar.container}>
-            <div className={sidebar.sidebar}>
-                <NestedList />
-            </div>
+            
             <div className={sidebar.content}>
                 <div className={styles['CreatePostbbsRegisterContainer']}>
                     <h2 className={styles['CreatePostbbsRegisterTitle']}>자유 게시판</h2>
@@ -162,7 +163,12 @@ const BbsRegister = observer(() => {
                                             파일첨부
                                             <input type="file" hidden multiple onChange={handleFileChange}/>
                                         </Button>
-                                        <Typography variant="body2" color="textSecondary">0/10MB</Typography>
+                                        {fileNames.length > 0 && (
+                                            <Typography variant="body2" color="textSecondary">
+                                                첨부된 파일: {fileNames.join(', ')}
+                                            </Typography>
+                                        )}
+                                        
                                     </Grid>
                                 </Grid>
                             </Grid>

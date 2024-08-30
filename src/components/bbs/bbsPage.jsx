@@ -3,7 +3,7 @@ import PaginationTableNotice from '@/components/bbs/bbsTable'; // PaginationTabl
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/BoardTable.module.css';
-
+import Box from '@mui/material/Box';
 import axios from 'axios'; // axios import 추가
 
 const BoardTable = () => {
@@ -21,6 +21,7 @@ const BoardTable = () => {
         const fetchPosts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/bbs');
+                console.log(response);
                 setPosts(response.data);
                 setFilteredPosts(response.data); // 필터링된 게시물에 처음 데이터 설정
                 setLoading(false);
@@ -149,14 +150,13 @@ const BoardTable = () => {
                                     </Button>
                                 </Grid>
                             </Grid>
-
-                            {/* 페이지네이션 */}
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                            {/* 페이지네이션 컨트롤 */}
+                            <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <Button
                                     variant="outlined"
                                     onClick={() => handleChangePage(0)}
                                     disabled={page === 0}
-                                    style={{ marginRight: '8px' }}
+                                    sx={{ marginRight: 2 }}
                                 >
                                     처음
                                 </Button>
@@ -164,7 +164,7 @@ const BoardTable = () => {
                                     variant="outlined"
                                     onClick={() => handleChangePage(page - 1)}
                                     disabled={page === 0}
-                                    style={{ marginRight: '8px' }}
+                                    sx={{ marginRight: 2 }}
                                 >
                                     이전
                                 </Button>
@@ -173,7 +173,7 @@ const BoardTable = () => {
                                     variant="outlined"
                                     onClick={() => handleChangePage(page + 1)}
                                     disabled={page >= totalPages - 1}
-                                    style={{ marginLeft: '8px' }}
+                                    sx={{ marginLeft: 2 }}
                                 >
                                     다음
                                 </Button>
@@ -181,16 +181,28 @@ const BoardTable = () => {
                                     variant="outlined"
                                     onClick={() => handleChangePage(totalPages - 1)}
                                     disabled={page >= totalPages - 1}
-                                    style={{ marginLeft: '8px' }}
+                                    sx={{ marginLeft: 2 }}
                                 >
                                     마지막
                                 </Button>
+                                {/* 페이지당 표시할 행 수 선택 */}
+                                <Select
+                                    value={rowsPerPage}
+                                    onChange={handleRowsPerPageChange}
+                                    sx={{ marginLeft: 2 }}
+                                >
+                                    <MenuItem value={5}>5</MenuItem>
+                                    <MenuItem value={10}>10</MenuItem>
+                                    <MenuItem value={25}>25</MenuItem>
+                                </Select>
+                            </Box>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        
     );
 };
 

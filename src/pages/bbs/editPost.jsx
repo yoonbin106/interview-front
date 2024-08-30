@@ -12,7 +12,7 @@ import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import sidebar from '@/styles/bbs/bbsPage.module.css';
 import styles from '@/styles/bbs/bbsCreatePost.module.css';
-import NestedList from '@/components/bbs/bbsSidebar';
+
 const EditPost = () => {
   const router = useRouter();
   const { id } = router.query; // useRouter를 통해 동적 파라미터 사용
@@ -79,9 +79,7 @@ const EditPost = () => {
 
   return (
     <div className={sidebar.container}>
-        <div className={sidebar.sidebar}>
-            <NestedList />
-        </div>
+        
         <div className={sidebar.content}>
             <div className={styles['CreatePostbbsRegisterContainer']}>
                 <h2 className={styles['CreatePostbbsRegisterTitle']}>게시글 수정</h2>

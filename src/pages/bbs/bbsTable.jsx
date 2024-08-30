@@ -89,52 +89,8 @@ export default function PaginationTableNotice({ posts }) {
           )}
         </TableBody>
       </Table>
-
-      {/* 페이지네이션 컨트롤 */}
-      <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Button
-          variant="outlined"
-          onClick={() => handleChangePage(0)}
-          disabled={page === 0}
-          sx={{ marginRight: 2 }}
-        >
-          처음
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => handleChangePage(page - 1)}
-          disabled={page === 0}
-          sx={{ marginRight: 2 }}
-        >
-          이전
-        </Button>
-        <span>{page + 1} / {totalPages}</span>
-        <Button
-          variant="outlined"
-          onClick={() => handleChangePage(page + 1)}
-          disabled={page >= totalPages - 1}
-          sx={{ marginLeft: 2 }}
-        >
-          다음
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => handleChangePage(totalPages - 1)}
-          disabled={page >= totalPages - 1}
-          sx={{ marginLeft: 2 }}
-        >
-          마지막
-        </Button>
-        <Select
-          value={rowsPerPage}
-          onChange={handleRowsPerPageChange}
-          sx={{ marginLeft: 2 }}
-        >
-          <MenuItem value={5}>5</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={25}>25</MenuItem>
-        </Select>
-      </Box>
+      
+     
     </TableContainer>
   );
 }
