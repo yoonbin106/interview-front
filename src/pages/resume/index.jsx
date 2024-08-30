@@ -9,7 +9,7 @@ import styles from '@/styles/resume/resumeForm.module.css';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
 import proofreadStyles from '@/styles/resume/proofreadStyles.module.css';
 import { closestIndexTo } from 'date-fns';
-import {
+import {useLoadDaumPostcodeScript,
   openPostcodePopup,
 } from "@/api/getPostCode";
 import html2canvas from 'html2canvas';
@@ -565,6 +565,7 @@ const applyColorToQuotes = (text) => {
     setIsAiProofreadSidebarOpen(false);
   };
 
+  useLoadDaumPostcodeScript();
   
 
 
@@ -752,7 +753,8 @@ const applyColorToQuotes = (text) => {
                   className={styles.formControl}
                   id="zipcode"
                   placeholder="우편번호"
-                  readOnly
+                  value={postcode}
+                  
                 />
                 <button
                   type="button"
