@@ -1435,12 +1435,12 @@ const applyColorToQuotes = (text) => {
           <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>맞춤법 검사 결과</h3>
               <div className={proofreadStyles.sidebarIcons}>
       {isSidebarCollapsed ? (
-        <KeyboardArrowDownIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' }} />
+        <KeyboardArrowDownIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'65px',marginTop:'10px' }} />
       ) : (
-        <KeyboardArrowUpIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' }} />
+        <KeyboardArrowUpIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'65px',marginTop:'10px' }} />
       )}
       <button className={proofreadStyles.closeButton} onClick={closeProofreadSidebar}>
-        <CloseIcon />
+        <CloseIcon style={{marginTop:'5px' }} />
       </button>
     </div>
   </div>
@@ -1467,12 +1467,12 @@ const applyColorToQuotes = (text) => {
             <h3 style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>AI 첨삭 결과</h3>
             <div className={proofreadStyles.sidebarIcons}>
               {isSidebarCollapsed ? (
-                <KeyboardArrowDownIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' }} />
+                <KeyboardArrowDownIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'300px',marginTop:'10px' }} />
               ) : (
-                <KeyboardArrowUpIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' }} />
+                <KeyboardArrowUpIcon onClick={toggleSidebarHeight} style={{ cursor: 'pointer' ,marginRight:'300px',marginTop:'10px' }} />
               )}
               <button className={proofreadStyles.closeButton} onClick={closeAiProofreadSidebar}>
-                <CloseIcon />
+                <CloseIcon style={{marginTop:'5px' }} />
               </button>
             </div>
           </div>
