@@ -11,48 +11,60 @@ const AdminQnaDetails = ({ onSubmit }) => {
     const [qnaDetail, setQnaDetail] = useState(null); // QnA 상세 정보를 저장할 상태
     const [response, setResponse] = useState(''); // 관리자가 작성할 답변을 위한 상태
     const [category, setCategory] = useState(''); // 문의 카테고리 상태
+    const [qnaStatus, setQnaStatus] = useState('');// 상태 카테고리
 
     useEffect(() => {
-        console.log('qnaId:', qnaId);
         const fetchQnaDetail = async () => {
             try {
                 // qnaId가 존재하는지 확인
                 if (qnaId) {
                     const response = await axios.get(`http://localhost:8080/api/qna/${qnaId}`);
-                    console.log('응답이에요:', response);
                     setQnaDetail(response.data);
+                    setResponse(response.data.qnaAnswer || '');
                     setCategory(response.data.qnaCategory);
-                } else {
-                    console.log('qnaId is undefined, API call skipped.');
+                    setQnaStatus(response.data.qnaStatus || '');
                 }
             } catch (error) {
                 console.error('Error fetching QnA details:', error);
             }
         };
-    
         fetchQnaDetail(); // 컴포넌트가 마운트될 때 QnA 세부사항을 가져옴
     }, [qnaId]);
+
+      // 상태를 한글로 변환하는 함수
+      const getStatusText = (status) => {
+        switch (status) {
+            case 'N':
+                return '대기';
+            case 'T':
+                return '진행중';
+            case 'P':
+                return '완료';
+            default:
+                return '알 수 없음';
+        }
+    };
 
     // 답변 입력 핸들러
     const handleResponseChange = (event) => {
         setResponse(event.target.value);
     };
-
-    // 카테고리 변경 핸들러
-    const handleCategoryChange = (event) => {
-        setCategory(event.target.value); // 선택한 카테고리로 상태 업데이트
-    };
+    // 상태 카테고리 업데이트
+    const handleStatusChange = (event) => {
+        setQnaStatus(event.target.value); 
+    }
 
     // 답변 제출 핸들러
     const handleSubmit = () => {
         const updateQna = {
             qnaAnswer: response,
-            qnaCategory: category,
+            qnaStatus: qnaStatus,
         };
 
         axios.put(`http://localhost:8080/api/qna/${qnaId}`, updateQna)
             .then(() => {
-                alert(`답변을 등록하였습니다. 카테고리가 '${category}'(으)로 변경되었습니다.`);
+                alert(`답변을 등록하였습니다. 문의상태가 '${getStatusText(qnaStatus)}'(으)로 변경되었습니다.`);
+                router.push('http://localhost:3000/adminPage/adminQnaPage');
             })
             .catch(error => {
                 console.error('Error updating QnA:', error);
@@ -102,26 +114,35 @@ const AdminQnaDetails = ({ onSubmit }) => {
                         onChange={handleResponseChange} // 답변 입력 핸들러
                     />
                     <FormControl fullWidth variant="outlined" className={styles.qnaDetailsFormControl}>
-                        <InputLabel id="category-label">카테고리 변경</InputLabel>
+                        <InputLabel id="status-label">문의상태 변경</InputLabel>
                         <Select
-                            labelId="category-label"
-                            id="category"
-                            value={category}
-                            onChange={handleCategoryChange} // 카테고리 변경 핸들러
-                            label="카테고리 변경"
+                            labelId="status-label"
+                            id="status"
+                            value={qnaStatus}
+                            onChange={handleStatusChange} // 상태 변경 핸들러
+                            label="문의상태 변경"
                         >
                             <MenuItem value="N">대기</MenuItem>
                             <MenuItem value="T">진행중</MenuItem>
                             <MenuItem value="P">완료</MenuItem>
                         </Select>
                     </FormControl>
-                    <Button
-                        variant="contained"
-                        onClick={handleSubmit} // 답변 제출 핸들러
-                        className={styles.qnaDetailsSubmitButton}
-                    >
-                        답변 등록
-                    </Button>
+                    <div className={styles.qnaDetailsButtonContainer}>
+                        <Button
+                            variant="contained"
+                            onClick={handleSubmit} // 답변 제출 핸들러
+                            className={styles.qnaDetailsSubmitButton}
+                        >
+                            답변 등록
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={() => router.push('http://localhost:3000/adminPage/adminQnaPage')}
+                            className={styles.qnaDetailsBackButton}
+                        >
+                            목록
+                        </Button>
+                    </div>
                 </Paper>
             </Box>
         </div>

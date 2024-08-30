@@ -3,10 +3,17 @@ import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminQna.module.css';
 import axios from 'axios';
+import {useRouter} from 'next/router';
 
 // PaginationTableQna 컴포넌트: QnA 테이블을 렌더링하는 컴포넌트
 const PaginationTableQna = ({ rows, page, rowsPerPage, getStatusText }) => {
+  const router = useRouter();
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  //행을 클릭했을 때 실행되는 함수
+  const handleRowClick = (qnaId) => {
+    router.push(`/adminPage/adminQnaDetailsPage/${qnaId}`)
+  }
 
   return (
     <TableContainer component={Paper} className={styles.adminQnaTableContainer}>
@@ -26,14 +33,15 @@ const PaginationTableQna = ({ rows, page, rowsPerPage, getStatusText }) => {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.qnaId}>
+            <TableRow key={row.qnaId}
+            hover
+            onClick={() => handleRowClick(row.qnaId)}
+            style={{cursor:'pointer'}}>
               <TableCell align="center">{row.qnaId}</TableCell>
               <TableCell align="center">{getStatusText(row.qnaStatus)}</TableCell>
               <TableCell align="center">{`[${row.qnaCategory}]`}</TableCell>
               <TableCell align="center" className={styles.adminQnaTitleCell}>
-                <a href={`/adminPage/adminQnaDetailsPage/${row.qnaId}`} className={styles.adminQnaTableLink}>
                   {row.qnaTitle}
-                </a>
               </TableCell>
               <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
               <TableCell align="center">
@@ -87,7 +95,9 @@ const AdminQna = () => {
     const fetchQnaData = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/qna');
-        console.log(response);
+        
+        //데이터를 최신 날짜 기준으로 정렬
+        const sortedData = response.data.sort((a,b) => new Date(b.qnaCreatedTime) - new Date(a.qnaCreatedTime));
         setQnaData(response.data); // 가져온 데이터를 상태에 저장
         setFilteredQna(response.data); // 필터링된 QnA 상태에 전체 데이터 저장
       } catch (error) {
