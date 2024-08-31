@@ -59,7 +59,7 @@ const AdminMainCharts = ({ chartType }) => {
             distributed: true, // 각 막대를 개별적으로 스타일링
           }
         },
-        colors: ['#2C3E50', '#2C3E50', '#4A90E2'], // 막대 색상
+        colors: ['#2C3E50', '#2C3E50', '#5A8AF2'], // 막대 색상
         legend: {
           show: false,
         },
@@ -97,7 +97,7 @@ const AdminMainCharts = ({ chartType }) => {
         xaxis: {
           categories: labels, // X축에 시간 표시
         },
-        colors: ['#4A90E2'], // 선 색상
+        colors: ['#5A8AF2'], // 선 색상
         stroke: {
           curve: 'smooth', // 선을 부드럽게
         },

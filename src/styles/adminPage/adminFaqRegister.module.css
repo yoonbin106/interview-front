@@ -8,37 +8,9 @@
     margin-bottom: 16px;
 }
 
-/* 글꼴 크기 선택 드롭다운 스타일 */
-.faqRegisterFontSizeSelect {
-    margin-right: 8px;
-}
 
-/* 텍스트 필드 스타일 */
-.faqRegisterTextField {
-    font-size: var(--font-size);
-    font-style: var(--font-style);
-    font-weight: var(--font-weight);
-    text-decoration: var(--text-decoration);
-    text-align: var(--text-align);
-    margin-bottom: 8px;
-}
 
-/* 글자수 제한 스타일 */
-.faqRegisterCharacterCount {
-    text-align: right;
-    color: #888;
-}
 
-/* 파일 첨부 버튼과 파일 크기 표시 텍스트 스타일 */
-.faqRegisterFileAttachButton {
-    margin-right: 8px;
-    background-color: #4A90E2;
-}
-
-.faqRegisterFileSizeInfo {
-    margin-top: 4px;
-    color: #888;
-}
 .FaqRegisterSubmitButton {
     padding: 10px 20px;
     font-size: 16px;
@@ -49,4 +21,23 @@
     cursor: pointer;
     align-self: flex-end;
     margin-top: 20px; /* 버튼과 위의 내용 사이에 간격 추가 */
+}
+.faqRegisterButton {
+    background-color: #5A8AF2;
+    color: white;
+    padding: 10px 40px;
+    border-radius: 10px;
+    text-transform: none;
+    transition: background-color 0.3s ease;
+}
+
+.faqRegisterButton:hover {
+    background-color: #0056b3;
+}
+
+.faqRegisterButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 28px;
+    margin-bottom: 30px;
 }

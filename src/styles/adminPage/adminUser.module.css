@@ -10,7 +10,7 @@
 
 /* 검색 버튼 스타일 */
 .adminUserSearchButton {
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
     border: 2px solid #007bff;
     width: 30%;
 }
@@ -37,7 +37,7 @@
 }
 /* 상세보기 버튼 스타일 */
 .adminUserViewDetailsButton {
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
 }
 
 .adminUserViewDetailsButton:hover {
@@ -45,7 +45,7 @@
 }
 .adminUserTableHeaderCell {
     font-weight: bold;
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
     color: white;
     width: 100px;
     white-space:nowrap;

@@ -33,7 +33,7 @@
 .infoCardHeader {
     font-weight: bold;
     padding: 10px;
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
     color: white;
 }
 
@@ -64,7 +64,7 @@
 .mainNoticeTableHeader {
     font-weight: bold;
     padding: 10px;
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
     color: white;
 }
 
@@ -138,6 +138,6 @@
 
 /* 우선순위를 높이기 위해 부모 클래스와 결합하여 지정 */
 .adminMainCard .adminMainMainHeader {
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
     color: white;
 }

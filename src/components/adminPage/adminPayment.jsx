@@ -166,7 +166,7 @@ export default function AdminPayment() {
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             sx={{ mr: 2 }}
                                         />
-                                        <Button variant="contained" color="primary" onClick={handleSearch} sx={{ height: '56px' }}>
+                                        <Button variant="contained" onClick={handleSearch} sx={{ height: '56px' , backgroundColor: '#5A8AF2'}}>
                                             검색
                                         </Button>
                                     </Box>

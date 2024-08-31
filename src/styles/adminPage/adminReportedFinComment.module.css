@@ -2,12 +2,12 @@
 
 .reportedFinCommentTableContainer {
     margin-top: 20px;
-    background-color: #ffffff; 
+    background-color: #f0eeee;
   }
   
   .reportedFinCommentTableHeaderCell {
     font-weight: bold;
-    background-color: black; /* 헤더 배경색을 검정으로 설정 */
+    background-color: #5A8AF2; /* 헤더 배경색을 검정으로 설정 */
     color: white; /* 헤더 글자를 흰색으로 설정 */
   }
   

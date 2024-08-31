@@ -3,13 +3,14 @@
 /* 테이블 컨테이너 스타일 */
 .reportedCommentTableContainer {
     margin-top: 20px;
+    
   
   }
   
   /* 테이블 헤더 셀 스타일 */
   .reportedCommentTableHeaderCell {
     font-weight: bold;
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
     color: white;
   }
   

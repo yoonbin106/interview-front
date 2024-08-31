@@ -53,7 +53,9 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 <Typography variant="h3" gutterBottom>
                     자주 묻는 질문 (FAQ)
                 </Typography>
-                <Button variant="contained" color="primary" href="/adminPage/adminFaqRegisterPage">
+                <Button variant="contained" 
+                        href="/adminPage/adminFaqRegisterPage"
+                        sx={{backgroundColor: '#5A8AF2'}}>
                     새 FAQ 등록
                 </Button>
             </Box>

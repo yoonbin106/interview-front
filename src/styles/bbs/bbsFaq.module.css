@@ -14,7 +14,7 @@
 /* 카테고리 검색을 위한 FormControl 스타일 */
 .bbsFaqCategorySearch {
     margin-bottom: 24px;
-    background-color: #4A90E2;
+    background-color: #5A8AF2;
 }
 
 /* 페이지네이션 컨트롤 박스의 스타일 */
@@ -51,7 +51,7 @@
 
 .bbsFaqMenuItem {
     color: white;
-    background-color: #4A90E2; /* 필요 시 배경색도 설정 가능 */
+    background-color: #5A8AF2; /* 필요 시 배경색도 설정 가능 */
 }
 
 .bbsFaqMenuItem:hover {

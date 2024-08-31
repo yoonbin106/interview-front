@@ -192,7 +192,7 @@ const AdminReportedFinPost = () => {
                                     variant="contained"
                                     color="primary"
                                     onClick={handleSearch}
-                                    style={{ height: '56px', width: '100%', backgroundColor: '#4A90E2', color: 'white' }}
+                                    style={{ height: '56px', width: '100%', backgroundColor: '#5A8AF2', color: 'white' }}
                                 >
                                     검색
                                 </Button>

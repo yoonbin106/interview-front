@@ -81,7 +81,11 @@ const AdminAdminNotice = () => {
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredNotices.length) : 0;
 
     // 현재 월을 표시하기 위한 로직
-    const currentMonth = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const [currentMonth, setCurrentMonth] = React.useState('');
+    React.useEffect(() => {
+        const formattedMonth = date.toLocaleString('ko-KR', {month:'long',year:'numeric'});
+        setCurrentMonth(formattedMonth);
+    },[date]);
 
     return (
         <div className={styles.adminNoticeContainer}>
@@ -97,7 +101,7 @@ const AdminAdminNotice = () => {
                                 <Button
                                     variant="contained"
                                     sx={{
-                                        backgroundColor: '#007bff',
+                                        backgroundColor: '#5A8AF2',
                                         '&:hover': {
                                             backgroundColor: '#0056b3',
                                         },

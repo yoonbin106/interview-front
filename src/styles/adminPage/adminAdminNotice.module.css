@@ -7,7 +7,7 @@
 
 .adminNoticeTableHeaderCell {
   font-weight: bold;
-  background-color: #4A90E2;
+  background-color: #5A8AF2;
   color: white;
   width: 150px;
   white-space:nowrap;
@@ -74,7 +74,7 @@
 }
 
 .adminNoticeSearchButton {
-  background-color: #4A90E2;
+  background-color: #5A8AF2;
   &:hover {
       background-color: #357ABD;
   }

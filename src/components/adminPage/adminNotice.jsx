@@ -29,7 +29,7 @@ const RegisterButton = ({ to }) => {
     return (
         <Button variant="contained" 
         sx={{
-            backgroundColor: '#007bff',
+            backgroundColor: '#5A8AF2',
             '&:hover': {
                 backgroundColor: '#0056b3',
             }

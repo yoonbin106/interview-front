@@ -1,11 +1,12 @@
 .reportedFinPostTableContainer {
   margin-top: 20px;
+  background-color: #f0eeee;
  
 }
 
 .reportedFinPostHeaderCell {
   font-weight: bold;
-  background-color: #000000;
+  background-color: #5A8AF2;
   color: rgb(255, 255, 255);
   width: 150px;
   white-space:nowrap;
