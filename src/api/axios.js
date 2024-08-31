@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { logout } from './user';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'contexts/storeContext';
+import { useRouter } from 'next/router';
+import authStore from 'stores/authStore';
+import userStore from 'stores/userStore';
 
 // Axios 인스턴스 생성
 const instance = axios.create({
@@ -11,9 +15,11 @@ instance.interceptors.request.use(
     config => {
         // '/reissue' 요청은 인터셉터에서 액세스 토큰을 추가하지 않도록 합니다.
         if (config.url !== '/reissue') {
-            const token = localStorage.getItem('token');
-            if (token) {
-                config.headers['Authorization'] = `Bearer ${token}`;
+            if (typeof window !== 'undefined') { // 브라우저 환경인지 확인
+                const token = localStorage.getItem('token');
+                if (token) {
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                }
             }
         }
         return config;
@@ -21,24 +27,25 @@ instance.interceptors.request.use(
     error => Promise.reject(error)
 );
 
-
 const refreshToken = async () => {
     try {
-        const refreshToken = localStorage.getItem('refresh');
-        const response = await instance.post('/reissue', null, {
-            headers: {
-                'Authorization': `Bearer ${refreshToken}`
-            }
-        });
-        const token = response.headers['authorization'] || response.headers['Authorization'];
-        const pureToken = token.split(' ')[1];
-        localStorage.setItem('token', pureToken);
-        return pureToken;
+        if (typeof window !== 'undefined') { // 브라우저 환경인지 확인
+            const refreshToken = localStorage.getItem('refresh');
+            const response = await instance.post('/reissue', null, {
+                headers: {
+                    'Authorization': `Bearer ${refreshToken}`
+                }
+            });
+            const token = response.headers['authorization'] || response.headers['Authorization'];
+            const pureToken = token.split(' ')[1];
+            localStorage.setItem('token', pureToken);
+            return pureToken;
+        }
     } catch (error) {
         // 에러 응답을 확인합니다.
         if (error.response && error.response.data === 'refresh token expired') {
             // 리프레시 토큰이 만료된 경우 로그아웃 처리
-            logout();
+            tokenlogout();
         } else {
             // 다른 종류의 에러 처리
             console.error('An error occurred:', error);
@@ -46,7 +53,21 @@ const refreshToken = async () => {
     }
 };
 
-
+const tokenlogout = () => {
+    if (typeof window !== 'undefined') { // 브라우저 환경인지 확인
+        localStorage.clear(); // 로컬 스토리지 비우기
+    }
+    authStore.setLoggedIn(false);
+    userStore.setEmail('');
+    userStore.setUsername('');
+    userStore.setAddress('');
+    userStore.setGender('');
+    userStore.setBirth('');
+    userStore.setPhone('');
+    userStore.setProfile('');
+    userStore.setId('');
+    // window.location.href = '/';
+};
 
 // 응답 인터셉터 추가
 instance.interceptors.response.use(
