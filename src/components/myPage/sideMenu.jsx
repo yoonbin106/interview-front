@@ -100,7 +100,7 @@ export default function SideMenu(theme) {
 
       <a href="/myPage/surveyHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
-          <ListItemText primary="설문조사 내역" />
+          <ListItemText primary="적성 탐색 내역" />
         </ListItemButton>
       </a>
 
