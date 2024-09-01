@@ -122,7 +122,7 @@ export default function SideMenu(theme) {
         <List component="div" disablePadding>
           <a href="/myPage/inquiryHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
             <ListItemButton sx={nestedListItemButtonStyle}>
-              <ListItemText primary="Q&A 내역" />
+              <ListItemText primary="1:1 문의내역" />
             </ListItemButton>
           </a>
           <a href="/myPage/reportHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
