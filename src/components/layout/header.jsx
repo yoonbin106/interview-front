@@ -173,7 +173,14 @@ const Header = observer(() => {
                       {!authStore.loggedIn && (
                         <MenuItem onClick={() => router.push('/auth')}>로그인</MenuItem>
                       )}
-                      {authStore.loggedIn && <MenuItem onClick={() => router.push('/myPage')}>마이페이지</MenuItem>}
+                      {authStore.loggedIn && <MenuItem onClick={() => {
+                          if (authStore.isAdmin) {
+                            router.push('/adminPage');
+                          } else {
+                            router.push('/myPage');
+                          }
+                        }}>마이페이지</MenuItem>
+                      }
                       <ListDivider />
                       {authStore.loggedIn && (
                         <MenuItem variant="soft" color="danger" onClick={handleLogout}>
