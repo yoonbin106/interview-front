@@ -8,6 +8,7 @@ import CompanyList from '@/components/search/companyList';
 import MapSearchButton from '@/components/search/mapSearchButton';
 import NaverEconomicNews from '@/components/search/naverEconomicNews';
 import { fetchCorpInfo } from '@/api/searchCorpApi';
+import FavoriteList from '@/components/search/favoriteList'; // 새로운 컴포넌트 import
 
 function Search() {
     const [pageNo, setPageNo] = useState('1');
@@ -29,6 +30,8 @@ function Search() {
     const mapRef = useRef(null);
     const [filters, setFilters] = useState({});
     const [noResults, setNoResults] = useState(false);
+
+ 
 
     const handleFilterChange = (newFilters) => {
         setFilters(newFilters);
@@ -182,7 +185,13 @@ function Search() {
                         </div>
                     )}
                 </div>
+               
+              
                 <div style={{ width: '70%', position: 'relative' }}>
+                {/* 지도 위에 찜 목록 오버레이 */}
+                <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 3, backgroundColor: 'white', padding: '10px', borderRadius: '5px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}>
+                        <FavoriteList /> 
+                    </div>
                     <UserLocationMap 
                         companies={corpInfo} 
                         setMapBounds={setMapBounds} 
@@ -193,6 +202,9 @@ function Search() {
                         mapRef={mapRef}
                     />
                     {searchTriggered && <MapSearchButton onClick={handleMapSearch} />}
+                   
+                   
+                   
                 </div>
             </div>
         </div>

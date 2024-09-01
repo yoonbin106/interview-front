@@ -1,0 +1,10 @@
+.favorite-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+.favorite-list.visible {
+    max-height: 300px; /* 최대 높이를 지정 */
+    overflow-y: auto; /* 스크롤 가능하도록 */
+}
