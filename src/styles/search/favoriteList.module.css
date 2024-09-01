@@ -1,0 +1,58 @@
+/* FavoriteList.module.css */
+
+.favoriteListContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.favoriteListButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.favoriteListDropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 4;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.favoriteListContainer:hover .favoriteListDropdown {
+    display: block;
+}
+
+.favoriteListItem {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.favoriteListItem:last-child {
+    border-bottom: none;
+}
+
+.favoriteListItem strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.favoriteListItem p {
+    margin: 0;
+    color: #666;
+}

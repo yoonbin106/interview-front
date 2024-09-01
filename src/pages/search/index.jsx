@@ -189,7 +189,7 @@ function Search() {
               
                 <div style={{ width: '70%', position: 'relative' }}>
                 {/* 지도 위에 찜 목록 오버레이 */}
-                <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 3, backgroundColor: 'white', padding: '10px', borderRadius: '5px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}>
+                <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 3 }}>
                         <FavoriteList /> 
                     </div>
                     <UserLocationMap 

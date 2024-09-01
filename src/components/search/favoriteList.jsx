@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
 import { useStores } from 'contexts/storeContext';
+import styles from '@/styles/search/favoriteList.module.css'; // CSS 모듈을 임포트합니다.
 
 const FavoriteList = observer(() => {
     const { userStore } = useStores();
@@ -18,18 +19,20 @@ const FavoriteList = observer(() => {
     }, [userEmail]);
 
     return (
-        <div >
-            <h4>찜 목록</h4>
-            {likedCompanies.length > 0 ? (
-                likedCompanies.map((company, index) => (
-                    <div key={index} style={{ marginBottom: '10px' }}>
-                        <strong>{company.companyName}</strong>
-                        <p>{company.companyId}</p>
-                    </div>
-                ))
-            ) : (
-                <p>찜한 회사가 없습니다.</p>
-            )}
+        <div className={styles.favoriteListContainer}>
+            <button className={styles.favoriteListButton}>찜 목록</button>
+            <div className={styles.favoriteListDropdown}>
+                {likedCompanies.length > 0 ? (
+                    likedCompanies.map((company, index) => (
+                        <div key={index} className={styles.favoriteListItem}>
+                            <strong>{company.companyName}</strong>
+                            <p>{company.companyId}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p>찜한 회사가 없습니다.</p>
+                )}
+            </div>
         </div>
     );
 });
