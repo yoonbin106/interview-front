@@ -30,13 +30,13 @@ const salaries = ["연봉협의", "연봉 3000만원이상 6000만원 미만", "
 
 const Filter = ({ onFilterChange, handleSearch, setSearchInputFocus, searchInputRef, setCorpNm , setSearchTriggered}) => {
     const [selectedCategory, setSelectedCategory] = useState('지역');
-    const [selectedRegion, setSelectedRegion] = useState('');
+    const [selectedRegion, setSelectedRegion] = useState('서울');
     const [selectedDistricts, setSelectedDistricts] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedSalaries, setSelectedSalaries] = useState([]);
 
     useEffect(() => {
-        setSelectedRegion('서울');
+       
         handleFilterChange();
     }, [selectedRegion, selectedDistricts, selectedSizes, selectedSalaries]);
 
