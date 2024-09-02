@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import PostView from '@/pages/bbs/PostView'; // 경로가 맞는지 확인
+import PostView from '@/pages/bbs/postView'; // 경로가 맞는지 확인
 
 const PostPage = () => {
   const router = useRouter();
