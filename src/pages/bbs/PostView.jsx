@@ -1,10 +1,10 @@
 
-import styles from '@/styles/bbs/PostView.module.css';
-import sidebar from '@/styles/bbs/bbsPage.module.css';
+import styles from '@/styles/bbs/postView.module.css';
+
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React, { useEffect, useState } from 'react';
-import NestedList from '@/components/bbs/bbsSidebar';
+
 import { useRouter } from 'next/router';
 import axios from 'axios';
 const PostView = () => {
@@ -47,9 +47,7 @@ const PostView = () => {
 
   return (
     <div className={styles.content}>
-       <div className={sidebar.sidebar}>
-          <NestedList/>
-      </div>
+       
       <div className={styles.postView}>
         
         <PostContent post={post}/>
@@ -139,6 +137,19 @@ const PostView = () => {
           <p>
             {post.content}
           </p>
+          <div className={styles.files}>
+            {post.files && post.files.length > 0 ? (
+              post.files.map((file, index) => (
+                <div key={index} className={styles.fileItem}>
+                  <a href={`http://localhost:8080/bbs/${id}/files/${file.fileIndex}`} target="_blank" rel="noopener noreferrer">
+                    {file.fileName || `파일 ${index + 1}`}
+                  </a>
+                </div>
+              ))
+            ) : (
+              <p>파일이 없습니다.</p>
+            )}
+          </div>
         </div>
       
     
@@ -157,6 +168,13 @@ const CommentList = ({ comments }) => {
 };
 
 const CommentItem = ({ comment }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div className={styles.commentItem}>
       <strong>{comment.author}</strong>
@@ -165,10 +183,19 @@ const CommentItem = ({ comment }) => {
           aria-label="display more actions"
           edge="end"
           color="inherit"
-          // 추가적인 클릭 핸들러를 여기에 넣을 수 있습니다
+          onClick={handleClick}
         >
           <MoreVertIcon />
         </IconButton>
+        <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem >수정</MenuItem>
+                <MenuItem >삭제</MenuItem>
+                <MenuItem>신고</MenuItem>
+            </Menu>
       <p>{comment.content}</p>
       <span>{comment.date}</span>
     </div>
