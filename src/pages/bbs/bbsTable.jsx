@@ -13,6 +13,9 @@ import MenuItem from '@mui/material/MenuItem';
 import styles from '@/styles/bbs/bbsTable.module.css';
 import axios from 'axios';
 import { useStores } from '@/contexts/storeContext';
+import Link from 'next/link';
+
+
 
 export default function PaginationTableNotice({ posts }) {
   const [page, setPage] = React.useState(0);
@@ -72,9 +75,9 @@ export default function PaginationTableNotice({ posts }) {
             <TableRow key={post.bbs_id} >
               <TableCell align="center">{post.bbs_id}</TableCell>
               <TableCell align="center">
-                <a href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
+                <Link href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
                 {post.title}
-                </a>
+                </Link>
               </TableCell>
               <TableCell align="center">{post.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
