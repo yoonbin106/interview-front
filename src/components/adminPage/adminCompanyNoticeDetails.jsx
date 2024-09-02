@@ -94,7 +94,7 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
                     name="adminNoticeTitle"
                     value={editedCompanyNotice.companyNoticeTitle || ''}
                     onChange={(e) =>
-                        setEditedNotice(prevNotice => ({
+                        setEditedCompanyNotice(prevNotice => ({
                             ...prevNotice,
                             companyNoticeTitle: e.target.value
                         }))
