@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styles from '@/styles/bbs/postView.module.css';
+
 import axios from 'axios';
 
 const PostView = () => {
@@ -128,6 +129,19 @@ const PostContent = ({ post }) => {
       <p>
         {post.content}
       </p>
+      <div className={styles.files}>
+        {post.files && post.files.length > 0 ? (
+          post.files.map((file, index) => (
+            <div key={index} className={styles.fileItem}>
+              <a href={`http://localhost:8080/bbs/${id}/files/${file.fileIndex}`} target="_blank" rel="noopener noreferrer">
+                {file.fileName || `파일 ${index + 1}`}
+              </a>
+            </div>
+          ))
+        ) : (
+          <p>파일이 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 };
@@ -143,6 +157,13 @@ const CommentList = ({ comments }) => {
 };
 
 const CommentItem = ({ comment }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div className={styles.commentItem}>
       <strong>{comment.author}</strong>
@@ -151,9 +172,19 @@ const CommentItem = ({ comment }) => {
         aria-label="display more actions"
         edge="end"
         color="inherit"
+        onClick={handleClick}
       >
         <MoreVertIcon />
       </IconButton>
+      <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem >수정</MenuItem>
+            <MenuItem >삭제</MenuItem>
+            <MenuItem>신고</MenuItem>
+          </Menu>
       <p>{comment.content}</p>
       <span>{comment.date}</span>
     </div>
