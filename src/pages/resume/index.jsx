@@ -86,14 +86,6 @@ function ResumeForm() {
     document.execCommand('insertText', false, textToPaste);
 };
 
-const handleAccordionChange = (panel) => (event, isExpanded) => {
-  if (panel === 'proofread') {
-    setExpandedProofread(isExpanded);
-  } else if (panel === 'aiProofread') {
-    setExpandedAiProofread(isExpanded);
-  }
-};
-
   const sectionsRef = {
     personalInfo: useRef(null),
     education: useRef(null),
@@ -361,6 +353,15 @@ const ModalContent = styled('div')(
                 selfIntroduction: selfIntroduction,
                 motivation: motivation
             });
+            
+            // 키워드 추출 및 업데이트
+            const keywordResponse = await axios.post('http://localhost:8080/api/resume/update-keywords', {
+                resumeId: resumeId,
+                selfIntroduction: selfIntroduction,
+                motivation:motivation
+            });
+
+            console.log('키워드 업데이트 응답:', keywordResponse.data);
 
             setIsModalOpen(false);
             setIsConfirmationOpen(true);
@@ -374,6 +375,7 @@ const ModalContent = styled('div')(
         router.push('/resume/resumeList');
     }
 };
+
 
   
   
@@ -472,7 +474,7 @@ const generatePDF = async () => {
     setLoading(true); // 로딩 시작
 
     try {
-        const response = await axios.post('http://localhost:8080/api/chatgpt', {
+        const response = await axios.post('http://localhost:8080/api/chatgpt-self', {
             text,
         });
 
