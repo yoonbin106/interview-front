@@ -96,6 +96,11 @@ export default function AdminPayment() {
     };
 
     const handleRefund = async () => {
+        if (!refundReason.trim()) {
+            alert('환불 사유를 입력해주세요.');
+            return;
+        }
+    
         console.log('Payment Key:', selectedPaymentKey);
         console.log('Refund Reason:', refundReason);
         try {
