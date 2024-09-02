@@ -19,11 +19,11 @@ export const useBotActions = (
       setBotStartTime(new Date(response.data.createdTime));
       setBotEndTime(null);
 
-      const greetingMessage = "안녕하세요! focusjob 플랫폼 면접 및 취업 관련 전문가 챗봇 force입니다. 무엇을 도와드릴까요?";
+      const greetingMessage = "안녕하세요! focusjob 플랫폼 면접 및 취업 관련 전문가 챗봇 force입니다. 무엇을 도와드릴까요? 챗봇 설명이 필요하시면 [help]라고 메세지를 보내주세요.";
       setMessages([{ text: greetingMessage, sender: 'bot' }]);
     } catch (error) {
       console.error('Error starting new chat:', error);
-      setMessages([{ text: "채팅 시작 중 오류가 발생했습니다.", sender: 'system' }]);
+      setMessages([{ text: "챗봇 시작 중 오류가 발생했습니다.", sender: 'system' }]);
     }
   }, [setCurrentBotId, setBotStartTime, setBotEndTime, setMessages]);
 
@@ -35,7 +35,7 @@ export const useBotActions = (
         setBotEndTime(endTime);
 
         const endMessages = [
-          { text: "챗봇을 종료합니다. 다음에서 focusjob 챗봇 force를 이용해주세요. 이용해 주셔서 감사합니다!", sender: 'bot' }
+          { text: "챗봇을 종료합니다. 다음에도 force를 이용해주세요. 이용해 주셔서 감사합니다! 좋은 하루 되세요.", sender: 'bot' }
         ];
 
         setMessages(prev => [...prev, ...endMessages]);

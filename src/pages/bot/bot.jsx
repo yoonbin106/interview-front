@@ -4,12 +4,14 @@ import styles from '@/styles/bot/bot.module.css';
 import BotHeader from '@/components/bot/botHeader';
 import BotMessages from '@/components/bot/botMessages';
 import InputArea from '@/components/bot/inputArea';
+import BotMusicPlayer from '@/components/bot/botMusicPlayer';
 import { useChat } from '@/contexts/chatContext';
 import { useBotActions } from '@/hooks/useBotAction';
 import { useMessageHandling } from '@/hooks/useMessageHandling';
 import { Snackbar } from '@mui/material';
 
 const Bot = () => {
+  // 채팅 컨텍스트에서 필요한 상태와 함수들을 가져옵니다.
   const {
     isOpen,
     closeBot,
@@ -27,9 +29,11 @@ const Bot = () => {
     toggleDarkMode
   } = useChat();
 
+  // 메시지 생성 중 상태와 스낵바 상태를 관리합니다.
   const [isGenerating, setIsGenerating] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-
+  const [isUserTyping, setIsUserTyping] = useState(false);
+  // 봇 액션 훅을 사용하여 봇 시작과 종료 함수를 가져옵니다.
   const { startNewBot, endBot } = useBotActions(
     setMessages,
     setCurrentBotId,
@@ -40,7 +44,54 @@ const Bot = () => {
     botStartTime,
     closeBot
   );
+  const [showMusicPlayer, setShowMusicPlayer] = useState(false);
+  const [playlist, setPlaylist] = useState([
+    '/music/Gold and Crawfish - Density & Time.mp3',
+    '/music/Jumpin June - The Soundlings.mp3',
+    '/music/Loading Screen - Dyalla.mp3',
+    '/music/Quirk n Twerk - The Soundlings.mp3',
+    '/music/Why Oh Why - The Soundlings.mp3',
+  ]);
+  const handleMessage = useCallback(async (message) => {
+    console.log("Received message:", message);  // 이 줄을 추가
+    const lowerMessage = message.toLowerCase();
+    if (lowerMessage.includes('뮤직 실행')) {
+      console.log("Music playback requested");  // 이 줄을 추가
+      setShowMusicPlayer(true);
+    } else if (lowerMessage.includes('뮤직 종료')) {
+      setShowMusicPlayer(false);
+    } else if (lowerMessage.includes('다음곡')) {
+      handleNext();
+    } else if (lowerMessage.includes('이전곡')) {
+      handlePrevious();
+    } else {
+      // 기존의 메시지 처리 로직
+      // ...
+    }
+  }, [setMessages]);
 
+  const handleStop = () => {
+    setShowMusicPlayer(false);
+    setMessages(prev => [...prev, {
+      text: "음악 재생을 중지했습니다.",
+      sender: 'bot'
+    }]);
+  };
+
+  const handleNext = () => {
+    setMessages(prev => [...prev, {
+      text: "다음 곡으로 넘어갑니다.",
+      sender: 'bot'
+    }]);
+  };
+
+  const handlePrevious = () => {
+    setMessages(prev => [...prev, {
+      text: "이전 곡으로 돌아갑니다.",
+      sender: 'bot'
+    }]);
+  };
+  // 메시지 처리 훅을 사용하여 메시지 관련 함수들을 가져옵니다.
   const {
     inputMessage,
     setInputMessage,
@@ -48,20 +99,24 @@ const Bot = () => {
     sendMessage: originalSendMessage,
     handleKeyPress,
     startListening
-  } = useMessageHandling(setMessages, currentBotId);
+  } = useMessageHandling(setMessages, currentBotId, handleMessage);
 
+  // 메시지 전송 함수를 래핑하여 생성 중 상태를 관리합니다.
   const sendMessage = useCallback(async () => {
     setIsGenerating(true);
     await originalSendMessage();
+    handleMessage(inputMessage);  // 이 부분이 중요합니다
     setIsGenerating(false);
-  }, [originalSendMessage]);
+  }, [originalSendMessage, inputMessage, handleMessage]);
 
+  // 임시 ID 생성 함수
   const tempId = useCallback(() => {
     const timestamp = Date.now().toString();
     const randomSuffix = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
     return `${timestamp}${randomSuffix}`;
   }, []);
 
+  // 채팅방이 열리고 봇 ID가 없을 때 새 봇을 시작합니다.
   useEffect(() => {
     if (isOpen && !currentBotId) {
       console.log("Starting new chat");
@@ -69,6 +124,7 @@ const Bot = () => {
     }
   }, [isOpen, currentBotId, startNewBot, tempId]);
 
+  // 피드백 추가 함수
   const addFeedback = async (answerId, isLike) => {
     if (answerId === undefined || answerId === null || isNaN(answerId)) {
       console.error('Invalid answerId:', answerId);
@@ -96,6 +152,7 @@ const Bot = () => {
     }
   };
 
+  // 메시지 피드백 업데이트 함수
   const updateMessageFeedback = (answerId, isLike) => {
     setMessages(prevMessages => prevMessages.map(msg => {
       if (msg.answerId === answerId) {
@@ -105,6 +162,7 @@ const Bot = () => {
     }));
   };
 
+  // 스낵바 닫기 핸들러
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -112,7 +170,8 @@ const Bot = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
-  if (!isOpen) return null; // 챗봇이 닫혀있을 때는 아무것도 렌더링하지 않음
+  // 챗봇이 닫혀있을 때는 아무것도 렌더링하지 않음
+  if (!isOpen) return null;
 
   return (
     <div className={`${styles.botContainer} ${isDarkMode ? styles.darkMode : ''}`}>
@@ -127,8 +186,17 @@ const Bot = () => {
           messages={messages} 
           feedbacks={feedbacks} 
           addFeedback={addFeedback} 
-          isGenerating={isGenerating} 
+          isGenerating={isGenerating}
+          isUserTyping={isUserTyping}  // 이 부분을 변경
         />
+        {showMusicPlayer && 
+          <BotMusicPlayer 
+            playlist={playlist} 
+            onStop={handleStop} 
+            onNext={handleNext} 
+            onPrevious={handlePrevious} 
+          />
+        }
         {botEndTime && (
           <div className={styles.botInfo}>
             {botEndTime.toLocaleString()}
@@ -144,6 +212,7 @@ const Bot = () => {
           isListening={isListening}
           handleKeyPress={handleKeyPress}
           isDarkMode={isDarkMode}
+          setIsUserTyping={setIsUserTyping}  // 이 부분을 변경
         />
       </div>
       <Snackbar
@@ -152,7 +221,7 @@ const Bot = () => {
         onClose={handleSnackbarClose}
         message={snackbar.message}
         severity={snackbar.severity}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} // 위치 변경
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       />
     </div>
   );

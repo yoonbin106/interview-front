@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import { Box, SpeedDial as MuiSpeedDial, SpeedDialAction } from '@mui/material';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import Headset from '@mui/icons-material/Headset';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import EditIcon from '@mui/icons-material/Edit';
 import { HiLightBulb } from 'react-icons/hi';
 import styles from '@/styles/bot/bot.module.css';
 import { useChat } from '@/contexts/chatContext';
 import Chatting from 'pages/chat/chatting';
+import { IoLogoSnapchat } from "react-icons/io5";
+
 
 const SpeedDial = () => {
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [open, setOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const { openBot } = useChat();
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleBotClick = () => {
     openBot();
     setShowTooltip(false);
+    handleClose();
   };
 
   const handleChattingClick = () => {
@@ -33,13 +40,26 @@ const SpeedDial = () => {
       <div className={styles.botInactive}>
         <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
           <MuiSpeedDial 
-            ariaLabel="SpeedDial basic example"
-            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon/>}
+            ariaLabel="SpeedDial menu"
+            sx={{
+              position: 'absolute',
+              bottom: 16,
+              right: 16,
+              '& .MuiSpeedDial-fab': {
+                bgcolor: '#5A8AF2',
+                '&:hover': {
+                  bgcolor: '#4A7AD2',
+                },
+              },
+            }}
+            icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+            onClose={handleClose}
+            onOpen={handleOpen}
+            open={open}
           >
             <SpeedDialAction
               key='ChatBot'
-              icon={<Headset />}
+              icon={<IoLogoSnapchat size={30} color='#5A8AF2'/>}
               tooltipTitle="ChatBot"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
@@ -57,7 +77,7 @@ const SpeedDial = () => {
           <div className={styles.botTooltip}>
             <HiLightBulb className={styles.tooltipIcon} />
             <span className={styles.tooltipText}>Tip:</span> 궁금하신 점이 있으면 클릭!
-            <div className={styles.tooltipSubtext}>포커스잡 챗봇 force가 친절히 답변해 드립니다.</div>
+            <div className={styles.tooltipSubtext}>포커스잡   챗봇 force가 친절히 답변해 드립니다.</div>
           </div>
         )}
         {isChatOpen && <Chatting closeChatting={closeChatting} />}
