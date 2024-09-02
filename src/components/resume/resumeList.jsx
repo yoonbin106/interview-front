@@ -68,12 +68,22 @@ const ResumeList = () => {
       setIsDeleteModalOpen(false);
       setModalContent('삭제가 완료되었습니다.');
       setIsConfirmModalOpen(true);
-      fetchResumes();
+  
+      // 이력서를 삭제한 후 목록을 다시 불러옴
+      await fetchResumes();
+  
+      // 현재 페이지에 이력서가 없으면 이전 페이지로 이동
+      const totalResumesAfterDeletion = resumes.length - 1; // 이력서를 하나 삭제했으므로 전체 개수에서 1을 뺌
+      const lastPage = Math.ceil(totalResumesAfterDeletion / resumesPerPage);
+  
+      // 현재 페이지가 마지막 페이지보다 크면 마지막 페이지로 이동
+      if (currentPage > lastPage) {
+        setCurrentPage(lastPage);
+      }
     } catch (error) {
       console.error('이력서 삭제 중 오류 발생:', error);
     }
   };
-
   const handleDownloadClick = async (resumeId, event) => {
     event.stopPropagation();
     try {

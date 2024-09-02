@@ -1,15 +1,30 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import { FaMicrophoneLines, FaMicrophoneSlash } from "react-icons/fa6";
 import { BsSendFill } from "react-icons/bs";
 import styles from '@/styles/bot/inputArea.module.css';
 
-const InputArea = ({ inputMessage, setInputMessage, isListening, startListening, stopListening, sendMessage, isDarkMode }) => {
+const InputArea = ({ inputMessage, setInputMessage, isListening, startListening, stopListening, sendMessage, isDarkMode, setIsUserTyping }) => {
+
+  const handleInputChange = (e) => {
+    const newMessage = e.target.value;
+    setInputMessage(newMessage);
+    setIsUserTyping(newMessage.length > 0);
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+      setIsUserTyping(false);
     }
   };
+
+  const handleSendMessage = () => {
+    sendMessage();
+    setInputMessage('');  // Clear the input after sending
+    setIsUserTyping(false);
+  };
+
 
   const toggleListening = () => {
     if (isListening) {
@@ -24,13 +39,13 @@ const InputArea = ({ inputMessage, setInputMessage, isListening, startListening,
       <textarea
         className={styles.inputTextarea}
         value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
+        onChange={handleInputChange}
         onKeyPress={handleKeyPress}
         placeholder="궁금한 사항이 있으면 여기에 입력해주세요.."
       />
-      <button 
+       <button 
         className={styles.sendButton}
-        onClick={sendMessage}
+        onClick={handleSendMessage}
       >
         <BsSendFill />
       </button>

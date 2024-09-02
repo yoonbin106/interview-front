@@ -23,7 +23,6 @@ const AdminAdminNoticeRegisterPage = () => {
                 <div className={styles['adminAdminNoticeRegisterContainer']}>
                     <h2 className={styles['adminAdminNoticeRegisterTitle']}>관리자 공지사항</h2>
                     <AdminAdminNoticeRegister />
-                    <button type="button" onClick={handleSubmit} className={styles['adminAdminNoticeRegisterSubmitButton']}>등록하기</button>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminMain.module.css';
 import dynamic from 'next/dynamic';
+import { HomeIcon } from 'lucide-react';
 
 // AdminMainCharts 컴포넌트를 동적 로딩으로 가져온다.
 const AdminMainCharts = dynamic(() => import('@/components/adminPage/adminMainCharts'),{ssr:false});
@@ -105,9 +106,12 @@ const AdminMain = () => {
             <div className={sidebar.content}>
                 <Container fluid className={styles.adminMainContainerFluid}>
                     <Row className={styles.adminMainContent}>
-                        <h2 className={styles.adminMainTitle}>관리자페이지 홈</h2>
                         <Col className={styles.adminMainColPadding}>
-                            
+                            <div className={styles.adminMainTitleContainer}>
+                                <HomeIcon size={40} />
+                                <h2 className={styles.adminMainTitle}>Main Adminpage</h2>
+                            </div>
+                            <hr className={styles.adminMainTitleDivider} />
                             {/* 사이트 종합 정보 카드 */}
                             <Card className={styles.infoCard}>
                                 <Card.Header className={styles.infoCardHeader}>

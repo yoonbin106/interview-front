@@ -4,14 +4,16 @@ import { sendQuestion, getAnswer } from '@/utils/api';
 export const useMessageHandling = (setMessages, currentBotId) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [conversationContext, setConversationContext] = useState([]);
 
   const sendMessage = useCallback(async () => {
     if (inputMessage.trim() && currentBotId) {
       const userMessage = { text: inputMessage, sender: 'user' };
       setMessages(prev => [...prev, userMessage]);
+      setConversationContext(prev => [...prev, userMessage]);
       setInputMessage('');
       try {
-        const questionResponse = await sendQuestion(inputMessage, currentBotId);
+        const questionResponse = await sendQuestion(inputMessage, currentBotId, conversationContext);
         const answerResponse = await getAnswer(questionResponse.data.questionId);
 
         const newBotMessage = {
@@ -20,12 +22,15 @@ export const useMessageHandling = (setMessages, currentBotId) => {
           answerId: answerResponse.data.answerId
         };
         setMessages(prev => [...prev, newBotMessage]);
+        setConversationContext(prev => [...prev, newBotMessage]);
       } catch (error) {
         console.error('Error processing message:', error);
-        setMessages(prev => [...prev, { text: "죄송합니다. 오류가 발생했습니다.", sender: 'bot' }]);
+        const errorMessage = { text: "죄송합니다. 오류가 발생했습니다.", sender: 'bot' };
+        setMessages(prev => [...prev, errorMessage]);
+        setConversationContext(prev => [...prev, errorMessage]);
       }
     }
-  }, [inputMessage, currentBotId, setMessages]);
+  }, [inputMessage, currentBotId, setMessages, conversationContext]);
 
   const handleKeyPress = useCallback((event) => {
     if (event.key === 'Enter') {
@@ -57,6 +62,7 @@ export const useMessageHandling = (setMessages, currentBotId) => {
     isListening,
     sendMessage,
     handleKeyPress,
-    startListening
+    startListening,
+    conversationContext
   };
 };

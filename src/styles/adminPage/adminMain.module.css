@@ -1,8 +1,5 @@
 /*adminMain.module.css*/
 
-/* 기존 adminMain.module.css에서 가져온 스타일 */
-
-
 .adminMainContainerFluid {
     display: flex;
     flex-direction: column;
@@ -10,8 +7,21 @@
     margin-top: 25px;
 }
 
+.adminMainTitleContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .adminMainContent {
     flex: 1;
+}
+
+.adminMainTitleDivider {
+    border: 0;
+    height: 2px;
+    background-color: #ccc;
+    margin-bottom: 20px;
 }
 
 .adminMainColPadding {
@@ -23,6 +33,7 @@
     margin: 15px;
     white-space: nowrap;
     font-size: 40px;
+    font-weight:bold;
 }
 /* adminMainInfoCard */
 .infoCard {

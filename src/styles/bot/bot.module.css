@@ -55,6 +55,7 @@
   transform: translateY(-0.5rem);
 }
 
+
 /* 툴팁 화살표 */
 .botTooltip::before {
   content: '';
@@ -70,7 +71,7 @@
 }
 /* Wrapper */
 .atbotWrapper {
-  z-index: 50;
+  z-index: 1300;
   position: fixed;
   bottom: 1.25rem;
   right: 1.25rem;
@@ -103,25 +104,25 @@
 
 .botInactive:hover .botTooltip {
   opacity: 1;
-  transform: translateY(-0.5rem);
+  transform: translateY(0);
 }
 
 /* Tooltip Content */
 .tooltipIcon {
   display: inline-block;
   margin-right: 0.5rem;
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: #fbbf24;
 }
 
 .tooltipText {
-  font-weight: 200;
+  font-weight: 600;
 }
 
 .tooltipSubtext {
   margin-top: 0.5rem;
-  font-size: 0.7rem;
-  opacity: 0.75;
+  font-size: 0.75rem;
+  opacity: 0.9;
 }
 /* 다크 모드 스타일 */
 /* Dark mode */

@@ -6,11 +6,14 @@
 .messageContainer {
   display: flex;
   margin-bottom: 1rem;
+  
 }
-
-.messageContainer.user {
-  flex-direction: row-reverse; 
-  justify-content: flex-start; 
+/* .generating 상태에서 messageContent의 스타일을 조정합니다 */
+.messageContainer.bot .messageContent.generating {
+  padding: 0.5rem 1rem;
+  width: 50%; /* 전체 너비 사용 */
+  box-sizing: border-box; /* padding을 포함한 전체 너비 계산 */
+  overflow: hidden; /* 텍스트가 삐져나오지 않도록 설정 */
 }
 
 .userAvatar, .botAvatar {
@@ -65,14 +68,6 @@
   padding: 10px;
 }
 
-/* .generating 상태에서 messageContent의 스타일을 조정합니다 */
-.messageContainer.bot .messageContent.generating {
-  padding: 0.5rem 1rem;
-  width: 50%; /* 전체 너비 사용 */
-  box-sizing: border-box; /* padding을 포함한 전체 너비 계산 */
-  overflow: hidden; /* 텍스트가 삐져나오지 않도록 설정 */
-}
-
 .dot {
   width: 8px;
   height: 8px;
@@ -88,6 +83,35 @@
 
 .dot:nth-child(3) {
   animation-delay: 1s;
+}
+
+.messageContainer.user {
+  flex-direction: row-reverse;
+}
+
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  margin-right: 10px;
+  
+}
+
+.typingDot {
+  width: 10px;
+  height: 10px;
+  background-color: #5A8AF2;
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: typingAnimation 1.5s infinite ease-in-out; 
+}
+
+@keyframes typingAnimation {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
 }
 
 @keyframes pulse {
