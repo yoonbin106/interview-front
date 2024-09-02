@@ -40,7 +40,7 @@
 }
 
 /* 저장하기 버튼 스타일 */
-.admiNoticeSaveButton {
+.adminNoticeSaveButton {
     margin-right: 10px;
     background-color: #4A90E2;
     color: white;
@@ -56,9 +56,17 @@
 /* 삭제하기 버튼 스타일 */
 .adminNoticeDeleteButton {
     background-color: red;
+    margin-right: 10px;
     color: white;
+
 }
 
+/* 수정하기 버튼 스타일 */
+.adminNoticeListButton {
+    margin-right: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
 /* 이전글 / 다음글 버튼 스타일 */
 .adminNoticeNavButtons {
     margin-top: 40px;

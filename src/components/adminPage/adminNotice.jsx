@@ -1,6 +1,4 @@
-//adminNotice.jsx
-
-import React, { useState } from 'react';
+import React,{useState,useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,232 +10,257 @@ import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { useRouter } from 'next/router'; // router 사용을 위해 추가
 import { TextField, Grid, FormControl, InputLabel } from '@mui/material';
 import NestedList from '@/components/adminPage/adminSideMenu';
-import styles from '@/styles/adminPage/adminNotice.module.css'; // CSS 파일을 import
+import { useRouter } from 'next/router';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // 기본 CSS를 가져옵니다.
+import styles from '@/styles/adminPage/adminNotice.module.css';
+import axios from 'axios';
 
-// 내부에 RegisterButton 컴포넌트를 정의합니다.
-const RegisterButton = ({ to }) => {
+const PaginationTableAdminNotice = ({rows,page,rowsPerPage}) => {
     const router = useRouter();
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-    // 클릭 시 지정된 경로로 이동하는 함수
-    const handleClick = () => {
-        router.push(to);
-    };
-
+    //행을 클릭했을 때 실행되는 함수
+    const handleRowClick = (noticeId) => {
+        router.push(`/adminPage/adminNoticeDetailsPage/${noticeId}`)
+    }
     return (
-        <Button variant="contained" 
-        sx={{
-            backgroundColor: '#5A8AF2',
-            '&:hover': {
-                backgroundColor: '#0056b3',
-            }
-        }}
-        onClick={handleClick}>
-            글 등록
-        </Button>
-    );
-};
-
-// AdminNotice 컴포넌트: 공지사항 페이지 전체를 렌더링
+        <TableContainer component={Paper} className={styles.noticeTableContainer}>
+          <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center" className={styles.noticeTableHeaderCell}>글 번호</TableCell>
+                <TableCell align="center" className={styles.noticeTableHeaderCell}>제목</TableCell>
+                <TableCell align="center" className={styles.noticeTableHeaderCell}>작성자</TableCell>
+                <TableCell align="center" className={styles.noticeTableHeaderCell}>작성날짜</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : rows
+              ).map((row) => (
+                <TableRow key={row.noticeId}
+                hover
+                onClick={() => handleRowClick(row.noticeId)}
+                style={{cursor:'pointer'}}>
+                  <TableCell align="center">{row.noticeId}</TableCell>
+                  <TableCell align="center" className={styles.adminNoticeTitleCell}>
+                      {row.noticeTitle}
+                  </TableCell>
+                  <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
+                  <TableCell align="center">
+                    {new Date(row.noticeCreatedTime).toLocaleString('ko-KR',{
+                        year: 'numeric',
+                        month:'2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 30 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    };
 const AdminNotice = () => {
-    // 하드코딩된 공지사항 데이터 (임시 데이터)
-    const adminnotices = [
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        // 추가된 더미 데이터...
-    ];
-
-    // 검색 상태를 관리하기 위한 useState 훅
-    const [searchCategory, setSearchCategory] = useState(''); // 검색 카테고리 상태
+    const router = useRouter();
+    const [noticeData, setNoticeData] = useState([]); // 실제 데이터베이스에서 가져온 데이터 
+    const [searchCategory, setSearchCategory] = useState(''); // 검색 기준 카테고리 상태
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
-    const [filteredNotices, setFilteredNotices] = useState(adminnotices); // 필터링된 공지사항 상태
+    const [filteredNotices, setFilteredNotices] = useState([]); // 필터링된 QnA 상태
+    const [categoryFilter, setCategoryFilter] = useState(''); // 카테고리 필터
+    const [page, setPage] = useState(0); // 현재 페이지 상태
+    const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 표시할 행 수 상태
+    const [date, setDate] = useState(new Date());
 
-    // 검색 카테고리 변경 핸들러: 사용자가 선택한 검색 기준에 따라 상태를 업데이트
+    useEffect(() => {
+        const fetchNoticeData = async () => {
+          try {
+            const response = await axios.get('http://localhost:8080/api/notice');
+            const sortedData = response.data.sort((a,b) => new Date(b.noticeCreatedTime) - new Date(a.noticeCreatedTime));
+            setNoticeData(response.data); // 가져온 데이터를 상태에 저장
+            setFilteredNotices(sortedData);//초기값 설정
+          } catch (error) {
+            console.error('Error fetching Notice data:', error);
+          }
+        };
+    
+        fetchNoticeData(); // 컴포넌트가 마운트될 때 AdminNotice 데이터를 가져옴
+      }, []); 
+   
+
+    
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
-        setSearchTerm(''); // 카테고리 변경 시 검색어 초기화
     };
 
-    // 검색어 변경 핸들러: 사용자가 입력한 검색어를 상태로 관리
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    // 검색 버튼 클릭 시 필터링 로직: 입력된 검색어에 따라 공지사항을 필터링
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
-        const filteredData = adminnotices.filter(item => {
-            if (searchCategory === 'title') {
-                return item.title.toLowerCase().includes(lowercasedFilter);
-            }
-            if (searchCategory === 'author') {
-                return item.author.toLowerCase().includes(lowercasedFilter);
-            }
-            return false;
-        });
-        setFilteredNotices(filteredData); // 필터링된 결과를 상태로 업데이트
-    };
+        const filteredData = noticeData.filter(item => {
+            const matchesCategory = categoryFilter ? item.qnaCategory === categoryFilter : true;
+            const matchesSearch = searchCategory === 'title'
+              ? item.nNoticeTitle.toLowerCase().includes(lowercasedFilter)
+              : true; // 검색어 필터링
+      
+            return matchesStatus && matchesCategory && matchesSearch;
+          });
+          setFilteredNotices(filteredData);
+          setPage(0); // 검색 시 첫 페이지로 이동
+        };
 
-    // 페이지 상태 관리
-    const [page, setPage] = useState(0); // 현재 페이지 상태
-    const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 표시할 행 수 상태
+        const handleChangePage = (newPage) => {
+            setPage(newPage);
+        };
+    
+        const handleRowsPerPageChange = (event) => {
+            setRowsPerPage(parseInt(event.target.value, 10));
+            setPage(0);
+        };
 
-    const totalPages = Math.ceil(filteredNotices.length / rowsPerPage); // 전체 페이지 수 계산
+    const totalPages = Math.ceil(filteredNotices.length / rowsPerPage);
 
-    // 페이지 변경 핸들러
-    const handleChangePage = (newPage) => {
-        setPage(newPage);
-    };
+   
 
-    // 페이지당 행 수 변경 핸들러
-    const handleRowsPerPageChange = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); // 페이지를 첫 페이지로 초기화
-    };
+    
 
-    // 비어있는 행의 수 계산 (페이지에 표시될 행이 부족할 경우)
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredNotices.length) : 0;
-
-    // 전체 페이지 렌더링
     return (
         <div className={styles.noticeContainer}>
             <div className={styles.noticeSidebar}>
-                <NestedList /> {/* 사이드 메뉴 컴포넌트 */}
+                <NestedList />
             </div>
             <div className={styles.noticeContent}>
                 <div className={styles.noticeMainContainer}>
-                    <div>
-                        {/* 페이지 상단: 제목과 등록 버튼 */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2 className={styles.noticeTitle}>전체 공지사항</h2>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                                <RegisterButton to="/adminPage/adminNoticeRegisterPage" /> {/* 공지사항 등록 버튼 */}
-                            </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div className={styles.adminNoticeTitleContainer}>
+                            <h2 className={styles.noticeTitle}>Notices</h2>
                         </div>
-                        {/* 필터링된 공지사항을 테이블로 렌더링 */}
-                        <TableContainer component={Paper} className={styles.noticeTableContainer}>
-                            <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center" className={styles.noticeTableHeaderCell}>글 번호</TableCell>
-                                        <TableCell align="center" className={styles.noticeTableHeaderCell}>제목</TableCell>
-                                        <TableCell align="center" className={styles.noticeTableHeaderCell}>작성자</TableCell>
-                                        <TableCell align="center" className={styles.noticeTableHeaderCell}>작성날짜</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {(rowsPerPage > 0
-                                        ? filteredNotices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // 현재 페이지의 행만 보여줌
-                                        : filteredNotices
-                                    ).map((row) => (
-                                        <TableRow key={row.id}>
-                                            <TableCell align="center">{row.id}</TableCell>
-                                            <TableCell align="center">
-                                                <a href={`/adminPage/adminNoticeDetailsPage`} className={styles.noticeTableLink}>
-                                                    {row.title}
-                                                </a>
-                                            </TableCell>
-                                            <TableCell align="center">{row.author}</TableCell>
-                                            <TableCell align="center">{row.date}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{ height: 30 * emptyRows }}>
-                                            <TableCell colSpan={4} />
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        {/* 검색 필터 UI */}
-                        <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.noticeGridContainer}>
-                            <Grid item xs={3}>
-                                <FormControl fullWidth variant="outlined">
-                                    <InputLabel id="search-category-label">검색 기준</InputLabel>
-                                    <Select
-                                        labelId="search-category-label"
-                                        id="search-category"
-                                        value={searchCategory}
-                                        onChange={handleCategoryChange}
-                                        label="검색 기준"
-                                    >
-                                        <MenuItem value="">선택</MenuItem>
-                                        <MenuItem value="title">제목</MenuItem>
-                                        <MenuItem value="author">작성자</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={7}>
-                                <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    placeholder="검색어를 입력하세요"
-                                    value={searchTerm}
-                                    onChange={handleSearchChange}
-                                    disabled={!searchCategory} // 검색 카테고리를 선택해야만 입력 가능
-                                    className={styles.noticeGridItem}
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleSearch}
-                                    className={styles.noticeSearchButton}
-                                >
-                                    검색
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        {/* 페이지네이션 컨트롤 */}
-                        <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleChangePage(0)}
-                                disabled={page === 0}
-                                sx={{ marginRight: 2 }}
-                            >
-                                처음
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleChangePage(page - 1)}
-                                disabled={page === 0}
-                                sx={{ marginRight: 2 }}
-                            >
-                                이전
-                            </Button>
-                            <span>{page + 1} / {totalPages}</span>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleChangePage(page + 1)}
-                                disabled={page >= totalPages - 1}
-                                sx={{ marginLeft: 2 }}
-                            >
-                                다음
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleChangePage(totalPages - 1)}
-                                disabled={page >= totalPages - 1}
-                                sx={{ marginLeft: 2 }}
-                            >
-                                마지막
-                            </Button>
-                            {/* 페이지당 표시할 행 수 선택 */}
-                            <Select
-                                value={rowsPerPage}
-                                onChange={handleRowsPerPageChange}
-                                sx={{ marginLeft: 2 }}
-                            >
-                                <MenuItem value={5}>5</MenuItem>
-                                <MenuItem value={10}>10</MenuItem>
-                                <MenuItem value={25}>25</MenuItem>
-                            </Select>
-                        </Box>
+                        <hr className={styles.adminNoticeTitleDivider} />
                     </div>
+                    <div className={styles.adminNoticeButtonContainer}>
+                        <Button
+                            variant="contained"
+                            className={styles.adminNoticeRegisterButton}
+                            onClick={() => router.push('/adminPage/adminNoticeRegisterPage')}
+                        >
+                            전체공지 등록
+                        </Button>
+                    </div>
+
+                    {/* 테이블 가로 길이에 맞춘 달력 */}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                        <Box sx={{ width: '100%' }}>
+                            <Calendar
+                                value={date}
+                                onChange={setDate}
+                                locale="en-US"
+                                className={styles.calendar}
+                            />
+                        </Box>
+                    </Box>
+                    <PaginationTableAdminNotice
+                        rows={filteredNotices}
+                        page={page}
+                        rowsPerPage={rowsPerPage}
+                    />
+                   
+                    <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.noticeGridContainer}>
+                        <Grid item xs={3}>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel id="search-category-label">검색 기준</InputLabel>
+                                <Select
+                                    labelId="search-category-label"
+                                    id="search-category"
+                                    value={searchCategory}
+                                    onChange={handleCategoryChange}
+                                    label="검색 기준"
+                                >
+                                    <MenuItem value="">선택</MenuItem>
+                                    <MenuItem value="title">제목</MenuItem>
+                                    <MenuItem value="author">작성자</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={7}>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                placeholder="검색어를 입력하세요"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                disabled={!searchCategory}
+                                className={styles.noticeGridItem}
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                onClick={handleSearch}
+                                className={styles.noticeSearchButton}
+                            >
+                                검색
+                            </Button>
+                        </Grid>
+                    </Grid>
+
+                    <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(0)}
+                            disabled={page === 0}
+                            sx={{ marginRight: 2 }}
+                        >
+                            처음
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(page - 1)}
+                            disabled={page === 0}
+                            sx={{ marginRight: 2 }}
+                        >
+                            이전
+                        </Button>
+                        <span>{page + 1} / {totalPages}</span>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(page + 1)}
+                            disabled={page >= totalPages - 1}
+                            sx={{ marginLeft: 2 }}
+                        >
+                            다음
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(totalPages - 1)}
+                            disabled={page >= totalPages - 1}
+                            sx={{ marginLeft: 2 }}
+                        >
+                            마지막
+                        </Button>
+                        <Select
+                            value={rowsPerPage}
+                            onChange={handleRowsPerPageChange}
+                            sx={{ marginLeft: 2 }}
+                        >
+                            <MenuItem value={5}>5</MenuItem>
+                            <MenuItem value={10}>10</MenuItem>
+                            <MenuItem value={25}>25</MenuItem>
+                        </Select>
+                    </Box>
                 </div>
             </div>
         </div>

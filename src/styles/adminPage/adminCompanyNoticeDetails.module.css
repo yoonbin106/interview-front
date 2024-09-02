@@ -56,9 +56,17 @@
 /* 삭제하기 버튼 스타일 */
 .adminCompanyNoticeDeleteButton {
     background-color: red;
+    margin-right: 10px;
     color: white;
+
 }
 
+/* 수정하기 버튼 스타일 */
+.adminCompanyNoticeListButton {
+    margin-right: 10px;
+    background-color: #4A90E2;
+    color: white;
+}
 /* 이전글 / 다음글 버튼 스타일 */
 .adminCompanyNoticeNavButtons {
     margin-top: 40px;

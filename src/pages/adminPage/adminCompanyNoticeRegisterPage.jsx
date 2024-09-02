@@ -1,6 +1,4 @@
 //**adminCompanyNoticeRegisterPage.jsx
-
-
 import React from 'react';
 import { useRouter } from 'next/router';
 import styles from '@/styles/adminPage/adminCompanyNoticeRegister.module.css';
@@ -23,9 +21,8 @@ const AdminCompanyNoticeRegisterPage = () => {
             </div>
             <div className={sidebar.content}>
                 <div className={styles['adminCompanyNoticeRegisterContainer']}>
-                    <h2 className={styles['adminCompanyNoticeRegisterTitle']}>기업별 공지사항</h2>
+                    <h2 className={styles['adminCompanyNoticeRegisterTitle']}>기업 공지사항</h2>
                     <AdminCompanyNoticeRegister />
-                    <button type="button" onClick={handleSubmit} className={styles['adminCompanyNoticeRegisterSubmitButton']}>등록하기</button>
                 </div>
             </div>
         </div>
