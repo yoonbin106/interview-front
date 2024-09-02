@@ -1,48 +1,39 @@
 import React, { useState } from 'react';
-import { Grid, TextField, Select, MenuItem, IconButton, Typography, Button } from '@mui/material';
-import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatItalicIcon from '@mui/icons-material/FormatItalic';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
-import styles from '@/styles/adminPage/adminAdminNoticeRegister.module.css'; // 모듈 스타일을 import
+import { Grid, Typography, Button, TextField } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { useStores } from 'contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
+import styles from '@/styles/adminPage/adminAdminNoticeRegister.module.css';
+
+// Quill.js를 동적 import로 클라이언트에서만 로드되도록 설정
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const AdminAdminNoticeRegister = observer(() => {
-    const {userStore} = useStores();
+    const { userStore } = useStores();
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState('');  // Quill.js의 content를 관리하기 위한 상태
     const router = useRouter();
-    // 글꼴 속성들을 관리하는 상태 변수들
-    const [fontSize, setFontSize] = useState(15); // 글꼴 크기
-    const [fontStyle, setFontStyle] = useState('normal'); // 글꼴 스타일 (일반 또는 기울임꼴)
-    const [fontWeight, setFontWeight] = useState('normal'); // 글꼴 굵기 (일반 또는 굵게)
-    const [textDecoration, setTextDecoration] = useState('none'); // 글꼴 꾸밈 (밑줄)
-    const [textAlign, setTextAlign] = useState('left'); // 텍스트 정렬 (왼쪽, 가운데, 오른쪽, 양쪽 정렬)
-    
+
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
     };
 
-    const handleContentChange = (event) => {
-        setContent(event.target.value);
+    const handleContentChange = (value) => {
+        setContent(value);  // Quill.js가 반환하는 HTML을 상태로 저장
     };
 
-    //제출 핸들러
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         if (!title || !content) {
             alert('제목과 내용을 모두 입력해주세요.');
             return;
         }
-  
+
         const adminAdminNoticeData = {
             adminNoticeTitle: title,
-            adminNoticeContent: content,
+            adminNoticeContent: content,  // Quill.js가 생성한 HTML을 저장
             id: userStore.id
         };
 
@@ -51,29 +42,13 @@ const AdminAdminNoticeRegister = observer(() => {
             alert('관리자 공지사항이 성공적으로 등록되었습니다.');
             router.push('/adminPage/adminAdminNoticePage');
         } catch (error) {
-            console.error('문의 등록 중 오류 발생:', error);
-            alert('문의 등록에 실패했습니다.');
+            console.error('공지사항 등록 중 오류 발생:', error);
+            alert('공지사항 등록에 실패했습니다.');
         }
     };
 
-    // 글꼴 크기 변경 핸들러
-    const handleFontSizeChange = (e) => setFontSize(e.target.value);
-
-    // 글꼴 스타일 변경 핸들러 (일반 <-> 기울임꼴)
-    const toggleFontStyle = () => setFontStyle(fontStyle === 'normal' ? 'italic' : 'normal');
-
-    // 글꼴 굵기 변경 핸들러 (일반 <-> 굵게)
-    const toggleFontWeight = () => setFontWeight(fontWeight === 'normal' ? 'bold' : 'normal');
-
-    // 밑줄 꾸밈 토글 핸들러 (밑줄 <-> 없음)
-    const toggleTextDecoration = () => setTextDecoration(textDecoration === 'none' ? 'underline' : 'none');
-
-    // 텍스트 정렬 변경 핸들러 (왼쪽, 가운데, 오른쪽, 양쪽 정렬)
-    const handleTextAlign = (align) => setTextAlign(align);
-
     return (
         <Grid container spacing={2} className={styles.adminAdminNoticeRegisterContainer}>
-            {/* 제목 입력 필드 */}
             <Grid item xs={12}>
                 <Typography variant="h5" gutterBottom>글 작성하기</Typography>
             </Grid>
@@ -87,77 +62,33 @@ const AdminAdminNoticeRegister = observer(() => {
                     onChange={handleTitleChange}
                 />
             </Grid>
-            {/* 글꼴 스타일 조정 컨트롤 */}
-            <Grid item container spacing={1} xs={12} alignItems="center" className={styles.adminNoticeRegisterFontControls}>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <Typography variant="body1">글꼴 크기:</Typography>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <Select
-                        value={fontSize}
-                        onChange={handleFontSizeChange}
-                        variant="outlined"
-                        size="small"
-                    >
-                        {[...Array(30).keys()].map(i => (
-                            <MenuItem key={i} value={i + 10}>{i + 10}</MenuItem>
-                        ))}
-                    </Select>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={toggleFontWeight}>
-                        <FormatBoldIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={toggleFontStyle}>
-                        <FormatItalicIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={toggleTextDecoration}>
-                        <FormatUnderlinedIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={() => handleTextAlign('left')}>
-                        <FormatAlignLeftIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={() => handleTextAlign('center')}>
-                        <FormatAlignCenterIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={() => handleTextAlign('right')}>
-                        <FormatAlignRightIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item className={styles.adminAdminNoticeRegisterFontControlItem}>
-                    <IconButton onClick={() => handleTextAlign('justify')}>
-                        <FormatAlignJustifyIcon />
-                    </IconButton>
-                </Grid>
-            </Grid>
-            {/* 내용 입력 필드 */}
             <Grid item xs={12}>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    rows={8}
-                    placeholder="내용을 입력하세요"
+                <ReactQuill
+                    value={content}
                     onChange={handleContentChange}
+                    modules={{
+                        toolbar: [
+                            [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+                            [{size: ['small', false, 'large', 'huge']}], // small, normal, large, huge 크기 선택 가능
+                            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                            [{'list': 'ordered'}, {'list': 'bullet'}, 
+                            {'indent': '-1'}, {'indent': '+1'}],
+                            ['link', 'image', 'video'],
+                            ['clean']
+                        ],
+                    }}
+                    formats={[
+                        'header', 'font', 'size',
+                        'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'list', 'bullet', 'indent',
+                        'link', 'image', 'video'
+                    ]}
                     className={styles.adminAdminNoticeRegisterContentInput}
                     style={{
-                        fontSize: `${fontSize}px`,
-                        fontStyle: fontStyle,
-                        fontWeight: fontWeight,
-                        textDecoration: textDecoration,
-                        textAlign: textAlign,
+                        minHeight: '200px',
+                        border: '1px solid #ccc',
+                        padding: '10px',
                     }}
-                    value={content}
                 />
                 <Typography variant="body2" align="right" color="textSecondary" className={styles.adminNoticeRegisterCharCount}>
                     {content.length}/2000

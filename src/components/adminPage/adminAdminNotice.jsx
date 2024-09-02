@@ -24,6 +24,7 @@ const PaginationTableAdminAdminNotice = ({rows,page,rowsPerPage}) => {
 
     //행을 클릭했을 때 실행되는 함수
     const handleRowClick = (adminNoticeId) => {
+        console.log(adminNoticeId);
         router.push(`/adminPage/adminAdminNoticeDetailsPage/${adminNoticeId}`)
     }
     return (

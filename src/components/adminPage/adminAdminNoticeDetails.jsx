@@ -1,53 +1,89 @@
-//adminAdminNoticeDetails.jsx
+import React, { useState, useEffect } from 'react';
+import { Button, Paper, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import dynamic from 'next/dynamic';
+import styles from '@/styles/adminPage/adminAdminNoticeDetails.module.css';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
 
-import React, { useState } from 'react';
-import {
-    Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, TextField, Typography
-} from '@mui/material';
-import styles from '@/styles/adminPage/adminAdminNoticeDetails.module.css'; // 모듈 스타일을 import
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const AdminAdminNoticeDetails = ({ noticeData, onSave, onDelete, onEdit }) => {
-    const [open, setOpen] = useState(false); // 삭제 확인 다이얼로그의 열림 상태를 관리
-    const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태를 관리
-    const [editedNotice, setEditedNotice] = useState(noticeData); // 공지사항 데이터를 관리
+const AdminAdminNoticeDetails = ({ noticeData }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedNotice, setEditedNotice] = useState(noticeData || {});
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const router = useRouter();
+    const { adminNoticeId } = router.query;
 
-    // 삭제 버튼 클릭 핸들러: 삭제 확인 다이얼로그를 엶
-    const handleDelete = () => {
-        setOpen(true);
-    };
+    useEffect(() => {
+        if (!noticeData && adminNoticeId) {
+            const fetchNotice = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/adminnotice/${adminNoticeId}`);
+                    setEditedNotice(response.data);
+                } catch (error) {
+                    console.error('Error fetching notice:', error);
+                }
+            };
+            fetchNotice();
+        }
+    }, [adminNoticeId, noticeData]);
 
-    // 삭제 확인 핸들러: 공지사항 삭제를 확인하고 다이얼로그를 닫음
-    const handleConfirmDelete = () => {
-        setOpen(false);
-        onDelete();
-    };
-
-    // 삭제 취소 핸들러: 다이얼로그를 닫고 삭제를 취소함
-    const handleCancelDelete = () => {
-        setOpen(false);
-    };
-
-    // 수정 버튼 클릭 핸들러: 편집 모드로 전환
     const handleEdit = () => {
         setIsEditing(true);
     };
 
-    // 수정 완료 버튼 클릭 핸들러: 편집 모드를 종료하고 변경 사항을 저장
-    const handleSave = () => {
-        setIsEditing(false);
-        onSave(editedNotice);
+    const handleSave = async () => {
+        try {
+            const updatedNotice = {
+                adminNoticeTitle: editedNotice.adminNoticeTitle,
+                adminNoticeContent: editedNotice.adminNoticeContent,
+            };
+            await axios.put(`http://localhost:8080/api/adminnotice/${editedNotice.adminNoticeId}`, updatedNotice);
+            alert('공지사항이 성공적으로 수정되었습니다.');
+            setIsEditing(false);
+            router.push(`/adminPage/adminAdminNoticeDetailsPage/${editedNotice.adminNoticeId}`);
+        } catch (error) {
+            console.error('공지사항 수정 중 오류 발생:', error);
+            alert('공지사항 수정에 실패했습니다.');
+        }
     };
 
-    // 입력 필드 값 변경 핸들러: 입력된 내용을 공지사항 데이터에 반영
-    const handleChange = (event) => {
-        const { name, value } = event.target;
+    const handleDelete = () => {
+        setOpenDeleteDialog(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/adminnotice/${editedNotice.adminNoticeId}`);
+            alert('공지사항이 성공적으로 삭제되었습니다.');
+            setOpenDeleteDialog(false);
+            router.push('/adminPage/adminAdminNoticePage');
+        } catch (error) {
+            console.error('공지사항 삭제 중 오류 발생:', error);
+            alert('공지사항 삭제에 실패했습니다.');
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setOpenDeleteDialog(false);
+    };
+
+    const handleGoBack = () => {
+        router.push('/adminPage/adminAdminNoticePage');
+    };
+
+    const handleChange = (value) => {
         setEditedNotice(prevNotice => ({
             ...prevNotice,
-            [name]: value
+            adminNoticeContent: value
         }));
     };
 
-    // 공지사항 헤더 렌더링: 제목과 날짜를 표시
+    if (!editedNotice.adminNoticeTitle) {
+        return <div>Loading...</div>;
+    }
+
     const renderHeader = () => (
         <div className={styles.adminAdminNoticeDetailsHeader}>
             {isEditing ? (
@@ -55,52 +91,78 @@ const AdminAdminNoticeDetails = ({ noticeData, onSave, onDelete, onEdit }) => {
                     fullWidth
                     variant="outlined"
                     label="제목"
-                    name="title"
-                    value={editedNotice.title}
-                    onChange={handleChange}
+                    name="adminNoticeTitle"
+                    value={editedNotice.adminNoticeTitle || ''}
+                    onChange={(e) =>
+                        setEditedNotice(prevNotice => ({
+                            ...prevNotice,
+                            adminNoticeTitle: e.target.value
+                        }))
+                    }
+                    inputProps={{ style: { fontWeight: 'bold', fontSize: '1.5rem' } }}
                 />
             ) : (
-                <h2>{editedNotice.title}</h2>
+                <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedNotice.adminNoticeTitle}</h2>
             )}
-            <p className={styles.adminAdminNoticeDetailsDate}>{editedNotice.date}</p>
+            <p className={styles.adminAdminNoticeDetailsDate}>{editedNotice.adminNoticeCreatedTime}</p>
         </div>
     );
 
-    // 공지사항 내용 렌더링: 편집 모드에 따라 내용을 표시하거나 편집 가능하게 함
     const renderContent = () => (
         <div className={styles.adminAdminNoticeDetailsContent}>
             {isEditing ? (
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    multiline
-                    rows={10}
-                    label="내용"
-                    name="content"
-                    value={editedNotice.content}
+                <ReactQuill
+                    value={editedNotice.adminNoticeContent}
                     onChange={handleChange}
+                    modules={{
+                        toolbar: [
+                            [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                            [{ size: ['small', false, 'large', 'huge'] }],
+                            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                            [{'list': 'ordered'}, {'list': 'bullet'}, 
+                            {'indent': '-1'}, {'indent': '+1'}],
+                            ['link', 'image', 'video'],
+                            ['clean']
+                        ],
+                    }}
+                    formats={[
+                        'header', 'font', 'size',
+                        'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'list', 'bullet', 'indent',
+                        'link', 'image', 'video'
+                    ]}
                 />
             ) : (
-                editedNotice.content
+                <div dangerouslySetInnerHTML={{ __html: editedNotice.adminNoticeContent }} />
             )}
         </div>
     );
 
-    // 공지사항 버튼 렌더링: 수정, 삭제 버튼을 표시하고, 편집 모드에서는 저장 버튼을 표시
+    const renderAuthor = () => (
+        <div className={styles.adminAdminNoticeAuthor}>
+            <Typography variant="subtitle1">작성자: {editedNotice.user?.username}</Typography>
+        </div>
+    );
+
     const renderButtons = () => (
         <div className={styles.adminAdminNoticeDetailsButtonsContainer}>
             {isEditing ? (
-                <Button variant="contained" color="primary" className={styles.adminAdminNoticeSaveButton} onClick={handleSave}>
+                <Button variant="contained" className={styles.adminAdminNoticeSaveButton} onClick={handleSave}>
                     저장하기
                 </Button>
             ) : (
-                <Button variant="contained" className={styles.adminAdminNoticeEditButton} onClick={handleEdit}>
-                    수정하기
-                </Button>
+                <>
+                    <Button variant="contained" className={styles.adminAdminNoticeEditButton} onClick={handleEdit}>
+                        수정하기
+                    </Button>
+                    <Button variant="contained" className={styles.adminAdminNoticeDeleteButton} onClick={handleDelete}>
+                        삭제하기
+                    </Button>
+                    <Button variant="contained" className={styles.adminAdminNoticeListButton} onClick={handleGoBack}>
+                        목록으로 돌아가기
+                    </Button>
+                </>
             )}
-            <Button variant="contained" className={styles.adminAdminNoticeDeleteButton} onClick={handleDelete}>
-                삭제하기
-            </Button>
         </div>
     );
 
@@ -109,37 +171,30 @@ const AdminAdminNoticeDetails = ({ noticeData, onSave, onDelete, onEdit }) => {
             <div className={styles.adminAdminNoticeDetailsContainer}>
                 <Paper elevation={3} className={styles.adminAdminNoticeDetailsPaper}>
                     <Typography variant="h6" gutterBottom className={styles.adminAdminNoticeDetailsDate}>
-                        [전체 공지사항]
+                        [관리자 공지사항]
                     </Typography>
-                    
                     {renderHeader()}
+                    {renderAuthor()}
                     {renderContent()}
                     {renderButtons()}
-
-                    {/* 삭제 확인 다이얼로그 */}
-                    <Dialog open={open} onClose={handleCancelDelete}>
-                        <DialogTitle className={styles.adminAdminNoticeDialogTitle}>공지사항 삭제</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText className={styles.adminAdminNoticeDialogContentText}>
-                                공지사항을 삭제하시겠습니까?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCancelDelete} color="primary">
-                                취소
-                            </Button>
-                            <Button onClick={handleConfirmDelete} color="secondary">
-                                확인
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-
-                    {/* 이전글 / 다음글 기능 */}
-                    <div className={styles.adminAdminNoticeNavButtons}>
-                        <Button>&lt; 이전글</Button>
-                        <Button>다음글 &gt;</Button>
-                    </div>
                 </Paper>
+
+                <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
+                    <DialogTitle>공지사항 삭제</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            공지사항을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCancelDelete} color="primary">
+                            취소
+                        </Button>
+                        <Button onClick={handleConfirmDelete} color="secondary">
+                            삭제
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </div>
     );

@@ -2,11 +2,9 @@
 
 import React,{useEffect,useState} from 'react';
 import { useRouter } from 'next/router';
-import styles from '@/styles/adminPage/adminQnaDetails.module.css';
 import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import AdminQnaDetails from '@/components/adminPage/adminQnaDetails'; // 새로 만든 컴포넌트 import
-import { Button } from 'react-bootstrap';
 import axios from 'axios';
 
 const AdminQnaDetailsPage = () => {
