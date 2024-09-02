@@ -74,6 +74,10 @@ export default function NestedList() {
           <ListItemButton className={`${styles.nestedListItemButton} ${styles.cursorPointer}`} onClick={() => handleNavigation('/adminPage/adminAdminNoticePage')}>
             <ListItemText primary="　관리자 공지사항" />
           </ListItemButton>
+           {/* 기업별 공지사항 페이지로 이동 */}
+           <ListItemButton className={`${styles.nestedListItemButton} ${styles.cursorPointer}`} onClick={() => handleNavigation('/adminPage/adminCompanyNoticePage')}>
+            <ListItemText primary="　기업별 공지사항" />
+          </ListItemButton>
         </List>
       </Collapse>
       <Divider />
