@@ -17,7 +17,6 @@ export default function AdminRefund() {
     const [refundStatus, setRefundStatus] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [expanded, setExpanded] = useState(false);
-    const [notes, setNotes] = useState({});
 
     useEffect(() => {
         async function fetchPaymentData() {
@@ -69,22 +68,6 @@ export default function AdminRefund() {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
-
-    const handleNoteChange = (refundId, value) => {
-        setNotes(prevNotes => ({
-            ...prevNotes,
-            [refundId]: value
-        }));
-    };
-
-    const handleSaveNote = (refundId) => {
-        console.log(`Note for ${refundId}:`, notes[refundId]);
-        setNotes(prevNotes => ({
-            ...prevNotes,
-            [refundId]: notes[refundId] || ''
-        }));
-    };
-
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -175,25 +158,6 @@ export default function AdminRefund() {
                                                         <Typography variant="body2">
                                                             <strong>환불 사유:</strong> {row.reason || '사유 없음'}
                                                         </Typography>
-                                                        {/* 메모 입력 필드 */}
-                                                        <TextField
-                                                            label="메모"
-                                                            multiline
-                                                            fullWidth
-                                                            rows={3}
-                                                            value={notes[row.refundId] || ''}
-                                                            onChange={(e) => handleNoteChange(row.refundId, e.target.value)}
-                                                            sx={{ mt: 2 }}
-                                                        />
-                                                        {/* 메모 저장 버튼 */}
-                                                        <Button 
-                                                            variant="contained" 
-                                                            color="primary" 
-                                                            onClick={() => handleSaveNote(row.refundId)}
-                                                            sx={{ mt: 2 }}
-                                                        >
-                                                            메모 저장
-                                                        </Button>
                                                     </AccordionDetails>
                                                 </Accordion>
                                             </TableCell>
