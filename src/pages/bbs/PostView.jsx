@@ -4,7 +4,7 @@ import styles from '@/styles/bbs/postView.module.css';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React, { useEffect, useState } from 'react';
-
+import userStore from '@/stores/UserStore'; // UserStore 임포트
 import { useRouter } from 'next/router';
 import axios from 'axios';
 const PostView = () => {
@@ -66,6 +66,8 @@ const PostView = () => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
+  const userId = userStore.id; 
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -96,7 +98,17 @@ const PostView = () => {
     }
     handleClose();
   };
-  
+  console.log('Post User ID:', post.userId);
+  console.log('Post User ID:', post.userId?.id);
+  const postOwnerId = Number(post.userId?.id) || 0;
+  const currentUserId = Number(userId) || 0;
+  const menuItems = postOwnerId === currentUserId ? [
+    <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
+    <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>,
+    <MenuItem key="report">신고</MenuItem>
+  ] : [
+    <MenuItem key="report">신고</MenuItem>
+  ];
 
   return (
 
@@ -127,9 +139,7 @@ const PostView = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleEdit}>수정</MenuItem>
-                <MenuItem onClick={handleDelete}>삭제</MenuItem>
-                <MenuItem>신고</MenuItem>
+                {menuItems}
             </Menu>
             </div>
           </div>
