@@ -47,6 +47,7 @@ const FavoriteList = observer(() => {
                             <div key={index} className={styles.favoriteListItem}>
                                 <strong>{company.companyName}</strong>
                                 <p>{company.companyId}</p>
+                                <button className={styles.removeButton}>X</button> {/* X 버튼 추가 */}
                             </div>
                         ))
                     ) : (

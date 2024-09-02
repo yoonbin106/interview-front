@@ -38,6 +38,9 @@
 }
 
 .favoriteListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
@@ -47,7 +50,6 @@
 }
 
 .favoriteListItem strong {
-    display: block;
     font-size: 16px;
     margin-bottom: 5px;
 }
@@ -55,4 +57,16 @@
 .favoriteListItem p {
     margin: 0;
     color: #666;
+}
+
+.removeButton {
+    background-color: transparent;
+    border: none;
+    color: #5a29cc;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.removeButton:hover {
+    color: #5837cf;
 }
