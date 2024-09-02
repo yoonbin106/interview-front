@@ -96,13 +96,13 @@ export default function SideMenu(theme) {
         </ListItemButton>
       </a>
 
-      <Divider sx={{ borderColor: grey[400] }} />
+      {/* <Divider sx={{ borderColor: grey[400] }} />
 
       <a href="/myPage/surveyHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
           <ListItemText primary="적성 탐색 내역" />
         </ListItemButton>
-      </a>
+      </a> */}
 
       <Divider sx={{ borderColor: grey[400] }} />
 
