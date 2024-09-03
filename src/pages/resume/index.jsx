@@ -9,9 +9,7 @@ import styles from '@/styles/resume/resumeForm.module.css';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
 import proofreadStyles from '@/styles/resume/proofreadStyles.module.css';
 import { closestIndexTo } from 'date-fns';
-import {useLoadDaumPostcodeScript,
-  openPostcodePopup,
-} from "@/api/getPostCode";
+import { useLoadDaumPostcodeScript, openPostcodePopup } from "@/api/getPostCode";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useStores } from '@/contexts/storeContext';
@@ -50,8 +48,6 @@ function ResumeForm() {
   const [loading, setLoading] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
-
   const [formData, setFormData] = useState({
     resume_title: '',
     military_service_type: '',
@@ -73,12 +69,11 @@ function ResumeForm() {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  //텍스트 복붙 2000자 초과 금지용
   const handlePaste = (e) => {
     e.preventDefault();
 
     const pasteText = (e.clipboardData || window.clipboardData).getData('text');
-
-    // 현재 텍스트에 붙여넣기를 더해도 2000자를 넘지 않게 함
     const currentText = e.target.innerText;
     const remainingLength = 2000 - currentText.length;
     const textToPaste = pasteText.substring(0, remainingLength);
@@ -86,6 +81,7 @@ function ResumeForm() {
     document.execCommand('insertText', false, textToPaste);
 };
 
+  //섹션 지정
   const sectionsRef = {
     personalInfo: useRef(null),
     education: useRef(null),
@@ -99,42 +95,36 @@ function ResumeForm() {
     motivation: useRef(null)
   };
 
+  //자동 해당없음 체크용
   const checkAndSetExemptions = () => {
-      
-    // 경력 섹션
+    
     const isCareerEmpty = careerFields.every(field =>
       !field.company_name && !field.join_date && !field.leave_date && !field.position && !field.job_description
     );
     setIsCareerExempt(isCareerEmpty);
-  
-    // 외국어 섹션
+
     const isLanguageEmpty = languageFields.every(field =>
       !field.language && !field.language_level && !field.language_score
     );
     setIsLanguageExempt(isLanguageEmpty);
   
-    // 입상경력 섹션
     const isAwardEmpty = awardFields.every(field =>
       !field.contest_name && !field.contest_award && !field.contest_date
     );
     setIsAwardExempt(isAwardEmpty);
   
-    // 자격증 섹션
     const isCertificateEmpty = certificateFields.every(field =>
       !field.certificate_name && !field.certificate_issuer && !field.certificate_date
     );
     setIsCertificateExempt(isCertificateEmpty);
   
-    // 병역 섹션
     const isMilitaryEmpty = !formData.military_service_type && !formData.military_start_date && !formData.military_end_date && !formData.military_rank;
     setIsMilitaryExempt(isMilitaryEmpty);
   
-    // 희망 근무조건 섹션
     const isWorkConditionEmpty = !formData.desired_salary && !formData.desired_start_date;
     setIsWorkConditionExempt(isWorkConditionEmpty);
   };
   
-  // MUI styled components for Modal
 const Backdrop = React.forwardRef(
   ({ open, className, ...other }, ref) => {
     return (
@@ -213,12 +203,14 @@ const ModalContent = styled('div')(
   `,
 );
 
+  //프로필 사진 변경 처리
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setProfileImage(URL.createObjectURL(e.target.files[0]));
     }
   };
 
+  //네임-밸류 설정용
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -227,16 +219,14 @@ const ModalContent = styled('div')(
     });
   };
 
+  
   const handleSelfIntroductionChange = (e) => {
     let text = e.target.innerText;
 
-    // 최대 길이를 초과하지 않도록 체크
     if (text.length > 2000) {
-        // 2000자를 초과할 경우, 초과된 부분을 제거
         text = text.substring(0, 2000);
         e.target.innerText = text;
-
-        // 캐럿(커서)을 텍스트 끝으로 이동
+      
         const range = document.createRange();
         const sel = window.getSelection();
         range.selectNodeContents(e.target);
@@ -248,17 +238,12 @@ const ModalContent = styled('div')(
     setSelfIntroduction(text);
 };
 
-
-
   const handleMotivationChange = (e) => {
     let text = e.target.innerText;
-    // 최대 길이를 초과하지 않도록 체크
     if (text.length > 2000) {
-      // 2000자를 초과할 경우, 초과된 부분을 제거
       text = text.substring(0, 2000);
       e.target.innerText = text;
 
-      // 캐럿(커서)을 텍스트 끝으로 이동
       const range = document.createRange();
       const sel = window.getSelection();
       range.selectNodeContents(e.target);
@@ -287,8 +272,6 @@ const ModalContent = styled('div')(
     }
   };
   
-
-
   const handleFieldChange = (index, e, fields, setFields) => {
     const { name, value } = e.target;
     const updatedFields = [...fields];
@@ -329,7 +312,6 @@ const ModalContent = styled('div')(
     setIsModalOpen(false);
   };
  
-
   const confirmAction = async () => {
     if (modalContent === '작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?') {
         try {
@@ -354,7 +336,6 @@ const ModalContent = styled('div')(
                 motivation: motivation
             });
             
-            // 키워드 추출 및 업데이트
             const keywordResponse = await axios.post('http://localhost:8080/api/resume/update-keywords', {
                 resumeId: resumeId,
                 selfIntroduction: selfIntroduction,
@@ -368,18 +349,13 @@ const ModalContent = styled('div')(
         } catch (error) {
             console.error('에러 발생:', error);
         } finally {
-            setLoadingSave(false); // 저장 완료 후 로딩 모달 숨기기
+            setLoadingSave(false);
         }
     } else {
         setIsModalOpen(false);
         router.push('/resume/resumeList');
     }
 };
-
-
-  
-  
-
 
 const generatePDF = async () => {
   const buttons = document.querySelectorAll('button');
@@ -392,7 +368,6 @@ const generatePDF = async () => {
     scrollY: 0,
   });
   
-
   const imgData = canvas.toDataURL('image/png');
   const pdf = new jsPDF('p', 'mm', 'a4', true);
   const imgWidth = 207;
@@ -471,7 +446,7 @@ const generatePDF = async () => {
         return;
     }
 
-    setLoading(true); // 로딩 시작
+    setLoading(true);
 
     try {
         const response = await axios.post('http://localhost:8080/api/chatgpt-self', {
@@ -502,7 +477,7 @@ const generatePDF = async () => {
         setAiProofreadResult([{ message: "AI 첨삭 중 오류가 발생했습니다." }]);
         setIsAiProofreadSidebarOpen(true);
     } finally {
-        setLoading(false); // 로딩 종료
+        setLoading(false);
     }
 };
 
@@ -513,7 +488,7 @@ const handleAiProofreadMotivation = async (text) => {
       return;
   }
 
-  setLoading(true); // 로딩 시작
+  setLoading(true);
 
   try {
       const response = await axios.post('http://localhost:8080/api/chatgpt-motivation', { text });
@@ -542,19 +517,17 @@ const handleAiProofreadMotivation = async (text) => {
       setAiProofreadResult([{ message: "AI 첨삭 중 오류가 발생했습니다." }]);
       setIsAiProofreadSidebarOpen(true);
   } finally {
-      setLoading(false); // 로딩 종료
+      setLoading(false);
   }
 };
 
 
 const applyColorToQuotes = (text) => {
-  // 텍스트가 문자열이 아닌 경우를 처리
   if (typeof text !== 'string') {
       return text;
   }
   let coloredText = text.replace(/##([^#]+)##/g, "<span style='color:#5A8AF2;'>$&</span>");
 
-  // "첨삭 결과는 다음과 같습니다."와 "수정 부분은 다음과 같습니다." 부분에 주황색과 볼드 처리 적용
   coloredText = coloredText.replace(/첨삭 결과는 다음과 같습니다\./g, "<span style='color:#5A8AF2;'>첨삭 결과는 다음과 같습니다.</span><br>");
   coloredText = coloredText.replace(/첨삭 결과는 다음과 같습니다\:/g, "<span style='color:#5A8AF2;'>첨삭 결과는 다음과 같습니다.</span><br>");
   coloredText = coloredText.replace(/수정 부분은 다음과 같습니다\./g, "<span style='color:#5A8AF2;'>수정 부분은 다음과 같습니다.</span>");
@@ -569,8 +542,6 @@ const applyColorToQuotes = (text) => {
 
   useLoadDaumPostcodeScript();
   
-
-
   return (
   
     <div className={`${styles.body} ${styles.resumeForm}`}>
@@ -646,7 +617,7 @@ const applyColorToQuotes = (text) => {
           disableScrollLock
         >
           <ModalContent sx={{ width: 300 }}>
-            <div className={modalStyles.spinner}></div> {/* 스피너 추가 */}
+            <div className={modalStyles.spinner}></div>
             <h2 id="loading-modal-title" className={modalStyles.modalText}>
               AI 첨삭 중...
             </h2>
@@ -746,7 +717,6 @@ const applyColorToQuotes = (text) => {
             </div>
           </div>
 
-                
           <div className={styles.formGroup} style={{ marginTop: '30px' }}>
             <label className={`${styles.label} ${styles.required}`}>우편번호</label>
             <div className="input-group mb-2">
@@ -826,8 +796,8 @@ const applyColorToQuotes = (text) => {
     top: '10px',
     cursor: 'pointer',
     color: '#6c757d',
-    padding: '13px', // 클릭 가능한 영역을 넓히기 위해 padding 추가
-    boxSizing: 'content-box', // padding이 실제 크기에 추가되도록 설정
+    padding: '13px',
+    boxSizing: 'content-box',
   }}
 />
 
@@ -932,7 +902,7 @@ const applyColorToQuotes = (text) => {
                 <ClearIcon
                   className={styles.clearIcon} 
                   onClick={() => removeField(index, careerFields, setCareerFields)} 
-                  style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }} // X 버튼 위치 조정
+                  style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }}
                 />
               )}
                 {index > 0 && <div className={styles.formGroupSeparator}></div>}
@@ -1031,7 +1001,7 @@ const applyColorToQuotes = (text) => {
                 <ClearIcon
                   className={styles.clearIcon} 
                   onClick={() => removeField(index, languageFields, setLanguageFields)} 
-                  style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }} // X 버튼 위치 조정
+                  style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }}
                 />
                 )}
                 {index > 0 && <div className={styles.formGroupSeparator}></div>}
@@ -1355,13 +1325,12 @@ const applyColorToQuotes = (text) => {
             type="button"
             className={proofreadStyles.aiproofreadButton}
             onClick={() => handleAiProofread(selfIntroduction)}
-            style={{ marginLeft: '10px' }} // 버튼 간격 조정
+            style={{ marginLeft: '10px' }}
           >
             AI 첨삭 실행
           </button>
         </div>
         <div className={styles.textareaContainer}>
-           {/* placeholder를 조건부로 표시 */}
       {selfIntroduction.length === 0 && (
         <div className={styles.placeholder}>본인을 소개하는 글을 작성해주세요.</div>
       )}
@@ -1378,8 +1347,6 @@ const applyColorToQuotes = (text) => {
 
           <hr className={styles.hr} />
 
-          
-
           <div className={styles.formGroup} ref={sectionsRef.motivation}>
         <div className={styles.sectionHeaderContainer}>
           <h2 className={`${styles.sectionHeader} ${styles.requiredTwo}`}>지원동기</h2>
@@ -1394,24 +1361,22 @@ const applyColorToQuotes = (text) => {
             type="button"
             className={proofreadStyles.aiproofreadButton}
             onClick={() => handleAiProofreadMotivation(motivation)}
-            style={{ marginLeft: '10px' }} // 버튼 간격 조정
+            style={{ marginLeft: '10px' }}
           >
             AI 첨삭 실행
           </button>
         </div>
         <div className={styles.textareaContainer}>
-          {/* placeholder를 조건부로 표시 */}
           {motivation.length === 0 && (
             <div className={styles.placeholder}>회사에 지원하게 된 동기를 작성해주세요.</div>
           )}
           <pre
             contentEditable="true"
-            onInput={handleMotivationChange} // onChange 대신 onInput 사용
+            onInput={handleMotivationChange}
             maxLength="2000"
             onPaste={handlePaste}
             value={motivation}
           >
-              {/* pre 태그 안에 상태값을 직접 넣기 */}
           </pre>
           <div className={styles.charCounter}>{motivation.length}/2000</div>
         </div>

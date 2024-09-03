@@ -156,3 +156,16 @@ export const getAllPayInfo = async () => {
     console.error("결제 정보를 가져오는 데 오류가 발생했습니다:", error);
   }
 };
+
+export const getAllRefundInfo = async () => {
+  try {
+    const user = await axios.get(`${baseUrl}/findAllRefundInfo`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    return user;
+  } catch (error) {
+    console.error("결제 정보를 가져오는 데 오류가 발생했습니다:", error);
+  }
+};

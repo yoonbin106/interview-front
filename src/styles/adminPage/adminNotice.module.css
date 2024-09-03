@@ -3,49 +3,45 @@
 /* 테이블 관련 스타일 */
 .noticeTableContainer {
     margin-top: 20px;
-}
-
-.noticeTableHeaderCell {
+  }
+  
+  .noticeTableHeaderCell {
     font-weight: bold;
     background-color: #5A8AF2;
     color: white;
     width: 150px;
     white-space:nowrap;
-}
-
-.noticeTableLink {
+  }
+  
+  .noticeTableLink {
     color: black;
     cursor: pointer;
     text-decoration: none;
-}
-
-.noticeTableLink:hover {
+  }
+  
+  .noticeTableLink:hover {
     text-decoration: underline;
-}
-
-.noticeTableButtonContainer {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-}
-
-/* 레이아웃 및 컨테이너 스타일 */
-.noticeContainer {
+  }
+  
+  
+  
+  /* 레이아웃 및 컨테이너 스타일 */
+  .noticeContainer {
     display: flex;
     margin: 30px 30px 30px 30px;
     width: 100%;
     height:1000px ;
     justify-content: center;
-}
-
-.noticeSidebar {
+  }
+  
+  .noticeSidebar {
     border: solid 2px;
     border-color: #DEFFF5;
     margin: 10px 20px 10px 10px;
     min-width: 200px;
-}
-
-.noticeContent {
+  }
+  
+  .noticeContent {
     background-color: white;
     padding: 20px;
     margin: 10px 10px 10px 10px;
@@ -55,32 +51,95 @@
     width: 1080px;
     box-sizing: border-box;
     overflow-y: auto;
-}
-
-.noticeMainContainer {
+  }
+  
+  .noticeMainContainer {
     padding: 20px;
-}
-
-/* 기타 스타일 */
-.noticeTitle {
+  }
+  
+  .noticeTitle {
     margin: 15px;
     white-space: nowrap;
     font-size: 40px;
-}
-
-.noticeGridContainer {
+    font-weight:bold;
+  }
+  .noticeTitleContainer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  
+  .adminNoticeTitleDivider {
+    border: 0;
+    height: 2px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .noticeGridContainer {
     margin-top: 20px;
     max-width: 100%;
-}
-
-.noticeGridItem {
+  }
+  
+  .noticeGridItem {
     height: 56px;
-}
-
-.noticeSearchButton {
+  }
+  
+  .noticeSearchButton {
     background-color: #5A8AF2;
     &:hover {
         background-color: #357ABD;
     }
     height: 56px;
-}
+  }
+  .adminNoticeTitleCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* 달력 기본 스타일 */
+  .calendar {
+    width: 100%;
+    max-width: 100%;
+    border: 8px solid #cccccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #ffffff;
+  }
+  
+  /* 달력에서 요일에 커서 올렸을 때 물음표 커서 제거 */
+  .calendar__tile {
+    cursor: default;
+  }
+  /* 달력에서 요일에 커서 올렸을 때 물음표 커서 제거 */
+  .calendar__month-view__weekdays__weekday {
+    cursor: pointer;
+  }
+  
+  
+  /* 달력에서 이전 달과 다음 달로 넘어가는 버튼 스타일 */
+  .calendar__navigation button {
+    min-width: 44px;
+    background: none;
+    font-size: 5rem;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+  
+  .adminNoticeButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  
+  .adminNoticeRegisterButton {
+    background-color: #5A8AF2;
+    margin-bottom : 20px;
+    padding: 10px 30px;
+  }
+  
+  .adminNoticeRegisterButton:hover {
+    background-color: #0056b3;
+  }
