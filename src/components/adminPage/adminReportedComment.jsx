@@ -1,7 +1,6 @@
-//adminReportedComment.jsx
-
 import * as React from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem, Divider } from '@mui/material';
+import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import styles from '@/styles/adminPage/adminReportedComment.module.css';
 
 export default function AdminReportedComment() {
@@ -45,41 +44,42 @@ export default function AdminReportedComment() {
 
   const totalPages = Math.ceil(rows.length / rowsPerPage); // 전체 페이지 수 계산
 
-  // 페이지 변경 핸들러
   const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
-  // 페이지당 표시할 행 수 변경 핸들러
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // 페이지를 첫 페이지로 초기화
   };
 
-  // 특정 행을 토글(확장/축소)하는 핸들러
   const toggleRow = (index) => {
     setOpenRowIndex(openRowIndex === index ? null : index);
   };
 
-  // 댓글 삭제 버튼 클릭 핸들러
   const handleDelete = () => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
       alert("댓글 삭제가 완료되었습니다.");
     }
   };
 
-  // 댓글 숨김 버튼 클릭 핸들러
   const handleHide = () => {
     if (window.confirm("댓글을 숨기시겠습니까?")) {
       alert("댓글 숨김이 완료되었습니다.");
     }
   };
 
-  // 빈 행 계산 (페이지가 변경될 때 테이블 하단을 채우기 위함)
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <div>
+      {/* 페이지 상단: 제목 */}
+      <Box display="flex" alignItems="center" mb={2}>
+        <WarningTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+        <h2 className={styles.reportedCommentTitle}>𝐑𝐞𝐩𝐨𝐫𝐭𝐞𝐝 𝐂𝐨𝐦𝐦𝐞𝐧𝐭𝐬</h2>
+      </Box>
+      <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} /> {/* 굵고 중간 톤의 Divider 추가 */}
+
       <div>
         {/* 신고된 댓글을 표시하는 테이블 */}
         <TableContainer component={Paper} className={styles.reportedCommentTableContainer}>

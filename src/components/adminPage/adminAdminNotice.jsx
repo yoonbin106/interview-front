@@ -17,6 +17,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 CSS를 가져옵니다.
 import styles from '@/styles/adminPage/adminAdminNotice.module.css';
 import axios from 'axios';
+import CampaignTwoToneIcon from '@mui/icons-material/CampaignTwoTone';
 
 const PaginationTableAdminAdminNotice = ({rows,page,rowsPerPage}) => {
     const router = useRouter();
@@ -78,7 +79,6 @@ const AdminAdminNotice = () => {
     const [searchCategory, setSearchCategory] = useState(''); // 검색 기준 카테고리 상태
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
     const [filteredNotices, setFilteredNotices] = useState([]); // 필터링된 QnA 상태
-    const [categoryFilter, setCategoryFilter] = useState(''); // 카테고리 필터
     const [page, setPage] = useState(0); // 현재 페이지 상태
     const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 표시할 행 수 상태
     const [date, setDate] = useState(new Date());
@@ -111,16 +111,15 @@ const AdminAdminNotice = () => {
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
         const filteredData = adminNoticeData.filter(item => {
-            const matchesCategory = categoryFilter ? item.qnaCategory === categoryFilter : true;
             const matchesSearch = searchCategory === 'title'
-              ? item.adminNoticeTitle.toLowerCase().includes(lowercasedFilter)
-              : true; // 검색어 필터링
-      
-            return matchesStatus && matchesCategory && matchesSearch;
-          });
-          setFilteredNotices(filteredData);
-          setPage(0); // 검색 시 첫 페이지로 이동
-        };
+                ? item.adminNoticeTitle.toLowerCase().includes(lowercasedFilter)
+                : true; // 검색어 필터링
+    
+            return matchesSearch;
+        });
+        setFilteredNotices(filteredData);
+        setPage(0); // 검색 시 첫 페이지로 이동
+    };
 
         const handleChangePage = (newPage) => {
             setPage(newPage);
@@ -144,13 +143,11 @@ const AdminAdminNotice = () => {
             </div>
             <div className={styles.adminNoticeContent}>
                 <div className={styles.adminNoticeMainContainer}>
+                    <div style={{ display: 'flex', alignItems: 'center',justifyContent: 'space-between'  }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div className={styles.adminAdminNoticeTitleContainer}>
-                            <h2 className={styles.adminNoticeTitle}>Admin Notices</h2>
+                    <CampaignTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+                            <h2 className={styles.adminNoticeTitle}>𝐀𝐝𝐦𝐢𝐧 𝐍𝐨𝐭𝐢𝐜𝐞𝐬</h2>
                         </div>
-                        <hr className={styles.adminAdminNoticeTitleDivider} />
-                    </div>
-                    <div className={styles.adminAdminNoticeButtonContainer}>
                         <Button
                             variant="contained"
                             className={styles.adminAdminNoticeRegisterButton}
@@ -158,6 +155,8 @@ const AdminAdminNotice = () => {
                         >
                             관리자공지 등록
                         </Button>
+                    </div>
+                    <hr className={styles.adminAdminNoticeTitleDivider} />
                     </div>
 
                     {/* 테이블 가로 길이에 맞춘 달력 */}
@@ -263,7 +262,6 @@ const AdminAdminNotice = () => {
                     </Box>
                 </div>
             </div>
-        </div>
     );
 };
 

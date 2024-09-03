@@ -30,3 +30,9 @@
   display: flex;
   gap: 10px;
 }
+
+.deletedCommentTitle {
+  margin: 15px;
+  white-space: nowrap;
+  font-size: 40px;
+}

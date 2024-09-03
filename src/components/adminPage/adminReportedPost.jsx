@@ -1,9 +1,10 @@
 //adminReportedPost.jsx
 
 import React, { useState } from 'react';
-import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead } from '@mui/material';
+import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Divider } from '@mui/material';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminReportedPost.module.css';
+import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 
 // PaginationTableReportedPost 컴포넌트: ReportedPost 테이블을 렌더링하는 컴포넌트
 const PaginationTableReportedPost = ({ rows, page, rowsPerPage }) => {
@@ -127,18 +128,24 @@ const AdminReportedPost = () => {
     return (
         <div className={styles.reportedPostContainer}>
             <div className={styles.reportedPostSidebar}>
-                <NestedList/>
+                <NestedList />
             </div>
             <div className={styles.reportedPostContent}>
-            <div className={styles.reportedPostMainContainer}>
+                <div className={styles.reportedPostMainContainer}>
                     <div>
-                    {/* 페이지 상단: 제목 */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2 className={styles.reportedPostTitle}>신고된 게시글</h2>
+                        {/* 페이지 상단: 제목 */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <WarningTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+                                <h2 className={styles.reportedPostTitle}>𝐑𝐞𝐩𝐨𝐫𝐭𝐞𝐝 𝐏𝐨𝐬𝐭</h2>
+                            </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                             </div>
-                            </div>
-                            
+                        </div>
+                        <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} /> 
+                    </div>
+                </div>
+             
                             {/* 신고된 게시글 목록을 테이블로 렌더링 */}
                             <PaginationTableReportedPost rows={filteredReportedPost} page={page} rowsPerPage={rowsPerPage} />
                             
@@ -255,8 +262,6 @@ const AdminReportedPost = () => {
                             </Box>
                         </div>
                     </div>
-                </div>
-            </div>
     );
 };
 

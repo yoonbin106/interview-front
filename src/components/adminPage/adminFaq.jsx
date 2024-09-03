@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, Select, MenuItem, Box, Button, InputLabel } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, Select, MenuItem, Box, Button, InputLabel, ListItemIcon } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from '@/styles/adminPage/adminFaq.module.css';
+import QuestionAnswerTwoToneIcon from '@mui/icons-material/QuestionAnswerTwoTone';
 
 const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
     const [faqs, setFaqs] = useState([]);
@@ -50,16 +51,23 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
     return (
         <div className={styles.adminFaqContainer}>
             <Box mb={3} className={styles.adminFaqHeader}>
-                <Typography variant="h3" gutterBottom>
-                    자주 묻는 질문 (FAQ)
-                </Typography>
-                <Button variant="contained" 
-                        href="/adminPage/adminFaqRegisterPage"
-                        sx={{backgroundColor: '#5A8AF2'}}>
+                <Box display="flex" alignItems="center">
+                    <ListItemIcon>
+                    <QuestionAnswerTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2' }} />
+                    </ListItemIcon>
+                    <Typography variant="h3" gutterBottom className={styles.adminFaqTitle}>
+                    자주 묻는 질문(𝐅𝐀𝐐)
+                    </Typography>
+                </Box>
+                <Button 
+                    variant="contained" 
+                    href="/adminPage/adminFaqRegisterPage"
+                    className={styles.adminFaqButton}
+                >
                     새 FAQ 등록
                 </Button>
             </Box>
-
+    
             <Box mb={3} className={styles.adminFaqCategorySearch}>
                 <FormControl fullWidth variant="outlined">
                     <Select
@@ -71,7 +79,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                             ? undefined
                             : () => <Typography color="textSecondary">카테고리를 선택하여 검색해보세요.</Typography>
                         }
-                        >
+                    >
                         <MenuItem value="">
                             <em>전체</em>
                         </MenuItem>
@@ -88,7 +96,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                     </Select>
                 </FormControl>
             </Box>
-
+    
             {filteredFaqs
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(faq => (
@@ -117,7 +125,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                     </Accordion>
                 ))
             }
-
+    
             <Box className={styles.adminFaqPaginationControl}>
                 <Button
                     variant="outlined"
@@ -165,5 +173,4 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         </div>
     );
 };
-
-export default AdminFaq;
+    export default AdminFaq;

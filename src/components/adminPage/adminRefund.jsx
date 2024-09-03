@@ -1,5 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Accordion, AccordionSummary, AccordionDetails, Typography, TextField, Button, Select, MenuItem, Card, CardContent, FormControl, InputLabel } from '@mui/material';
+import {
+    Box,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+    TextField,
+    Button,
+    Select,
+    MenuItem,
+    Card,
+    CardContent,
+    Divider
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -7,6 +27,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import styles from '@/styles/adminPage/adminRefund.module.css';
 import { getAllRefundInfo } from 'api/user';
+import PaymentTwoToneIcon from '@mui/icons-material/PaymentTwoTone';
+
 
 export default function AdminRefund() {
     const [searchResults, setSearchResults] = useState([]);
@@ -14,7 +36,6 @@ export default function AdminRefund() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [refundStatus, setRefundStatus] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [expanded, setExpanded] = useState(false);
 
@@ -27,7 +48,7 @@ export default function AdminRefund() {
                     email: item.userId.email,
                     refundDate: dayjs(item.canceledAt).format('YYYY-MM-DD'),
                     amount: `₩${item.price.toLocaleString()}`,
-                    status: item.cancelStatus === "DONE" ? "처리" : "대기중",
+                    status: item.cancelStatus === "DONE" ? "처리완료" : "대기중",
                     admin: item.orderName,
                     reason: item.cancelReason || '사유 없음',
                 }));
@@ -42,21 +63,20 @@ export default function AdminRefund() {
     const handleSearch = () => {
         const query = searchQuery.toLowerCase();
         const filtered = searchResults.filter((item) => {
-            const matchesStatus = refundStatus ? item.status === refundStatus : true;
             const matchesDateRange = (!startDate || dayjs(item.refundDate).isAfter(dayjs(startDate).subtract(1, 'day'))) &&
                                       (!endDate || dayjs(item.refundDate).isBefore(dayjs(endDate).add(1, 'day')));
             const matchesSearchQuery = searchQuery === '' ||
                                         item.refundId.toLowerCase().includes(query) ||
                                         item.email.toLowerCase().includes(query);
 
-            return matchesStatus && matchesDateRange && matchesSearchQuery;
+            return matchesDateRange && matchesSearchQuery;
         }).sort((a, b) => dayjs(b.refundDate) - dayjs(a.refundDate));
 
         setSearchResults(filtered);
         setPage(0);
     };
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (newPage) => {
         setPage(newPage);
     };
 
@@ -73,25 +93,15 @@ export default function AdminRefund() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className={styles.adminRefundContainer}>
                 <div className={styles.adminRefundContent}>
-                    <h3 className={styles.adminRefundTitle}>환불 관리</h3>
+                    <Box display="flex" alignItems="center" mb={2}>
+                        <PaymentTwoToneIcon sx={{ fontSize: 60, color: '#4A90E2', marginRight: '8px' }} />
+                        <h3 className={styles.adminRefundTitle}>𝐑𝐞𝐟𝐮𝐧𝐝</h3>
+                    </Box>
+                    <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} />
+
                     <Card sx={{ width: '100%', textAlign: 'left' }}>
                         <CardContent>
                             <Box sx={{ mb: 4 }}>
-                                {/* 환불 상태 필터 */}
-                                <FormControl fullWidth sx={{ mb: 2 }}>
-                                    <InputLabel>환불 상태</InputLabel>
-                                    <Select
-                                        value={refundStatus}
-                                        onChange={(e) => setRefundStatus(e.target.value)}
-                                        label="환불 상태"
-                                    >
-                                        <MenuItem value="">전체</MenuItem>
-                                        <MenuItem value="대기">대기</MenuItem>
-                                        <MenuItem value="처리중">처리중</MenuItem>
-                                        <MenuItem value="완료">완료</MenuItem>
-                                    </Select>
-                                </FormControl>
-
                                 {/* 조회 날짜 선택 */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                                     <DatePicker
@@ -118,7 +128,7 @@ export default function AdminRefund() {
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         sx={{ mr: 2 }}
                                     />
-                                    <Button variant="contained" onClick={handleSearch} sx={{ height: '56px', backgroundColor: '#5A8AF2'}}>
+                                    <Button variant="contained" onClick={handleSearch} sx={{ height: '56px', backgroundColor: '#5A8AF2' }}>
                                         검색
                                     </Button>
                                 </Box>
@@ -145,7 +155,7 @@ export default function AdminRefund() {
                                     {searchResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                                         <TableRow key={row.refundId}>
                                             <TableCell>
-                                                {/* 아코디언: 클릭 시 추가 정보 및 메모 입력 가능 */}
+                                                {/* 아코디언: 클릭 시 추가 정보 표시 */}
                                                 <Accordion expanded={expanded === row.refundId} onChange={handleChange(row.refundId)}>
                                                     <AccordionSummary
                                                         expandIcon={<ExpandMoreIcon />}

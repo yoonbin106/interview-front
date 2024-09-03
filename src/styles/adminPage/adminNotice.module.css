@@ -23,7 +23,12 @@
     text-decoration: underline;
   }
   
-  
+  .noticeContainerFluid {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top: 25px;
+}
   
   /* 레이아웃 및 컨테이너 스타일 */
   .noticeContainer {
@@ -40,6 +45,11 @@
     margin: 10px 20px 10px 10px;
     min-width: 200px;
   }
+  .noticeColPadding {
+    padding-right: 15px;
+    padding-left: 15px;
+    min-width: 950px;
+}
   
   .noticeContent {
     background-color: white;

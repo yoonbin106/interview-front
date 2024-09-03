@@ -1,14 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Card, CardContent, Modal } from '@mui/material';
+import {
+    Box,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Button,
+    Select,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    FormControl,
+    FormLabel,
+    TextField,
+    Card,
+    CardContent,
+    Modal,
+    Divider
+} from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import styles from '@/styles/adminPage/adminPayment.module.css';
-import { cancelPayment, getAllPayInfo } from 'api/user';
 import CloseIcon from '@mui/icons-material/Close';
+import PaymentTwoToneIcon from '@mui/icons-material/PaymentTwoTone';
+import { cancelPayment, getAllPayInfo } from 'api/user';
 import { useRouter } from 'next/router';
+import styles from '@/styles/adminPage/adminPayment.module.css';
 
 const theme = createTheme({
     palette: {
@@ -19,13 +42,13 @@ const theme = createTheme({
 });
 
 export default function AdminPayment() {
-    const [searchResults, setSearchResults] = useState([]); 
-    const [page, setPage] = useState(0); 
-    const [rowsPerPage, setRowsPerPage] = useState(5); 
-    const [startDate, setStartDate] = useState(null); 
-    const [endDate, setEndDate] = useState(null); 
-    const [planType, setPlanType] = useState('베이직'); 
-    const [searchQuery, setSearchQuery] = useState(''); 
+    const [searchResults, setSearchResults] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [planType, setPlanType] = useState('베이직');
+    const [searchQuery, setSearchQuery] = useState('');
     const [open, setOpen] = useState(false);
     const [refundReason, setRefundReason] = useState('');
     const [selectedPaymentKey, setSelectedPaymentKey] = useState(null);
@@ -35,7 +58,6 @@ export default function AdminPayment() {
         async function fetchPaymentData() {
             try {
                 const paymentList = await getAllPayInfo();
-                console.log(paymentList); // 데이터 구조 확인용
 
                 const processedData = paymentList.data.map(item => ({
                     paymentId: item.orderId,
@@ -59,7 +81,7 @@ export default function AdminPayment() {
     }, []);
 
     const handleSearch = () => {
-        const query = searchQuery.toLowerCase(); 
+        const query = searchQuery.toLowerCase();
 
         const filtered = searchResults.filter((item) => {
             const matchesPlanType = planType ? item.planType === planType : true;
@@ -72,17 +94,17 @@ export default function AdminPayment() {
             return matchesPlanType && matchesDateRange && matchesSearchQuery;
         }).sort((a, b) => dayjs(b.paymentDate) - dayjs(a.paymentDate));
 
-        setSearchResults(filtered); 
-        setPage(0); 
+        setSearchResults(filtered);
+        setPage(0);
     };
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (newPage) => {
         setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); 
+        setPage(0);
     };
 
     const handleOpenModal = (paymentKey) => {
@@ -100,21 +122,16 @@ export default function AdminPayment() {
             alert('환불 사유를 입력해주세요.');
             return;
         }
-    
-        console.log('Payment Key:', selectedPaymentKey);
-        console.log('Refund Reason:', refundReason);
+
         try {
             const refundResponse = await cancelPayment(selectedPaymentKey, refundReason);
-    
-            // HTTP 상태 코드가 200일 경우
+
             if (refundResponse.status === 200) {
                 router.push('/adminPage/adminRefundPage');
             } else {
-                // 상태 코드가 200이 아닌 경우 오류 메시지 출력
                 alert(`오류 발생: ${refundResponse.data}`);
             }
         } catch (error) {
-            // 요청 중 예외가 발생한 경우 오류 메시지 출력
             alert(`오류 발생: ${error.response?.data || error.message}`);
         }
         handleCloseModal();
@@ -124,7 +141,11 @@ export default function AdminPayment() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className={styles.adminPaymentContainer}>
                 <div className={styles.adminPaymentContent}>
-                    <h3 className={styles.adminPaymentTitle}>결제내역 관리</h3>
+                    <Box display="flex" alignItems="center" mb={2}>
+                        <PaymentTwoToneIcon sx={{ fontSize: 60, color: '#4A90E2', marginRight: '8px' }} />
+                        <h3 className={styles.adminPaymentTitle}>𝐏𝐚𝐲𝐦𝐞𝐧𝐭</h3>
+                    </Box>
+                    <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} />
                     <ThemeProvider theme={theme}>
                         <Card className={styles.adminPaymentCard} sx={{ mt: 5 }}>
                             <CardContent>
@@ -145,23 +166,21 @@ export default function AdminPayment() {
                                         </Box>
                                     </FormControl>
 
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                                            <DatePicker
-                                                label="조회 시작 날짜"
-                                                value={startDate}
-                                                onChange={(newValue) => setStartDate(newValue)}
-                                                renderInput={(params) => <TextField {...params} sx={{ mx: 1 }} />}
-                                            />
-                                            <Box sx={{ mx: 2 }}> ~ </Box>
-                                            <DatePicker
-                                                label="조회 종료 날짜"
-                                                value={endDate}
-                                                onChange={(newValue) => setEndDate(newValue)}
-                                                renderInput={(params) => <TextField {...params} sx={{ mx: 1 }} />}
-                                            />
-                                        </Box>
-                                    </LocalizationProvider>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                                        <DatePicker
+                                            label="조회 시작 날짜"
+                                            value={startDate}
+                                            onChange={setStartDate}
+                                            renderInput={(params) => <TextField {...params} sx={{ mx: 1 }} />}
+                                        />
+                                        <Box sx={{ mx: 2 }}> ~ </Box>
+                                        <DatePicker
+                                            label="조회 종료 날짜"
+                                            value={endDate}
+                                            onChange={setEndDate}
+                                            renderInput={(params) => <TextField {...params} sx={{ mx: 1 }} />}
+                                        />
+                                    </Box>
 
                                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                                         <TextField
@@ -171,7 +190,7 @@ export default function AdminPayment() {
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             sx={{ mr: 2 }}
                                         />
-                                        <Button variant="contained" onClick={handleSearch} sx={{ height: '56px' , backgroundColor: '#5A8AF2'}}>
+                                        <Button variant="contained" onClick={handleSearch} sx={{ height: '56px', backgroundColor: '#5A8AF2' }}>
                                             검색
                                         </Button>
                                     </Box>
@@ -180,7 +199,7 @@ export default function AdminPayment() {
                         </Card>
                     </ThemeProvider>
 
-                    <Box sx={{ width: '100%', mt: 4}}>
+                    <Box sx={{ width: '100%', mt: 4 }}>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -194,26 +213,26 @@ export default function AdminPayment() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {searchResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                                    <TableRow key={row.paymentId}>
-                                        <TableCell>{row.paymentId}</TableCell>
-                                        <TableCell>{row.email}</TableCell>
-                                        <TableCell>{row.paymentDate}</TableCell>
-                                        <TableCell>{row.amount}</TableCell>
-                                        <TableCell>{row.planType}</TableCell>
-                                        <TableCell>
-                                            <Button 
-                                                variant="outlined" 
-                                                color="secondary"
-                                                disabled={!row.isRefundable}  
-                                                onClick={() => handleOpenModal(row.paymentKey)} 
-                                            >
-                                                {row.isRefundable ? '환불하기' : '환불 완료'}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
+                                    {searchResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                                        <TableRow key={row.paymentId}>
+                                            <TableCell>{row.paymentId}</TableCell>
+                                            <TableCell>{row.email}</TableCell>
+                                            <TableCell>{row.paymentDate}</TableCell>
+                                            <TableCell>{row.amount}</TableCell>
+                                            <TableCell>{row.planType}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    disabled={!row.isRefundable}
+                                                    onClick={() => handleOpenModal(row.paymentKey)}
+                                                >
+                                                    {row.isRefundable ? '환불하기' : '환불 완료'}
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
                             </Table>
                         </TableContainer>
 
@@ -260,6 +279,7 @@ export default function AdminPayment() {
                                 <MenuItem value={10}>10</MenuItem>
                                 <MenuItem value={25}>25</MenuItem>
                             </Select>
+
                             {/* 환불 모달 */}
                             <Modal
                                 open={open}
@@ -283,8 +303,8 @@ export default function AdminPayment() {
                                     p: 4,
                                     position: 'relative'
                                 }}>
-                                    <Button 
-                                        onClick={handleCloseModal} 
+                                    <Button
+                                        onClick={handleCloseModal}
                                         sx={{ position: 'absolute', top: 8, right: 8 }}
                                     >
                                         <CloseIcon />

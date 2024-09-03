@@ -11,7 +11,6 @@ export default function AdminReportedCommentPage() {
                 <NestedList />
             </div>
             <div className={styles.content}>
-            <h2 className={styles.title}>신고된 댓글 목록</h2>
                 <ReportedComment />
                 
             </div>

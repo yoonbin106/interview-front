@@ -73,3 +73,14 @@
 .adminFaqDeleteButton:hover {
     background-color: #ff1744;
 }
+
+.adminFaqTitle {
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 40px;
+    font-weight:bold;
+}
+
+.adminFaqButton{
+    background-color: #5A8AF2;
+}

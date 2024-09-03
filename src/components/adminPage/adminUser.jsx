@@ -1,11 +1,12 @@
 //adminUser.jsx
 
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, MenuItem, Select, FormControl, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography } from '@mui/material';
+import { Box, TextField, Button, MenuItem, Select, FormControl, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Divider } from '@mui/material';
 import { useRouter } from 'next/router';
 import styles from '@/styles/adminPage/adminUser.module.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import GroupTwoToneIcon from '@mui/icons-material/GroupTwoTone';
 
 const AdminUser = ({ allData }) => {
     const [searchCondition, setSearchCondition] = useState(''); // 검색 조건 상태 관리
@@ -70,14 +71,23 @@ const AdminUser = ({ allData }) => {
 
     const totalPages = Math.ceil(sortedResults.length / rowsPerPage); // 전체 페이지 수 계산
 
+   
+    
     return (
         <Box className={styles.adminUserContainer}>
-            <Typography variant="h3" gutterBottom>
-                회원정보 검색
-            </Typography>
+            <Box display="flex" alignItems="center">
+                <GroupTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+                <Typography variant="h3" gutterBottom>
+                    𝐒𝐞𝐚𝐫𝐜𝐡 𝐔𝐬𝐞𝐫
+                </Typography>
+            </Box>
+            <div>
+            <Divider sx={{ my: 2, borderBottomWidth: 3,  borderColor: '#999' }} /> 
+            </div>
+    
             {/* 검색 폼 */}
             <Box component="form" onSubmit={handleSubmit}>
-                <FormControl fullWidth sx={{ mb: 2, minWidth: 120 }}>
+                <FormControl fullWidth sx={{ mb: 2, minWidth: 120, marginTop:3,}}>
                     <InputLabel>검색 조건을 선택해주세요.</InputLabel>
                     <Select
                         label="검색 조건"
@@ -106,7 +116,7 @@ const AdminUser = ({ allData }) => {
                     </Button>
                 </Box>
             </Box>
-
+    
             {/* 회원정보 테이블 */}
             <TableContainer component={Paper} className={styles.adminUserTableContainer}>
                 <Table className={styles.adminUserTable}>
@@ -142,7 +152,7 @@ const AdminUser = ({ allData }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
+    
             {/* 커스텀 페이지네이션 */}
             <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
                 <IconButton onClick={handlePreviousPage} disabled={page === 0}>
@@ -156,5 +166,4 @@ const AdminUser = ({ allData }) => {
         </Box>
     );
 };
-
-export default AdminUser;
+    export default AdminUser;

@@ -2,6 +2,13 @@
   margin-top: 20px;
 }
 
+.reportedPostTitleDivider {
+  border: 0;
+  height: 2px;
+  background-color: #ccc;
+  margin-bottom: 20px;
+}
+
 .reportedPostHeaderCell {
   font-weight: bold;
   background-color: #5A8AF2;

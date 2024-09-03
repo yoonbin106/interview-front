@@ -1,11 +1,9 @@
-//adminReportedFinComment.jsx
-
 import * as React from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem, Divider } from '@mui/material';
+import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import styles from '@/styles/adminPage/adminReportedFinComment.module.css';
 
 export default function AdminReportedFinComment() {
-  // 더미 데이터 정의: 신고된 댓글 목록
   const reportedFinComments = [
     { id: 3021, category: '광고', content: '단 6개월만에 취업성공? ICT2기 절찬리에 모집중@@-->링크클릭', author: 'user789', date: '2023-08-10' },
     { id: 3022, category: '스팸', content: '무의미한 반복 텍스트...', author: 'user654', date: '2023-08-09' },
@@ -30,7 +28,6 @@ export default function AdminReportedFinComment() {
     { id: 3041, category: '광고', content: '저렴한 가격에 최고의 품질!', author: 'user666', date: '2023-07-21' },
   ];
 
-  // 테이블에 표시할 데이터 변환: 각 댓글 데이터를 테이블에 맞게 변환
   const rows = reportedFinComments.map(comment => ({
     id: comment.id,
     category: comment.category,
@@ -39,48 +36,47 @@ export default function AdminReportedFinComment() {
     date: comment.date,
   }));
 
-  // 상태 변수들
-  const [page, setPage] = React.useState(0); // 현재 페이지 번호를 관리하는 상태
-  const [rowsPerPage, setRowsPerPage] = React.useState(10); // 페이지당 표시할 행 수를 관리하는 상태
-  const [openRowIndex, setOpenRowIndex] = React.useState(null); // 현재 확장된 행을 관리하는 상태
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [openRowIndex, setOpenRowIndex] = React.useState(null);
 
-  const totalPages = Math.ceil(rows.length / rowsPerPage); // 전체 페이지 수 계산
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
 
-  // 페이지 변경 핸들러
   const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
-  // 페이지당 표시할 행 수 변경 핸들러
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // 페이지를 첫 페이지로 초기화
+    setPage(0);
   };
 
-  // 특정 행을 확장/축소하는 핸들러
   const toggleRow = (index) => {
     setOpenRowIndex(openRowIndex === index ? null : index);
   };
 
-  // 댓글 삭제 버튼 클릭 핸들러
   const handleDelete = () => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
       alert("댓글 삭제가 완료되었습니다.");
     }
   };
 
-  // 댓글 숨김 버튼 클릭 핸들러
   const handleHide = () => {
     if (window.confirm("댓글을 숨기시겠습니까?")) {
       alert("댓글 숨김이 완료되었습니다.");
     }
   };
 
-  // 빈 행 계산 (페이지가 변경될 때 테이블 하단을 채우기 위함)
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <div>
+      {/* 페이지 상단: 제목 */}
+      <Box display="flex" alignItems="center" mb={2}>
+        <WarningTwoToneIcon sx={{ fontSize: 60, color: '#000', marginRight: '8px' }} />
+        <h2 className={styles.reportedFinCommentTitle}>𝐑𝐞𝐬𝐨𝐥𝐯𝐞𝐝 𝐂𝐨𝐦𝐦𝐞𝐧𝐭𝐬</h2>
+      </Box>
+      <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} /> 
       <div>
         {/* 신고된 댓글을 표시하는 테이블 */}
         <TableContainer component={Paper} className={styles.reportedFinCommentTableContainer}>
@@ -94,13 +90,11 @@ export default function AdminReportedFinComment() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* 현재 페이지에 해당하는 댓글 데이터를 테이블에 표시 */}
               {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map((row, index) => (
                 <React.Fragment key={index}>
                   <TableRow>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="center">
-                      {/* 댓글 내용을 클릭하면 해당 행을 확장/축소 */}
                       <span onClick={() => toggleRow(index)} className={styles.reportedFinCommentLink}>
                         {row.title}
                       </span>
@@ -110,7 +104,6 @@ export default function AdminReportedFinComment() {
                   </TableRow>
                   <TableRow>
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                      {/* Collapse 컴포넌트로 해당 행의 추가 정보를 표시 (신고 카테고리, 신고 사유 등) */}
                       <Collapse in={openRowIndex === index} timeout="auto" unmountOnExit>
                         <Box margin={1}>
                           <p><strong>신고 카테고리:</strong> {row.category}</p>
@@ -129,7 +122,6 @@ export default function AdminReportedFinComment() {
                   </TableRow>
                 </React.Fragment>
               ))}
-              {/* 빈 행을 채워 테이블의 일관성을 유지 */}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 30 * emptyRows }}>
                   <TableCell colSpan={4} />
@@ -176,7 +168,6 @@ export default function AdminReportedFinComment() {
           >
             마지막
           </Button>
-          {/* 페이지당 표시할 행 수 선택 */}
           <Select
             value={rowsPerPage}
             onChange={handleRowsPerPageChange}

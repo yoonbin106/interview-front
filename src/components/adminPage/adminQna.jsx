@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead } from '@mui/material';
+import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Divider } from '@mui/material';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminQna.module.css';
 import axios from 'axios';
 import {useRouter} from 'next/router';
+import QuestionAnswerTwoToneIcon from '@mui/icons-material/QuestionAnswerTwoTone';
 
 // PaginationTableQna 컴포넌트: QnA 테이블을 렌더링하는 컴포넌트
 const PaginationTableQna = ({ rows, page, rowsPerPage, getStatusText }) => {
@@ -45,14 +46,17 @@ const PaginationTableQna = ({ rows, page, rowsPerPage, getStatusText }) => {
               </TableCell>
               <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
               <TableCell align="center">
-                {new Date(row.qnaCreatedTime).toLocaleString('ko-KR',{
-                    year: 'numeric',
-                    month:'2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                })}
-              </TableCell>
+    {new Date(row.qnaCreatedTime).toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    })}
+    <br />
+    {new Date(row.qnaCreatedTime).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+    })}
+</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (
@@ -161,158 +165,163 @@ const AdminQna = () => {
 
   return (
     <div className={styles.adminQnaContainer}>
-      <div className={styles.adminQnaSidebar}>
-        <NestedList /> {/* 사이드 메뉴 컴포넌트 */}
-      </div>
-      <div className={styles.adminQnaContent}>
-        <div className={styles.adminQnaMainContainer}>
-          <div>
-            {/* 페이지 상단: 제목 */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 className={styles.adminQnaTitle}>고객센터 문의사항</h2>
-            </div>
-                
-            {/* 필터링된 QnA를 테이블로 렌더링 */}
-            <PaginationTableQna rows={filteredQna} 
-                                page={page} 
-                                rowsPerPage={rowsPerPage}
-                                getStatusText={getStatusText} />
-                
-            {/* 검색 필터링 UI */}
-            <Grid container spacing={1} alignItems="center" className={styles.adminQnaFilterContainer}>
-  {/* 상태 필터 */}
-  <Grid item xs={4} className={styles.adminQnaDropdown}>
-    <FormControl fullWidth variant="outlined">
-      <InputLabel id="status-filter-label">상태</InputLabel>
-      <Select
-        labelId="status-filter-label"
-        id="status-filter"
-        value={statusFilter}
-        onChange={handleStatusChange}
-        label="상태"
-      >
-        <MenuItem value="">전체</MenuItem>
-        <MenuItem value="N">대기</MenuItem>
-        <MenuItem value="T">진행중</MenuItem>
-        <MenuItem value="P">완료</MenuItem>
-      </Select>
-    </FormControl>
-  </Grid>
-
-  {/* 질문 카테고리 필터 */}
-  <Grid item xs={4} className={styles.adminQnaDropdown}>
-    <FormControl fullWidth variant="outlined">
-      <InputLabel id="category-filter-label">질문 카테고리</InputLabel>
-      <Select
-        labelId="category-filter-label"
-        id="category-filter"
-        value={categoryFilter}
-        onChange={handleCategoryChange}
-        label="질문 카테고리"
-      >
-        <MenuItem value="">전체</MenuItem>
-        <MenuItem value="계정 및 로그인">계정 및 로그인</MenuItem>
-        <MenuItem value="AI면접 준비">AI면접 준비</MenuItem>
-        <MenuItem value="기술 문제 해결">기술 문제 해결</MenuItem>
-        <MenuItem value="결제 및 환불">결제 및 환불</MenuItem>
-        <MenuItem value="기타">기타</MenuItem>
-      </Select>
-    </FormControl>
-  </Grid>
-
-  {/* 검색 기준 선택 */}
-  <Grid item xs={4} className={styles.adminQnaDropdown}>
-    <FormControl fullWidth variant="outlined">
-      <InputLabel id="search-category-label">검색 기준</InputLabel>
-      <Select
-        labelId="search-category-label"
-        id="search-category"
-        value={searchCategory}
-        onChange={handleSearchCategoryChange}
-        label="검색 기준"
-      >
-        <MenuItem value="">전체</MenuItem>
-        <MenuItem value="title">글 제목</MenuItem>
-        <MenuItem value="author">작성자</MenuItem>
-      </Select>
-    </FormControl>
-  </Grid>
-
-  {/* 검색어 입력 */}
-  <Grid item xs={9} className={styles.adminQnaSearchInput}>
-    <TextField
-      fullWidth
-      variant="outlined"
-      placeholder="검색어를 입력하세요"
-      value={searchTerm}
-      onChange={handleSearchChange}
-    />
-  </Grid>
-
-  {/* 검색 버튼 */}
-  <Grid item xs={3}>
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={handleSearch}
-      className={styles.adminQnaSearchButton}
-    >
-      검색
-    </Button>
-  </Grid>
-</Grid>
-
-
-            {/* 페이지네이션 컨트롤 */}
-            <Box className={styles.adminQnaPaginationControl}>
-              <Button
-                variant="outlined"
-                onClick={() => handleChangePage(0)}
-                disabled={page === 0}
-                className={styles.adminQnaPaginationButton}
-              >
-                처음
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => handleChangePage(page - 1)}
-                disabled={page === 0}
-                className={styles.adminQnaPaginationButton}
-              >
-                이전
-              </Button>
-              <span className={styles.adminQnaPageIndicator}>{page + 1} / {totalPages}</span>
-              <Button
-                variant="outlined"
-                onClick={() => handleChangePage(page + 1)}
-                disabled={page >= totalPages - 1}
-                className={styles.adminQnaPaginationButton}
-              >
-                다음
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => handleChangePage(totalPages - 1)}
-                disabled={page >= totalPages - 1}
-                className={styles.adminQnaPaginationButton}
-              >
-                마지막
-              </Button>
-              <Select
-                value={rowsPerPage}
-                onChange={handleRowsPerPageChange}
-                className={styles.adminQnaRowsPerPageSelect}
-              >
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={25}>25</MenuItem>
-              </Select>
-            </Box>
-          </div>
+        <div className={styles.adminQnaSidebar}>
+            <NestedList /> {/* 사이드 메뉴 컴포넌트 */}
         </div>
-      </div>
-    </div>
-  );
-};
+        <div className={styles.adminQnaContent}>
+            <div className={styles.adminQnaMainContainer}>
+                <div>
+                    {/* 페이지 상단: 제목 */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <QuestionAnswerTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+                            <h2 className={styles.adminQnaTitle}>𝐂𝐮𝐬𝐭𝐨𝐦𝐞𝐫 𝐒𝐞𝐫𝐯𝐢𝐜𝐞 𝐈𝐧𝐪𝐮𝐢𝐫𝐢𝐞𝐬</h2>
+                        </div>
+                    </div>
+                    <Divider sx={{ my: 2, borderBottomWidth: 3,  borderColor: '#999' }} /> 
+                </div>
+            </div>
 
+                    {/* 필터링된 QnA를 테이블로 렌더링 */}
+                    <PaginationTableQna 
+                        rows={filteredQna} 
+                        page={page} 
+                        rowsPerPage={rowsPerPage}
+                        getStatusText={getStatusText} 
+                    />
+
+                    {/* 검색 필터링 UI */}
+                    <Grid container spacing={1} alignItems="center" className={styles.adminQnaFilterContainer}>
+                        {/* 상태 필터 */}
+                        <Grid item xs={4} className={styles.adminQnaDropdown}>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel id="status-filter-label">상태</InputLabel>
+                                <Select
+                                    labelId="status-filter-label"
+                                    id="status-filter"
+                                    value={statusFilter}
+                                    onChange={handleStatusChange}
+                                    label="상태"
+                                >
+                                    <MenuItem value="">전체</MenuItem>
+                                    <MenuItem value="N">대기</MenuItem>
+                                    <MenuItem value="T">진행중</MenuItem>
+                                    <MenuItem value="P">완료</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        {/* 질문 카테고리 필터 */}
+                        <Grid item xs={4} className={styles.adminQnaDropdown}>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel id="category-filter-label">질문 카테고리</InputLabel>
+                                <Select
+                                    labelId="category-filter-label"
+                                    id="category-filter"
+                                    value={categoryFilter}
+                                    onChange={handleCategoryChange}
+                                    label="질문 카테고리"
+                                >
+                                    <MenuItem value="">전체</MenuItem>
+                                    <MenuItem value="계정 및 로그인">계정 및 로그인</MenuItem>
+                                    <MenuItem value="AI면접 준비">AI면접 준비</MenuItem>
+                                    <MenuItem value="기술 문제 해결">기술 문제 해결</MenuItem>
+                                    <MenuItem value="결제 및 환불">결제 및 환불</MenuItem>
+                                    <MenuItem value="기타">기타</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        {/* 검색 기준 선택 */}
+                        <Grid item xs={4} className={styles.adminQnaDropdown}>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel id="search-category-label">검색 기준</InputLabel>
+                                <Select
+                                    labelId="search-category-label"
+                                    id="search-category"
+                                    value={searchCategory}
+                                    onChange={handleSearchCategoryChange}
+                                    label="검색 기준"
+                                >
+                                    <MenuItem value="">전체</MenuItem>
+                                    <MenuItem value="title">글 제목</MenuItem>
+                                    <MenuItem value="author">작성자</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        {/* 검색어 입력 */}
+                        <Grid item xs={9} className={styles.adminQnaSearchInput}>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                placeholder="검색어를 입력하세요"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                        </Grid>
+
+                        {/* 검색 버튼 */}
+                        <Grid item xs={3}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSearch}
+                                className={styles.adminQnaSearchButton}
+                            >
+                                검색
+                            </Button>
+                        </Grid>
+                    </Grid>
+
+                    {/* 페이지네이션 컨트롤 */}
+                    <Box className={styles.adminQnaPaginationControl}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(0)}
+                            disabled={page === 0}
+                            className={styles.adminQnaPaginationButton}
+                        >
+                            처음
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(page - 1)}
+                            disabled={page === 0}
+                            className={styles.adminQnaPaginationButton}
+                        >
+                            이전
+                        </Button>
+                        <span className={styles.adminQnaPageIndicator}>{page + 1} / {totalPages}</span>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(page + 1)}
+                            disabled={page >= totalPages - 1}
+                            className={styles.adminQnaPaginationButton}
+                        >
+                            다음
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleChangePage(totalPages - 1)}
+                            disabled={page >= totalPages - 1}
+                            className={styles.adminQnaPaginationButton}
+                        >
+                            마지막
+                        </Button>
+                        <Select
+                            value={rowsPerPage}
+                            onChange={handleRowsPerPageChange}
+                            className={styles.adminQnaRowsPerPageSelect}
+                        >
+                            <MenuItem value={5}>5</MenuItem>
+                            <MenuItem value={10}>10</MenuItem>
+                            <MenuItem value={25}>25</MenuItem>
+                        </Select>
+                    </Box>
+                </div>
+            </div>
+
+);
+};
 export default AdminQna;

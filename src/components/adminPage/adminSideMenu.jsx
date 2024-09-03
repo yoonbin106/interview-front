@@ -17,6 +17,7 @@ import CampaignSharpIcon from '@mui/icons-material/CampaignSharp';
 import WarningSharpIcon from '@mui/icons-material/WarningSharp';
 import HomeIcon from '@mui/icons-material/Home';
 import styles from '@/styles/adminPage/adminSideMenu.module.css'; // CSS 모듈 임포트
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function NestedList() {
   const router = useRouter(); // Next.js의 페이지 이동을 위한 useRouter 훅
@@ -177,9 +178,9 @@ export default function NestedList() {
       {/* 게시글 관리 섹션 */}
       <ListItemButton onClick={() => handleClick('posts')} className={styles.cursorPointer}>
         <ListItemIcon>
-          <ArticleIcon /> {/* 게시글 관리 아이콘 */}
+          <DeleteIcon /> {/* 게시글 관리 아이콘 */}
         </ListItemIcon>
-        <ListItemText primary="게시글관리" />
+        <ListItemText primary="삭제관리" />
         {openItems.posts ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.posts} timeout="auto" unmountOnExit>

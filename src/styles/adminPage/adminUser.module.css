@@ -8,6 +8,13 @@
     background-color: white;
 }
 
+.adminUserTitleDivider {
+    border: 0;
+    height: 2px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+  }
+
 /* 검색 버튼 스타일 */
 .adminUserSearchButton {
     background-color: #5A8AF2;

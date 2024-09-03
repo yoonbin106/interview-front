@@ -11,7 +11,6 @@ export default function AdminReportedFinCommentPage() {
                 <NestedList />
             </div>
             <div className={styles.content}>
-            <h2 className={styles.title}>신고처리 완료된 댓글 목록</h2>
                 <ReportedFinComment />
                 
             </div>

@@ -1,8 +1,8 @@
-//adminDeletedComment.jsx
-
 import * as React from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem, Typography, Divider } from '@mui/material';
+import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
 import styles from '@/styles/adminPage/adminDeletedComment.module.css';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 
 export default function AdminDeletedComment() {
   // 더미 데이터 정의: 삭제된 댓글들의 목록
@@ -30,7 +30,6 @@ export default function AdminDeletedComment() {
     { id: 3041, category: '광고', content: '저렴한 가격에 최고의 품질!', author: 'user666', date: '2023-07-21' },
   ];
 
-  // 테이블에 표시할 데이터 변환
   const rows = deletedComments.map(comment => ({
     id: comment.id,
     category: comment.category,
@@ -39,42 +38,43 @@ export default function AdminDeletedComment() {
     date: comment.date,
   }));
 
-  const [page, setPage] = React.useState(0); // 현재 페이지 상태
-  const [rowsPerPage, setRowsPerPage] = React.useState(10); // 페이지당 표시할 행 수 상태
-  const [openRowIndex, setOpenRowIndex] = React.useState(null); // 열림 상태인 행의 인덱스 관리
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [openRowIndex, setOpenRowIndex] = React.useState(null);
 
-  const totalPages = Math.ceil(rows.length / rowsPerPage); // 전체 페이지 수 계산
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
 
-  // 페이지 변경 핸들러
   const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
-  // 페이지당 행 수 변경 핸들러
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // 페이지를 첫 페이지로 초기화
+    setPage(0);
   };
 
-  // 행 열림/닫힘 토글 핸들러
   const toggleRow = (index) => {
     setOpenRowIndex(openRowIndex === index ? null : index);
   };
 
-  // 댓글 삭제 핸들러
   const handleDelete = () => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
       alert("댓글 삭제가 완료되었습니다.");
     }
   };
 
-  // 현재 페이지에서 비어있는 행의 수 계산
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <div>
       <div>
-        {/* 테이블 컨테이너: 삭제된 댓글 목록을 테이블로 렌더링 */}
+        <Box display="flex" alignItems="center" mb={2}>
+          <DeleteTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+          <h2 className={styles.deletedCommentTitle}>𝐃𝐞𝐥𝐞𝐭𝐞𝐝 𝐂𝐨𝐦𝐦𝐞𝐧𝐭</h2>
+          
+         
+        </Box>
+        <Divider sx={{ borderBottomWidth: 2, backgroundColor: '#999', mb: 2 }} />
         <TableContainer component={Paper} className={styles.deletedCommentTableContainer}>
           <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
             <TableHead>
@@ -102,13 +102,12 @@ export default function AdminDeletedComment() {
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
                       <Collapse in={openRowIndex === index} timeout="auto" unmountOnExit>
                         <Box margin={1}>
-                          <br></br>
+                          <br />
                           <p><strong>게시글:</strong>ㅇㅇ게시글</p>
                           <p><strong>댓글 등록 날짜:</strong> 2024-08-20</p>
-                          <br></br>
+                          <br />
                           <div className={styles.deletedCommentTableButtonContainer}>
                             <Button variant="contained" color="error" onClick={handleDelete}>댓글 영구삭제</Button>
-                
                           </div>
                         </Box>
                       </Collapse>
@@ -127,7 +126,6 @@ export default function AdminDeletedComment() {
       </div>
 
       <div>
-        {/* 페이지네이션 컨트롤 */}
         <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Button
             variant="outlined"

@@ -17,6 +17,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 CSS를 가져옵니다.
 import styles from '@/styles/adminPage/adminNotice.module.css';
 import axios from 'axios';
+import CampaignTwoToneIcon from '@mui/icons-material/CampaignTwoTone';
 
 const PaginationTableAdminNotice = ({rows,page,rowsPerPage}) => {
     const router = useRouter();
@@ -144,13 +145,11 @@ const AdminNotice = () => {
             </div>
             <div className={styles.noticeContent}>
                 <div className={styles.noticeMainContainer}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div className={styles.adminNoticeTitleContainer}>
-                            <h2 className={styles.noticeTitle}>Notices</h2>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <CampaignTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+                            <h2 className={styles.noticeTitle}>𝐍𝐨𝐭𝐢𝐜𝐞𝐬</h2>
                         </div>
-                        <hr className={styles.adminNoticeTitleDivider} />
-                    </div>
-                    <div className={styles.adminNoticeButtonContainer}>
                         <Button
                             variant="contained"
                             className={styles.adminNoticeRegisterButton}
@@ -159,112 +158,112 @@ const AdminNotice = () => {
                             전체공지 등록
                         </Button>
                     </div>
-
-                    {/* 테이블 가로 길이에 맞춘 달력 */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-                        <Box sx={{ width: '100%' }}>
-                            <Calendar
-                                value={date}
-                                onChange={setDate}
-                                locale="en-US"
-                                className={styles.calendar}
-                            />
-                        </Box>
-                    </Box>
-                    <PaginationTableAdminNotice
-                        rows={filteredNotices}
-                        page={page}
-                        rowsPerPage={rowsPerPage}
-                    />
-                   
-                    <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.noticeGridContainer}>
-                        <Grid item xs={3}>
-                            <FormControl fullWidth variant="outlined">
-                                <InputLabel id="search-category-label">검색 기준</InputLabel>
-                                <Select
-                                    labelId="search-category-label"
-                                    id="search-category"
-                                    value={searchCategory}
-                                    onChange={handleCategoryChange}
-                                    label="검색 기준"
-                                >
-                                    <MenuItem value="">선택</MenuItem>
-                                    <MenuItem value="title">제목</MenuItem>
-                                    <MenuItem value="author">작성자</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={7}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                placeholder="검색어를 입력하세요"
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                                disabled={!searchCategory}
-                                className={styles.noticeGridItem}
-                            />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                onClick={handleSearch}
-                                className={styles.noticeSearchButton}
-                            >
-                                검색
-                            </Button>
-                        </Grid>
-                    </Grid>
-
-                    <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Button
-                            variant="outlined"
-                            onClick={() => handleChangePage(0)}
-                            disabled={page === 0}
-                            sx={{ marginRight: 2 }}
-                        >
-                            처음
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            onClick={() => handleChangePage(page - 1)}
-                            disabled={page === 0}
-                            sx={{ marginRight: 2 }}
-                        >
-                            이전
-                        </Button>
-                        <span>{page + 1} / {totalPages}</span>
-                        <Button
-                            variant="outlined"
-                            onClick={() => handleChangePage(page + 1)}
-                            disabled={page >= totalPages - 1}
-                            sx={{ marginLeft: 2 }}
-                        >
-                            다음
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            onClick={() => handleChangePage(totalPages - 1)}
-                            disabled={page >= totalPages - 1}
-                            sx={{ marginLeft: 2 }}
-                        >
-                            마지막
-                        </Button>
-                        <Select
-                            value={rowsPerPage}
-                            onChange={handleRowsPerPageChange}
-                            sx={{ marginLeft: 2 }}
-                        >
-                            <MenuItem value={5}>5</MenuItem>
-                            <MenuItem value={10}>10</MenuItem>
-                            <MenuItem value={25}>25</MenuItem>
-                        </Select>
-                    </Box>
+                    <hr className={styles.adminNoticeTitleDivider} />
                 </div>
+    
+                {/* 테이블 가로 길이에 맞춘 달력 */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                    <Box sx={{ width: '100%' }}>
+                        <Calendar
+                            value={date}
+                            onChange={setDate}
+                            locale="en-US"
+                            className={styles.calendar}
+                        />
+                    </Box>
+                </Box>
+                <PaginationTableAdminNotice
+                    rows={filteredNotices}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                />
+               
+                <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.noticeGridContainer}>
+                    <Grid item xs={3}>
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel id="search-category-label">검색 기준</InputLabel>
+                            <Select
+                                labelId="search-category-label"
+                                id="search-category"
+                                value={searchCategory}
+                                onChange={handleCategoryChange}
+                                label="검색 기준"
+                            >
+                                <MenuItem value="">선택</MenuItem>
+                                <MenuItem value="title">제목</MenuItem>
+                                <MenuItem value="author">작성자</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            placeholder="검색어를 입력하세요"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            disabled={!searchCategory}
+                            className={styles.noticeGridItem}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            onClick={handleSearch}
+                            className={styles.noticeSearchButton}
+                        >
+                            검색
+                        </Button>
+                    </Grid>
+                </Grid>
+    
+                <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => handleChangePage(0)}
+                        disabled={page === 0}
+                        sx={{ marginRight: 2 }}
+                    >
+                        처음
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={() => handleChangePage(page - 1)}
+                        disabled={page === 0}
+                        sx={{ marginRight: 2 }}
+                    >
+                        이전
+                    </Button>
+                    <span>{page + 1} / {totalPages}</span>
+                    <Button
+                        variant="outlined"
+                        onClick={() => handleChangePage(page + 1)}
+                        disabled={page >= totalPages - 1}
+                        sx={{ marginLeft: 2 }}
+                    >
+                        다음
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={() => handleChangePage(totalPages - 1)}
+                        disabled={page >= totalPages - 1}
+                        sx={{ marginLeft: 2 }}
+                    >
+                        마지막
+                    </Button>
+                    <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        sx={{ marginLeft: 2 }}
+                    >
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                    </Select>
+                </Box>
             </div>
         </div>
     );
 };
-
-export default AdminNotice;
+    export default AdminNotice;

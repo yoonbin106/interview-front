@@ -1,5 +1,3 @@
-//adminDeletedPost.jsx
-
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -12,47 +10,44 @@ import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { TextField, Grid, FormControl, InputLabel } from '@mui/material';
+import { TextField, Grid, FormControl, InputLabel, Divider } from '@mui/material';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import NestedList from '@/components/adminPage/adminSideMenu';
-import styles from '@/styles/adminPage/adminDeletedPost.module.css'; // CSS 파일을 import
+import styles from '@/styles/adminPage/adminDeletedPost.module.css';
 
 const AdminDeletedPost = () => {
     // 하드코딩된 삭제된 게시글 데이터 (임시 데이터)
     const deletedpost = [
         { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
         { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        // ... 나머지 삭제된 게시글 데이터
+        { id: 13, title: '새로운 기능 업데이트', author: 'admin456', date: '2024-06-30' },
+        { id: 12, title: '운영정책 변경 안내', author: 'admin789', date: '2024-06-25' },
+        { id: 11, title: '서버 이전 공지', author: 'admin222', date: '2024-06-20' },
+        { id: 10, title: '서비스 이용약관 변경', author: 'admin555', date: '2024-06-15' },
+        { id: 9, title: '데이터베이스 점검 안내', author: 'admin888', date: '2024-06-10' },
+        { id: 8, title: '긴급 서버 점검', author: 'admin333', date: '2024-06-05' },
+        { id: 7, title: '서비스 일시 중단 안내', author: 'admin999', date: '2024-05-30' },
+        { id: 6, title: '공휴일 휴무 안내', author: 'admin111', date: '2024-05-25' },
+        { id: 5, title: '유료 서비스 변경 안내', author: 'admin654', date: '2024-05-20' },
+        { id: 4, title: '시스템 유지보수 작업', author: 'admin333', date: '2024-05-15' },
+        { id: 3, title: '회원가입 정책 변경', author: 'admin222', date: '2024-05-10' },
+        { id: 2, title: '보안 강화 업데이트', author: 'admin999', date: '2024-05-05' },
+        { id: 1, title: '서버 업그레이드 안내', author: 'admin123', date: '2024-05-01' },
     ];
 
-    // 검색 상태를 관리하기 위한 useState 훅
-    const [searchCategory, setSearchCategory] = useState(''); // 검색 카테고리 상태
-    const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
-    const [filteredDeletedPost, setFilteredDeletedPost] = useState(deletedpost); // 필터링된 게시글 상태
+    const [searchCategory, setSearchCategory] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredDeletedPost, setFilteredDeletedPost] = useState(deletedpost);
 
-    // 검색 카테고리 변경 핸들러: 사용자가 선택한 검색 기준에 따라 상태를 업데이트
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
-        setSearchTerm(''); // 카테고리 변경 시 검색어 초기화
+        setSearchTerm('');
     };
 
-    // 검색어 변경 핸들러: 사용자가 입력한 검색어를 상태로 관리
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    // 검색 버튼 클릭 시 필터링 로직: 입력된 검색어에 따라 게시글을 필터링
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
         const filteredData = deletedpost.filter(item => {
@@ -64,30 +59,25 @@ const AdminDeletedPost = () => {
             }
             return false;
         });
-        setFilteredDeletedPost(filteredData); // 필터링된 결과를 상태로 업데이트
+        setFilteredDeletedPost(filteredData);
     };
 
-    // 페이지 상태 관리
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const totalPages = Math.ceil(filteredDeletedPost.length / rowsPerPage); // 전체 페이지 수 계산
+    const totalPages = Math.ceil(filteredDeletedPost.length / rowsPerPage);
 
-    // 페이지 변경 핸들러
     const handleChangePage = (newPage) => {
         setPage(newPage);
     };
 
-    // 페이지당 행 수 변경 핸들러
     const handleRowsPerPageChange = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); // 페이지를 0으로 초기화
+        setPage(0);
     };
 
-    // 비어있는 행의 수 계산 (페이지에 표시될 행이 부족할 경우)
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredDeletedPost.length) : 0;
 
-    // 전체 페이지 렌더링
     return (
         <div className={styles.deletedPostContainer}>
             <div className={styles.deletedPostSidebar}>
@@ -96,10 +86,12 @@ const AdminDeletedPost = () => {
             <div className={styles.deletedPostContent}>
                 <div className={styles.deletedPostMainContainer}>
                     <div>
-                        {/* 페이지 상단: 제목 */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2 className={styles.deletedPostTitle}>삭제된 게시글 목록</h2>
-                        </div>
+                        <Box display="flex" alignItems="center" mb={2}>
+                            <DeleteTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
+                            <h2 className={styles.deletedPostTitle}>𝐃𝐞𝐥𝐞𝐭𝐞𝐝 𝐏𝐨𝐬𝐭</h2>
+                        </Box>
+                        <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} />
+
                         {/* 필터링된 게시글을 테이블로 렌더링 */}
                         <TableContainer component={Paper} className={styles.deletedPostTableContainer}>
                             <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
@@ -113,7 +105,7 @@ const AdminDeletedPost = () => {
                                 </TableHead>
                                 <TableBody>
                                     {(rowsPerPage > 0
-                                        ? filteredDeletedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // 현재 페이지의 행만 보여줌
+                                        ? filteredDeletedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         : filteredDeletedPost
                                     ).map((row) => (
                                         <TableRow key={row.id}>
@@ -135,6 +127,7 @@ const AdminDeletedPost = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+
                         {/* 검색 필터 UI */}
                         <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.deletedPostGridContainer}>
                             <Grid item xs={3}>
@@ -160,7 +153,7 @@ const AdminDeletedPost = () => {
                                     placeholder="검색어를 입력하세요"
                                     value={searchTerm}
                                     onChange={handleSearchChange}
-                                    disabled={!searchCategory} // 검색 카테고리를 선택해야만 입력 가능
+                                    disabled={!searchCategory}
                                     className={styles.deletedPostGridItem}
                                 />
                             </Grid>
@@ -175,6 +168,7 @@ const AdminDeletedPost = () => {
                                 </Button>
                             </Grid>
                         </Grid>
+
                         {/* 페이지네이션 컨트롤 */}
                         <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Button

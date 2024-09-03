@@ -13,7 +13,6 @@ export default function AdminDeletedCommentPage() {
                 <NestedList />
             </div>
             <div className={styles.content}>
-            <h2 className={styles.title}>삭제된 댓글 목록</h2>
                 <DeletedComment />
                 
             </div>

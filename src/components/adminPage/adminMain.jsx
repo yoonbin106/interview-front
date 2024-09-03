@@ -6,7 +6,8 @@ import sidebar from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminMain.module.css';
 import dynamic from 'next/dynamic';
-import { HomeIcon } from 'lucide-react';
+import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
+import { ListItemIcon } from '@mui/material';
 
 // AdminMainCharts 컴포넌트를 동적 로딩으로 가져온다.
 const AdminMainCharts = dynamic(() => import('@/components/adminPage/adminMainCharts'),{ssr:false});
@@ -108,8 +109,10 @@ const AdminMain = () => {
                     <Row className={styles.adminMainContent}>
                         <Col className={styles.adminMainColPadding}>
                             <div className={styles.adminMainTitleContainer}>
-                                <HomeIcon size={40} />
-                                <h2 className={styles.adminMainTitle}>Main Adminpage</h2>
+                                <ListItemIcon>
+                                <HomeTwoToneIcon sx={{fontSize:60, color:'#5A8AF2'}} />
+                                </ListItemIcon>
+                                <h2 className={styles.adminMainTitle}>𝐌𝐚𝐢𝐧 𝐀𝐝𝐦𝐢𝐧𝐏𝐚𝐠𝐞</h2>
                             </div>
                             <hr className={styles.adminMainTitleDivider} />
                             {/* 사이트 종합 정보 카드 */}
