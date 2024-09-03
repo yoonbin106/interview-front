@@ -75,9 +75,9 @@ export default function PaginationTableNotice({ rows }) {
             <TableRow key={post.bbs_id} >
               <TableCell align="center">{post.bbs_id}</TableCell>
               <TableCell align="center">
-                <Link href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
+                <a href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
                 {post.title}
-                </Link>
+                </a>
               </TableCell>
               <TableCell align="center">{post.username || userStore.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
