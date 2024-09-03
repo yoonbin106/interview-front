@@ -4,6 +4,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import userStore from 'stores/userStore';
 
 const PostView = () => {
   const [comments, setComments] = useState([
@@ -14,7 +15,7 @@ const PostView = () => {
   const { id } = router.query;  // URL 파라미터에서 ID를 가져옴
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
-
+  
   useEffect(() => {
     console.log("Router query ID:", id);  // ID 값 로그로 출력
     if (id) {
@@ -65,6 +66,10 @@ const PostContent = ({ post }) => {
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const userId = userStore.id; // 현재 로그인한 사용자 ID 가져오기
+
+  const postOwnerId = Number(post.userId?.id) || 0;
+  const currentUserId = Number(userId) || 0;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -83,7 +88,7 @@ const PostContent = ({ post }) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
         console.log(`Deleting post with ID: ${id}`);  // 삭제 기능 로그 출력
-        const response = await fetch(`http://localhost:8080/bbs/${id}`, {
+        const response = await fetch(`http://localhost:8080/bbs/${id}?userId=${userId}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -100,6 +105,14 @@ const PostContent = ({ post }) => {
     }
     handleClose();
   };
+
+  const menuItems = postOwnerId === currentUserId ? [
+    <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
+    <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>,
+    <MenuItem key="report">신고</MenuItem>
+  ] : [
+    <MenuItem key="report">신고</MenuItem>
+  ];
 
   return (
     <div className={styles.postContainer}>
@@ -125,20 +138,22 @@ const PostContent = ({ post }) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleEdit}>수정</MenuItem>
-            <MenuItem onClick={handleDelete}>삭제</MenuItem>
-            <MenuItem>신고</MenuItem>
+            {menuItems}
           </Menu>
         </div>
       </div>
       <hr className={styles.divider} />
       <p>{post.content}</p>
       <div className={styles.files}>
-        {post.files && post.files.length > 0 ? (
-          post.files.map((file, index) => (
+        {post.files && Object.keys(post.files).length > 0 ? (
+          Object.keys(post.files).map((fileName, index) => (
             <div key={index} className={styles.fileItem}>
-              <a href={`http://localhost:8080/bbs/${id}/files/${file.fileIndex}`} target="_blank" rel="noopener noreferrer">
-                {file.fileName || `파일 ${index + 1}`}
+              <a 
+                href={`http://localhost:8080/bbs/${id}/files/${fileName}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                {fileName}
               </a>
             </div>
           ))
@@ -149,6 +164,7 @@ const PostContent = ({ post }) => {
     </div>
   );
 };
+
 
 const CommentList = ({ comments }) => {
   return (
