@@ -19,9 +19,11 @@ import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import styles from '@/styles/interview/interviewPreparation.module.css';
 import { getMockQuestions } from 'api/interview';
+import LoadingOverlay from '@/components/interview/loadingOverlay'; // 로딩 컴포넌트 임포트
 
 const InterviewPreparation = observer(() => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const { interviewStore, userStore } = useStores();
   const [interviewType, setInterviewType] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -216,10 +218,12 @@ const InterviewPreparation = observer(() => {
    // 모달 확인 핸들러
    const handleConfirm = async () => {
     setModalOpen(false);
-    
+    setIsLoading(true); // 로딩 시작
+
     // handleSetMockQuestions가 완료될 때까지 기다림
     await handleSetMockQuestions();
-    
+
+    setIsLoading(false);
     // 이후 코드가 실행됨
     if (interviewType === 'mock') {
       router.push({
@@ -257,6 +261,7 @@ const InterviewPreparation = observer(() => {
 
   return (
     <Container maxWidth="lg" className={styles.container}>
+    {isLoading && <LoadingOverlay />} {/* 로딩 상태에 따라 로딩 화면 표시 */}
     <Fade in={true} timeout={1000}>
       <Paper className={styles.paper}>
         <Typography variant="h4" align="center" className={styles.title}>
