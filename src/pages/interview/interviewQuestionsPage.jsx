@@ -13,15 +13,20 @@ import TabButtons from '@/components/interview/tabButton';
 import QuestionList from '@/components/interview/questionList';
 import SelectedQuestions from '@/components/interview/selectedQuestions';
 import styles from '@/styles/interview/interviewQuestionsPage.module.css';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'contexts/storeContext';
 
-const InterviewQuestionsPage = () => {
+const InterviewQuestionsPage = observer(() => {
   const dispatch = useDispatch();
+  const { interviewStore } = useStores();
   const router = useRouter();
-  
-  const { activeTab, selectedQuestions, questions } = useSelector(state => state.questions);
+  const activeTab = interviewStore.activeTab;
+
+  const { selectedQuestions, questions } = useSelector(state => state.questions);
+
 
   const handleTabChange = (tab) => {
-    dispatch(setActiveTab(tab));
+    interviewStore.setActiveTab(tab);
   };
 
   const handleSelectQuestion = () => {
@@ -76,6 +81,6 @@ const InterviewQuestionsPage = () => {
       </Fade>
     </Container>
   );
-};
+});
 
 export default InterviewQuestionsPage;

@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { 
   Container, Typography, Grid, Button, Paper, Box, Dialog, DialogActions,
@@ -16,31 +15,28 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CastConnectedIcon from '@mui/icons-material/CastConnected';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
-import {
-  setCameraReady, setMicReady, setStream, setCountdown, setCurrentStep,
-  setAudioLevel, setAllReady, setButtonActive,setInterviewData
-} from '@/redux/slices/interviewSlice';
+import { useStores } from '@/contexts/storeContext';
+import { observer } from 'mobx-react-lite';
 import styles from '@/styles/interview/interviewPreparation.module.css';
+import { getMockQuestions } from 'api/interview';
 
-const InterviewPreparation = () => {
-  const dispatch = useDispatch();
+const InterviewPreparation = observer(() => {
   const router = useRouter();
+  const { interviewStore, userStore } = useStores();
   const [interviewType, setInterviewType] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef(null);
-  const {
-    cameraReady,
-    micReady,
-    stream,
-    countdown,
-    currentStep,
-    highContrast,
-    audioLevel,
-    allReady,
-    buttonActive,
-  } = useSelector(state => state.interview);
+  const cameraReady = interviewStore.cameraReady;
+  const micReady = interviewStore.micReady;
+  const stream = interviewStore.stream;
+  const countdown = interviewStore.countdown;
+  const currentStep = interviewStore.currentStep;
+  const highContrast = interviewStore.highContrast;
+  const audioLevel = interviewStore.audioLevel;
+  const allReady = interviewStore.allReady;
+  const buttonActive = interviewStore.buttonActive;
 
   const videoRef = useRef(null);
   const audioContextRef = useRef(null);
@@ -49,10 +45,10 @@ const InterviewPreparation = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      const { interviewType } = router.query;
+      const interviewType = interviewStore.type;
       setInterviewType(interviewType);
     }
-  }, [router.isReady, router.query]);
+  }, [router.isReady]);
 
   // Web Speech API 설정
   useEffect(() => {
@@ -91,28 +87,28 @@ const InterviewPreparation = () => {
    // 카메라와 마이크 준비 상태 체크
   useEffect(() => {
     if (cameraReady && micReady) {
-      dispatch(setAllReady(true));
-      dispatch(setCurrentStep(3));
-      dispatch(setCountdown(5));
+      interviewStore.setAllReady(true);
+      interviewStore.setCurrentStep(3);
+      interviewStore.setCountdown(5);
     } else {
-      dispatch(setAllReady(false));
-      dispatch(setButtonActive(false));
+      interviewStore.setAllReady(false);
+      interviewStore.setButtonActive(false);
     }
-  }, [cameraReady, micReady, dispatch]);
+  }, [cameraReady, micReady, interviewStore]);
 
   // 카운트다운 관리
   useEffect(() => {
     let timer;
     if (allReady && countdown > 0) {
       timer = setInterval(() => {
-        dispatch(setCountdown(countdown - 1));
+        interviewStore.setCountdown(countdown - 1);
       }, 1000);
     } else if (allReady && countdown === 0) {
-      dispatch(setButtonActive(true));
+      interviewStore.setButtonActive(true);
     }
   
     return () => clearInterval(timer);
-  }, [allReady, countdown, dispatch]);
+  }, [allReady, countdown, interviewStore]);
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -139,8 +135,8 @@ const InterviewPreparation = () => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
-    dispatch(setStream(null));
-  }, [stream, dispatch]);
+    interviewStore.setStream('');
+  }, [stream, interviewStore]);
 
   const checkCamera = async () => {
     try {
@@ -148,11 +144,11 @@ const InterviewPreparation = () => {
         stopStream();
       }
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-      dispatch(setStream(mediaStream));
-      dispatch(setCameraReady(true));
+      interviewStore.setStream(mediaStream);
+      interviewStore.setCameraReady(true);
     } catch (error) {
       console.error("카메라 접근 에러:", error);
-      dispatch(setCameraReady(false));
+      interviewStore.setCameraReady(false);
     }
   };
 
@@ -173,16 +169,16 @@ const InterviewPreparation = () => {
       const updateAudioLevel = () => {
         analyserRef.current.getByteFrequencyData(dataArray);
         const average = dataArray.reduce((acc, value) => acc + value, 0) / bufferLength;
-        dispatch(setAudioLevel(average / 128));
+        interviewStore.setAudioLevel(average / 128);
         animationFrameRef.current = requestAnimationFrame(updateAudioLevel);
       };
       updateAudioLevel();
   
-      dispatch(setMicReady(true));
+      interviewStore.setMicReady(true);
       startListening();
     } catch (error) {
       console.error("마이크 접근 에러:", error);
-      dispatch(setMicReady(false));
+      interviewStore.setMicReady(false);
     }
   };
 
@@ -202,14 +198,14 @@ const InterviewPreparation = () => {
    // 리셋 핸들러
   const handleReset = () => {
     stopStream();
-    dispatch(setStream(null));
-    dispatch(setCameraReady(false));
-    dispatch(setMicReady(false));
-    dispatch(setCountdown(5));
-    dispatch(setCurrentStep(1));
-    dispatch(setAudioLevel(0));
-    dispatch(setAllReady(false));
-    dispatch(setButtonActive(false));
+    interviewStore.setStream('');
+    interviewStore.setCameraReady(false);
+    interviewStore.setMicReady(false);
+    interviewStore.setCountdown(5);
+    interviewStore.setCurrentStep(1);
+    interviewStore.setAudioLevel(0);
+    interviewStore.setAllReady(false);
+    interviewStore.setButtonActive(false);
     setTranscript(''); // Reset transcript
     stop();  // Stop listening for speech
   };
@@ -218,28 +214,31 @@ const InterviewPreparation = () => {
     setModalOpen(true);
   };
    // 모달 확인 핸들러
-  const handleConfirm = () => {
+   const handleConfirm = async () => {
     setModalOpen(false);
-    const mockQuestions = [
-      "자신의 강점과 약점에 대해 말해주세요.",
-      "왜 우리 회사에 지원하셨나요?",
-      "5년 후 자신의 모습을 어떻게 그리고 계신가요?",
-      "팀 프로젝트에서 갈등 상황을 어떻게 해결하셨나요?",
-      "최근에 배운 새로운 기술이나 지식이 있다면 무엇인가요?"
-    ];
+    
+    // handleSetMockQuestions가 완료될 때까지 기다림
+    await handleSetMockQuestions();
+    
+    // 이후 코드가 실행됨
     if (interviewType === 'mock') {
       router.push({
-        pathname: '/interview/interviewQuestionsPage',
-        query: { interviewType, mockQuestions: JSON.stringify(mockQuestions) }
+        pathname: '/interview/interviewQuestionsPage'
       });
     } else {
       router.push({
-        pathname: '/interview/interviewRecordPage',
-        query: { interviewType, mockQuestions: JSON.stringify(mockQuestions) }
+        pathname: '/interview/interviewRecordPage'
       });
     }
   };
-
+  async function handleSetMockQuestions() {
+    try {
+      const mockQuestions = await getMockQuestions(userStore.id);  // 비동기 함수 대기
+      interviewStore.setMockQuestions(mockQuestions);  // 데이터 저장
+    } catch (error) {
+      console.error('Mock 질문을 불러오는 중 오류가 발생했습니다:', error);
+    }
+  }
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -439,6 +438,6 @@ const InterviewPreparation = () => {
 </Dialog>
     </Container>
   );
-};
+});
 
 export default InterviewPreparation;

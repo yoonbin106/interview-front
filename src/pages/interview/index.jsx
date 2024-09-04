@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { setInterviewType } from '@/redux/slices/interviewSlice';
+import { useStores } from '@/contexts/storeContext';
+import { observer } from 'mobx-react-lite';
 import { 
   Typography, 
   Container,
@@ -12,9 +12,9 @@ import {
 import InterviewOption from '@/components/interview/interviewOption';
 import styles from '@/styles/interview/interviewSelectPage.module.css';
 
-const InterviewSelectPage = () => {
+const InterviewSelectPage = observer(() => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const { interviewStore } = useStores();
 
   const realInterviewFeatures = [
     '실제 면접과 유사한 환경에서의 면접 연습',
@@ -29,10 +29,17 @@ const InterviewSelectPage = () => {
   ];
 
   const handleInterviewStart = (type) => {
-    dispatch(setInterviewType(type));
+    interviewStore.setType(type);
+    interviewStore.setStream('');
+    interviewStore.setCameraReady(false);
+    interviewStore.setMicReady(false);
+    interviewStore.setCountdown(5);
+    interviewStore.setCurrentStep(1);
+    interviewStore.setAudioLevel(0);
+    interviewStore.setAllReady(false);
+    interviewStore.setButtonActive(false);
     router.push({
-      pathname: '/interview/interviewPreparation',
-      query: { interviewType: type },
+      pathname: '/interview/interviewPreparation'
     });
   };
 
@@ -70,6 +77,6 @@ const InterviewSelectPage = () => {
       </Grid>
     </Container>
   );
-};
+});
 
 export default InterviewSelectPage;
