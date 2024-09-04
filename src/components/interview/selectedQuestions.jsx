@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { Paper, Typography, Button, List, ListItem, ListItemText, Box, IconButton, Snackbar } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MuiAlert from '@mui/material/Alert';
+import { observer } from 'mobx-react-lite';
 import styles from '@/styles/interview/selectedQuestions.module.css';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const SelectedQuestions = ({
-  selectedQuestions = [], // 기본값 빈 배열로 설정
-  questions = { common: [], resume: [] }, // 기본값 빈 객체로 설정
+const SelectedQuestions = observer(({
+  selectedQuestions = [],
+  questions = { common: [], resume: [] },
   onCancel,
   onSelectQuestion,
   onRemoveQuestion,
@@ -18,9 +19,13 @@ const SelectedQuestions = ({
 }) => {
   const [showWarning, setShowWarning] = useState(false);
 
+  // 선택된 질문의 상세 정보를 추출하는 함수
   const getSelectedQuestionDetails = () => {
-    const allQuestions = [...(questions.common || []), ...(questions.resume || [])];
-    return selectedQuestions.map(id => allQuestions.find(q => q.id === id)).filter(q => q !== undefined);
+    // 모든 질문을 합쳐서 선택된 질문의 ID로 매칭시켜 상세 정보를 반환
+    const allQuestions = [...questions.common, ...questions.resume];
+    return selectedQuestions
+      .map(id => allQuestions.find(q => q.id === id))
+      .filter(q => q !== undefined); // undefined 체크 추가
   };
 
   const selectedQuestionDetails = getSelectedQuestionDetails();
@@ -72,6 +77,6 @@ const SelectedQuestions = ({
       </Snackbar>
     </Paper>
   );
-};
+});
 
 export default SelectedQuestions;
