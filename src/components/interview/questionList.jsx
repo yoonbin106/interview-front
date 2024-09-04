@@ -14,7 +14,7 @@ const QuestionList = observer(({ activeTab }) => {
   // activeTab에 따라 사용할 질문 데이터를 선택
   const questions = {
     common: commonQuestions,
-    resume: resumeQuestions
+    resume: resumeQuestions,
   };
 
   // 열려 있는 질문을 관리할 상태
@@ -31,7 +31,7 @@ const QuestionList = observer(({ activeTab }) => {
             key={item.id} 
             item={item} 
             isOpen={openQuestion === item.id} 
-            onClick={() => setOpenQuestion(openQuestion === item.id ? null : item.id)} // 질문을 클릭 시 열고 닫는 기능 추가
+            onClick={() => setOpenQuestion(openQuestion === item.id ? null : item.id)} // onClick 전달
           />
         ))}
       </Box>
