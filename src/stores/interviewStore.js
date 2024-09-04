@@ -96,6 +96,12 @@ class InterviewStore {
         this.setEditMode({ id: null, type: null });
     }
 
+    // 선택된 질문 초기화
+    clearSelectedQuestions() {
+        this.selectedQuestions = [];
+        console.log('선택된 질문들이 초기화됨');
+    }
+
     // 초기화 함수
     initializeInterviewStore() {
         this.type = '';
