@@ -16,37 +16,59 @@ const BoardTable = () => {
     const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 게시물 상태 관리
     const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 게시물 개수
     const [page, setPage] = useState(0); // 현재 페이지 상태
+    const [sortCriteria, setSortCriteria] = useState('bbsId'); // 기본 정렬 기준
 
     useEffect(() => {
+        console.log("useEffect 실행됨");  // 이 로그가 찍히는지 확인
+        
         const fetchPosts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/bbs');
-                console.log(response);
-
-                // 최신 글이 가장 먼저 보이도록 createdAt 기준 내림차순 정렬
-                const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                setPosts(sortedPosts);
-                setFilteredPosts(sortedPosts); // 필터링된 게시물에 처음 데이터 설정
-                setLoading(false);
+                console.log("서버 응답 (원본 데이터):", response.data);  // 이 로그가 찍히는지 확인
+    
+                let sortedPosts = [...response.data].sort((a, b) => b.bbsId - a.bbsId);  // 데이터가 정렬되는지 확인
+                console.log("정렬된 게시글:", sortedPosts);
+    
+                setPosts(sortedPosts);  // 상태 업데이트
+                setFilteredPosts(sortedPosts);
+                setLoading(false);  // 로딩 상태 변경
             } catch (error) {
+                console.error("데이터 로드 중 오류:", error);
                 setError(error);
                 setLoading(false);
             }
         };
-
-        fetchPosts();
-    }, []);
-
+    
+        fetchPosts();  // 비동기 함수 호출
+    }, []);  // 페이지 로드 시 한 번 실행
+    
+    
+    
+    useEffect(() => {
+        if (posts.length > 0) {
+            let sortedPosts = [...posts];
+            if (sortCriteria === 'bbsId') {
+                sortedPosts.sort((a, b) => b.bbsId - a.bbsId);
+            } else if (sortCriteria === 'createdAt') {
+                sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            console.log("정렬 기준에 따른 정렬된 게시글 데이터:", sortedPosts);
+            setFilteredPosts(sortedPosts);
+        }
+    }, [sortCriteria, posts]);  // sortCriteria 또는 posts가 변경될 때마다 실행
+    
+    
     // 검색 카테고리 변경 핸들러
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
         setSearchTerm('');
+        console.log("검색 카테고리 변경:", event.target.value);
     };
 
     // 검색어 변경 핸들러
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
+        console.log("검색어 변경:", event.target.value);
     };
 
     // 검색 버튼 클릭 핸들러
@@ -61,6 +83,7 @@ const BoardTable = () => {
             }
             return false;
         });
+        console.log("검색 결과 필터링된 데이터:", filteredData);
         setFilteredPosts(filteredData);
         setPage(0); // 검색 시 페이지를 첫 페이지로 초기화
     };
@@ -69,14 +92,26 @@ const BoardTable = () => {
     const handleRowsPerPageChange = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0); // 페이지 개수 변경 시 첫 페이지로 초기화
+        console.log("페이지당 게시물 수 변경:", event.target.value);
     };
 
     // 페이지 변경 핸들러
     const handleChangePage = (newPage) => {
         setPage(newPage);
+        console.log("페이지 변경:", newPage);
     };
 
     const totalPages = Math.ceil(filteredPosts.length / rowsPerPage); // 전체 페이지 계산
+
+    useEffect(() => {
+        console.log("현재 페이지의 게시글 데이터:", filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
+    }, [filteredPosts, page, rowsPerPage]);
+
+    // 정렬 기준 변경 핸들러
+    const handleSortCriteriaChange = (event) => {
+        setSortCriteria(event.target.value);
+        console.log("정렬 기준 변경:", event.target.value);
+    };
 
     return (
         <div className={styles.container}>
@@ -100,6 +135,13 @@ const BoardTable = () => {
                                         <option value={10}>10개씩</option>
                                         <option value={20}>20개씩</option>
                                         <option value={30}>30개씩</option>
+                                    </select>
+                                </div>
+                                <div className={styles.boardHeaderControl}>
+                                    {/* 정렬 기준 선택 */}
+                                    <select onChange={handleSortCriteriaChange} value={sortCriteria}>
+                                        <option value="bbsId">글 번호</option>
+                                        <option value="createdAt">작성 날짜</option>
                                     </select>
                                 </div>
                             </div>
