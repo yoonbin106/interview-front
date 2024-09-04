@@ -11,22 +11,27 @@ class InterviewStore {
     audioLevel = 0;
     allReady = false;
     buttonActive = false;
-    mockQuestions = { commonQuestions: [], resumeQuestions: [] };  // mockQuestions 객체로 수정
-    commonQuestions = [];  // commonQuestions를 별도로 저장
-    resumeQuestions = [];  // resumeQuestions를 별도로 저장
+    mockQuestions = { commonQuestions: [], resumeQuestions: [] };
+    commonQuestions = [];
+    resumeQuestions = [];
     activeTab = 'common';
+
+    // 추가된 상태
+    selectedQuestions = []; // 선택된 질문들을 관리할 배열
+    openQuestion = null; // 현재 열려 있는 질문의 ID
+    editMode = { id: null, type: null }; // 편집 중인 질문의 ID와 타입 (script 또는 keywords)
+    tempEdit = { script: '', keywords: [] }; // 편집 중인 질문의 임시 저장 상태
 
     constructor() {
         makeAutoObservable(this);
         if (typeof window !== 'undefined') {
-            this.loadInterviewData(); // 페이지 로드 시 사용자 데이터를 복원 (클라이언트 환경에서만)
+            this.loadInterviewData(); // 페이지 로드 시 데이터 복원
         }
     }
     
-    // mockQuestions에서 commonQuestions와 resumeQuestions를 분리하여 설정하는 함수
+    // mockQuestions에서 commonQuestions와 resumeQuestions를 분리하는 함수
     parseMockQuestions() {
         if (this.mockQuestions && typeof this.mockQuestions === 'object') {
-            // mockQuestions가 객체이고 commonQuestions, resumeQuestions가 배열일 경우 데이터 분리
             this.commonQuestions = Array.isArray(this.mockQuestions.commonQuestions)
                 ? this.mockQuestions.commonQuestions
                 : [];
@@ -34,29 +39,64 @@ class InterviewStore {
                 ? this.mockQuestions.resumeQuestions
                 : [];
         } else {
-            // mockQuestions가 올바른 형식이 아닐 경우 빈 배열로 설정
             this.commonQuestions = [];
             this.resumeQuestions = [];
         }
     }
 
-    // mockQuestions 설정
+    // mockQuestions 설정 및 로컬스토리지 저장
     setMockQuestions(mockQuestions) {
-        if (mockQuestions && typeof mockQuestions === 'object') {
-            this.mockQuestions = mockQuestions;
-        } else {
-            this.mockQuestions = { commonQuestions: [], resumeQuestions: [] };
-        }
+        this.mockQuestions = mockQuestions && typeof mockQuestions === 'object'
+            ? mockQuestions
+            : { commonQuestions: [], resumeQuestions: [] };
 
-        console.log('스토어 Mock 질문들: ', mockQuestions);
-        this.parseMockQuestions(); // mockQuestions 설정 후 바로 분리
-
+        this.parseMockQuestions(); // mockQuestions 설정 후 데이터 분리
         if (typeof window !== 'undefined') {
-            localStorage.setItem('mockQuestions', JSON.stringify(mockQuestions)); // 로컬스토리지에 저장
+            localStorage.setItem('mockQuestions', JSON.stringify(mockQuestions));
         }
     }
 
-    // 초기화 함수 추가
+    // 질문 선택 및 삭제
+    toggleSelectedQuestion(id) {
+        if (this.selectedQuestions.includes(id)) {
+            this.selectedQuestions = this.selectedQuestions.filter(q => q !== id);
+        } else {
+            this.selectedQuestions.push(id);
+        }
+        console.log('선택된 질문들: ', this.selectedQuestions);
+    }
+
+    // 질문 열림 상태 설정
+    setOpenQuestion(id) {
+        this.openQuestion = id;
+        console.log('열려 있는 질문 ID: ', this.openQuestion);
+    }
+
+    // 질문 편집 모드 설정
+    setEditMode({ id, type }) {
+        this.editMode = { id, type };
+        console.log('편집 모드: ', this.editMode);
+    }
+
+    // 임시 편집 상태 설정
+    setTempEdit({ script, keywords }) {
+        this.tempEdit = { script, keywords };
+        console.log('임시 편집 상태: ', this.tempEdit);
+    }
+
+    // 질문 저장
+    saveQuestion({ id, script, keywords }) {
+        const allQuestions = [...this.commonQuestions, ...this.resumeQuestions];
+        const questionIndex = allQuestions.findIndex(q => q.id === id);
+        if (questionIndex !== -1) {
+            allQuestions[questionIndex].script = script;
+            allQuestions[questionIndex].keywords = keywords;
+        }
+        console.log('질문 저장됨: ', allQuestions[questionIndex]);
+        this.setEditMode({ id: null, type: null });
+    }
+
+    // 초기화 함수
     initializeInterviewStore() {
         this.type = '';
         if (typeof window !== 'undefined') {
@@ -66,7 +106,6 @@ class InterviewStore {
 
     setType(type) {
         this.type = type;
-        console.log('스토어 인터뷰 타입: ', type);
         if (typeof window !== 'undefined') {
             localStorage.setItem('type', type);
         }
@@ -74,7 +113,6 @@ class InterviewStore {
 
     setCameraReady(cameraReady) {
         this.cameraReady = cameraReady;
-        console.log('스토어 카메라준비: ', cameraReady);
         if (typeof window !== 'undefined') {
             localStorage.setItem('cameraReady', cameraReady);
         }
@@ -82,7 +120,6 @@ class InterviewStore {
 
     setMicReady(micReady) {
         this.micReady = micReady;
-        console.log('스토어 마이크준비: ', micReady);
         if (typeof window !== 'undefined') {
             localStorage.setItem('micReady', micReady);
         }
@@ -90,7 +127,6 @@ class InterviewStore {
 
     setStream(stream) {
         this.stream = stream;
-        console.log('스토어 스트림준비: ', stream);
         if (typeof window !== 'undefined') {
             localStorage.setItem('stream', stream);
         }
@@ -98,7 +134,6 @@ class InterviewStore {
 
     setCountdown(countdown) {
         this.countdown = countdown;
-        console.log('스토어 카운트다운: ', countdown);
         if (typeof window !== 'undefined') {
             localStorage.setItem('countdown', countdown);
         }
@@ -106,7 +141,6 @@ class InterviewStore {
 
     setCurrentStep(currentStep) {
         this.currentStep = currentStep;
-        console.log('스토어 현재스텝: ', currentStep);
         if (typeof window !== 'undefined') {
             localStorage.setItem('currentStep', currentStep);
         }
@@ -114,7 +148,6 @@ class InterviewStore {
 
     setHighContrast(highContrast) {
         this.highContrast = highContrast;
-        console.log('스토어 하이컨트레스트: ', highContrast);
         if (typeof window !== 'undefined') {
             localStorage.setItem('highContrast', highContrast);
         }
@@ -126,7 +159,6 @@ class InterviewStore {
 
     setAllReady(allReady) {
         this.allReady = allReady;
-        console.log('스토어 올 레디: ', allReady);
         if (typeof window !== 'undefined') {
             localStorage.setItem('allReady', allReady);
         }
@@ -134,7 +166,6 @@ class InterviewStore {
 
     setButtonActive(buttonActive) {
         this.buttonActive = buttonActive;
-        console.log('스토어 버튼 엑티브: ', buttonActive);
         if (typeof window !== 'undefined') {
             localStorage.setItem('buttonActive', buttonActive);
         }
@@ -142,7 +173,6 @@ class InterviewStore {
 
     setActiveTab(activeTab) {
         this.activeTab = activeTab;
-        console.log('스토어 엑티브 탭: ', activeTab);
         if (typeof window !== 'undefined') {
             localStorage.setItem('activeTab', activeTab);
         }
@@ -163,7 +193,7 @@ class InterviewStore {
             
             const storedMockQuestions = localStorage.getItem('mockQuestions');
             this.mockQuestions = storedMockQuestions ? JSON.parse(storedMockQuestions) : { commonQuestions: [], resumeQuestions: [] };
-            this.parseMockQuestions();  // mockQuestions가 로드되면 commonQuestions와 resumeQuestions를 분리
+            this.parseMockQuestions();
         }
     }
 }

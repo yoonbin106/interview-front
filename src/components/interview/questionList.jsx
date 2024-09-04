@@ -16,6 +16,7 @@ const QuestionList = observer(({ activeTab }) => {
     common: commonQuestions,
     resume: resumeQuestions
   };
+
   // 열려 있는 질문을 관리할 상태
   const [openQuestion, setOpenQuestion] = useState(null);
 
@@ -28,7 +29,7 @@ const QuestionList = observer(({ activeTab }) => {
         {questions[activeTab]?.map((item) => (
           <QuestionItem 
             key={item.id} 
-            item={item.questionText} 
+            item={item} 
             isOpen={openQuestion === item.id} 
             onClick={() => setOpenQuestion(openQuestion === item.id ? null : item.id)} // 질문을 클릭 시 열고 닫는 기능 추가
           />

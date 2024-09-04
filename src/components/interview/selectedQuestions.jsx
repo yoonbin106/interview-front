@@ -8,14 +8,19 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const SelectedQuestions = ({ selectedQuestions, questions, onCancel, onSelectQuestion, onRemoveQuestion, maxSelections }) => {
+const SelectedQuestions = ({
+  selectedQuestions = [], // 기본값 빈 배열로 설정
+  questions = { common: [], resume: [] }, // 기본값 빈 객체로 설정
+  onCancel,
+  onSelectQuestion,
+  onRemoveQuestion,
+  maxSelections
+}) => {
   const [showWarning, setShowWarning] = useState(false);
 
   const getSelectedQuestionDetails = () => {
-    return selectedQuestions.map(id => {
-      const allQuestions = [...questions.common, ...questions.resume];
-      return allQuestions.find(q => q.id === id);
-    }).filter(q => q !== undefined);
+    const allQuestions = [...(questions.common || []), ...(questions.resume || [])];
+    return selectedQuestions.map(id => allQuestions.find(q => q.id === id)).filter(q => q !== undefined);
   };
 
   const selectedQuestionDetails = getSelectedQuestionDetails();
@@ -37,7 +42,7 @@ const SelectedQuestions = ({ selectedQuestions, questions, onCancel, onSelectQue
         {selectedQuestionDetails.map((question, index) => (
           <ListItem key={question.id} className={styles.questionItem}>
             <ListItemText 
-              primary={`${index + 1}. ${question.question}`} 
+              primary={`${index + 1}. ${question.questionText}`} 
               primaryTypographyProps={{ className: styles.questionText }}
             />
             <IconButton edge="end" aria-label="delete" onClick={() => onRemoveQuestion(question.id)}>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { 
   Container, 
@@ -8,7 +7,6 @@ import {
   Box, 
   Fade,
 } from '@mui/material';
-import { setActiveTab, toggleSelectedQuestion, clearSelectedQuestions } from '../../redux/slices/questionSlice';
 import TabButtons from '@/components/interview/tabButton';
 import QuestionList from '@/components/interview/questionList';
 import SelectedQuestions from '@/components/interview/selectedQuestions';
@@ -17,13 +15,16 @@ import { observer } from 'mobx-react-lite';
 import { useStores } from 'contexts/storeContext';
 
 const InterviewQuestionsPage = observer(() => {
-  const dispatch = useDispatch();
   const { interviewStore } = useStores();
   const router = useRouter();
   const activeTab = interviewStore.activeTab;
 
-  const { selectedQuestions, questions } = useSelector(state => state.questions);
-
+  // 인터뷰 스토어에서 선택된 질문과 질문 데이터를 가져옴
+  const selectedQuestions = interviewStore.selectedQuestions;
+  const questions = {
+    common: interviewStore.commonQuestions,
+    resume: interviewStore.resumeQuestions,
+  };
 
   const handleTabChange = (tab) => {
     interviewStore.setActiveTab(tab);
@@ -40,12 +41,12 @@ const InterviewQuestionsPage = observer(() => {
   };
 
   const handleCancel = () => {
-    dispatch(clearSelectedQuestions());
-    navigate(-1);
+    interviewStore.clearSelectedQuestions();
+    router.back(); // 뒤로 이동
   };
 
   const handleRemoveQuestion = (id) => {
-    dispatch(toggleSelectedQuestion(id));
+    interviewStore.toggleSelectedQuestion(id);
   };
 
   return (
