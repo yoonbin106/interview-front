@@ -69,25 +69,25 @@ export default function PaginationTableNotice({ rows }) {
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? posts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : posts
+            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : rows
           ).map((post) => (
-            <TableRow key={post.bbs_id} >
+            <TableRow key={post.bbs_id}>
               <TableCell align="center">{post.bbs_id}</TableCell>
               <TableCell align="center">
-                <a href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
-                {post.title}
-                </a>
+                <Link href={`/bbs/postView?id=${post.bbs_id}`} style={{ textDecoration: 'none', color: 'black' }}>
+                  {post.title}
+                </Link>
               </TableCell>
-              <TableCell align="center">{post.username || userStore.username}</TableCell>
+              <TableCell align="center">{post.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
               <TableCell align="center">13</TableCell>
               <TableCell align="center">10</TableCell>
             </TableRow>
           ))}
-        {emptyRows > 0 && (
+          {emptyRows > 0 && (
             <TableRow style={{ height: 30 * emptyRows }}>
-              <TableCell colSpan={4} />
+              <TableCell colSpan={6} />
             </TableRow>
           )}
         </TableBody>

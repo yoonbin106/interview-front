@@ -8,8 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+
 import styles from '@/styles/bbs/bbsTable.module.css';
 import axios from 'axios';
 import { useStores } from '@/contexts/storeContext';
@@ -17,7 +16,7 @@ import Link from 'next/link';
 
 
 
-export default function PaginationTableNotice({ posts }) {
+export default function PaginationTableNotice({ rows }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [posts, setPosts] = React.useState([]);
@@ -69,14 +68,14 @@ export default function PaginationTableNotice({ posts }) {
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? posts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : posts
+            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : rows
           ).map((post) => (
-            <TableRow key={post.bbs_id} >
+            <TableRow key={post.bbs_id}>
               <TableCell align="center">{post.bbs_id}</TableCell>
               <TableCell align="center">
-                <Link href={`/bbs/postView?id=${post.bbs_id}`} style={{textDecoration:'none',color:'black'}}>
-                {post.title}
+                <Link href={`/bbs/postView?id=${post.bbs_id}`} style={{ textDecoration: 'none', color: 'black' }}>
+                  {post.title}
                 </Link>
               </TableCell>
               <TableCell align="center">{post.username}</TableCell>
@@ -85,9 +84,9 @@ export default function PaginationTableNotice({ posts }) {
               <TableCell align="center">10</TableCell>
             </TableRow>
           ))}
-        {emptyRows > 0 && (
+          {emptyRows > 0 && (
             <TableRow style={{ height: 30 * emptyRows }}>
-              <TableCell colSpan={4} />
+              <TableCell colSpan={6} />
             </TableRow>
           )}
         </TableBody>
