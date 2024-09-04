@@ -8,13 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
-
 import styles from '@/styles/bbs/bbsTable.module.css';
 import axios from 'axios';
 import { useStores } from '@/contexts/storeContext';
 import Link from 'next/link';
-
-
 
 export default function PaginationTableNotice({ rows }) {
   const [page, setPage] = React.useState(0);
@@ -23,9 +20,7 @@ export default function PaginationTableNotice({ rows }) {
   const [loading, setLoading] = React.useState(true);
   const totalPages = Math.ceil(rows.length / rowsPerPage);
   const [error, setError] = React.useState(null);
-  const [usernames, setUsernames] = React.useState({});
 
-  const { userStore } = useStores(); // Get userStore from context
   const handleChangePage = (newPage) => {
     setPage(newPage);
   };
@@ -36,24 +31,24 @@ export default function PaginationTableNotice({ rows }) {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - posts.length) : 0;
- 
+
   React.useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get('http://localhost:8080/bbs');
-        setPosts(response.data);
+        // 최신 글이 가장 먼저 보이도록 createdAt 기준 내림차순 정렬
+        const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setPosts(sortedPosts);
         setLoading(false);
       } catch (error) {
         setError(error);
         setLoading(false);
       }
     };
-
     fetchPosts();
   }, []);
 
   return (
-    
     <TableContainer component={Paper} className={styles.bbsTableContainer}>
       <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
         <TableHead>
@@ -91,8 +86,6 @@ export default function PaginationTableNotice({ rows }) {
           )}
         </TableBody>
       </Table>
-      
-     
     </TableContainer>
   );
 }

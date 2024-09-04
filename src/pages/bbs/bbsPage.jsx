@@ -22,8 +22,12 @@ const BoardTable = () => {
             try {
                 const response = await axios.get('http://localhost:8080/bbs');
                 console.log(response);
-                setPosts(response.data);
-                setFilteredPosts(response.data); // 필터링된 게시물에 처음 데이터 설정
+
+                // 최신 글이 가장 먼저 보이도록 createdAt 기준 내림차순 정렬
+                const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                setPosts(sortedPosts);
+                setFilteredPosts(sortedPosts); // 필터링된 게시물에 처음 데이터 설정
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -76,13 +80,11 @@ const BoardTable = () => {
 
     return (
         <div className={styles.container}>
-           
             <div className={styles.content}>
                 <div className={"main-container"}>
                     <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
                         <div style={{ width: '90%' }}>
                             {/* 게시판 헤더 */}
-
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>자유 게시판</h2>
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
@@ -94,8 +96,6 @@ const BoardTable = () => {
                                     000 키워드로 검색된 글 <br /> {filteredPosts.length}개의 글
                                 </div>
                                 <div className={styles.boardHeaderControl}>
-                                    
-                                    
                                     <select onChange={handleRowsPerPageChange} value={rowsPerPage}>
                                         <option value={10}>10개씩</option>
                                         <option value={20}>20개씩</option>
@@ -196,13 +196,11 @@ const BoardTable = () => {
                                     <MenuItem value={25}>25</MenuItem>
                                 </Select>
                             </Box>
-                                
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        
+        </div>
     );
 };
 
