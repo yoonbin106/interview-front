@@ -26,13 +26,15 @@ const Chatting = observer(({ closeChatting }) => {
     const [chatRoomList, setChatRoomList] = useState([]);
 
     const { authStore, userStore } = useStores();
-
     const [users, setUsers] = useState([]); //getAllUsers()
 
     const [client, setClient] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
 
     const [currentChatRoomId, setCurrentChatRoomId] = useState(null); // 현재 선택된 채팅방의 ID
+
+    const [lastMessage, setLastMessage] = useState('');
+    const [lastMTopic, setLastMTopic] = useState('');
 
     // const getAllChatroomList = async () => {
     //     try {
@@ -44,6 +46,15 @@ const Chatting = observer(({ closeChatting }) => {
     //     }
     // };
 
+    // const setLastMessage = (chatRoomId, message) => {
+    //     setChatRoomList(prevChatRoomList =>
+    //         prevChatRoomList.map(room =>
+    //             room.id === chatRoomId ? { ...room, lastMessage: message } : room
+    //         )
+    //     );
+    // };
+
+
     //getChatroomList
     const getChatroomList = async () => {
         try {
@@ -54,6 +65,7 @@ const Chatting = observer(({ closeChatting }) => {
                                                 { headers: { 'Content-Type': 'application/json' } }
             );
             setChatRoomList(response.data);
+            // console.log('response.data: ', response.data);
         } catch (error) {
             console.error('Error fetching chat rooms:', error);
         }
@@ -87,16 +99,27 @@ const Chatting = observer(({ closeChatting }) => {
             const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884');
 
             mqttClient.on('connect', () => {
-                console.log('Connected to MQTT broker');
+                //console.log('Connected to MQTT broker');
                 setIsConnected(true);
             });
 
             mqttClient.on('message', (topic, message) => {
-                console.log('Received message:', message.toString());
+                // console.log('Received message:', message.toString());
                 const receivedMessage = JSON.parse(message);
-                // if (receivedMessage.sender !== userStore.username) {
-                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-                // }
+
+                const lastM = `${receivedMessage.sender} : ${receivedMessage.text}`;
+                const lastMTopic = topic.split('/').pop();
+
+                // console.log('lastM: ', lastM);
+                // console.log('lastMTopic: ', lastMTopic);
+                // setLastMessage(lastM);
+                // setLastMTopic(lastMTopic);
+                setChatRoomList(prevChatRoomList =>
+                    prevChatRoomList.map(room =>
+                        room.id == lastMTopic ? { ...room, lastMessage: lastM } : room
+                    )
+                );
+                setMessages((prevMessages) => [...prevMessages, receivedMessage]);
             });
 
             mqttClient.on('error', (err) => {
@@ -110,15 +133,18 @@ const Chatting = observer(({ closeChatting }) => {
 
             setClient(mqttClient);
         }
-    }, [client, userStore.username]);
+    }, [client]);
 
     useEffect(() => {
+        // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
+        // chatRoomList.map((list) => {
+        //     client.subscribe(`mqtt/chat/${list.id}`);
+        // })
         if (client && currentChatRoomId) {
             const topic = `mqtt/chat/${currentChatRoomId}`;
             client.subscribe(topic);
             console.log(`Subscribed to topic: ${topic}`);
 
-            // 이전 토픽을 구독 해제 (optional, 필요에 따라)
             return () => {
                 client.unsubscribe(topic);
                 console.log(`Unsubscribed from topic: ${topic}`);
@@ -126,8 +152,12 @@ const Chatting = observer(({ closeChatting }) => {
         }
     }, [client, currentChatRoomId]);
    
-
-
+    useEffect(() => {
+        if (currentChatRoomId) {
+            setMessages([]);
+            getPastChatting();
+        }
+    }, [currentChatRoomId]);
 
    
     //채팅방 구분만 안되고 그래도 왔다갔다 소통은 되는 코드
@@ -205,54 +235,6 @@ const Chatting = observer(({ closeChatting }) => {
 
     // }, []);
 
-
-
-
-
-
-
-
-
-
-
-
-    
-
-    // const startNewBot = useCallback(async () => {
-    //     try {
-    //         const response = await axios.post('/api/bot/chat', null, {
-    //             params: { id: tempId }
-    //         });
-    //         console.log("New chat started with ID:", response.data.botId);
-    //         setCurrentBotId(response.data.botId);
-    //         setBotStartTime(new Date(response.data.createdTime));
-    //         setBotEndTime(null);
-
-    //         const greetingMessage = "안녕하세요!";
-    //         setMessages([{ text: greetingMessage, sender: 'bot' }]);
-    //     } catch (error) {
-    //         console.error('Error starting new chat:', error);
-    //         setMessages([{ text: "채팅 시작 중 오류가 발생했습니다.", sender: 'system' }]);
-    //     }
-    // }, [tempId]);
-
-    // const saveJsonFile = async () => {
-    //     try {
-    //         const data = {
-    //             botId: currentBotId,
-    //             messages: messages,
-    //             startTime: botStartTime,
-    //             endTime: new Date()
-    //         };
-
-    //         await axios.post('/api/bot/save-json', data);
-    //         console.log('Chat data saved successfully');
-    //     } catch (error) {
-    //         console.error('Error saving chat data:', error);
-    //     }
-    // };
-
-
     const toggleDarkMode = () => {
         setIsDarkMode(prev => !prev);
     };
@@ -267,50 +249,43 @@ const Chatting = observer(({ closeChatting }) => {
         // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
 
         setIsChatOpen(true);
-        //채팅 하나하나 각각 눌렀을때 ?
+        // 채팅 하나하나 각각 눌렀을때 ?
+        // getPastChatting();
 
     };
 
     const handleBackClick = () => {
         setIsChatOpen(false);
-        // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
+        setCurrentChatRoomId('');
+        setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
     };
 
-
-
     //currentChatRoomId : 선택된 채팅방 ID 값 저장돼있듬
+    const getPastChatting = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/chat/getPastChatting', 
+                currentChatRoomId, 
+                { headers: { 'Content-Type': 'application/json' } });
 
-    // const getPastChatting = async () => {
-    //     try {
-    //         const response = await axios.get('http://localhost:8080/api/chat/getPastChatting', currentChatRoomId }
-    //         );
-    //         setChatRoomList(response.data);
-    //     } catch (error) {
-    //         console.error('Error get past chatting history:', error);
-    //     }
-    // };
+            const pastMessages = response.data.map(chat => ({
+                id: chat.id,
+                text: chat.message,
+                sender: chat.username,
+                timestamp: chat.createdTime,
+                senderId: chat.userId,
+            }));
 
+            // console.log(pastMessages);
+            // console.log(userStore.id);
 
-    const loadingPastChatting = () => {
-        const pastMessages = [
-            { text: '테스트용 첫 채팅', sender: '김길동', timestamp: new Date(), senderId: 1 },
-        ]
-
-        pastMessages.map((pastMessage, index) => (
-            setMessages(prev => [...prev, pastMessage])
-        ));
-    }
-
-
-
-
-
-
-
-
-
-
-
+            pastMessages.map((pastMessage, index) => (
+                setMessages(prev => [...prev, pastMessage])
+            ));
+            
+        } catch (error) {
+            console.error('Error get past chatting history:', error);
+        }
+    };
 
 
 
@@ -329,64 +304,7 @@ const Chatting = observer(({ closeChatting }) => {
                     senderId: userStore.id
                 }));
 
-            // const topic = `mqtt/chat/${currentChatRoomId}`;
-            // client.publish(topic, JSON.stringify({
-            //     text: inputMessage,
-            //     sender: userStore.username,
-            //     timestamp: new Date()
-            // }));
-
-
-            // client.send(JSON.stringify({ text: inputMessage, timestamp: new Date() }));
-
-            // // Received
-            // client.on('message', (topic, inputMessage, packet) => {
-            //     console.log('Received Message: ' + inputMessage.toString() + '\nOn topic: ' + topic)
-            // })
-
-            // mqttClient.on('connect', () => {
-            //     const topic = 'mqtt/chat'
-            //     mqttClient.subscribe(topic, (err) => {
-            //         if (!err) {
-            //             mqttClient.publish('mqtt/chat', JSON.stringify(userMessage))
-            //         }
-            //     });
-            // });
-
-            // MQTT를 통해 메시지 전송
-            // mqttClient.publish('mqtt/chat', JSON.stringify(userMessage), (err) => {
-            //     if (err) {
-            //         console.error('MQTT publish error:', err);
-            //     } else {
-            //         console.log('Message sent to mqtt/chat');
-            //     }
-            // });
-
             setInputMessage('');
-            try {
-                // const questionResponse = await axios.post('/api/bot/question', {
-                //     content: inputMessage,
-                //     botId: currentBotId
-                // });
-
-                // const answerResponse = await axios.post('/api/bot/answer', null, {
-                //     params: { questionId: questionResponse.data.questionId }
-                // });
-
-                // const newBotMessage = {
-                //     text: answerResponse.data.content,
-                //     sender: 'bot',
-                //     answerId: answerResponse.data.answerId
-                // };
-
-
-
-                if (inputMessage == '지금')
-                    setMessages(prev => [...prev, { text: '상대방의 메세지', sender: 'kim' }]);
-            } catch (error) {
-                console.error('Error processing message:', error);
-                setMessages(prev => [...prev, { text: "죄송합니다. 오류가 발생했습니다.", sender: 'kim' }]);
-            }
         }
     };
     const handleKeyPress = (event) => {
@@ -394,7 +312,6 @@ const Chatting = observer(({ closeChatting }) => {
             sendMessage();
         }
     };
-
 
     return (
         <div className={`${styles.atchatWrapper} ${isDarkMode ? `${styles.darkMode}` : ''}`}>
@@ -411,7 +328,8 @@ const Chatting = observer(({ closeChatting }) => {
                             getChatroomList={getChatroomList}
                             userStore={userStore} 
                             users={users} 
-                            currentChatRoomId={currentChatRoomId} />
+                            currentChatRoomId={currentChatRoomId} 
+                            client={client} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>
@@ -421,9 +339,6 @@ const Chatting = observer(({ closeChatting }) => {
                             </div>
                             <ChattingMessages messages={messages} userStore={userStore} />
                         </>
-
-
-
                     )}
                 </div>
                 {isChatOpen && (
@@ -437,7 +352,6 @@ const Chatting = observer(({ closeChatting }) => {
                     </div>
                 )}
             </div>
-
         </div>
     );
 });

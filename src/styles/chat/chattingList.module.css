@@ -49,21 +49,22 @@
   
 
 
-
+.chattingList {
+    display: flex;
+    align-items: center;
+    padding: 0px 20px 0px 0px;
+    /* padding: 20px; */
+    border-bottom: solid 1px rgb(206, 206, 206);
+}
 
 .chattingList:hover {
     /* border: solid 1px black; */
     background-color: #f0f0f0;
 }
 
-.chattingList {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-bottom: solid 1px rgb(206, 206, 206);
-}
-
 .chattingListInside {
+    /* margin: 20px; */
+    padding: 20px;
     display: flex;
     width: 100%;
 }
@@ -91,6 +92,88 @@
 .noChatroom {
     margin-top: 50px;
     text-align: center;
-    color: #888; /* 회색 톤으로 부드러운 느낌을 줌 */
+    color: #888;
     font-size: 16px;
+}
+
+
+
+
+/* 모달 */
+.modalOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 30px 25px 25px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    z-index: 1001;
+    margin-top: -100px;
+}
+
+.modalTitle {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.modalInput {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin-bottom: 17px;
+}
+
+.modalInput input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px; 
+    box-sizing: border-box;
+    font-size: 16px;
+    text-align: left;
+    outline: none;
+}
+
+.modalButton {
+    display: flex;
+    justify-content: space-between; /* 버튼을 중앙 정렬 */
+    gap: 10px; /* 버튼 간의 간격 조정 */
+}
+
+.modalButton button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: black;
+    transition: background-color 0.3s; /* 버튼 색상 변경 애니메이션 */
+}
+
+.modalButton button:hover {
+    background-color: #d7dce0; /* 버튼 호버 색상 */
+}
+
+.modalButton button:nth-child(2) {
+    color: white;
+    background-color: #1586fffa; /* 취소 버튼 색상 */
+}
+
+.modalButton button:nth-child(2):hover {
+    background-color: #0056b3; /* 취소 버튼 호버 색상 */
 }

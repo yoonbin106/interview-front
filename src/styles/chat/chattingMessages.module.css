@@ -2,7 +2,7 @@
   position: relative;
 
   padding: 30px 10px 10px 2px;
-  margin: 20px;
+  margin: 20px 20px 20px 20px;
 }
 
 .messageContainer {
@@ -60,65 +60,36 @@
 
 
 
-
-
-
-
-/* .chattingMessages {
-  padding: 1rem;
-  margin: 20px;
-}
-
-.messageContainer {
+.chattingListHeader {
   display: flex;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: solid 1px rgb(168, 168, 168);
 }
 
-.messageContainer.my {
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+.chattingListTitle {
+  font-weight: 600;
+  margin-right: auto;
 }
 
-.messageContainer.others {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+.chattingListCreate {
+  margin-left: 15px;
 }
 
-.messageContent {
-  max-width: 270px;
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
+.chattingListCreate:hover {
+  transform: scale(1.1);
 }
 
-.othersMessageInfo {
-  display: flex; 
-  align-items: center; 
-  margin-bottom: 0.5rem; 
+.chattingListSettings {
+  margin-left: 15px;
+  margin-right: 5px;
 }
 
-.recieverAvatar {
-  font-size: 2rem;
-  display: flex;
-  align-items: flex-start;
-  margin-top: 6px;
-  margin-right: 0.5rem;
+.chattingListSettings:hover {
+  transform: scale(1.1);
 }
 
-.othersMessageSender {
-  font-weight: bold;
-  margin-left: 2px;
-  margin-bottom: 3px;
-  color: #333;
-}
 
-.messageContainer.my .messageContent {
-  background-color: #e7f3ff;
-  color: #0056b3;
-}
 
-.messageContainer.others .messageContent {
-  background-color: #f3f4f6;
-  color: #1f2937;
-}
- */
+

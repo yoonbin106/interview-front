@@ -7,14 +7,46 @@ import ChattingCreateRoom from './chattingCreateRoom';
 import MenuIcon from './menuIcon';
 import axios from 'axios';
 
-const ChattingList = ({ onChatClick, getChatroomId, userStore, users, chatRoomList, currentChatRoomId, getChatroomList }) => {
+
+
+const ChattingList = ({ 
+    onChatClick, 
+    getChatroomId, 
+    userStore, 
+    users, 
+    chatRoomList, 
+    currentChatRoomId, 
+    getChatroomList,
+    client,
+ }) => {
 
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
-    const options = [
-        { label: '채팅방 이름 수정', action: editChatroomTitle },
-        { label: '채팅방 나가기', action: exitChatroom },
-    ];
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [newChatroomTitle, setNewChatroomTitle] = useState('');
+    const [currentChatRoomTitle, setCurrentChatRoomTitle] = useState('');
+
+    const inputRef = useRef(null);
+
+    // useEffect(() => {
+    //     console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
+    //     chatRoomList.forEach((list) => {
+    //         const topic = `mqtt/chat/test/${list.id}`;
+    //         client.subscribe(topic);
+    //     })
+    // }, [client, chatRoomList]);
+
+    useEffect(() => {
+
+        if (showEditModal && inputRef.current) {
+            inputRef.current.focus();
+        }
+
+        if (showEditModal) {
+            getChatroomTitle();
+        }
+
+    }, [showEditModal]);
 
     // console.log('chatRoomList print: ', chatRoomList);
     // console.log('users.id: ', userStore.id, currentChatRoomId);
@@ -26,25 +58,68 @@ const ChattingList = ({ onChatClick, getChatroomId, userStore, users, chatRoomLi
         setIsCreatingRoom(false);
     };
 
-    const editChatroomTitle  = async () => {}
-
     const exitChatroom = async () => {
         try {
-            //const response = 
-            console.log('[exitChatroom()] :', currentChatRoomId, userStore.id);
-            const response = await axios.delete('http://localhost:8080/api/chat/exitChatroom', {
+            // const response = 
+            // console.log('[exitChatroom()] :', currentChatRoomId, userStore.id);
+            await axios.delete('http://localhost:8080/api/chat/exitChatroom', {
                 params: {
-                    currentChatRoomId: currentChatRoomId, 
+                    currentChatRoomId: currentChatRoomId,
                     userId: userStore.id
                 }
             });
-            console.log(response.data);
+            //채팅방 다시 불러와서 UI 갱신
+            getChatroomList();
+
+            client.unsubscribe(currentChatRoomId);
+            console.log(`Unsubscribed from topic: ${currentChatRoomId}`);
 
         } catch (error) {
-            console.error('Error delete Chatroom:', error);
+            console.error('채팅방 나가기 중 에러 발생:', error);
         }
     };
 
+    const getChatroomTitle = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/chat/getChatroomTitle', {
+                params: {
+                    id: currentChatRoomId
+                }
+            });
+            // console.log('[getChatroomTitle()] - response.data: ', response.data);
+            setCurrentChatRoomTitle(response.data);
+        } catch (error) {
+            console.error('채팅방 제목 가져오기 중 에러 발생:', error);
+        }
+    }
+
+    const editChatroomTitle = async (newChatroomTitle) => {
+        try {
+            console.log('newChatroomTitle: ', newChatroomTitle);
+            console.log('currentChatRoomId: ', currentChatRoomId);
+
+            await axios.post('http://localhost:8080/api/chat/editChatroomTitle', {
+                chatRoomId: currentChatRoomId,
+                newTitle: newChatroomTitle
+            });
+
+        } catch (error) {
+            console.error('채팅방 제목 수정 중 에러 발생: ', error);
+        }
+        setShowEditModal(false); // 모달 닫기
+        getChatroomList(); //채팅방 리스트 갱신
+    }
+
+    const closeModal = (event) => {
+        if (event.target === event.currentTarget) {
+            setShowEditModal(false);
+        }
+    };
+
+    const options = [
+        { label: '채팅방 이름 수정', action: () => setShowEditModal(true) },
+        { label: '채팅방 나가기', action: exitChatroom },
+    ];
 
     return (
         <div className={styles.chattingListContainer}>
@@ -80,52 +155,50 @@ const ChattingList = ({ onChatClick, getChatroomId, userStore, users, chatRoomLi
                                     </div>
                                     <div className={styles.chattingListContent}>
                                         <div className={styles.chattingRoomTitle}>{list.chatRoomTitle}</div>
-                                        <div className={styles.chattingRoomLastMessage}>테스트 : 테스트 마지막 메세지</div>
-                                        {/* 마지막 메세지는 json으로 저장해야하나 했는데 그냥 메세지 하나하나 보낼때마다... 
-                                    마지막 메세지의 id 값을 chatroomList의 last_message에 저장하고 출력해올때마다 스프링에서 또 받아오게
-                                    그러면 뭔가 더 복잡해지나? chatroom 정보 가져올때 lastMessage의 id 값으로 chat_message 테이블을 또 조회해야하니까..
-                                    id로 하지말고 값을 그냥 저장해야하나
-                                     ? ?  ? ?  */}
+                                        <div className={styles.chattingRoomLastMessage}>
+                                            {list.lastMessage ? list.lastMessage : '채팅내역 없음'}
+                                        </div>
                                     </div>
                                 </div>
-
                                 <div>
-                                    <MenuIcon options={options} exitChatroom={exitChatroom}/>
+                                    <MenuIcon options={options} />
                                 </div>
                             </div>
                         ))
                     )}
-                    {/* 
-                    {chatRoomList.map((list) => (
-                        <div className={styles.chattingList} key={list.id} onClick={() => onChatClick(list.id)}>
-                            <div className={styles.chattingListProfile}>
-                                <Avatar sx={{ width: 50, height: 50 }} /> 
-                                
-                            </div>
-                            <div className={styles.chattingListContent}>
-                                <div className={styles.chattingRoomTitle}>{list.chatRoomTitle}</div>
-                                <div className={styles.chattingRoomLastMessage}>테스트 : 테스트 마지막 메세지</div>
-                                
-                            </div>
-                        </div>
-                    ))}
-                     */}
-                    {/* src={userInfo.profile} */}
-                    {/* {list.name} : {list.lastMessage} */}
                 </>
             ) : (
                 <div>
                     <button className={styles.chattingBackToListButton} onClick={backToChatList}>
                         <ArrowBackIosNewRoundedIcon />
                     </button>
-                    <ChattingCreateRoom onBack={backToChatList} userStore={userStore} getChatroomList={getChatroomList}/>
+                    <ChattingCreateRoom onBack={backToChatList} userStore={userStore} getChatroomList={getChatroomList} />
                     {/* users={users} */}
                 </div>
 
             )}
+
+            {showEditModal && (
+                <div className={styles.modalOverlay} onClick={closeModal}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalTitle}>채팅방 제목 수정</div>
+                        <div className={styles.modalInput}>
+                            <input
+                                type="text"
+                                ref={inputRef}
+                                onChange={(e) => setNewChatroomTitle(e.target.value)}
+                                placeholder={currentChatRoomTitle}
+                            />
+                        </div>
+                        <div className={styles.modalButton}>
+                            <button onClick={() => setShowEditModal(false)}>취소</button>
+                            <button onClick={() => editChatroomTitle(newChatroomTitle)}>수정</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            )}
         </div>
-
-
     );
 };
 

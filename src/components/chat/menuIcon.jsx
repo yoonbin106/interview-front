@@ -6,27 +6,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const ITEM_HEIGHT = 48;
 
-export default function MenuIcon({ options, exitChatroom }) {
-    // console.log('options: ', options);
+export default function MenuIcon({ options }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-
-    
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleClose = async () => {
         setAnchorEl(null);
     };
-
-    const test = () => {
-        console.log('아니 왜 안되냐고 제발');
-        handleClose();
-        exitChatroom();
-    };
-
-    
 
     return (
         <div>
@@ -62,18 +51,11 @@ export default function MenuIcon({ options, exitChatroom }) {
                 }}
                 disableScrollLock={true} // 비활성화 안하면 ui 어긋남
             >
-                {/* {options.map(({ label, action }) => (
-                    <MenuItem key={label} onClick={() => handleMenuItemClick(action)}>
-                        {label}
+                {options.map((option, index) => (
+                    <MenuItem key={index} onClick={() => { handleClose(); option.action(); }}>
+                        {option.label}
                     </MenuItem>
-                ))} */}
-                
-                <MenuItem>
-                    {options[0].label}
-                </MenuItem>
-                <MenuItem onClick={() => test()}>
-                    {options[1].label}
-                </MenuItem>
+                ))}
             </Menu>
         </div>
     );

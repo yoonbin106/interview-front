@@ -3,6 +3,8 @@ import Avatar from '@mui/material/Avatar';
 import styles from '../../styles/chat/chattingMessages.module.css';
 import { getAllUsers } from 'api/user';
 
+import { MessageSquareDiff, Settings } from 'lucide-react';
+
 
 const ChattingMessages = ({ messages, userStore }) => {
   const messagesEndRef = useRef(null);
@@ -30,16 +32,32 @@ const ChattingMessages = ({ messages, userStore }) => {
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages]);
 
 
   return (
     <div className={styles.chattingMessages}>
 
+{/* 
+      <div className={styles.chattingListHeader}>
+        <div className={styles.chattingListTitle}>채팅방</div>
+        <div className={styles.chattingListCreate}>
+          <button>
+            <MessageSquareDiff />
+          </button>
+        </div>
+        <div className={styles.chattingListSettings}>
+          <button>
+            <Settings />
+          </button>
+        </div>
+      </div> */}
+
+
       {messages.map((message, index) => (
 
-        message.sender === userStore.username ? (
+        message.senderId == userStore.id ? (
           <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
             <div className={styles.messageContent}>
               <p>{message.text}</p>

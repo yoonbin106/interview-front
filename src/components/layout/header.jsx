@@ -180,6 +180,9 @@ const Header = observer(() => {
                             router.push('/myPage');
                           }
                         }}>마이페이지</MenuItem>
+
+
+                        
                       }
                       <ListDivider />
                       {authStore.loggedIn && (
@@ -190,23 +193,26 @@ const Header = observer(() => {
                     </Menu>
                   </Dropdown>
                 </div>
+                {authStore.loggedIn &&
                 <Dropdown>
-                  <MenuButton
-                    slots={{ root: IconButton }}
-                    slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
-                    sx={{ borderRadius: 40, width: 50, height: 50 }}
-                  >
-                    <Badge badgeContent={999} color="danger" variant="solid" size="sm">
-                      <NotificationsNoneTwoToneIcon color="action" />
-                    </Badge>
-                  </MenuButton>
-                  <Menu placement="bottom-start" sx={{ width: 400 }}>
-                    <MenuItem>알림</MenuItem>
-                    <ListDivider />
-                    <MenuItem>채팅 : 안읽은 메시지 1개</MenuItem>
-                    <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem>
-                  </Menu>
-                </Dropdown>
+                <MenuButton
+                  slots={{ root: IconButton }}
+                  slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
+                  sx={{ borderRadius: 40, width: 50, height: 50 }}
+                >
+                  <Badge badgeContent={999} color="danger" variant="solid" size="sm">
+                    <NotificationsNoneTwoToneIcon color="action" />
+                  </Badge>
+                </MenuButton>
+                <Menu placement="bottom-start" sx={{ width: 400 }}>
+                  <MenuItem>알림</MenuItem>
+                  <ListDivider />
+                  <MenuItem>채팅 : 안읽은 메시지 1개</MenuItem>
+                  <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem>
+                </Menu>
+              </Dropdown>
+                }
+                
               </div>
             </div>
           </div>
