@@ -66,10 +66,10 @@ const AdminCompanyNoticeRegister = observer(() => {
                 <ReactQuill
                     value={content}
                     onChange={handleContentChange}
+                    placeholder="내용을 입력하세요"  // 내용 입력 placeholder 추가
                     modules={{
                         toolbar: [
-                            [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
-                            [{size: ['small', false, 'large', 'huge']}], // small, normal, large, huge 크기 선택 가능
+                            [{ 'header': '1'}, { 'header': '2' }],
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                             [{'list': 'ordered'}, {'list': 'bullet'}, 
                             {'indent': '-1'}, {'indent': '+1'}],
@@ -78,7 +78,7 @@ const AdminCompanyNoticeRegister = observer(() => {
                         ],
                     }}
                     formats={[
-                        'header', 'font', 'size',
+                        'header', 'font',
                         'bold', 'italic', 'underline', 'strike', 'blockquote',
                         'list', 'bullet', 'indent',
                         'link', 'image', 'video'

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
 
+// Quill.js 동적 import 설정
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
@@ -37,7 +38,7 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
         try {
             const updatedCompanyNotice = {
                companyNoticeTitle: editedCompanyNotice.companyNoticeTitle,
-                companyNoticeContent: editedCompanyNotice.companyNoticeContent,
+               companyNoticeContent: editedCompanyNotice.companyNoticeContent,
             };
             await axios.put(`http://localhost:8080/api/companynotice/${editedCompanyNotice.companyNoticeId}`, updatedCompanyNotice);
             alert('공지사항이 성공적으로 수정되었습니다.');
@@ -114,10 +115,10 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
                 <ReactQuill
                     value={editedCompanyNotice.companyNoticeContent}
                     onChange={handleChange}
+                    placeholder="내용을 입력하세요" // Placeholder 추가
                     modules={{
                         toolbar: [
                             [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-                            [{ size: ['small', false, 'large', 'huge'] }],
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                             [{'list': 'ordered'}, {'list': 'bullet'}, 
                             {'indent': '-1'}, {'indent': '+1'}],
@@ -126,7 +127,7 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
                         ],
                     }}
                     formats={[
-                        'header', 'font', 'size',
+                        'header', 'font',
                         'bold', 'italic', 'underline', 'strike', 'blockquote',
                         'list', 'bullet', 'indent',
                         'link', 'image', 'video'
@@ -147,7 +148,7 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
     const renderButtons = () => (
         <div className={styles.adminCompanyNoticeDetailsButtonsContainer}>
             {isEditing ? (
-                <Button variant="contained" className={styles.adminACompanyNoticeSaveButton} onClick={handleSave}>
+                <Button variant="contained" className={styles.adminCompanyNoticeSaveButton} onClick={handleSave}>
                     저장하기
                 </Button>
             ) : (

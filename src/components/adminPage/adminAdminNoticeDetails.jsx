@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
 
+// Quill.js 동적 import 설정
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const AdminAdminNoticeDetails = ({ noticeData }) => {
@@ -104,7 +105,15 @@ const AdminAdminNoticeDetails = ({ noticeData }) => {
             ) : (
                 <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedNotice.adminNoticeTitle}</h2>
             )}
-            <p className={styles.adminAdminNoticeDetailsDate}>{editedNotice.adminNoticeCreatedTime}</p>
+            <p className={styles.adminAdminNoticeDetailsDate}>
+                {new Date(editedNotice.adminNoticeCreatedTime).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                })}
+            </p>
         </div>
     );
 
@@ -114,20 +123,18 @@ const AdminAdminNoticeDetails = ({ noticeData }) => {
                 <ReactQuill
                     value={editedNotice.adminNoticeContent}
                     onChange={handleChange}
+                    placeholder="내용을 입력하세요"
                     modules={{
                         toolbar: [
-                            [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-                            [{ size: ['small', false, 'large', 'huge'] }],
+                            [{ 'header': '1'}, {'header': '2'}],
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                            [{'list': 'ordered'}, {'list': 'bullet'}, 
-                            {'indent': '-1'}, {'indent': '+1'}],
+                            [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
                             ['link', 'image', 'video'],
                             ['clean']
                         ],
                     }}
                     formats={[
-                        'header', 'font', 'size',
-                        'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
                         'list', 'bullet', 'indent',
                         'link', 'image', 'video'
                     ]}

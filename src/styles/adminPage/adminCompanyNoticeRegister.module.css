@@ -1,5 +1,3 @@
-/* adminCompanyNoticeRegister.module.css */
-
 /* 전체 컨테이너 */
 .adminCompanyNoticeRegisterContainer {
     max-width: 1000px;
@@ -13,15 +11,8 @@
     margin-bottom: 10px;
 }
 
-
-
-.adminCompanyNoticeRegisterFontControlItem {
-    margin-right: 5px;
-}
-
 /* 내용 텍스트 필드 */
 .adminCompanyNoticeRegisterContentInput {
-    font-size: 15px;
     font-style: normal;
     font-weight: normal;
     text-decoration: none;
@@ -29,19 +20,7 @@
     margin-bottom: 10px;
 }
 
-
-/* 파일 첨부 버튼 */
-.adminCompanyNoticeRegisterFileAttachButton {
-    margin-right: 10px;
-}
-
-/* 파일 첨부 텍스트 */
-.adminCompanyNoticeRegisterFileAttachText {
-    margin-top: 5px;
-    color: gray;
-    font-size: 0.9em;
-}
-
+/* 등록 버튼 스타일 */
 .adminCompanyNoticeRegisterSubmitButton {
     padding: 10px 20px;
     font-size: 16px;
@@ -58,8 +37,7 @@
     background-color: #0056b3;
 }
 
-
-
+/* 제목 스타일 */
 .adminCompanyNoticeRegisterTitle {
     font-size: 40px;
     font-weight: bold;

@@ -66,10 +66,10 @@ const AdminAdminNoticeRegister = observer(() => {
                 <ReactQuill
                     value={content}
                     onChange={handleContentChange}
+                    placeholder="내용을 입력하세요" // 여기에 placeholder 추가
                     modules={{
                         toolbar: [
                             [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
-                            [{size: ['small', false, 'large', 'huge']}], // small, normal, large, huge 크기 선택 가능
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                             [{'list': 'ordered'}, {'list': 'bullet'}, 
                             {'indent': '-1'}, {'indent': '+1'}],
@@ -78,19 +78,19 @@ const AdminAdminNoticeRegister = observer(() => {
                         ],
                     }}
                     formats={[
-                        'header', 'font', 'size',
+                        'header', 'font',
                         'bold', 'italic', 'underline', 'strike', 'blockquote',
                         'list', 'bullet', 'indent',
                         'link', 'image', 'video'
                     ]}
                     className={styles.adminAdminNoticeRegisterContentInput}
                     style={{
-                        minHeight: '200px',
+                        minHeight: '300px',
                         border: '1px solid #ccc',
                         padding: '10px',
                     }}
                 />
-                <Typography variant="body2" align="right" color="textSecondary" className={styles.adminNoticeRegisterCharCount}>
+                <Typography variant="body2" align="right" color="textSecondary" className={styles.noticeRegisterCharCount}>
                     {content.length}/2000
                 </Typography>
                 <Grid item xs={12} align="right">

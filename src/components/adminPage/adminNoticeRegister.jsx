@@ -1,4 +1,3 @@
-//adminNoticeRegister.jsx
 import React, { useState } from 'react';
 import { Grid, Typography, Button, TextField } from '@mui/material';
 import dynamic from 'next/dynamic';
@@ -16,19 +15,30 @@ const AdminNoticeRegister = observer(() => {
     const { userStore } = useStores();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');  // Quill.js의 content를 관리하기 위한 상태
+    const [titleError, setTitleError] = useState(false);  // 제목 입력 오류 상태
+    const [contentError, setContentError] = useState(false);  // 내용 입력 오류 상태
     const router = useRouter();
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
+        setTitleError(false);  // 제목을 입력하면 오류 상태 초기화
     };
 
     const handleContentChange = (value) => {
         setContent(value);  // Quill.js가 반환하는 HTML을 상태로 저장
+        setContentError(false);  // 내용을 입력하면 오류 상태 초기화
     };
 
     const handleSubmit = async () => {
-        if (!title || !content) {
-            alert('제목과 내용을 모두 입력해주세요.');
+        if (!title) {
+            setTitleError(true);
+            alert('제목을 입력해주세요.');
+            return;
+        }
+
+        if (!content || content === '<p><br></p>') {  // 내용이 비어있거나 기본 빈 텍스트일 경우
+            setContentError(true);
+            alert('내용을 입력해주세요.');
             return;
         }
 
@@ -61,12 +71,15 @@ const AdminNoticeRegister = observer(() => {
                     className={styles.adminNoticeRegisterTitleInput}
                     value={title}
                     onChange={handleTitleChange}
+                    error={titleError}  // 오류 상태에 따라 에러 스타일 적용
+                    helperText={titleError && "제목을 입력해주세요"}  // 오류 메시지 출력
                 />
             </Grid>
             <Grid item xs={12}>
                 <ReactQuill
                     value={content}
                     onChange={handleContentChange}
+                    placeholder="내용을 입력하세요" // 여기서 placeholder 설정
                     modules={{
                         toolbar: [
                             [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
@@ -85,12 +98,12 @@ const AdminNoticeRegister = observer(() => {
                         'link', 'image', 'video'
                     ]}
                     className={styles.adminNoticeRegisterContentInput}
-                    style={{
-                        minHeight: '200px',
-                        border: '1px solid #ccc',
-                        padding: '10px',
-                    }}
                 />
+                {contentError && (
+                    <Typography variant="body2" color="error">
+                        내용을 입력해주세요.
+                    </Typography>
+                )}
                 <Typography variant="body2" align="right" color="textSecondary" className={styles.noticeRegisterCharCount}>
                     {content.length}/2000
                 </Typography>

@@ -1,5 +1,3 @@
-/* adminAdminNoticeRegister.module.css */
-
 /* 전체 컨테이너 */
 .adminAdminNoticeRegisterContainer {
     max-width: 1000px;
@@ -13,35 +11,38 @@
     margin-bottom: 10px;
 }
 
-
-
-.adminAdminNoticeRegisterFontControlItem {
-    margin-right: 5px;
-}
-
-/* 내용 텍스트 필드 */
+/* Quill 에디터 입력 필드 스타일 */
 .adminAdminNoticeRegisterContentInput {
-    font-size: 15px;
+    font-size: 1.5rem;  /* 기본 폰트 크기 */
     font-style: normal;
     font-weight: normal;
     text-decoration: none;
     text-align: left;
     margin-bottom: 10px;
+    min-height: 100px; /* 에디터 높이 */
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 100%;
 }
 
-
-/* 파일 첨부 버튼 */
-.adminAdminNoticeRegisterFileAttachButton {
-    margin-right: 10px;
+/* 툴바 크기와 버튼 크기 조정 */
+.ql-toolbar.ql-snow {
+    height: 50px;
+    font-size: 1.1rem;
 }
 
-/* 파일 첨부 텍스트 */
-.adminAdminNoticeRegisterFileAttachText {
-    margin-top: 5px;
-    color: gray;
-    font-size: 0.9em;
+.ql-toolbar.ql-snow .ql-picker-label, 
+.ql-toolbar.ql-snow .ql-picker-item {
+    padding: 10px;
 }
 
+.ql-toolbar.ql-snow .ql-formats button, 
+.ql-toolbar.ql-snow .ql-formats .ql-picker {
+    font-size: 1.1rem;
+    padding: 5px;
+}
+
+/* 등록 버튼 스타일 */
 .adminAdminNoticeRegisterSubmitButton {
     padding: 10px 20px;
     font-size: 16px;
@@ -57,8 +58,6 @@
 .adminAdminNoticeRegisterSubmitButton:hover {
     background-color: #0056b3;
 }
-
-
 
 .adminAdminNoticeRegisterTitle {
     font-size: 40px;

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
 
+// Quill.js 동적 import 설정
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const AdminNoticeDetails = ({ noticeData }) => {
@@ -74,9 +75,9 @@ const AdminNoticeDetails = ({ noticeData }) => {
     };
 
     const handleChange = (value) => {
-        setEditedNotice(prevNotice => ({
+        setEditedNotice((prevNotice) => ({
             ...prevNotice,
-            noticeContent: value
+            noticeContent: value,
         }));
     };
 
@@ -94,9 +95,9 @@ const AdminNoticeDetails = ({ noticeData }) => {
                     name="noticeTitle"
                     value={editedNotice.noticeTitle || ''}
                     onChange={(e) =>
-                        setEditedNotice(prevNotice => ({
+                        setEditedNotice((prevNotice) => ({
                             ...prevNotice,
-                            noticeTitle: e.target.value
+                            noticeTitle: e.target.value,
                         }))
                     }
                     inputProps={{ style: { fontWeight: 'bold', fontSize: '1.5rem' } }}
@@ -104,7 +105,15 @@ const AdminNoticeDetails = ({ noticeData }) => {
             ) : (
                 <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedNotice.noticeTitle}</h2>
             )}
-            <p className={styles.adminNoticeDetailsDate}>{editedNotice.noticeCreatedTime}</p>
+            <p className={styles.adminNoticeDetailsDate}>
+                {new Date(editedNotice.noticeCreatedTime).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                })}
+            </p>
         </div>
     );
 
@@ -114,33 +123,25 @@ const AdminNoticeDetails = ({ noticeData }) => {
                 <ReactQuill
                     value={editedNotice.noticeContent}
                     onChange={handleChange}
+                    placeholder="내용을 입력하세요" // Placeholder 추가
                     modules={{
                         toolbar: [
-                            [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-                            [{ size: ['small', false, 'large', 'huge'] }],
+                            [{ header: '1' }, { header: '2' }, { font: [] }],
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                            [{'list': 'ordered'}, {'list': 'bullet'}, 
-                            {'indent': '-1'}, {'indent': '+1'}],
+                            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                             ['link', 'image', 'video'],
-                            ['clean']
+                            ['clean'],
                         ],
                     }}
                     formats={[
-                        'header', 'font', 'size',
-                        'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'header', 'font', 'bold', 'italic', 'underline', 'strike', 'blockquote',
                         'list', 'bullet', 'indent',
                         'link', 'image', 'video'
                     ]}
                 />
             ) : (
-                <div dangerouslySetInnerHTML={{ __html: editedNotice.noticeContent }} />
+                <div className={styles.quillContent} dangerouslySetInnerHTML={{ __html: editedNotice.noticeContent }} />
             )}
-        </div>
-    );
-
-    const renderAuthor = () => (
-        <div className={styles.adminNoticeAuthor}>
-            <Typography variant="subtitle1">작성자: {editedNotice.user?.username}</Typography>
         </div>
     );
 
@@ -174,7 +175,6 @@ const AdminNoticeDetails = ({ noticeData }) => {
                         [전체 공지사항]
                     </Typography>
                     {renderHeader()}
-                    {renderAuthor()}
                     {renderContent()}
                     {renderButtons()}
                 </Paper>
