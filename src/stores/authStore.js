@@ -25,6 +25,7 @@ class AuthStore {
 
   checkLoggedIn() {
     this.loggedIn = !!localStorage.getItem('token');
+    this.isAdmin = !!localStorage.getItem('isAdmin');
   }
 
   setIsAdmin(status) {
