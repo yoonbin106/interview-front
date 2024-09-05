@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import RingLoader from 'react-spinners/RingLoader';
+// import RingLoader from 'react-spinners/RingLoader';
+import Image from 'next/image';
 import styles from '@/styles/interview/interviewLoading.module.css';
 
 const LoadingOverlay = () => {
@@ -21,7 +22,14 @@ const LoadingOverlay = () => {
 
   return (
     <div className={styles.overlay}>
-      <RingLoader color="#2397d3" size={90} speedMultiplier={1.25} />
+      {/* <RingLoader color="#2397d3" size={90} speedMultiplier={1.25} /> */}
+      <Image 
+        src="/images/interviewLoading.gif"
+        alt="Loading"
+        width={900}
+        height={900}
+        unoptimized
+      />
       <div className={styles.loadingText}>
         {messages[currentMessageIndex]}
       </div>

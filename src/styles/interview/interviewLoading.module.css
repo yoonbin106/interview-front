@@ -1,29 +1,28 @@
 /* interviewLoading.module.css */
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-  
-  .fade-in-out {
-    animation: fadeInOut 1s linear infinite;
-  }
-  
-  @keyframes fadeInOut {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
-  }
-  
-  .loadingText {
-    position: absolute;
-    top: 60%;
-    font-size: 18px;
-    text-align: center;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.fade-in-out {
+  animation: fadeInOut 1s linear infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.loadingText {
+  font-size: 24px;
+  text-align: center;
+}
