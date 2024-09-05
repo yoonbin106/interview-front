@@ -246,6 +246,23 @@ const CommentItem = ({ comment, setComments }) => {
       console.error('Failed to update comment:', error);
     }
   };
+
+  const handleDeleteClick = async () => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      try {
+        const response = await axios.delete(`http://localhost:8080/bbs/comments/${comment.commentId}`);
+        if (response.status === 200) {
+          // 삭제된 댓글을 필터링하여 상태 업데이트
+          setComments(prevComments => prevComments.filter(c => c.commentId !== comment.commentId));
+          console.log("댓글 삭제 성공.");
+        }
+      } catch (error) {
+        console.error('댓글 삭제 실패:', error);
+      }
+    }
+    handleClose();
+  };
+  
   
   
   return (
@@ -269,7 +286,8 @@ const CommentItem = ({ comment, setComments }) => {
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
             <MenuItem onClick={handleEditClick}>수정</MenuItem>
-            <MenuItem>삭제</MenuItem>
+            <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
+
             <MenuItem>신고</MenuItem>
           </Menu>
         </>
