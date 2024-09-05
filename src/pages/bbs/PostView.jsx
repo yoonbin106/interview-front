@@ -196,16 +196,19 @@ const PostContent = ({ post, openReportModal }) => {
 
 
 // 댓글 목록 컴포넌트
-const CommentList = ({ comments }) => {
+const CommentList = ({ comments, setComments }) => {
   return (
     <div className={styles.commentList}>
       {comments.map((comment, index) => (
-        <CommentItem key={`${comment.id}-${index}`} comment={comment} />  // 고유 키 생성
+        <CommentItem key={`${comment.commentId}-${index}`} comment={comment} setComments={setComments} />
       ))}
     </div>
   );
 };
-const CommentItem = ({ comment }) => {
+
+const CommentItem = ({ comment, setComments }) => {
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+  const [newContent, setNewContent] = useState(comment.content); // 수정할 댓글 내용
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -216,33 +219,65 @@ const CommentItem = ({ comment }) => {
     setAnchorEl(null);
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true); // 수정 모드로 전환
+    handleClose();
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      const commentId = comment.commentId;  // 수정할 댓글의 ID
+      const response = await axios.put(`http://localhost:8080/bbs/comments/${commentId}`, {
+        content: newContent,  // 수정된 내용
+      });
+  
+      // 서버에서 수정된 댓글을 받은 후 state 업데이트
+      if (response.status === 200) {
+        setComments((prevComments) =>
+          prevComments.map((c) => 
+            c.commentId === commentId ? { ...c, content: newContent } : c // 특정 commentId에 맞는 댓글만 수정
+          )
+        );
+        setIsEditing(false); // 수정 모드 종료
+      } else {
+        console.error("Failed to update comment:", response.statusText);
+      }
+    } catch (error) {
+      console.error('Failed to update comment:', error);
+    }
+  };
+  
+  
   return (
     <div className={styles.commentItem}>
-        {/* author 대신 username으로 수정 */}
-        <strong>{comment.username}</strong> {/* 수정한 부분 */}
-      <IconButton
-        size="small"
-        aria-label="display more actions"
-        edge="end"
-        color="inherit"
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem>수정</MenuItem>
-        <MenuItem>삭제</MenuItem>
-        <MenuItem>신고</MenuItem>
-      </Menu>
-      <p>{comment.content}</p>
-      <span>{comment.date}</span>
+      <strong>{comment.username}</strong>
+      {isEditing ? (
+        <>
+          <input
+            type="text"
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+          />
+          <button onClick={handleSaveClick}>저장</button>
+          <button onClick={() => setIsEditing(false)}>취소</button>
+        </>
+      ) : (
+        <>
+          <p>{comment.content}</p>
+          <IconButton size="small" aria-label="more actions" onClick={handleClick}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+            <MenuItem onClick={handleEditClick}>수정</MenuItem>
+            <MenuItem>삭제</MenuItem>
+            <MenuItem>신고</MenuItem>
+          </Menu>
+        </>
+      )}
     </div>
   );
 };
+
 
 // 댓글 입력 컴포넌트 (서버로 등록 요청)
 const CommentInput = ({ postId, setComments }) => {
