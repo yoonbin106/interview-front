@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import userStore from 'stores/userStore';
+import ReportModal from '@/pages/bbs/reportModal';
+
 
 const PostView = () => {
   const [comments, setComments] = useState([
@@ -15,6 +17,7 @@ const PostView = () => {
   const { id } = router.query;  // URL 파라미터에서 ID를 가져옴
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
+  const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
   
   useEffect(() => {
     console.log("Router query ID:", id);  // ID 값 로그로 출력
@@ -46,10 +49,18 @@ const PostView = () => {
     return <div>No post found</div>;
   }
 
+  const openReportModal = () => {
+    setReportModalOpen(true); // 신고 모달 열기
+  };
+
+  const closeReportModal = () => {
+    setReportModalOpen(false); // 신고 모달 닫기
+  };
+
   return (
     <div className={styles.content}>
       <div className={styles.postView}>
-        <PostContent post={post}/>
+        <PostContent post={post} openReportModal={openReportModal} />
         <div className={styles.divider}></div>
         <h3>댓글</h3>
         <CommentList comments={comments} />
@@ -57,11 +68,20 @@ const PostView = () => {
         <h3>댓글 쓰기</h3>
         <CommentInput onAddComment={(newComment) => setComments([...comments, newComment])} />
       </div>
+
+      {/* 신고 모달 컴포넌트 추가 */}
+      <ReportModal 
+        open={isReportModalOpen} 
+        onClose={closeReportModal} 
+        postId={id}
+        postAuthor={post.username}  // 작성자 이름 전달
+        postContent={post.content}  // 게시글 내용 전달
+      />
     </div>
   );
 };
 
-const PostContent = ({ post }) => {
+const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -70,6 +90,7 @@ const PostContent = ({ post }) => {
 
   const postOwnerId = Number(post.userId?.id) || 0;
   const currentUserId = Number(userId) || 0;
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -107,16 +128,18 @@ const PostContent = ({ post }) => {
     }
     handleClose();
   };
-  
-  
-  
+
+  const handleReport = () => {
+    openReportModal();  // 신고 모달 열기
+    handleClose();  // 메뉴 닫기
+  };
 
   const menuItems = postOwnerId === currentUserId ? [
     <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
     <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>,
-    <MenuItem key="report">신고</MenuItem>
+    <MenuItem key="report" onClick={handleReport}>신고</MenuItem>  // 신고 클릭 시 모달 열기
   ] : [
-    <MenuItem key="report">신고</MenuItem>
+    <MenuItem key="report" onClick={handleReport}>신고</MenuItem>  // 신고 클릭 시 모달 열기
   ];
 
   return (
