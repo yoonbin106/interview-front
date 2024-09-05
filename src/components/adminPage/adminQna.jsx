@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Divider } from '@mui/material';
+import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Divider, FormControlLabel, FormGroup, Switch } from '@mui/material';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminQna.module.css';
 import axios from 'axios';
@@ -94,6 +94,7 @@ const AdminQna = () => {
   const [categoryFilter, setCategoryFilter] = useState(''); // 카테고리 필터
   const [page, setPage] = useState(0); // 현재 페이지 상태
   const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 표시할 행 수 상태
+  const [showRefundOnly, setShowRefundOnly] = useState(false);//환불 처리 필터 상태
 
   useEffect(() => {
     const fetchQnaData = async () => {
@@ -102,8 +103,8 @@ const AdminQna = () => {
         
         //데이터를 최신 날짜 기준으로 정렬
         const sortedData = response.data.sort((a,b) => new Date(b.qnaCreatedTime) - new Date(a.qnaCreatedTime));
-        setQnaData(response.data); // 가져온 데이터를 상태에 저장
-        setFilteredQna(response.data); // 필터링된 QnA 상태에 전체 데이터 저장
+        setQnaData(sortedData); // 가져온 데이터를 상태에 저장
+        setFilteredQna(sortedData); // 필터링된 QnA 상태에 전체 데이터 저장
       } catch (error) {
         console.error('Error fetching QnA data:', error);
       }
@@ -112,6 +113,18 @@ const AdminQna = () => {
     fetchQnaData(); // 컴포넌트가 마운트될 때 QnA 데이터를 가져옴
   }, []); 
 
+  //'환불 처리'필터 스위치 변경 핸들러
+  const handleRefundSwitch = (event) => {
+    setShowRefundOnly(event.target.checked);
+
+    if(event.target.checked){
+      const refundFilteredData = qnaData.filter((item) => item.qnaCategory === '환불 처리');
+      setFilteredQna(refundFilteredData);
+    } else {
+      //스위치가 꺼졌을 때 전체 데이터를 보여줌
+      setFilteredQna(qnaData);
+    }
+  };
   // 상태 필터 변경 핸들러
   const handleStatusChange = (event) => {
     setStatusFilter(event.target.value);
@@ -181,7 +194,13 @@ const AdminQna = () => {
                     <Divider sx={{ my: 2, borderBottomWidth: 3,  borderColor: '#999' }} /> 
                 </div>
             </div>
-
+                  {/* 환불 처리 필터 스위치 */}
+                  <FormGroup>
+                    <FormControlLabel
+                    control={<Switch checked={showRefundOnly} onChange={handleRefundSwitch}/>}
+                    label="[환불 처리] 건만 보기"
+                    />
+                    </FormGroup>
                     {/* 필터링된 QnA를 테이블로 렌더링 */}
                     <PaginationTableQna 
                         rows={filteredQna} 
@@ -226,7 +245,8 @@ const AdminQna = () => {
                                     <MenuItem value="계정 및 로그인">계정 및 로그인</MenuItem>
                                     <MenuItem value="AI면접 준비">AI면접 준비</MenuItem>
                                     <MenuItem value="기술 문제 해결">기술 문제 해결</MenuItem>
-                                    <MenuItem value="결제 및 환불">결제 및 환불</MenuItem>
+                                    <MenuItem value="결제 관련">결제 관련</MenuItem>
+                                    <MenuItem value="환불 처리">환불 처리</MenuItem>
                                     <MenuItem value="기타">기타</MenuItem>
                                 </Select>
                             </FormControl>

@@ -1,27 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Button,
-    Select,
-    MenuItem,
-    Radio,
-    RadioGroup,
-    FormControlLabel,
-    FormControl,
-    FormLabel,
-    TextField,
-    Card,
-    CardContent,
-    Modal,
-    Divider
-} from '@mui/material';
+    Box,Table,TableBody,TableCell,TableContainer,TableHead,
+    TableRow,Paper,Button,Select,MenuItem,Radio,RadioGroup,
+    FormControlLabel,FormControl,FormLabel,TextField,Card,
+    CardContent,Modal,Divider } from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -32,6 +14,9 @@ import PaymentTwoToneIcon from '@mui/icons-material/PaymentTwoTone';
 import { cancelPayment, getAllPayInfo } from 'api/user';
 import { useRouter } from 'next/router';
 import styles from '@/styles/adminPage/adminPayment.module.css';
+import dynamic from 'next/dynamic';
+
+const AdminPaymentCharts = dynamic(() => import('@/components/adminPage/adminPaymentCharts'), { ssr: false });
 
 const theme = createTheme({
     palette: {
@@ -146,6 +131,10 @@ export default function AdminPayment() {
                         <h3 className={styles.adminPaymentTitle}>𝐏𝐚𝐲𝐦𝐞𝐧𝐭</h3>
                     </Box>
                     <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} />
+
+                    {/* 차트 먼저 표시 */}
+                    <AdminPaymentCharts />
+
                     <ThemeProvider theme={theme}>
                         <Card className={styles.adminPaymentCard} sx={{ mt: 5 }}>
                             <CardContent>

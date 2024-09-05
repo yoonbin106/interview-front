@@ -86,16 +86,19 @@ const AdminQnaDetails = ({ onSubmit }) => {
                     {qnaDetail.qnaTitle} {/* 문의 제목 */}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                    작성자: {qnaDetail.user.username} | 날짜: {new Date(qnaDetail.qnaCreatedTime).toLocaleString('ko-KR', {
+                    작성자: {qnaDetail.user.username} | 이메일 : {qnaDetail.user.email} 
+                    <br/>
+                    날짜: {new Date(qnaDetail.qnaCreatedTime).toLocaleString('ko-KR', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
-                    })} | 카테고리: {category}
+                    })} 
+                    <br/>카테고리: {category}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    {qnaDetail.qnaQuestion} {/* 문의 내용 */}
+                   <br/> {qnaDetail.qnaQuestion} {/* 문의 내용 */}
                 </Typography>
             </Paper>
 
@@ -127,6 +130,9 @@ const AdminQnaDetails = ({ onSubmit }) => {
                             <MenuItem value="P">완료</MenuItem>
                         </Select>
                     </FormControl>
+
+                    {/*환불 처리 카테고리일 때만 '환불하기' 버튼 표시 */}
+                   
                     <div className={styles.qnaDetailsButtonContainer}>
                         <Button
                             variant="contained"
@@ -142,6 +148,17 @@ const AdminQnaDetails = ({ onSubmit }) => {
                         >
                             목록
                         </Button>
+                        </div>
+                        <div>
+                        {category === '환불 처리' && (
+                        <Button
+                            variant="contained"
+                            onClick={() => router.push('http://localhost:3000/adminPage/adminPaymentPage')}
+                                //환불 처리 로직 추가
+                                className={styles.qnaDetailsRefundButton}>
+                                환불 처리 페이지
+                                </Button> 
+                    )}
                     </div>
                 </Paper>
             </Box>

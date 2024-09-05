@@ -63,7 +63,8 @@ const BbsQnaRegister = observer(() => {
           <MenuItem value="계정 및 로그인">계정 및 로그인</MenuItem>
           <MenuItem value="AI 면접 준비">AI 면접 준비</MenuItem>
           <MenuItem value="기술 문제 해결">기술 문제 해결</MenuItem>
-          <MenuItem value="결제 및 환불">결제 및 환불</MenuItem>
+          <MenuItem value="결제 관련">결제 관련</MenuItem>
+          <MenuItem value="환불 처리">환불 처리</MenuItem>
           <MenuItem value="기타">기타</MenuItem>
         </Select>
       </FormControl>
