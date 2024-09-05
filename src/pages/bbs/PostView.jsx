@@ -87,24 +87,29 @@ const PostContent = ({ post }) => {
   const handleDelete = async () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        console.log(`Deleting post with ID: ${id}`);  // 삭제 기능 로그 출력
-        const response = await fetch(`http://localhost:8080/bbs/${id}?userId=${userId}`, {
-          method: 'DELETE',
+        console.log(`Deleting post with ID: ${id}, userId: ${userId}`); // 삭제 요청 전 로그 출력
+        
+        const response = await axios.delete(`http://localhost:8080/bbs/${id}`, {
+          params: { userId },  // userId를 query parameter로 전달
         });
-        if (response.ok) {
-          console.log("Post deleted successfully.");  // 성공적으로 삭제된 경우 로그 출력
+  
+        if (response.status === 200) {
+          console.log("Post deleted successfully.");
           router.push('/bbs');
         } else {
           console.error('Failed to delete post:', response.statusText);
           alert('삭제를 실패하였습니다');
         }
       } catch (error) {
-        console.error('Error deleting post:', error);  // 삭제 중 오류 발생 시 로그 출력
+        console.error('Error deleting post:', error); // 오류 발생 시 콘솔에 상세 정보 출력
         alert('삭제를 실패하였습니다');
       }
     }
     handleClose();
   };
+  
+  
+  
 
   const menuItems = postOwnerId === currentUserId ? [
     <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,

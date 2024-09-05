@@ -1,198 +1,176 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { Grid, Button, TextField, Select, MenuItem, IconButton, Typography } from '@mui/material';
-import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatItalicIcon from '@mui/icons-material/FormatItalic';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import { Grid, Button, TextField, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import sidebar from '@/styles/bbs/bbsPage.module.css';
 import styles from '@/styles/bbs/bbsCreatePost.module.css';
 
 const EditPost = () => {
   const router = useRouter();
-  const { id } = router.query; // useRouter를 통해 동적 파라미터 사용
-  const [title, setTitle] = useState(''); // 제목 상태
-  const [content, setContent] = useState(''); // 내용 상태
-  const [fontSize, setFontSize] = useState(15);
-  const [fontStyle, setFontStyle] = useState('normal');
-  const [fontWeight, setFontWeight] = useState('normal');
-  const [textDecoration, setTextDecoration] = useState('none');
-  const [textAlign, setTextAlign] = useState('left');
-  const [loading, setLoading] = useState(true); // 로딩 상태
+  const { id } = router.query;
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [existingFiles, setExistingFiles] = useState([]); // 기존 파일 목록
+  const [filesToUpload, setFilesToUpload] = useState([]); // 새로 업로드할 파일 목록
+  const [filesToRemove, setFilesToRemove] = useState([]); // 삭제할 파일 목록
 
   useEffect(() => {
-    if(id){
-    const fetchPost = async () => {
+    if (id) {
+      const fetchPost = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/bbs/${id}`);
-            const data = await response.json();
-            setTitle(data.title);
-            setContent(data.content);
-            // 필요시 fontSize, fontStyle, fontWeight, textDecoration, textAlign도 설정
+          const response = await axios.get(`http://localhost:8080/bbs/${id}`);
+          const data = response.data;
+  
+          console.log('API 응답 데이터:', data);  // 파일 리스트가 포함된 응답인지 확인
+  
+          setTitle(data.title);
+          setContent(data.content);
+  
+           // 파일 목록이 객체 형태로 전달되므로, 파일 이름(키)을 추출
+           const fileNames = data.files ? Object.keys(data.files) : [];
+           setExistingFiles(fileNames); // 파일 이름만 저장
+  
         } catch (error) {
-            console.error('Failed to fetch post:', error);
+          console.error('게시글 로드 실패:', error);
         }
-    };
+      };
+      fetchPost();
+    }
+  }, [id]);
+  
 
-    fetchPost();
-  }
-}, [id]);
-
-  const handleFontSizeChange = (e) => setFontSize(e.target.value);
-  const toggleFontStyle = () => setFontStyle(fontStyle === 'normal' ? 'italic' : 'normal');
-  const toggleFontWeight = () => setFontWeight(fontWeight === 'normal' ? 'bold' : 'normal');
-  const toggleTextDecoration = () => setTextDecoration(textDecoration === 'none' ? 'underline' : 'none');
-  const handleTextAlign = (align) => setTextAlign(align);
+  // 새 파일 선택 핸들러
   const handleFileChange = (event) => {
-    setFiles(event.target.files);
+    setFilesToUpload(Array.from(event.target.files)); // 새로 업로드할 파일 설정
   };
-  const handleSave = async (e) => {
-    e.preventDefault();
-    const updatedPost = {
-      title,
-      content,
-      fontSize,
-      fontStyle,
-      fontWeight,
-      textDecoration,
-      textAlign,
-    };
-    try {
-      await fetch(`http://localhost:8080/bbs/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedPost),
-      });
-      router.push(`/bbs/postView?id=${id}`); // 수정 후 해당 포스트 상세 페이지로 이동
-    } catch (error) {
-      console.error('수정 실패:', error);
+
+  // 기존 파일 삭제 선택 핸들러
+  const handleRemoveExistingFile = (fileName) => {
+    if (filesToRemove.includes(fileName)) {
+      setFilesToRemove(filesToRemove.filter((file) => file !== fileName)); // 선택 취소
+    } else {
+      setFilesToRemove([...filesToRemove, fileName]); // 삭제할 파일 목록에 추가
     }
   };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+  
+    // 현재 상태의 filesToRemove 배열 확인
+    console.log("filesToRemove before sending:", filesToRemove);
+  
+    // 파일 업로드와 함께 전송할 FormData 생성
+    const formData = new FormData();
+    formData.append('title', title); // 제목 필드 추가
+    formData.append('content', content); // 내용 필드 추가
+  
+    // 삭제할 파일 목록을 JSON 문자열로 변환하여 추가
+    formData.append('filesToRemove', JSON.stringify(filesToRemove));
+    
+    // FormData에 추가된 삭제할 파일 목록 확인
+    console.log("FormData with filesToRemove:", formData.get('filesToRemove'));
+  
+    // 새로 업로드할 파일들 추가
+    filesToUpload.forEach((file) => {
+      formData.append('files', file);
+    });
+  
+    try {
+      await axios.post(`http://localhost:8080/bbs/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      router.push(`/bbs/postView?id=${id}`); // 수정 후 해당 게시글 페이지로 이동
+    } catch (error) {
+      console.error('게시글 수정 실패:', error);
+    }
+  };
+  
 
 
   return (
     <div className={sidebar.container}>
-        
-        <div className={sidebar.content}>
-            <div className={styles['CreatePostbbsRegisterContainer']}>
-                <h2 className={styles['CreatePostbbsRegisterTitle']}>게시글 수정</h2>
-                <form onSubmit={handleSave}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <Typography variant="h5" gutterBottom>글 수정하기</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                placeholder="제목을 입력하세요"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item container spacing={1} xs={12} alignItems="center">
-                            <Grid item>
-                                <Typography variant="body1">글꼴 크기:</Typography>
-                            </Grid>
-                            <Grid item>
-                                <Select
-                                    value={fontSize}
-                                    onChange={handleFontSizeChange}
-                                    variant="outlined"
-                                    size="small"
-                                >
-                                    {[...Array(30).keys()].map(i => (
-                                        <MenuItem key={i} value={i + 10}>{i + 10}</MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={toggleFontWeight}>
-                                    <FormatBoldIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={toggleFontStyle}>
-                                    <FormatItalicIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={toggleTextDecoration}>
-                                    <FormatUnderlinedIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={() => handleTextAlign('left')}>
-                                    <FormatAlignLeftIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={() => handleTextAlign('center')}>
-                                    <FormatAlignCenterIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={() => handleTextAlign('right')}>
-                                    <FormatAlignRightIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item>
-                                <IconButton onClick={() => handleTextAlign('justify')}>
-                                    <FormatAlignJustifyIcon />
-                                </IconButton>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                placeholder="내용을 입력하세요"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                multiline
-                                rows={8}
-                                style={{
-                                    fontSize: `${fontSize}px`,
-                                    fontStyle: fontStyle,
-                                    fontWeight: fontWeight,
-                                    textDecoration: textDecoration,
-                                    textAlign: textAlign,
-                                }}
-                            />
-                            <Typography variant="body2" align="right" color="textSecondary">0/2000</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Grid container justifyContent="space-between" alignItems="center">
-                                <Grid item>
-                                    <Button
-                                        variant="contained"
-                                        component="label"
-                                        startIcon={<AttachFileIcon />}
-                                    >
-                                        파일첨부
-                                        <input type="file" hidden multiple onChange={handleFileChange}/>
-                                    </Button>
-                                    <Typography variant="body2" color="textSecondary">0/10MB</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" className={styles['submit-button']}>수정</Button>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
+      <div className={sidebar.content}>
+        <div className={styles['CreatePostbbsRegisterContainer']}>
+          <h2 className={styles['CreatePostbbsRegisterTitle']}>게시글 수정</h2>
+          <form onSubmit={handleSave}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h5" gutterBottom>글 수정하기</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="제목을 입력하세요"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="내용을 입력하세요"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  multiline
+                  rows={8}
+                />
+                <Typography variant="body2" align="right" color="textSecondary">0/2000</Typography>
+              </Grid>
+
+              {/* 기존 파일 목록 표시 */}
+              <Grid item xs={12}>
+  <Typography variant="body1">기존 파일 (체크 시 삭제됨):</Typography>
+  {existingFiles.length > 0 ? (
+    existingFiles.map((fileName, index) => (
+      <div key={index}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={filesToRemove.includes(fileName)}
+              onChange={() => handleRemoveExistingFile(fileName)}
+              color="primary"
+            />
+          }
+          label={fileName}  // 파일 이름 표시
+        />
+      </div>
+    ))
+  ) : (
+    <Typography variant="body2">기존 파일이 없습니다.</Typography>
+  )}
+</Grid>
+
+
+              {/* 새로 추가할 파일 업로드 */}
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  startIcon={<AttachFileIcon />}
+                >
+                  파일첨부
+                  <input type="file" hidden multiple onChange={handleFileChange} />
+                </Button>
+                {/* 업로드된 파일 이름 표시 */}
+                {filesToUpload.map((file, index) => (
+                  <Typography key={index} variant="body2">{file.name}</Typography>
+                ))}
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button type="submit" className={styles['submit-button']}>수정</Button>
+              </Grid>
+            </Grid>
+          </form>
         </div>
+      </div>
     </div>
   );
-
 };
 
 export default EditPost;
