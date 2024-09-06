@@ -9,6 +9,9 @@ import {
 import { Help, Mic } from '@mui/icons-material';
 import { setInterviewData, loadQuestions, setStatus } from '../../redux/slices/interviewSlice';
 import styles from '@/styles/interview/interviewRecordPage.module.css';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'contexts/storeContext';
+import { getInterviewQuestions } from 'api/interview';
 
 // 음성 분석을 위한 가상의 API
 const speechAnalysisAPI = {
@@ -24,14 +27,14 @@ const speechAnalysisAPI = {
   }
 };
 
-const InterviewRecordPage = () => {
+const InterviewRecordPage = observer(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [interviewType, setInterviewType] = useState(null);
-  const [selectedQuestions, setSelectedQuestions] = useState(null);
   const [candidateData, setCandidateData] = useState(null);
+  const [questions, setQuestions] = useState([]); // 질문 상태를 관리하기 위한 useState
   
-  const { questions, status, error } = useSelector(state => state.interview);
+  const { status, error } = useSelector(state => state.interview);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [stream, setStream] = useState(null);
@@ -58,16 +61,43 @@ const InterviewRecordPage = () => {
   const mediaRecorderRef = useRef(null);
   const timerRef = useRef(null);
   const speechSynthesisRef = useRef(null);
+  const { interviewStore } = useStores();
 
   useEffect(() => {
-    if (router.isReady) {
-      const { interviewType, selectedQuestions, candidateData } = router.query;
-      console.log("Router query:", { interviewType, selectedQuestions, candidateData });
-      setInterviewType(interviewType);
-      setSelectedQuestions(selectedQuestions ? JSON.parse(selectedQuestions) : null);
-      setCandidateData(candidateData ? JSON.parse(candidateData) : null);
+    const fetchInterviewData = async () => {
+      if (router.isReady) {
+        const interviewType = interviewStore.type;
+        const selectedQuestions = interviewStore.selectedQuestions;
+        const { candidateData } = router.query;
+  
+        console.log("Router query:", { candidateData });
+        console.log("interviewType:", interviewType);
+        console.log("selectedQuestions:", selectedQuestions);
+  
+        const questionIds = selectedQuestions.map(question => question);
+        console.log(questionIds);
+  
+        try {
+          const fetchedQuestions = await getInterviewQuestions(questionIds); // 질문 데이터 가져오기
+          console.log("interviewQuestion: ", fetchedQuestions);
+  
+          // 질문과 상태 세팅
+          setInterviewType(interviewType);
+          setCandidateData(candidateData ? JSON.parse(candidateData) : null);
+          setQuestions(fetchedQuestions); // 질문 상태 업데이트
+        } catch (error) {
+          console.error("Failed to fetch questions:", error);
+        }
+      }
+    };
+  
+    fetchInterviewData();
+  
+    // Status나 questions의 변화 감지
+    if (status || questions.length > 0) {
+      console.log("Status or questions changed:", { status, questionsLength: questions.length });
     }
-  }, [router.isReady, router.query]);
+  }, [router.isReady]);
 
   useEffect(() => {
     speechSynthesisRef.current = window.speechSynthesis;
@@ -78,21 +108,21 @@ const InterviewRecordPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (interviewType) {
-      console.log("Loading questions for interview type:", interviewType);
-      dispatch(setStatus('loading'));
-      dispatch(loadQuestions({ 
-        interviewType, 
-        selectedQuestions: interviewType === 'mock' ? selectedQuestions : undefined,
-        candidateData: interviewType === 'real' ? candidateData : undefined
-      }));
-    }
-  }, [dispatch, interviewType, selectedQuestions, candidateData]);
+  // useEffect(() => {
+  //   if (interviewType) {
+  //     console.log("Loading questions for interview type:", interviewType);
+  //     dispatch(setStatus('loading'));
+  //     dispatch(loadQuestions({ 
+  //       interviewType, 
+  //       selectedQuestions: interviewType === 'mock' ? selectedQuestions : undefined,
+  //       candidateData: interviewType === 'real' ? candidateData : undefined
+  //     }));
+  //   }
+  // }, [dispatch, interviewType, selectedQuestions, candidateData]);
 
-  useEffect(() => {
-    console.log("Status or questions changed:", { status, questionsLength: questions.length });
-  }, [status, questions]);
+  // useEffect(() => {
+  //   console.log("Status or questions changed:", { status, questionsLength: questions.length });
+  // }, [status, questions]);
 
   const getMediaPermission = useCallback(async () => {
     try {
@@ -299,6 +329,7 @@ const handleCloseWarning = () => {
     setHintAnchorEl(null);
   };
   const handleGuideClose = () => setShowGuide(false);
+
   if (!interviewType) {
     return <div>Loading...</div>;
   }
@@ -332,9 +363,9 @@ const handleCloseWarning = () => {
               )}
               <Fade in={true}>
                 <Box className={styles.questionOverlay}>
-                  <Typography variant="h6">
-                    Q{currentQuestionIndex + 1}. {questions[currentQuestionIndex]?.question}
-                  </Typography>
+                <Typography variant="h6">
+                  Q{currentQuestionIndex + 1}. {questions[currentQuestionIndex]?.questionText}
+                </Typography>
                 </Box>
               </Fade>
             </Box>
@@ -354,9 +385,13 @@ const handleCloseWarning = () => {
             <Fade in={showScript}>
               <Paper elevation={3} className={styles.scriptSection}>
                 <Typography variant="h6" gutterBottom>스크립트 및 키워드</Typography>
-                <Typography variant="body2">{questions[currentQuestionIndex]?.script}</Typography>
+                <Typography variant="body2">
+                  {questions[currentQuestionIndex]?.script}
+                </Typography>
                 <Typography variant="body2" className={styles.keywords}>
-                  키워드: {questions[currentQuestionIndex]?.keywords?.join(', ')}
+                  키워드: {typeof questions[currentQuestionIndex]?.keywords === 'string' 
+                    ? questions[currentQuestionIndex].keywords 
+                    : questions[currentQuestionIndex]?.keywords?.join(', ')}
                 </Typography>
               </Paper>
             </Fade>
@@ -511,6 +546,6 @@ const handleCloseWarning = () => {
       </Modal>
     </Container>
   );
-};
+});
 
 export default InterviewRecordPage;

@@ -5,6 +5,7 @@ import userStore from '@/stores/userStore';
 import reduxStore from '@/redux/store';
 import payStore from '@/stores/payStore';
 import interviewStore from '@/stores/interviewStore';
+import interviewRecordStore from '@/stores/interviewRecordStore';
 
 const StoreContext = createContext(null);
 
@@ -14,7 +15,8 @@ export const StoreProvider = ({ children }) => {
     userStore,
     reduxStore,
     payStore,
-    interviewStore
+    interviewStore,
+    interviewRecordStore
   };
   return (
     <StoreContext.Provider value={stores}>

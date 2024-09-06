@@ -32,11 +32,7 @@ const InterviewQuestionsPage = observer(() => {
 
   const handleSelectQuestion = () => {
     router.push({
-      pathname: '/interview/interviewRecordPage',
-      query: { 
-        interviewType: 'mock', 
-        selectedQuestions: JSON.stringify(selectedQuestions)
-      }
+      pathname: '/interview/interviewRecordPage'
     });
   };
 
