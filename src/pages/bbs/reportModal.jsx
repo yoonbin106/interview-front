@@ -4,7 +4,7 @@ import styles from '@/styles/bbs/reportModal.module.css'; // 모듈 CSS 사용
 import axios from 'axios';
 
 
-const ReportModal = ({ open, onClose, postId, postAuthor, postContent }) => {
+const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent }) => {
   const [reason, setReason] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState({
     defamation: false,
@@ -25,7 +25,13 @@ const ReportModal = ({ open, onClose, postId, postAuthor, postContent }) => {
   const handleSubmit = async () => {
     if (reason) {
       try {
-        await axios.post('http://localhost:8080/bbs/report', { postId, reason, additionalInfo });
+        const response = await axios.post('http://localhost:8080/bbs/report', {
+          postId: postId ? postId : null,  // 게시물 ID가 없으면 null
+          commentId: commentId ? commentId : null,  // 댓글 ID가 없으면 null
+          reason: reason,
+          additionalInfo: additionalInfo
+        });
+  
         alert('신고가 접수되었습니다.');
         onClose();
       } catch (error) {
@@ -36,6 +42,9 @@ const ReportModal = ({ open, onClose, postId, postAuthor, postContent }) => {
       alert('신고 사유를 선택해주세요.');
     }
   };
+  
+
+  
 
   return (
     <Modal open={open} onClose={onClose}>

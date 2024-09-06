@@ -210,7 +210,11 @@ const CommentItem = ({ comment, setComments }) => {
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [newContent, setNewContent] = useState(comment.content); // 수정할 댓글 내용
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태
+  
 
+  // commentId 값 확인
+  console.log(comment.commentId);  // 이 부분에 추가하여 commentId 값 확인
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -262,8 +266,16 @@ const CommentItem = ({ comment, setComments }) => {
     }
     handleClose();
   };
-  
-  
+
+  // 리자몽: 신고 모달 상태 및 UI 추가
+  const openReportModal = () => {
+    setReportModalOpen(true);  // 신고 모달 열기
+    handleClose();
+  };
+
+  const closeReportModal = () => {
+    setReportModalOpen(false);  // 신고 모달 닫기
+  };
   
   return (
     <div className={styles.commentItem}>
@@ -287,11 +299,19 @@ const CommentItem = ({ comment, setComments }) => {
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
             <MenuItem onClick={handleEditClick}>수정</MenuItem>
             <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
-
-            <MenuItem>신고</MenuItem>
+            <MenuItem onClick={openReportModal}>신고</MenuItem> {/* 리자몽: 신고 버튼 */}
           </Menu>
         </>
       )}
+
+      {/* 리자몽: 신고 모달 */}
+      <ReportModal 
+        open={isReportModalOpen} 
+        onClose={closeReportModal} 
+        commentId={comment.commentId}  // 댓글 ID 전달
+        commentAuthor={comment.username}  // 댓글 작성자 전달
+        commentContent={comment.content}  // 댓글 내용 전달
+      />
     </div>
   );
 };
@@ -333,3 +353,5 @@ const CommentInput = ({ postId, setComments }) => {
 };
 
 export default PostView;
+
+
