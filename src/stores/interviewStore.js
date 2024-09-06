@@ -22,13 +22,29 @@ class InterviewStore {
     editMode = { id: null, type: null }; // 편집 중인 질문의 ID와 타입 (script 또는 keywords)
     tempEdit = { script: '', keywords: [] }; // 편집 중인 질문의 임시 저장 상태
 
+    choosedPayment = '';
+    choosedResume = '';
+
     constructor() {
         makeAutoObservable(this);
         if (typeof window !== 'undefined') {
             this.loadInterviewData(); // 페이지 로드 시 데이터 복원
         }
     }
-    
+
+    setChoosedPayment(choosedPayment) {
+        this.choosedPayment = choosedPayment;
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('choosedPayment', choosedPayment);
+        }
+    }
+
+    setChoosedResume(choosedResume) {
+        this.choosedResume = choosedResume;
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('choosedResume', choosedResume);
+        }
+    }
     // mockQuestions에서 commonQuestions와 resumeQuestions를 분리하는 함수
     parseMockQuestions() {
         if (this.mockQuestions && typeof this.mockQuestions === 'object') {

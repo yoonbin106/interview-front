@@ -11,10 +11,12 @@ import {
 } from '@mui/material';
 import InterviewOption from '@/components/interview/interviewOption';
 import styles from '@/styles/interview/interviewSelectPage.module.css';
+import { getAllPayInfo } from 'api/user';
+import axios from 'axios';
 
 const InterviewSelectPage = observer(() => {
   const router = useRouter();
-  const { interviewStore } = useStores();
+  const { interviewStore, userStore } = useStores();
 
   const realInterviewFeatures = [
     '실제 면접과 유사한 환경에서의 면접 연습',
@@ -28,7 +30,22 @@ const InterviewSelectPage = observer(() => {
     'AI 분석을 통한 상세한 피드백 제공'
   ];
 
-  const handleInterviewStart = (type) => {
+  const fetchResumes = async () => {
+    const email = userStore.email;
+    try {
+      const response = await axios.get(`http://localhost:8080/api/resume/user-resumes?email=${email}`);
+      const sortedResumes = response.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      return sortedResumes;
+    } catch (error) {
+      console.error('이력서 데이터를 불러오는 중 오류 발생:', error);
+    }
+  };
+
+  const handleInterviewStart = async (type) => {
+    const paymentList = await getAllPayInfo();
+    const resumeList = await fetchResumes();
+    console.log(resumeList);
+    console.log(paymentList);
     interviewStore.setType(type);
     interviewStore.setStream('');
     interviewStore.setCameraReady(false);
