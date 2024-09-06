@@ -34,6 +34,7 @@ class InterviewStore {
 
     setChoosedPayment(choosedPayment) {
         this.choosedPayment = choosedPayment;
+        console.log('setChoosedPayment: ', choosedPayment);
         if (typeof window !== 'undefined') {
             localStorage.setItem('choosedPayment', choosedPayment);
         }
@@ -41,6 +42,7 @@ class InterviewStore {
 
     setChoosedResume(choosedResume) {
         this.choosedResume = choosedResume;
+        console.log('setChoosedResume: ', choosedResume);
         if (typeof window !== 'undefined') {
             localStorage.setItem('choosedResume', choosedResume);
         }
