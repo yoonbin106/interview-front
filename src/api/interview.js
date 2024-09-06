@@ -2,10 +2,10 @@ import axios from './axios';
 import qs from 'qs';
 const baseUrl = "/api/interviews";
 
-export const getMockQuestions = async (userId) => {
+export const getMockQuestions = async (choosedResume, userId) => {
     try {
       const response = await axios.get(`${baseUrl}/getmockquestion`, {
-        params: { userId },
+        params: { choosedResume, userId },
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

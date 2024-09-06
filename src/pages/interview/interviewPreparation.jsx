@@ -237,7 +237,7 @@ const InterviewPreparation = observer(() => {
   };
   async function handleSetMockQuestions() {
     try {
-      const mockQuestions = await getMockQuestions(userStore.id);  // 비동기 함수 대기
+      const mockQuestions = await getMockQuestions(interviewStore.choosedResume, userStore.id);  // 비동기 함수 대기
       interviewStore.setMockQuestions(mockQuestions);  // 데이터 저장
     } catch (error) {
       console.error('Mock 질문을 불러오는 중 오류가 발생했습니다:', error);
