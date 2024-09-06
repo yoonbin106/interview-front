@@ -7,7 +7,7 @@ import {
   Modal, Paper, Grid, Tooltip, Menu, MenuItem,Popover
 } from '@mui/material';
 import { Help, Mic } from '@mui/icons-material';
-import { setInterviewData, loadQuestions, setStatus } from '../../redux/slices/interviewSlice';
+import { setInterviewData, setStatus } from '../../redux/slices/interviewSlice';
 import styles from '@/styles/interview/interviewRecordPage.module.css';
 import { observer } from 'mobx-react-lite';
 import { useStores } from 'contexts/storeContext';
