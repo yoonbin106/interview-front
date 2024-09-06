@@ -18,7 +18,7 @@ const ChattingMessages = ({ messages, userStore }) => {
     catch (error) {
       console.log('Error: ', error);
     }
-  }
+  };
 
   const getSenderProfileImage = (senderId) => {
     const user = users.find((user) => user.id == senderId);

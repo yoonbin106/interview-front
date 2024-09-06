@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../styles/chat/chatting.module.css';
 import ChattingHeader from '../../components/chat/chattingHeader';
 import ChattingMessages from '../../components/chat/chattingMessages';
@@ -13,28 +13,20 @@ import { getAllUsers } from 'api/user';
 
 
 const Chatting = observer(({ closeChatting }) => {
-    // const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    // const [userInfo, setUserInfo] = useState({
-    //     username: '',
-    //     email: '',
-    //     profile: ''
-    // });
     const [chatRoomList, setChatRoomList] = useState([]);
 
     const { authStore, userStore } = useStores();
     const [users, setUsers] = useState([]); //getAllUsers()
 
-    const [client, setClient] = useState(null);
+    const [client, setClient] = useState(null); //mqttClient
     const [isConnected, setIsConnected] = useState(false);
 
-    const [currentChatRoomId, setCurrentChatRoomId] = useState(null); // 현재 선택된 채팅방의 ID
-
-    const [lastMessage, setLastMessage] = useState('');
-    const [lastMTopic, setLastMTopic] = useState('');
+    const [currentChatRoomId, setCurrentChatRoomId] = useState(null); // 현재 선택된 채팅방의 ID (전달용)
+    const currentChatRoomIdRef = useRef(null); // 현재 선택된 채팅방의 ID 즉시 적용
 
     // const getAllChatroomList = async () => {
     //     try {
@@ -54,7 +46,6 @@ const Chatting = observer(({ closeChatting }) => {
     //     );
     // };
 
-
     //getChatroomList
     const getChatroomList = async () => {
         try {
@@ -62,10 +53,10 @@ const Chatting = observer(({ closeChatting }) => {
             console.log('typeof(userId): ', typeof(userId));
             const response = await axios.post('http://localhost:8080/api/chat/userChatrooms', 
                 userId, 
-                                                { headers: { 'Content-Type': 'application/json' } }
+                { headers: { 'Content-Type': 'application/json' } }
             );
             setChatRoomList(response.data);
-            // console.log('response.data: ', response.data);
+            console.log('response.data (ChatRoomList): ', response.data);
         } catch (error) {
             console.error('Error fetching chat rooms:', error);
         }
@@ -81,17 +72,14 @@ const Chatting = observer(({ closeChatting }) => {
         }
     }
 
-
     useEffect(() => {
-        //이전 채팅 로딩
-        // loadingPastChatting();
-
         //채팅방 목록 얻어오기
         // getAllChatroomList();
         getChatroomList();
 
         //모든 유저 목록 얻어오기
         getUserList();
+
     }, []);
 
     useEffect(() => {
@@ -99,27 +87,32 @@ const Chatting = observer(({ closeChatting }) => {
             const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884');
 
             mqttClient.on('connect', () => {
-                //console.log('Connected to MQTT broker');
+                console.log('Connected to MQTT broker');
                 setIsConnected(true);
             });
 
             mqttClient.on('message', (topic, message) => {
-                // console.log('Received message:', message.toString());
+                // console.log('메세지 받음');
+                console.log('Received message:', message.toString());
                 const receivedMessage = JSON.parse(message);
 
                 const lastM = `${receivedMessage.sender} : ${receivedMessage.text}`;
                 const lastMTopic = topic.split('/').pop();
 
-                // console.log('lastM: ', lastM);
-                // console.log('lastMTopic: ', lastMTopic);
-                // setLastMessage(lastM);
-                // setLastMTopic(lastMTopic);
                 setChatRoomList(prevChatRoomList =>
                     prevChatRoomList.map(room =>
                         room.id == lastMTopic ? { ...room, lastMessage: lastM } : room
                     )
                 );
-                setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                
+                console.log(receivedMessage);
+                console.log(receivedMessage.chatroomId);
+                // if (receivedMessage && receivedMessage.chatroomId == currentChatRoomId) {
+                //채팅방에 들어가서 ! 채팅방 아이디값을 얻어왔을때만 그 채팅방에 해당하는 메세지만 화면에 setMessages하기
+                if (receivedMessage && receivedMessage.chatroomId == currentChatRoomIdRef.current) {
+                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                }
+                
             });
 
             mqttClient.on('error', (err) => {
@@ -133,31 +126,55 @@ const Chatting = observer(({ closeChatting }) => {
 
             setClient(mqttClient);
         }
+        
     }, [client]);
 
-    useEffect(() => {
-        // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
-        // chatRoomList.map((list) => {
-        //     client.subscribe(`mqtt/chat/${list.id}`);
-        // })
-        if (client && currentChatRoomId) {
-            const topic = `mqtt/chat/${currentChatRoomId}`;
-            client.subscribe(topic);
-            console.log(`Subscribed to topic: ${topic}`);
 
-            return () => {
-                client.unsubscribe(topic);
-                console.log(`Unsubscribed from topic: ${topic}`);
-            };
+    // useEffect(() => {
+    //     chatRoomList.forEach((list) => {
+    //         const topic = `mqtt/chat/${list.id}`;
+    //         client.subscribe(topic);
+    //     })
+    // }, [chatRoomList]);
+
+    useEffect(() => {
+        if(chatRoomList){
+            console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
+            chatRoomList.forEach((list) => {
+                const topic = `mqtt/chat/${list.id}`;
+                client.subscribe(topic);
+            })
         }
-    }, [client, currentChatRoomId]);
+        
+    }, [client, chatRoomList]);
+
+    // useEffect(() => {
+    //     // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
+    //     // chatRoomList.map((list) => {
+    //     //     client.subscribe(`mqtt/chat/${list.id}`);
+    //     // })
+
+    //     //아래는 채팅방 들어갔다가 나갈때 토픽 구독/해제 하는 코드
+        
+    //     if (client && currentChatRoomId) {
+    //         const topic = `mqtt/chat/${currentChatRoomId}`;
+    //         client.subscribe(topic);
+    //         console.log(`Subscribed to topic: ${topic}`);
+
+    //         return () => {
+    //             client.unsubscribe(topic);
+    //             console.log(`Unsubscribed from topic: ${topic}`);
+    //         };
+    //     }
+    // }, [client, currentChatRoomId]);
    
     useEffect(() => {
-        if (currentChatRoomId) {
+        if (currentChatRoomIdRef.current) {
+            //채팅방으로 들어갔을 때 실행될 코드 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             setMessages([]);
             getPastChatting();
         }
-    }, [currentChatRoomId]);
+    }, [currentChatRoomIdRef.current]);
 
    
     //채팅방 구분만 안되고 그래도 왔다갔다 소통은 되는 코드
@@ -241,22 +258,32 @@ const Chatting = observer(({ closeChatting }) => {
 
     //chatroomList 전체를 클릭하든 케밥메뉴 클릭하든 아무튼 chatRoomId 얻어오기
     const getChatroomId = (chatRoomId) => {
+        console.log('[getChatroomId() 호출]: ', chatRoomId);
+
+
         setCurrentChatRoomId(chatRoomId); // 선택된 채팅방 ID 저장
+        currentChatRoomIdRef.current = chatRoomId;
+
         // console.log('onChatClick() - currentChatRoomId: ', currentChatRoomId);
     }
 
-    const onChatClick = () => {
+    const onChatClick = (chatRoomId) => {
         // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
 
+
+        // setCurrentChatRoomId(chatRoomId); // React 상태 업데이트
+
+        console.log('[onChatClick() 호출]: ', chatRoomId);
+        currentChatRoomIdRef.current = chatRoomId; // Ref에 바로 값 저장
         setIsChatOpen(true);
         // 채팅 하나하나 각각 눌렀을때 ?
         // getPastChatting();
-
     };
 
     const handleBackClick = () => {
         setIsChatOpen(false);
-        setCurrentChatRoomId('');
+        // setCurrentChatRoomId('');
+        currentChatRoomIdRef.current = '';
         setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
     };
 
@@ -264,17 +291,19 @@ const Chatting = observer(({ closeChatting }) => {
     const getPastChatting = async () => {
         try {
             const response = await axios.post('http://localhost:8080/api/chat/getPastChatting', 
-                currentChatRoomId, 
+                currentChatRoomIdRef.current, 
                 { headers: { 'Content-Type': 'application/json' } });
 
             const pastMessages = response.data.map(chat => ({
                 id: chat.id,
+                chatroomId: chat.chatroomId,
                 text: chat.message,
                 sender: chat.username,
                 timestamp: chat.createdTime,
                 senderId: chat.userId,
             }));
 
+            // console.log('response.date: ', response.data);
             // console.log(pastMessages);
             // console.log(userStore.id);
 
@@ -292,13 +321,14 @@ const Chatting = observer(({ closeChatting }) => {
     const sendMessage = async () => {
         if (inputMessage.trim()) {
 
-            const userMessage = { text: inputMessage, sender: userStore.username };
+            // const userMessage = { text: inputMessage, sender: userStore.username };
             // setMessages(prev => [...prev, userMessage]);
 
             // client.publish('mqtt/chat', JSON.stringify({ text: inputMessage, sender: userStore.username, timestamp: new Date() }));
-            client.publish(`mqtt/chat/${currentChatRoomId}`, 
+            client.publish(`mqtt/chat/${currentChatRoomIdRef.current}`, 
                 JSON.stringify({ 
                     text: inputMessage, 
+                    chatroomId: currentChatRoomIdRef.current,
                     sender: userStore.username, 
                     timestamp: new Date(), 
                     senderId: userStore.id

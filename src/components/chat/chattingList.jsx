@@ -7,8 +7,6 @@ import ChattingCreateRoom from './chattingCreateRoom';
 import MenuIcon from './menuIcon';
 import axios from 'axios';
 
-
-
 const ChattingList = ({ 
     onChatClick, 
     getChatroomId, 
@@ -80,6 +78,7 @@ const ChattingList = ({
     };
 
     const getChatroomTitle = async () => {
+        console.log('[ChattingList.jsx] currentChatRoomId: ', currentChatRoomId);
         try {
             const response = await axios.get('http://localhost:8080/api/chat/getChatroomTitle', {
                 params: {
@@ -149,7 +148,7 @@ const ChattingList = ({
                                 key={list.id}
                                 onClick={() => getChatroomId(list.id)}
                             >
-                                <div className={styles.chattingListInside} onClick={() => onChatClick()}>
+                                <div className={styles.chattingListInside} onClick={() => onChatClick(list.id)}>
                                     <div className={styles.chattingListProfile}>
                                         <Avatar sx={{ width: 50, height: 50 }} />
                                     </div>
