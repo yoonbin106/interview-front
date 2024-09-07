@@ -18,6 +18,8 @@ const PostView = () => {
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
+
+  
   
   useEffect(() => {
     if (id) {
@@ -135,13 +137,13 @@ const PostContent = ({ post, openReportModal }) => {
     handleClose();  // 메뉴 닫기
   };
 
-  const menuItems = postOwnerId === currentUserId ? [
-    <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
-    <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>,
-    <MenuItem key="report" onClick={handleReport}>신고</MenuItem>  // 신고 클릭 시 모달 열기
-  ] : [
-    <MenuItem key="report" onClick={handleReport}>신고</MenuItem>  // 신고 클릭 시 모달 열기
-  ];
+  // 내 게시물에서는 수정/삭제 버튼만, 다른 사람의 게시물에서는 신고 버튼만 보이도록 조건 처리
+const menuItems = postOwnerId === currentUserId ? [
+  <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
+  <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>
+] : [
+  <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
+];
 
   return (
     <div className={styles.postContainer}>
@@ -212,6 +214,12 @@ const CommentItem = ({ comment, setComments }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태
   
+  const commentOwnerId = Number(comment.user?.id) || 0;  // 댓글 작성자의 ID를 숫자로 변환하여 처리
+  const currentUserId = Number(userStore.id) || 0;  // 현재 로그인한 사용자 ID를 숫자로 변환하여 처리
+
+  // 로그 확인
+  console.log("댓글 작성자 ID:", commentOwnerId);
+  console.log("현재 사용자 ID:", currentUserId);
 
   // commentId 값 확인
   console.log(comment.commentId);  // 이 부분에 추가하여 commentId 값 확인
@@ -297,9 +305,15 @@ const CommentItem = ({ comment, setComments }) => {
             <MoreVertIcon />
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-            <MenuItem onClick={handleEditClick}>수정</MenuItem>
-            <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
-            <MenuItem onClick={openReportModal}>신고</MenuItem> {/* 리자몽: 신고 버튼 */}
+            {commentOwnerId === currentUserId ? (
+              <>
+                <MenuItem onClick={handleEditClick}>수정</MenuItem>
+                <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
+                
+              </>
+            ) : (
+              <MenuItem onClick={openReportModal}>신고</MenuItem>
+            )}
           </Menu>
         </>
       )}
