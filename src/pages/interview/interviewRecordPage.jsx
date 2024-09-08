@@ -1,6 +1,8 @@
+//src\pages\interview\interviewRecordPage.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import { 
   Container, Typography, Box, Button, Card, CardContent, 
   LinearProgress, IconButton, Fade, useTheme, CircularProgress, 
@@ -10,8 +12,9 @@ import { Help, Mic } from '@mui/icons-material';
 import { setInterviewData, setStatus } from '../../redux/slices/interviewSlice';
 import styles from '@/styles/interview/interviewRecordPage.module.css';
 import { observer } from 'mobx-react-lite';
-import { useStores } from 'contexts/storeContext';
-import { getInterviewQuestions } from 'api/interview';
+import { useStores } from '@/contexts/storeContext';
+import { getInterviewQuestions, uploadInterviewVideo } from '@/api/interview';
+import userStore from '@/stores/userStore';
 
 // 음성 분석을 위한 가상의 API
 const speechAnalysisAPI = {
@@ -92,7 +95,6 @@ const InterviewRecordPage = observer(() => {
     };
   
     fetchInterviewData();
-  
     // Status나 questions의 변화 감지
     if (status || questions.length > 0) {
       console.log("Status or questions changed:", { status, questionsLength: questions.length });
@@ -137,30 +139,38 @@ const InterviewRecordPage = observer(() => {
   }, []);
 
   const startRecording = useCallback(() => {
-    if (!stream) return;
-    setRecordedChunks([]);
-    const mediaRecorder = new MediaRecorder(stream);
+    if (!stream) {
+      console.error('Stream is not available');
+      return;
+    }
+  
+    setRecordedChunks([]); // 녹화 시작 전에 chunk 초기화
+    const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"' });
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) {
+        console.log('Received data chunk:', event.data);
+        setRecordedChunks((prev) => [...prev, event.data]);
+      } else {
+        console.error('No data available');
+      }
+    };
+  
+    mediaRecorder.start(1000); // 1초마다 데이터 청크를 받음
     mediaRecorderRef.current = mediaRecorder;
-    mediaRecorder.ondataavailable = handleDataAvailable;
-    mediaRecorder.start();
     setIsRecording(true);
     setTimeLeft(60);
     setShowStartButton(false);
-    setRecordingStartTime(Date.now());
   }, [stream]);
-
+  
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+      console.log("Recording stopped");
     }
     setIsRecording(false);
   }, []);
 
-  const handleDataAvailable = useCallback((event) => {
-    if (event.data && event.data.size > 0) {
-      setRecordedChunks((prev) => [...prev, event.data]);
-    }
-  }, []);
   useEffect(() => {
     let timer;
     if (isRecording) {
@@ -201,33 +211,59 @@ const InterviewRecordPage = observer(() => {
       }
     }, 1000);
   }, [dispatch, startRecording, speakQuestion, questions, currentQuestionIndex]);
-  //수정 09:56
-  const handleSubmitAnswer = useCallback(() => {
-    const currentTime = Date.now();
-    if (recordingStartTime && currentTime - recordingStartTime < 10000) {
-      setWarningAnchorEl(event.currentTarget);
-      setShowWarning(true);
-    } else {
-      stopRecording();
-      dispatch(setStatus('uploading'));
-      setIsSubmitting(true);
-      setTimeout(() => {
+  
+// 제출 시 블롭 생성 및 폼 데이터에 추가
+const handleSubmitAnswer = useCallback(() => {
+  if (recordingStartTime && (Date.now() - recordingStartTime) < 10000) {
+    alert("녹화 시간이 너무 짧습니다. 최소 10초 이상 녹화해야 합니다.");
+    return;
+  }
+  const currentTime = Date.now();
+  if (recordingStartTime && currentTime - recordingStartTime < 10000) {
+    setWarningAnchorEl(event.currentTarget);
+    setShowWarning(true);
+  } else {
+    stopRecording();
+    dispatch(setStatus('uploading'));
+    setIsSubmitting(true);
+
+    // 녹화된 데이터를 기반으로 Blob 생성
+    const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+    console.log("블롭 사이즈: ", blob.size); // 0이 아니어야 정상
+    const formData = new FormData();
+    formData.append('video', blob, 'interview.mp4');
+    formData.append('userId', userStore.id);
+    formData.append('questionId', questions[currentQuestionIndex].id);
+    console.log('이거 확인: ', formData.get('video')); // null이면 문제가 있음
+
+    uploadInterviewVideo(formData)
+      .then(response => {
+        console.log('Video uploaded successfully', response);
+        // 수정: videoId를 저장
+        dispatch(setInterviewData({
+          questionIndex: currentQuestionIndex,
+          videoId: response.videoId  // 서버에서 반환한 videoId 사용
+        }));
+      })
+      .catch(error => {
+        console.error('Error uploading video:', error);
+      })
+      .finally(() => {
         setIsSubmitting(false);
         if (currentQuestionIndex < questions.length - 1) {
           setCurrentQuestionIndex(prevIndex => prevIndex + 1);
           dispatch(setStatus('pending'));
           setTimeLeft(60);
           setShowStartButton(true);
-          // 다음 질문을 준비하기 위해 상태 초기화
           setRecordedChunks([]);
           setIsRecording(false);
         } else {
           dispatch(setStatus('ending'));
-        // 모든 질문이 끝났을 때의 처리
         }
-      }, 3000);
-    }  
-  }, [dispatch, stopRecording, currentQuestionIndex, questions.length, recordingStartTime, router]);
+      });
+  }  
+}, [dispatch, stopRecording, currentQuestionIndex, questions, recordingStartTime, recordedChunks, userStore.id]);
+
 //수정 09:56
 const handleNextQuestion = useCallback(() => {
   if (currentQuestionIndex < questions.length - 1) {

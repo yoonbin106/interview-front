@@ -160,7 +160,10 @@ const interviewSlice = createSlice({
       state.buttonActive = action.payload;
     },
     setInterviewData: (state, action) => {
-      state.interviewData = action.payload; // interviewData 상태 업데이트
+      state.interviewData = {
+        questionIndex: action.payload.questionIndex,
+        videoId: action.payload.videoId,  // Blob 대신 videoId 저장
+      };
     },
     setQuestions: (state, action) => {
       state.questions = action.payload;
