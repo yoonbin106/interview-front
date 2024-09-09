@@ -19,6 +19,23 @@ export const getMockQuestions = async (choosedResume, userId) => {
     }
   };
 
+  export const getRealQuestions = async (choosedResume, userId) => {
+    try {
+      const response = await axios.get(`${baseUrl}/getrealquestion`, {
+        params: { choosedResume, userId },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        return response.data;
+      }
+    } catch (error) {
+      console.error("이력서 기반 질문을 가져오는 중 오류가 발생하였습니다:", error);
+    }
+  };
+
   export const getInterviewQuestions = async (questionIds) => {
     try {
       const response = await axios.get(`${baseUrl}/getinterviewquestions`, {

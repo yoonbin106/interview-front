@@ -19,7 +19,7 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import styles from '@/styles/interview/interviewPreparation.module.css';
-import { getMockQuestions } from 'api/interview';
+import { getMockQuestions, getRealQuestions } from 'api/interview';
 import LoadingOverlay from '@/components/interview/loadingOverlay'; // 로딩 컴포넌트 임포트
 
 const InterviewPreparation = observer(() => {
@@ -238,8 +238,14 @@ const InterviewPreparation = observer(() => {
   };
   async function handleSetMockQuestions() {
     try {
-      const mockQuestions = await getMockQuestions(interviewStore.choosedResume, userStore.id);  // 비동기 함수 대기
-      interviewStore.setMockQuestions(mockQuestions);  // 데이터 저장
+      if(interviewStore.type === 'mock') {
+        const mockQuestions = await getMockQuestions(interviewStore.choosedResume, userStore.id);  // 비동기 함수 대기
+        interviewStore.setMockQuestions(mockQuestions);  // 데이터 저장
+      }else{
+        const realQuestions = await getRealQuestions(interviewStore.choosedResume, userStore.id);  // 비동기 함수 대기
+        console.log("실전 질문 6개입니다!", realQuestions);
+        interviewStore.setRealQuestions(realQuestions);  // 데이터 저장
+      }
     } catch (error) {
       console.error('Mock 질문을 불러오는 중 오류가 발생했습니다:', error);
     }

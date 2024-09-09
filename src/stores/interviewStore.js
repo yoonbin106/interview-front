@@ -15,6 +15,7 @@ class InterviewStore {
     commonQuestions = [];
     resumeQuestions = [];
     activeTab = 'common';
+    realQuestions = [];
 
     // 추가된 상태
     selectedQuestions = []; // 선택된 질문들을 관리할 배열
@@ -71,6 +72,13 @@ class InterviewStore {
         this.parseMockQuestions(); // mockQuestions 설정 후 데이터 분리
         if (typeof window !== 'undefined') {
             localStorage.setItem('mockQuestions', JSON.stringify(mockQuestions));
+        }
+    }
+
+    setRealQuestions(realQuestions) {
+        this.realQuestions = realQuestions;
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('realQuestions', realQuestions);
         }
     }
 

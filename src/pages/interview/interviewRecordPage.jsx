@@ -70,26 +70,28 @@ const InterviewRecordPage = observer(() => {
     const fetchInterviewData = async () => {
       if (router.isReady) {
         const interviewType = interviewStore.type;
-        const selectedQuestions = interviewStore.selectedQuestions;
-        const { candidateData } = router.query;
-  
-        console.log("Router query:", { candidateData });
-        console.log("interviewType:", interviewType);
-        console.log("selectedQuestions:", selectedQuestions);
-  
-        const questionIds = selectedQuestions.map(question => question);
-        console.log(questionIds);
-  
-        try {
-          const fetchedQuestions = await getInterviewQuestions(questionIds); // 질문 데이터 가져오기
-          console.log("interviewQuestion: ", fetchedQuestions);
-  
-          // 질문과 상태 세팅
+        if(interviewType === 'mock'){
+          const selectedQuestions = interviewStore.selectedQuestions;
+          console.log("interviewType:", interviewType);
+          console.log("selectedQuestions:", selectedQuestions);
+    
+          const questionIds = selectedQuestions.map(question => question);
+          console.log(questionIds);
+    
+          try {
+            const fetchedQuestions = await getInterviewQuestions(questionIds); // 질문 데이터 가져오기
+            console.log("interviewQuestion: ", fetchedQuestions);
+    
+            // 질문과 상태 세팅
+            setInterviewType(interviewType);
+            // setCandidateData(candidateData ? JSON.parse(candidateData) : null);
+            setQuestions(fetchedQuestions); // 질문 상태 업데이트
+          } catch (error) {
+            console.error("Failed to fetch questions:", error);
+          }
+        }else{
           setInterviewType(interviewType);
-          setCandidateData(candidateData ? JSON.parse(candidateData) : null);
-          setQuestions(fetchedQuestions); // 질문 상태 업데이트
-        } catch (error) {
-          console.error("Failed to fetch questions:", error);
+          setQuestions(interviewStore.realQuestions.resumeQuestions);
         }
       }
     };
