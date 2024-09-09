@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,30 +15,31 @@ import { TextField, Grid, FormControl, InputLabel, Divider } from '@mui/material
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminDeletedPost.module.css';
+import { useRouter } from 'next/router';
 
 const AdminDeletedPost = () => {
-    // 하드코딩된 삭제된 게시글 데이터 (임시 데이터)
-    const deletedpost = [
-        { id: 15, title: '2024년 하반기 공휴일 안내', author: 'admin123', date: '2024-07-15' },
-        { id: 14, title: '서비스 점검 안내 (8월 25일)', author: 'admin1004', date: '2024-07-10' },
-        { id: 13, title: '새로운 기능 업데이트', author: 'admin456', date: '2024-06-30' },
-        { id: 12, title: '운영정책 변경 안내', author: 'admin789', date: '2024-06-25' },
-        { id: 11, title: '서버 이전 공지', author: 'admin222', date: '2024-06-20' },
-        { id: 10, title: '서비스 이용약관 변경', author: 'admin555', date: '2024-06-15' },
-        { id: 9, title: '데이터베이스 점검 안내', author: 'admin888', date: '2024-06-10' },
-        { id: 8, title: '긴급 서버 점검', author: 'admin333', date: '2024-06-05' },
-        { id: 7, title: '서비스 일시 중단 안내', author: 'admin999', date: '2024-05-30' },
-        { id: 6, title: '공휴일 휴무 안내', author: 'admin111', date: '2024-05-25' },
-        { id: 5, title: '유료 서비스 변경 안내', author: 'admin654', date: '2024-05-20' },
-        { id: 4, title: '시스템 유지보수 작업', author: 'admin333', date: '2024-05-15' },
-        { id: 3, title: '회원가입 정책 변경', author: 'admin222', date: '2024-05-10' },
-        { id: 2, title: '보안 강화 업데이트', author: 'admin999', date: '2024-05-05' },
-        { id: 1, title: '서버 업그레이드 안내', author: 'admin123', date: '2024-05-01' },
-    ];
-
+    const [deletedPosts, setDeletedPosts] = useState([]);
     const [searchCategory, setSearchCategory] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredDeletedPost, setFilteredDeletedPost] = useState(deletedpost);
+    const [filteredDeletedPost, setFilteredDeletedPost] = useState([]);
+
+    const router = useRouter(); // useRouter 사용
+
+    // 백엔드에서 삭제된 게시글 데이터를 가져오는 함수
+    useEffect(() => {
+        const fetchDeletedPosts = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/bbs/deleted');
+                // 내림차순 정렬 (최신 글이 위로)
+                const sortedPosts = response.data.sort((a, b) => new Date(b.deleted_date) - new Date(a.deleted_date));
+                setDeletedPosts(sortedPosts);
+                setFilteredDeletedPost(sortedPosts);
+            } catch (error) {
+                console.error('Error fetching deleted posts:', error);
+            }
+        };
+        fetchDeletedPosts();
+    }, []);
 
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
@@ -50,12 +52,12 @@ const AdminDeletedPost = () => {
 
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
-        const filteredData = deletedpost.filter(item => {
+        const filteredData = deletedPosts.filter(item => {
             if (searchCategory === 'title') {
                 return item.title.toLowerCase().includes(lowercasedFilter);
             }
             if (searchCategory === 'author') {
-                return item.author.toLowerCase().includes(lowercasedFilter);
+                return item.userId.username.toLowerCase().includes(lowercasedFilter);
             }
             return false;
         });
@@ -78,6 +80,25 @@ const AdminDeletedPost = () => {
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredDeletedPost.length) : 0;
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        });
+        const formattedTime = date.toLocaleTimeString('ko-KR', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+        return `${formattedDate} ${formattedTime}`;
+    };
+
+    // 행을 클릭했을 때 실행되는 함수
+    const handleRowClick = (bbsId) => {
+        router.push(`/adminPage/adminDeletedPostDetailsPage/${bbsId}`);
+    };
+
     return (
         <div className={styles.deletedPostContainer}>
             <div className={styles.deletedPostSidebar}>
@@ -92,7 +113,6 @@ const AdminDeletedPost = () => {
                         </Box>
                         <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} />
 
-                        {/* 필터링된 게시글을 테이블로 렌더링 */}
                         <TableContainer component={Paper} className={styles.deletedPostTableContainer}>
                             <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
                                 <TableHead>
@@ -108,15 +128,18 @@ const AdminDeletedPost = () => {
                                         ? filteredDeletedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         : filteredDeletedPost
                                     ).map((row) => (
-                                        <TableRow key={row.id}>
-                                            <TableCell align="center">{row.id}</TableCell>
-                                            <TableCell align="center">
-                                                <a href={`/adminPage/adminDeletedPostDetailsPage`} className={styles.deletedPostTableLink}>
+                                        <TableRow 
+                                            key={row.bbsId} 
+                                            hover 
+                                            style={{ cursor: 'pointer' }} 
+                                            onClick={() => handleRowClick(row.bbsId)}
+                                        >
+                                            <TableCell align="center">{row.bbsId}</TableCell>
+                                            <TableCell align="center" className={styles.deletedPostTableLink}>
                                                     {row.title}
-                                                </a>
                                             </TableCell>
-                                            <TableCell align="center">{row.author}</TableCell>
-                                            <TableCell align="center">{row.date}</TableCell>
+                                            <TableCell align="center">{row.userId.username}</TableCell>
+                                            <TableCell align="center">{formatDate(row.deleted_date)}</TableCell>
                                         </TableRow>
                                     ))}
                                     {emptyRows > 0 && (
