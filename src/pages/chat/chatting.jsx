@@ -231,7 +231,31 @@ const Chatting = observer(({ closeChatting }) => {
         }
     };
 
+    //채팅방에 있는 유저들의 id 값을 가져오기 (알람 목적)
+    const getUserIdsForChatAlarm = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/chat/getUserIdsForChatAlarm', {
+                params: {
+                    id: currentChatRoomId,
+                    userId: userStore.id
+                },
+            });
+            console.log(response.data);
+            return response.data;
+        }
+        catch (err) {
+            console.log('선택한 채팅방에 참여 중인 유저 목록 얻어오기 중 에러 발생: ', err);
+        }
+    };
+
+    //파이썬으로 채팅 값 보내는 함수
     const sendMessage = async () => {
+        const userIdsForAlarm = await getUserIdsForChatAlarm();
+        console.log('userIdsForAlarm: ', userIdsForAlarm);
+        console.log('userIdsForAlarm[0]: ', userIdsForAlarm[0]);
+        console.log('typeof(userIdsForAlarm): ', typeof(userIdsForAlarm));
+        console.log('typeof(userIdsForAlarm[0]): ', typeof(userIdsForAlarm[0]));
+
         if (inputMessage.trim()) {
 
             const messageData = {
@@ -240,7 +264,9 @@ const Chatting = observer(({ closeChatting }) => {
                 sender: userStore.username,
                 senderId: userStore.id.toString(),
                 timestamp: new Date().toISOString(),
-                type: 'chat'
+                type: 'chat',
+                userIds: userIdsForAlarm
+
             };
             console.log('type: ', typeof userStore.id);
             console.log('messageData: ', messageData);
@@ -263,6 +289,8 @@ const Chatting = observer(({ closeChatting }) => {
             //     }));
         }
     };
+
+
 
     const getChatroomTitle = async (chatRoomId) => {
         console.log('[ChattingList.jsx] currentChatRoomId: ', chatRoomId);

@@ -106,7 +106,8 @@ const Header = observer(() => {
     setIsClient(true);
     if (typeof window !== 'undefined') {
       await authStore.checkLoggedIn();
-      if(authStore.loggedIn){
+
+      if (authStore.loggedIn) {
         const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884');
         mqttStore.setMqttClient(mqttClient);
 
@@ -114,7 +115,19 @@ const Header = observer(() => {
           console.log('Connected to MQTT broker');
           // setIsConnected(true);
         });
+
+        mqttClient.on('message', (topic, message) => {
+          // console.log('메세지 받음');
+          console.log('Received message:', message.toString());
+          console.log('topic: ', topic);
+          const receivedMessage = JSON.parse(message);
+
+
+        
+
+        });
       }
+
     }
     // 쿼리 파라미터 확인 후 해당 섹션으로 스크롤
     if (router.query.scrollTo) {
@@ -135,7 +148,7 @@ const Header = observer(() => {
     try {
       mqttStore.mqttClient.unsubscribe(`mqtt/member/${userStore.id}`);
       await logout(authStore, userStore, mqttStore); // 로그아웃 API 호출
-      
+
       router.push('/'); // 홈 페이지로 리다이렉트
     } catch (error) {
       console.error('Logout failed:', error);
@@ -185,15 +198,15 @@ const Header = observer(() => {
                         <MenuItem onClick={() => router.push('/auth')}>로그인</MenuItem>
                       )}
                       {authStore.loggedIn && <MenuItem onClick={() => {
-                          if (authStore.isAdmin) {
-                            router.push('/adminPage');
-                          } else {
-                            router.push('/myPage');
-                          }
-                        }}>마이페이지</MenuItem>
+                        if (authStore.isAdmin) {
+                          router.push('/adminPage');
+                        } else {
+                          router.push('/myPage');
+                        }
+                      }}>마이페이지</MenuItem>
 
 
-                        
+
                       }
                       <ListDivider />
                       {authStore.loggedIn && (
@@ -205,25 +218,25 @@ const Header = observer(() => {
                   </Dropdown>
                 </div>
                 {authStore.loggedIn &&
-                <Dropdown>
-                <MenuButton
-                  slots={{ root: IconButton }}
-                  slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
-                  sx={{ borderRadius: 40, width: 50, height: 50 }}
-                >
-                  <Badge badgeContent={999} color="danger" variant="solid" size="sm">
-                    <NotificationsNoneTwoToneIcon color="action" />
-                  </Badge>
-                </MenuButton>
-                <Menu placement="bottom-start" sx={{ width: 400 }}>
-                  <MenuItem>알림</MenuItem>
-                  <ListDivider />
-                  <MenuItem>채팅 : 안읽은 메시지 1개</MenuItem>
-                  <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem>
-                </Menu>
-              </Dropdown>
+                  <Dropdown>
+                    <MenuButton
+                      slots={{ root: IconButton }}
+                      slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
+                      sx={{ borderRadius: 40, width: 50, height: 50 }}
+                    >
+                      <Badge badgeContent={999} color="danger" variant="solid" size="sm">
+                        <NotificationsNoneTwoToneIcon color="action" />
+                      </Badge>
+                    </MenuButton>
+                    <Menu placement="bottom-start" sx={{ width: 400 }}>
+                      <MenuItem>알림</MenuItem>
+                      <ListDivider />
+                      <MenuItem>채팅 : 안읽은 메시지 1개</MenuItem>
+                      <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem>
+                    </Menu>
+                  </Dropdown>
                 }
-                
+
               </div>
             </div>
           </div>
@@ -257,7 +270,7 @@ const Header = observer(() => {
                   </div>
                   <div className={styles.subMenus}>
                     <a href="/bbs" className={styles.subMenu}>자유게시판</a>
-                   
+
                   </div>
                   <div className={styles.subMenus}>
                     <a href="/bbs/bbsFaqPage" className={styles.subMenu}>문의사항</a>
