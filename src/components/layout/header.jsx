@@ -133,7 +133,9 @@ const Header = observer(() => {
 
   const handleLogout = async () => {
     try {
+      mqttStore.mqttClient.unsubscribe(`mqtt/member/${userStore.id}`);
       await logout(authStore, userStore, mqttStore); // 로그아웃 API 호출
+      
       router.push('/'); // 홈 페이지로 리다이렉트
     } catch (error) {
       console.error('Logout failed:', error);

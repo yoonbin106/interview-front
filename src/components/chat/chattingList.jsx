@@ -107,7 +107,7 @@ const ChattingList = ({
                             참가 중인 채팅방이 존재하지 않습니다.
                         </div>
                     ) : (
-                        chatRoomList.map((list) => (
+                        (chatRoomList.sort((a, b) => new Date(b.updatedTime) - new Date(a.updatedTime))).map((list) => (
                             <div
                                 className={styles.chattingList}
                                 key={list.id}

@@ -88,10 +88,13 @@ const Login = observer(() => {
           mqttClient.on('connect', () => {
             console.log('Connected to MQTT broker');
             // setIsConnected(true);
+            mqttClient.subscribe(`mqtt/member/${userStore.id}`);
           });
         } catch (err) {
           console.log('MQTT CONNECT ERROR: ', err);
         }
+
+        
 
         // 로그인 성공 후 홈 페이지로 리다이렉션
         router.push('/');

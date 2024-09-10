@@ -196,6 +196,7 @@ const Chatting = observer(({ closeChatting }) => {
 
     const handleBackClick = () => {
         setIsChatOpen(false);
+        getChatroomList();
         // setCurrentChatRoomId('');
         currentChatRoomIdRef.current = '';
         setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
