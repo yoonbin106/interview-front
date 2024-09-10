@@ -41,7 +41,7 @@ export default function PaginationTableNotice({ rows }) {
   React.useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/bbs');
+        const response = await axios.get(`http://localhost:8080/bbs/${id}`);
         setPosts(response.data);
         setLoading(false);
       } catch (error) {
@@ -81,7 +81,7 @@ export default function PaginationTableNotice({ rows }) {
               </TableCell>
               <TableCell align="center">{post.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
-              <TableCell align="center">13</TableCell>
+              <TableCell align="center">{post.hitCount || 0}</TableCell>
               <TableCell align="center">10</TableCell>
             </TableRow>
           ))}

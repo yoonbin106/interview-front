@@ -35,7 +35,7 @@ export default function PaginationTableNotice({ rows }) {
   React.useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/bbs');
+        const response = await axios.get(`http://localhost:8080/bbs/${id}`);
         // 최신 글이 가장 먼저 보이도록 createdAt 기준 내림차순 정렬
         const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setPosts(sortedPosts);
@@ -75,7 +75,7 @@ export default function PaginationTableNotice({ rows }) {
               </TableCell>
               <TableCell align="center">{post.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
-              <TableCell align="center">13</TableCell>
+              <TableCell align="center">{post.hitCount || 0}</TableCell>
               <TableCell align="center">10</TableCell>
             </TableRow>
           ))}
