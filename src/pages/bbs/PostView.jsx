@@ -14,7 +14,7 @@ const PostView = () => {
     { id: 2, author: '까떼메야', content: '1빠', date: '2024.07.24' },
   ]);
   const router = useRouter();
-  const { id } = router.query;  // URL 파라미터에서 ID를 가져옴
+  const { id, increment } = router.query;  // URL 파라미터에서 ID를 가져옴
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
@@ -25,7 +25,8 @@ const PostView = () => {
     if (id) {
       const fetchPost = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/bbs/${id}`);
+          const incrementValue = increment === 'false' ? 'false' : 'true';
+          const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=${incrementValue}`);
           setPost(response.data);
           // 댓글을 가져오는 부분 수정
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);  // 변수명 수정
@@ -39,7 +40,7 @@ const PostView = () => {
   
       fetchPost();
     }
-  }, [id]);
+  }, [id,increment]);
   
 
   if (loading) {
@@ -104,7 +105,7 @@ const PostContent = ({ post, openReportModal }) => {
 
   const handleEdit = () => {
     console.log(`Editing post with ID: ${id}`);  // 수정 기능 로그 출력
-    router.push(`/bbs/editPost?id=${id}`);
+    router.push(`/bbs/editPost?id=${id}&increment=false`);
     handleClose();
   };
 
@@ -152,7 +153,7 @@ const menuItems = postOwnerId === currentUserId ? [
         <div className={styles.author}>{userId}</div>
         <div className={styles.postInfo}>
           <span>❤️ 5</span>
-          <span>조회 13</span>
+          <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton
             size="large"

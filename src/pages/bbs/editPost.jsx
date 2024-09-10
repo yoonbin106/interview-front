@@ -19,7 +19,7 @@ const EditPost = () => {
     if (id) {
       const fetchPost = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/bbs/${id}`);
+          const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=false`);
           const data = response.data;
   
           console.log('API 응답 데이터:', data);  // 파일 리스트가 포함된 응답인지 확인
@@ -77,12 +77,14 @@ const EditPost = () => {
     });
   
     try {
-      await axios.post(`http://localhost:8080/bbs/${id}`, formData, {
+      await axios.post(`http://localhost:8080/bbs/${id}?increment=false`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Cache-Control': 'no-cache',
         },
       });
-      router.push(`/bbs/postView?id=${id}`); // 수정 후 해당 게시글 페이지로 이동
+     
+      router.push(`/bbs/postView?id=${id}&increment=false`); // 수정 후 해당 게시글 페이지로 이동
     } catch (error) {
       console.error('게시글 수정 실패:', error);
     }
