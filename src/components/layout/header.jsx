@@ -14,10 +14,11 @@ import Badge from '@mui/joy/Badge';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import { logout } from '@/api/user';  // 로그아웃 API 임포트
+import mqtt from 'mqtt';
 
 const Header = observer(() => {
   const [hover, setHover] = useState(false);
-  const { authStore, userStore } = useStores();
+  const { authStore, userStore, mqttStore } = useStores();
   const router = useRouter(); // useRouter 훅 사용
   const [isClient, setIsClient] = useState(false);
 
@@ -101,12 +102,20 @@ const Header = observer(() => {
     };
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     setIsClient(true);
     if (typeof window !== 'undefined') {
-      authStore.checkLoggedIn();
-    }
+      await authStore.checkLoggedIn();
+      if(authStore.loggedIn){
+        const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884');
+        mqttStore.setMqttClient(mqttClient);
 
+        mqttClient.on('connect', () => {
+          console.log('Connected to MQTT broker');
+          // setIsConnected(true);
+        });
+      }
+    }
     // 쿼리 파라미터 확인 후 해당 섹션으로 스크롤
     if (router.query.scrollTo) {
       const section = document.getElementById(router.query.scrollTo);
@@ -124,7 +133,7 @@ const Header = observer(() => {
 
   const handleLogout = async () => {
     try {
-      await logout(authStore, userStore); // 로그아웃 API 호출
+      await logout(authStore, userStore, mqttStore); // 로그아웃 API 호출
       router.push('/'); // 홈 페이지로 리다이렉트
     } catch (error) {
       console.error('Logout failed:', error);

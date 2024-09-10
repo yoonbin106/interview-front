@@ -116,13 +116,14 @@
 .chattingBackButtonWrapper {
   position: absolute; /* 버튼의 위치를 절대적으로 설정 */
   /* margin: 3px 0px 0px 3px; */
-  z-index: 1000;
+  z-index: 1001;
 }
 
 .chattingBackButton {
   color: #007bff;
   cursor: pointer;
   padding: 10px;
+  
 }
 
 

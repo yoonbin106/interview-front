@@ -3,22 +3,12 @@ import Avatar from '@mui/material/Avatar';
 import styles from '../../styles/chat/chattingMessages.module.css';
 import { getAllUsers } from 'api/user';
 
-import { UserRoundPlus , Menu } from 'lucide-react';
+import { UserRoundPlus, Menu } from 'lucide-react';
+import PopOver from './popOver';
 
 
-const ChattingMessages = ({ messages, userStore, chatRoomTitle }) => {
+const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, getUsersInChatroom, usersInChatroom }) => {
   const messagesEndRef = useRef(null);
-  const [users, setUsers] = useState([]);
-
-  const getAllUserList = async () => {
-    try {
-      const response = await getAllUsers();
-      setUsers(response.data);
-    }
-    catch (error) {
-      console.log('Error: ', error);
-    }
-  };
 
   const getSenderProfileImage = (senderId) => {
     const user = users.find((user) => user.id == senderId);
@@ -28,17 +18,13 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle }) => {
   };
 
   useEffect(() => {
-    getAllUserList()
-  }, []);
-
-  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages]);
 
 
   return (
     <>
-    <div className={styles.chattingMessageHeader}>
+      <div className={styles.chattingMessageHeader}>
         <div className={styles.chattingMessageTitle}>{chatRoomTitle}</div>
         <div className={styles.chattingMessageCreate}>
           <button>
@@ -47,7 +33,8 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle }) => {
         </div>
         <div className={styles.chattingMessageSettings}>
           <button>
-            <Menu />
+            {/* <Menu onClick={() => {getUsersInChatroom();}}/> */}
+            <PopOver getUsersInChatroom={getUsersInChatroom} usersInChatroom={usersInChatroom} userStore={userStore}/>
           </button>
         </div>
       </div>
@@ -55,16 +42,16 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle }) => {
 
 
       <div className={styles.chattingMessages}>
-        {messages.map((message, index) => (
+        {messages.map((message) => (
 
           message.senderId == userStore.id ? (
-            <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
+            <div key={message.id} className={`${styles.messageContainer} ${styles.my}`}>
               <div className={styles.messageContent}>
                 <p>{message.text}</p>
               </div>
             </div>
           ) : (
-            <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
+            <div key={message.id} className={`${styles.messageContainer} ${styles.others}`}>
 
               <div className={styles.recieverAvatar} aria-hidden="true">
                 <Avatar src={getSenderProfileImage(message.senderId)} sx={{ width: 50, height: 50 }}></Avatar>

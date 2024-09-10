@@ -21,8 +21,9 @@ const Chatting = observer(({ closeChatting }) => {
     const [chatRoomTitle, setChatRoomTitle] = useState([]);
     
 
-    const { authStore, userStore } = useStores();
+    const { authStore, userStore, mqttStore } = useStores();
     const [users, setUsers] = useState([]); //getAllUsers()
+    const [usersInChatroom, setUsersInChatroom] = useState([]);
 
     const [client, setClient] = useState(null); //mqttClient
     const [isConnected, setIsConnected] = useState(false);
@@ -50,7 +51,7 @@ const Chatting = observer(({ closeChatting }) => {
                 { headers: { 'Content-Type': 'application/json' } }
             );
             setChatRoomList(response.data);
-            console.log('response.data (ChatRoomList): ', response.data);
+            // console.log('response.data (ChatRoomList): ', response.data);
         } catch (error) {
             console.error('Error fetching chat rooms:', error);
         }
@@ -78,10 +79,10 @@ const Chatting = observer(({ closeChatting }) => {
 
     useEffect(() => {
         if (!client) {
-            const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884');
+            const mqttClient = mqttStore.mqttClient;
 
             mqttClient.on('connect', () => {
-                console.log('Connected to MQTT broker');
+                // console.log('Connected to MQTT broker');
                 setIsConnected(true);
             });
 
@@ -126,7 +127,7 @@ const Chatting = observer(({ closeChatting }) => {
 
     useEffect(() => {
         if(chatRoomList){
-            console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
+            // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
             chatRoomList.forEach((list) => {
                 const topic = `mqtt/chat/${list.id}`;
                 client.subscribe(topic);
@@ -171,7 +172,6 @@ const Chatting = observer(({ closeChatting }) => {
     //chatroomList 전체를 클릭하든 케밥메뉴 클릭하든 아무튼 chatRoomId 얻어오기
     const getChatroomId = (chatRoomId) => {
         console.log('[getChatroomId() 호출]: ', chatRoomId);
-
 
         setCurrentChatRoomId(chatRoomId); // 선택된 채팅방 ID 저장
         currentChatRoomIdRef.current = chatRoomId;
@@ -237,11 +237,12 @@ const Chatting = observer(({ closeChatting }) => {
                 text: inputMessage,
                 chatroomId: currentChatRoomIdRef.current,
                 sender: userStore.username,
-                senderId: userStore.id,
+                senderId: userStore.id.toString(),
                 timestamp: new Date().toISOString(),
                 type: 'chat'
             };
-
+            console.log('type: ', typeof userStore.id);
+            console.log('messageData: ', messageData);
             try {
                 // 파이썬 FastAPI 서버로 메시지 보내기
                 await axios.post('http://192.168.0.137:8000/sendMessage', messageData);
@@ -300,6 +301,23 @@ const Chatting = observer(({ closeChatting }) => {
         }
     };
 
+    const getUsersInChatroom = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/chat/getUsersInChatroom', {
+                params: {
+                    id: currentChatRoomId,
+                    userId: userStore.id
+                },
+            });
+            console.log(response.data);
+            setUsersInChatroom(response.data);
+            return response.data;
+        }
+        catch (err) {
+            console.log('선택한 채팅방에 참여 중인 유저 목록 얻어오기 중 에러 발생: ', err);
+        }
+    };
+
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             sendMessage();
@@ -332,7 +350,13 @@ const Chatting = observer(({ closeChatting }) => {
                                     <ArrowBackIosNewRoundedIcon />
                                 </button>
                             </div>
-                            <ChattingMessages messages={messages} userStore={userStore} chatRoomTitle={chatRoomTitle} />
+                            <ChattingMessages 
+                                messages={messages} 
+                                userStore={userStore} 
+                                chatRoomTitle={chatRoomTitle} 
+                                users={users} 
+                                getUsersInChatroom={getUsersInChatroom} 
+                                usersInChatroom={usersInChatroom} />
                         </>
                     )}
                 </div>

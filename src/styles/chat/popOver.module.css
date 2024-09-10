@@ -1,0 +1,58 @@
+.chatroomUsersListTitle {
+    display: flex;
+    padding: 20px;
+    font-size: 17px;
+    font-weight: 600;
+    border-bottom: solid 1px rgb(207, 207, 207);
+}
+
+.chattingCreateRoomUsersList {
+    width: 370px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.chattingCreateRoomUsersList::-webkit-scrollbar {
+    margin-right: 2px;
+    width: 5px;  /* 스크롤바의 너비 */
+}
+
+.chattingCreateRoomUsersList::-webkit-scrollbar-thumb {
+    height: 10%; /* 스크롤바의 길이 */
+    background: #217af4; /* 스크롤바의 색상 */
+    
+    border-radius: 10px;
+}
+
+.chattingCreateRoomUserItem {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.chattingCreateRoomUserItem:hover {
+    background-color: #f0f0f0;
+}
+
+.chattingCreateRoomUserProfile {
+    margin-right: 15px;
+}
+
+.chattingCreateRoomUserContent {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chattingCreateRoomUserInfo {
+    font-size: 1rem;
+    color: #555;
+}
+
+.chattingCreateRoomCheckBox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}

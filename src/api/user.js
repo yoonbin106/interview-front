@@ -37,7 +37,7 @@ export const login = async (loginData, authStore, userStore) => {  // authStore�
   return response.data;
 };
 
-export const logout = async (authStore, userStore) => {
+export const logout = async (authStore, userStore, mqttStore) => {
   return axios.post("/logout").then(res =>{
     localStorage.clear(); // 로컬 스토리지 비우기
     authStore.setLoggedIn(false);
@@ -49,6 +49,7 @@ export const logout = async (authStore, userStore) => {
     userStore.setPhone('');
     userStore.setProfile('');
     userStore.setId('');
+    mqttStore.setMqttClient('');
     return res
   });
 };
