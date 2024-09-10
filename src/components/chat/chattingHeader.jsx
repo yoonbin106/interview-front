@@ -11,7 +11,7 @@ const ChattingHeader = ({ closeChatting, isDarkMode, toggleDarkMode }) => {
         <PiWechatLogoBold />
       </span>
       <div>
-        &nbsp;&nbsp;&nbsp;Chatting
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chatting
       </div>
       <div>
         <div className={styles.darkModeButton}>

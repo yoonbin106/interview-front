@@ -11,18 +11,19 @@ const ChattingList = ({
     onChatClick, 
     getChatroomId, 
     userStore, 
-    users, 
     chatRoomList, 
     currentChatRoomId, 
     getChatroomList,
-    client,
+    getChatroomTitle,
+    chatRoomTitle,
+    exitChatroom
+    
  }) => {
 
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
     const [showEditModal, setShowEditModal] = useState(false);
     const [newChatroomTitle, setNewChatroomTitle] = useState('');
-    const [currentChatRoomTitle, setCurrentChatRoomTitle] = useState('');
 
     const inputRef = useRef(null);
 
@@ -41,7 +42,7 @@ const ChattingList = ({
         }
 
         if (showEditModal) {
-            getChatroomTitle();
+            // getChatroomTitle();
         }
 
     }, [showEditModal]);
@@ -55,42 +56,6 @@ const ChattingList = ({
     const backToChatList = () => {
         setIsCreatingRoom(false);
     };
-
-    const exitChatroom = async () => {
-        try {
-            // const response = 
-            // console.log('[exitChatroom()] :', currentChatRoomId, userStore.id);
-            await axios.delete('http://localhost:8080/api/chat/exitChatroom', {
-                params: {
-                    currentChatRoomId: currentChatRoomId,
-                    userId: userStore.id
-                }
-            });
-            //채팅방 다시 불러와서 UI 갱신
-            getChatroomList();
-
-            client.unsubscribe(currentChatRoomId);
-            console.log(`Unsubscribed from topic: ${currentChatRoomId}`);
-
-        } catch (error) {
-            console.error('채팅방 나가기 중 에러 발생:', error);
-        }
-    };
-
-    const getChatroomTitle = async () => {
-        console.log('[ChattingList.jsx] currentChatRoomId: ', currentChatRoomId);
-        try {
-            const response = await axios.get('http://localhost:8080/api/chat/getChatroomTitle', {
-                params: {
-                    id: currentChatRoomId
-                }
-            });
-            // console.log('[getChatroomTitle()] - response.data: ', response.data);
-            setCurrentChatRoomTitle(response.data);
-        } catch (error) {
-            console.error('채팅방 제목 가져오기 중 에러 발생:', error);
-        }
-    }
 
     const editChatroomTitle = async (newChatroomTitle) => {
         try {
@@ -186,7 +151,7 @@ const ChattingList = ({
                                 type="text"
                                 ref={inputRef}
                                 onChange={(e) => setNewChatroomTitle(e.target.value)}
-                                placeholder={currentChatRoomTitle}
+                                placeholder={chatRoomTitle}
                             />
                         </div>
                         <div className={styles.modalButton}>

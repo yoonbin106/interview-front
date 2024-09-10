@@ -3,10 +3,10 @@ import Avatar from '@mui/material/Avatar';
 import styles from '../../styles/chat/chattingMessages.module.css';
 import { getAllUsers } from 'api/user';
 
-import { MessageSquareDiff, Settings } from 'lucide-react';
+import { UserRoundPlus , Menu } from 'lucide-react';
 
 
-const ChattingMessages = ({ messages, userStore }) => {
+const ChattingMessages = ({ messages, userStore, chatRoomTitle }) => {
   const messagesEndRef = useRef(null);
   const [users, setUsers] = useState([]);
 
@@ -37,60 +37,62 @@ const ChattingMessages = ({ messages, userStore }) => {
 
 
   return (
-    <div className={styles.chattingMessages}>
-
-{/* 
-      <div className={styles.chattingListHeader}>
-        <div className={styles.chattingListTitle}>채팅방</div>
-        <div className={styles.chattingListCreate}>
+    <>
+    <div className={styles.chattingMessageHeader}>
+        <div className={styles.chattingMessageTitle}>{chatRoomTitle}</div>
+        <div className={styles.chattingMessageCreate}>
           <button>
-            <MessageSquareDiff />
+            <UserRoundPlus />
           </button>
         </div>
-        <div className={styles.chattingListSettings}>
+        <div className={styles.chattingMessageSettings}>
           <button>
-            <Settings />
+            <Menu />
           </button>
         </div>
-      </div> */}
+      </div>
 
 
-      {messages.map((message, index) => (
 
-        message.senderId == userStore.id ? (
-          <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
-            <div className={styles.messageContent}>
-              <p>{message.text}</p>
+      <div className={styles.chattingMessages}>
+        {messages.map((message, index) => (
+
+          message.senderId == userStore.id ? (
+            <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
+              <div className={styles.messageContent}>
+                <p>{message.text}</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
+          ) : (
+            <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
-            <div className={styles.recieverAvatar} aria-hidden="true">
-              <Avatar src={getSenderProfileImage(message.senderId)} sx={{ width: 50, height: 50 }}></Avatar>
-              {/* 보내는 사람 아이디: {message.senderId} */}
-            </div>
-
-            <div className={styles.othersMessageInfo}>
-
-              <div className={styles.othersMessageSender}>
-                {message.sender}
+              <div className={styles.recieverAvatar} aria-hidden="true">
+                <Avatar src={getSenderProfileImage(message.senderId)} sx={{ width: 50, height: 50 }}></Avatar>
+                {/* 보내는 사람 아이디: {message.senderId} */}
               </div>
 
-              <div>
-                <div className={styles.messageContent}>
-                  {message.text}
+              <div className={styles.othersMessageInfo}>
+
+                <div className={styles.othersMessageSender}>
+                  {message.sender}
                 </div>
+
+                <div>
+                  <div className={styles.messageContent}>
+                    {message.text}
+                  </div>
+                </div>
+
               </div>
-
             </div>
-          </div>
-        )
+          )
 
-      ))}
+        ))}
 
-      <div ref={messagesEndRef} />
-    </div>
+        <div ref={messagesEndRef} />
+      </div>
+    </>
+
   );
 };
 

@@ -18,6 +18,8 @@ const Chatting = observer(({ closeChatting }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [chatRoomList, setChatRoomList] = useState([]);
+    const [chatRoomTitle, setChatRoomTitle] = useState([]);
+    
 
     const { authStore, userStore } = useStores();
     const [users, setUsers] = useState([]); //getAllUsers()
@@ -36,14 +38,6 @@ const Chatting = observer(({ closeChatting }) => {
     //     } catch (error) {
     //         console.error('Error fetching chat rooms:', error);
     //     }
-    // };
-
-    // const setLastMessage = (chatRoomId, message) => {
-    //     setChatRoomList(prevChatRoomList =>
-    //         prevChatRoomList.map(room =>
-    //             room.id === chatRoomId ? { ...room, lastMessage: message } : room
-    //         )
-    //     );
     // };
 
     //getChatroomList
@@ -105,8 +99,9 @@ const Chatting = observer(({ closeChatting }) => {
                     )
                 );
                 
-                console.log(receivedMessage);
-                console.log(receivedMessage.chatroomId);
+                // console.log(receivedMessage);
+                // console.log(receivedMessage.chatroomId);
+                
                 // if (receivedMessage && receivedMessage.chatroomId == currentChatRoomId) {
                 //채팅방에 들어가서 ! 채팅방 아이디값을 얻어왔을때만 그 채팅방에 해당하는 메세지만 화면에 setMessages하기
                 if (receivedMessage && receivedMessage.chatroomId == currentChatRoomIdRef.current) {
@@ -128,14 +123,6 @@ const Chatting = observer(({ closeChatting }) => {
         }
         
     }, [client]);
-
-
-    // useEffect(() => {
-    //     chatRoomList.forEach((list) => {
-    //         const topic = `mqtt/chat/${list.id}`;
-    //         client.subscribe(topic);
-    //     })
-    // }, [chatRoomList]);
 
     useEffect(() => {
         if(chatRoomList){
@@ -176,81 +163,6 @@ const Chatting = observer(({ closeChatting }) => {
         }
     }, [currentChatRoomIdRef.current]);
 
-   
-    //채팅방 구분만 안되고 그래도 왔다갔다 소통은 되는 코드
-    // useEffect(() => {
-
-    //     // mqtt 연결을 ChatMessage 쪽으로 옮기고 그곳에서 ChatroomList 안에 있는 id 값을 받아와서 그걸로 topic 설정해주기
-    //     //topic을 chatroom의 id로 해주고 
-    //     //chatroomList 도 다 출력하면 안되고 자기가 속해있는 ChatroomUsers 에서 판단... findByUserId...
-
-    //     // MQTT 브로커에 연결
-    //     try{
-    //         const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884'); // 또는 'ws://broker.hivemq.com:8000/mqtt' (웹소켓 사용 시)
-
-    //         mqttClient.on('connect', () => {
-    //             console.log('Connected to MQTT broker');
-    //             setIsConnected(true);
-    //             mqttClient.subscribe('mqtt/chat'); // 토픽
-    //             // mqttClient.subscribe(`mqtt/chat/${currentChatRoomId}`);
-    //         });
-    
-    //         mqttClient.on('message', (topic, message) => {
-    //             console.log('Received message:', message.toString());
-    //             // if (topic === 'mqtt/chat') {
-    //             // if (topic === `mqtt/chat/83}`) {
-    
-    //                 const receivedMessage = JSON.parse(message);
-    //                 if (message.sender !== userStore.username) {
-    //                     setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-    //                 }
-    
-    //             // }
-    //         });
-    
-    //         mqttClient.on('error', (err) => {
-    //             console.error('Connection error:', err);
-    //         });
-    
-    //         mqttClient.on('close', () => {
-    //             console.log('Disconnected from MQTT broker');
-    //             setIsConnected(false);
-    //         });
-    
-    //         setClient(mqttClient);
-    
-    //         return () => {
-    //             if (mqttClient) {
-    //                 mqttClient.end();
-    //             }
-    //         };
-    //     }
-    //     catch (error) {
-    //         console.log('mqtt.connect Error: ', error);
-    //     }
-        
-    //     // ========================================================================================
-
-    //     // const websocketClient = new WebSocket('ws://192.168.0.137:8081/mqtt');
-    //     // setClient(websocketClient);
-
-    //     // websocketClient.onopen = () => {
-    //     //     console.log("WebSocket connection established");
-    //     // };
-
-    //     // websocketClient.onmessage = (event) => {
-    //     //     const message = JSON.parse(event.data);
-    //     //     console.log("Received WebSocket message: ", message);
-    //     //     setMessages((prevMessages) => [...prevMessages, message]);
-    //     // };
-
-    //     // websocketClient.onclose = () => {
-    //     //     console.log("WebSocket connection closed");
-    //     // };
-
-    //     // return () => websocketClient.close();
-
-    // }, []);
 
     const toggleDarkMode = () => {
         setIsDarkMode(prev => !prev);
@@ -263,6 +175,8 @@ const Chatting = observer(({ closeChatting }) => {
 
         setCurrentChatRoomId(chatRoomId); // 선택된 채팅방 ID 저장
         currentChatRoomIdRef.current = chatRoomId;
+
+        getChatroomTitle(chatRoomId);
 
         // console.log('onChatClick() - currentChatRoomId: ', currentChatRoomId);
     }
@@ -316,27 +230,76 @@ const Chatting = observer(({ closeChatting }) => {
         }
     };
 
-
-
     const sendMessage = async () => {
         if (inputMessage.trim()) {
 
-            // const userMessage = { text: inputMessage, sender: userStore.username };
-            // setMessages(prev => [...prev, userMessage]);
+            const messageData = {
+                text: inputMessage,
+                chatroomId: currentChatRoomIdRef.current,
+                sender: userStore.username,
+                senderId: userStore.id,
+                timestamp: new Date().toISOString(),
+                type: 'chat'
+            };
 
-            // client.publish('mqtt/chat', JSON.stringify({ text: inputMessage, sender: userStore.username, timestamp: new Date() }));
-            client.publish(`mqtt/chat/${currentChatRoomIdRef.current}`, 
-                JSON.stringify({ 
-                    text: inputMessage, 
-                    chatroomId: currentChatRoomIdRef.current,
-                    sender: userStore.username, 
-                    timestamp: new Date(), 
-                    senderId: userStore.id
-                }));
+            try {
+                // 파이썬 FastAPI 서버로 메시지 보내기
+                await axios.post('http://192.168.0.137:8000/sendMessage', messageData);
+                setInputMessage('');
+            } catch (error) {
+                console.error("메시지 전송 중 오류 발생:", error);
+            }
 
-            setInputMessage('');
+            // MQTT publish 코드
+            // client.publish(`mqtt/chat/${currentChatRoomIdRef.current}`, 
+            //     JSON.stringify({ 
+            //         text: inputMessage, 
+            //         chatroomId: currentChatRoomIdRef.current,
+            //         sender: userStore.username, 
+            //         timestamp: new Date(), 
+            //         senderId: userStore.id
+            //     }));
         }
     };
+
+    const getChatroomTitle = async (chatRoomId) => {
+        console.log('[ChattingList.jsx] currentChatRoomId: ', chatRoomId);
+        try {
+            const response = await axios.get('http://localhost:8080/api/chat/getChatroomTitle', {
+                params: {
+                    id: chatRoomId
+                }
+            });
+            // console.log('[getChatroomTitle()] - response.data: ', response.data);
+            // setCurrentChatRoomTitle(response.data);
+            setChatRoomTitle(response.data);
+            return response.data;
+        } catch (error) {
+            console.error('채팅방 제목 가져오기 중 에러 발생:', error);
+        }
+    }
+
+    const exitChatroom = async () => {
+        try {
+            // const response = 
+            // console.log('[exitChatroom()] :', currentChatRoomId, userStore.id);
+            await axios.delete('http://localhost:8080/api/chat/exitChatroom', {
+                params: {
+                    currentChatRoomId: currentChatRoomId,
+                    userId: userStore.id
+                }
+            });
+            //채팅방 다시 불러와서 UI 갱신
+            getChatroomList();
+
+            client.unsubscribe(currentChatRoomId);
+            console.log(`Unsubscribed from topic: ${currentChatRoomId}`);
+
+        } catch (error) {
+            console.error('채팅방 나가기 중 에러 발생:', error);
+        }
+    };
+
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             sendMessage();
@@ -357,9 +320,11 @@ const Chatting = observer(({ closeChatting }) => {
                             getChatroomId={getChatroomId}
                             getChatroomList={getChatroomList}
                             userStore={userStore} 
-                            users={users} 
                             currentChatRoomId={currentChatRoomId} 
-                            client={client} />
+                            client={client} 
+                            getChatroomTitle={getChatroomTitle}
+                            chatRoomTitle={chatRoomTitle} 
+                            exitChatroom={exitChatroom} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>
@@ -367,7 +332,7 @@ const Chatting = observer(({ closeChatting }) => {
                                     <ArrowBackIosNewRoundedIcon />
                                 </button>
                             </div>
-                            <ChattingMessages messages={messages} userStore={userStore} />
+                            <ChattingMessages messages={messages} userStore={userStore} chatRoomTitle={chatRoomTitle} />
                         </>
                     )}
                 </div>

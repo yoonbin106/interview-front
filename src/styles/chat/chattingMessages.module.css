@@ -1,8 +1,8 @@
 .chattingMessages {
   position: relative;
 
-  padding: 30px 10px 10px 2px;
-  margin: 20px 20px 20px 20px;
+  padding: 5px 10px 10px 2px;
+  margin: 20px;
 }
 
 .messageContainer {
@@ -60,33 +60,37 @@
 
 
 
-.chattingListHeader {
+.chattingMessageHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 10px;
-  border-bottom: solid 1px rgb(168, 168, 168);
+  margin-top: 1px;
+  border-bottom: solid 1px rgb(207, 207, 207);
 }
 
-.chattingListTitle {
+.chattingMessageTitle {
+  position: absolute;
+  margin-left: 20px;
+  font-size: 17px;
   font-weight: 600;
   margin-right: auto;
 }
 
-.chattingListCreate {
-  margin-left: 15px;
+.chattingMessageCreate {
+  margin-left: auto;
 }
 
-.chattingListCreate:hover {
+.chattingMessageCreate:hover {
   transform: scale(1.1);
 }
 
-.chattingListSettings {
+.chattingMessageSettings {
   margin-left: 15px;
   margin-right: 5px;
 }
 
-.chattingListSettings:hover {
+.chattingMessageSettings:hover {
   transform: scale(1.1);
 }
 
