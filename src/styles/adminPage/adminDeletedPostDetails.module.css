@@ -64,17 +64,11 @@
 }
 
 .deletedPostDetailsDeleteButton:hover {
-    background-color: #c82333;
+    background-color: #79151f;
 }
 
-.deletedPostDetailsHideButton {
-    background-color: #ffc107;
-    color: white;
-}
 
-.deletedPostDetailsHideButton:hover {
-    background-color: #e0a800;
-}
+
 
 .deletedPostDetailsBackButton {
     background-color: #007bff;
@@ -84,3 +78,16 @@
 .deletedPostDetailsBackButton:hover {
     background-color: #0056b3;
 }
+.deletedPostDetailsRestoreButton{
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #3ed87e;
+    color: white;
+  }
+
+  .deletedPostDetailsRestoreButton:hover{
+    background-color: #299757;
+  }

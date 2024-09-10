@@ -14,22 +14,15 @@ export default function AdminDeletedPostDetailsPage() {
     // 게시글과 댓글 데이터를 가져오는 함수
     useEffect(() => {
         if (bbsId) {
-            // 게시글 정보 가져오기
-            axios.get(`http://localhost:8080/bbs/${bbsId}`)
+            // 삭제된 게시글과 댓글을 함께 가져오는 API 호출
+            axios.get(`http://localhost:8080/api/admindeleted/deleted/${bbsId}/with-comments`)
                 .then(response => {
-                    setPost(response.data);
+                    const { post, comments } = response.data;
+                    setPost(post);  // 게시글 정보 설정
+                    setComments(comments);  // 댓글 정보 설정
                 })
                 .catch(error => {
-                    console.error('Error fetching post data:', error);
-                });
-
-            // 댓글 정보 가져오기
-            axios.get(`http://localhost:8080/bbs/${bbsId}/comments`)
-                .then(response => {
-                    setComments(response.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching comments:', error);
+                    console.error('Error fetching post and comments data:', error);
                 });
         }
     }, [bbsId]);
@@ -39,7 +32,7 @@ export default function AdminDeletedPostDetailsPage() {
         if (typeof window !== 'undefined') {
             if (window.confirm("게시글과 댓글을 완전히 삭제하시겠습니까?")) {
                 // 게시글 삭제 요청 (댓글도 함께 삭제)
-                axios.delete(`http://localhost:8080/bbs/${bbsId}`)
+                axios.delete(`http://localhost:8080/api/admindeleted/deleted/${bbsId}`)
                     .then(() => {
                         alert("게시글과 댓글 삭제가 완료되었습니다.");
                         router.push('/adminPage/adminDeletedPostPage');
@@ -47,6 +40,24 @@ export default function AdminDeletedPostDetailsPage() {
                     .catch(error => {
                         console.error('Error deleting post:', error);
                         alert('삭제 중 오류가 발생했습니다.');
+                    });
+            }
+        }
+    };
+
+    // 게시글 복구하는 함수
+    const handleRestore = () => {
+        if (typeof window !== 'undefined') {
+            if (window.confirm("게시글을 복구하시겠습니까?")) {
+                // 게시글 복구 요청
+                axios.post(`http://localhost:8080/api/admindeleted/restorepost/${bbsId}`)
+                    .then(() => {
+                        alert("게시글이 복구되었습니다.");
+                        router.push('/adminPage/adminDeletedPostPage');
+                    })
+                    .catch(error => {
+                        console.error('Error restoring post:', error);
+                        alert('복구 중 오류가 발생했습니다.');
                     });
             }
         }
@@ -71,7 +82,6 @@ export default function AdminDeletedPostDetailsPage() {
                         <div className={styles.deletedPostDetailsContent}>
                             <p><strong>작성자:</strong> {post.userId.username}</p><br />
                             <hr />
-
                             <p><strong>글 내용:</strong> {post.content}</p>
                             <br />
                             <hr />
@@ -82,7 +92,8 @@ export default function AdminDeletedPostDetailsPage() {
                             
                         {/* 댓글 목록 표시 */}
                         <div className={styles.commentsSection}>
-                            <h3>댓글</h3>
+                            <h3><strong>댓글 목록:</strong></h3>
+                            <br />
                             {comments.length > 0 ? (
                                 comments.map(comment => (
                                     <div key={comment.commentId} className={styles.comment}>
@@ -97,6 +108,7 @@ export default function AdminDeletedPostDetailsPage() {
 
                         <div className={styles.deletedPostDetailsButtonContainer}>
                             <button className={styles.deletedPostDetailsDeleteButton} onClick={handleDelete}>게시글 영구삭제</button>
+                            <button className={styles.deletedPostDetailsRestoreButton} onClick={handleRestore}>게시글 복구</button>
                             <button className={styles.deletedPostDetailsBackButton} onClick={handleBack}>목록</button>
                         </div>
                     </div>

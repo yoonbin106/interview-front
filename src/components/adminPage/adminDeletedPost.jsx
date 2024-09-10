@@ -29,7 +29,7 @@ const AdminDeletedPost = () => {
     useEffect(() => {
         const fetchDeletedPosts = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/bbs/deleted');
+                const response = await axios.get('http://localhost:8080/api/admindeleted/deletedposts');
                 // 내림차순 정렬 (최신 글이 위로)
                 const sortedPosts = response.data.sort((a, b) => new Date(b.deleted_date) - new Date(a.deleted_date));
                 setDeletedPosts(sortedPosts);
