@@ -7,7 +7,7 @@ import { UserRoundPlus, Menu } from 'lucide-react';
 import PopOver from './popOver';
 
 
-const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, getUsersInChatroom, usersInChatroom }) => {
+const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, usersInChatroom, currentChatRoomId }) => {
   const messagesEndRef = useRef(null);
 
   const getSenderProfileImage = (senderId) => {
@@ -34,7 +34,7 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, getUsersI
         <div className={styles.chattingMessageSettings}>
           <button>
             {/* <Menu onClick={() => {getUsersInChatroom();}}/> */}
-            <PopOver getUsersInChatroom={getUsersInChatroom} usersInChatroom={usersInChatroom} userStore={userStore}/>
+            <PopOver usersInChatroom={usersInChatroom} userStore={userStore} currentChatRoomId={currentChatRoomId}/>
           </button>
         </div>
       </div>

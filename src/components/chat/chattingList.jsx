@@ -7,18 +7,19 @@ import ChattingCreateRoom from './chattingCreateRoom';
 import MenuIcon from './menuIcon';
 import axios from 'axios';
 
-const ChattingList = ({ 
-    onChatClick, 
-    getChatroomId, 
-    userStore, 
-    chatRoomList, 
-    currentChatRoomId, 
+const ChattingList = ({
+    onChatClick,
+    getChatroomId,
+    userStore,
+    chatRoomList,
+    currentChatRoomId,
     getChatroomList,
     getChatroomTitle,
     chatRoomTitle,
-    exitChatroom
-    
- }) => {
+    exitChatroom,
+    getUsersInChatroom,
+    usersInChatroom,
+}) => {
 
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
@@ -46,6 +47,12 @@ const ChattingList = ({
         }
 
     }, [showEditModal]);
+
+    useEffect(() => {
+        chatRoomList.forEach((room) => {
+            getUsersInChatroom(room.id);  // 각 채팅방에 대해 유저 목록을 가져옴
+        });
+    }, [chatRoomList]);
 
     // console.log('chatRoomList print: ', chatRoomList);
     // console.log('users.id: ', userStore.id, currentChatRoomId);
@@ -85,6 +92,12 @@ const ChattingList = ({
         { label: '채팅방 나가기', action: exitChatroom },
     ];
 
+    const avatarStyles = {
+        position: 'absolute',
+        width: 30, // 기본 크기
+        height: 30,
+    };
+
     return (
         <div className={styles.chattingListContainer}>
             {!isCreatingRoom ? (
@@ -115,7 +128,74 @@ const ChattingList = ({
                             >
                                 <div className={styles.chattingListInside} onClick={() => onChatClick(list.id)}>
                                     <div className={styles.chattingListProfile}>
-                                        <Avatar sx={{ width: 50, height: 50 }} />
+
+                                        {usersInChatroom[list.id] && usersInChatroom[list.id].length == 1 ? (
+                                            // 유저가 1명일 때
+                                            <Avatar
+                                                src={usersInChatroom[list.id][0].profileImage}
+                                                sx={{ width: 50, height: 50 }}
+                                            />
+                                        ) : usersInChatroom[list.id] && usersInChatroom[list.id].length == 2 ? (
+                                            <>
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][0].profileImage}
+                                                    sx={{ width: 30, height: 30, top: '5px', left: '0px' }}
+                                                />
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][1].profileImage}
+                                                    sx={{ width: 30, height: 30, top: '-10px', left: '20px' }}
+                                                />
+                                            </>
+                                        ) : usersInChatroom[list.id] && usersInChatroom[list.id].length == 3 ? (
+                                            <>
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][0].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 30, height: 30, top: '0px', left: '10px' }}
+                                                />
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][1].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 30, height: 30, top: '-10px', left: '0px' }}
+                                                />
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][2].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 30, height: 30, top: '-40px', left: '20px' }}
+                                                />
+                                            </>
+                                        ) : usersInChatroom[list.id] && usersInChatroom[list.id].length >= 4 && (
+                                            <>
+                                            <Avatar
+                                                src={usersInChatroom[list.id][0].profileImage}
+                                                className="avatar"
+                                                style={{ width: 25, height: 25, top: '-0px', left: '0px' }}
+                                            />
+                                            <Avatar
+                                                src={usersInChatroom[list.id][1].profileImage}
+                                                className="avatar"
+                                                style={{ width: 25, height: 25, top: '-25px', left: '25px' }}
+                                            />
+                                            <Avatar
+                                                src={usersInChatroom[list.id][2].profileImage}
+                                                className="avatar"
+                                                style={{ width: 25, height: 25, top: '-25px', left: '0px' }}
+                                            />
+                                            <Avatar
+                                                src={usersInChatroom[list.id][3].profileImage}
+                                                className="avatar"
+                                                style={{ width: 25, height: 25, top: '-50px', left: '25px' }}
+                                            />
+                                        </>
+                                        )}
+
+
+
+
+
+                                        {/* <Avatar src={usersInChatroom[list.id]?.[0]?.profileImage} sx={{ width: 50, height: 50 }} /> */}
+
+
                                     </div>
                                     <div className={styles.chattingListContent}>
                                         <div className={styles.chattingRoomTitle}>{list.chatRoomTitle}</div>
@@ -158,7 +238,7 @@ const ChattingList = ({
                             <button onClick={() => setShowEditModal(false)}>취소</button>
                             <button onClick={() => editChatroomTitle(newChatroomTitle)}>수정</button>
                         </div>
-                        
+
                     </div>
                 </div>
             )}

@@ -7,12 +7,11 @@ import styles from '../../styles/chat/popOver.module.css';
 import Avatar from '@mui/material/Avatar';
 
 
-export default function PopOver({ getUsersInChatroom, usersInChatroom, userStore }) {
+export default function PopOver({ usersInChatroom, userStore, currentChatRoomId }) {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        getUsersInChatroom();
     };
 
     const handleClose = () => {
@@ -53,8 +52,8 @@ export default function PopOver({ getUsersInChatroom, usersInChatroom, userStore
                     <h1>참여 중인 유저 목록</h1>
                 </div>
                 <div className={styles.chattingCreateRoomUsersList}>
-                    {usersInChatroom
-                        .filter(user => user.id != userStore.id)
+                    {usersInChatroom[currentChatRoomId]
+                        ?.filter(user => user.id != userStore.id)
                         .map(user => (
                             <div key={user.id} className={styles.chattingCreateRoomUserItem}>
                                 <div className={styles.chattingCreateRoomUserProfile}>

@@ -184,7 +184,7 @@ const Chatting = observer(({ closeChatting }) => {
     const onChatClick = (chatRoomId) => {
         // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
 
-
+        getUsersInChatroom(chatRoomId);
         // setCurrentChatRoomId(chatRoomId); // React 상태 업데이트
 
         console.log('[onChatClick() 호출]: ', chatRoomId);
@@ -330,16 +330,23 @@ const Chatting = observer(({ closeChatting }) => {
         }
     };
 
-    const getUsersInChatroom = async () => {
+    const getUsersInChatroom = async (chatRoomId) => {
         try {
             const response = await axios.get('http://localhost:8080/api/chat/getUsersInChatroom', {
                 params: {
-                    id: currentChatRoomId,
+                    id: chatRoomId,
                     userId: userStore.id
                 },
             });
-            console.log(response.data);
-            setUsersInChatroom(response.data);
+            console.log('getUsersInChatroom(): ', response.data);
+
+            // setUsersInChatroom(response.data);
+
+            setUsersInChatroom(prevState => ({
+                ...prevState,   // 이전 상태를 유지하면서
+                [chatRoomId]: response.data  // 해당 채팅방 ID에 맞는 유저 목록 저장
+            }));
+            
             return response.data;
         }
         catch (err) {
@@ -371,7 +378,9 @@ const Chatting = observer(({ closeChatting }) => {
                             client={client} 
                             getChatroomTitle={getChatroomTitle}
                             chatRoomTitle={chatRoomTitle} 
-                            exitChatroom={exitChatroom} />
+                            exitChatroom={exitChatroom}
+                            getUsersInChatroom={getUsersInChatroom}
+                            usersInChatroom={usersInChatroom} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>
@@ -384,8 +393,8 @@ const Chatting = observer(({ closeChatting }) => {
                                 userStore={userStore} 
                                 chatRoomTitle={chatRoomTitle} 
                                 users={users} 
-                                getUsersInChatroom={getUsersInChatroom} 
-                                usersInChatroom={usersInChatroom} />
+                                usersInChatroom={usersInChatroom}
+                                currentChatRoomId={currentChatRoomId} />
                         </>
                     )}
                 </div>
