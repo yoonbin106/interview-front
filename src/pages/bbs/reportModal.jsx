@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Radio, FormControl, FormControlLabel, RadioGroup, Typography, Checkbox, FormGroup } from '@mui/material';
 import styles from '@/styles/bbs/reportModal.module.css'; // 모듈 CSS 사용
 import axios from 'axios';
+import userStore from 'stores/userStore';  // userStore import 추가
 
 
 const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent }) => {
@@ -23,11 +24,13 @@ const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent 
   };
 
   const handleSubmit = async () => {
+    const userId = userStore.id;  // userStore에서 userId 가져오기
     if (reason) {
       try {
         const response = await axios.post('http://localhost:8080/bbs/report', {
           postId: postId ? postId : null,  // 게시물 ID가 없으면 null
           commentId: commentId ? commentId : null,  // 댓글 ID가 없으면 null
+          userId: userId,  // userId 추가
           reason: reason,
           additionalInfo: additionalInfo
         });
