@@ -164,7 +164,7 @@ const ChattingList = ({
                                                     style={{ width: 30, height: 30, top: '-40px', left: '20px' }}
                                                 />
                                             </>
-                                        ) : usersInChatroom[list.id] && usersInChatroom[list.id].length >= 4 && (
+                                        ) : usersInChatroom[list.id] && usersInChatroom[list.id].length >= 4 ? (
                                             <>
                                             <Avatar
                                                 src={usersInChatroom[list.id][0].profileImage}
@@ -187,6 +187,8 @@ const ChattingList = ({
                                                 style={{ width: 25, height: 25, top: '-50px', left: '25px' }}
                                             />
                                         </>
+                                        ) : usersInChatroom[list.id] && usersInChatroom[list.id].length == 0 && (
+                                            <Avatar sx={{ width: 50, height: 50 }}/>
                                         )}
 
 
