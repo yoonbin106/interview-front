@@ -74,3 +74,21 @@ export const getMockQuestions = async (choosedResume, userId) => {
       throw error;
     }
   };
+
+  export const getInterviewResults = async (userId) => {
+    try {
+      const response = await axios.get(`${baseUrl}/getinterviewresults`, {
+        params: { userId: userId },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.status === 200) {
+        const data = response.data;
+        console.log("면접 결과 데이터입니다: ",data);
+        return data;
+      }
+    } catch (error) {
+      console.error("면접 결과를 가져오는 중 오류가 발생하였습니다:", error);
+    }
+  };

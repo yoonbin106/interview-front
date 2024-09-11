@@ -278,7 +278,7 @@ const handleNextQuestion = useCallback(() => {
     setIsRecording(false);
   } else {
     dispatch(setStatus('ending'));
-    router.push('/interview/interviewResult');
+    router.push('/interview/interviewResultList');
   }
 }, [currentQuestionIndex, questions.length, dispatch, router]);
 // useEffect 내에서 questions 상태 변화 감지
