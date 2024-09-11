@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { BsRobot } from "react-icons/bs";
 import { RiUserHeartFill } from "react-icons/ri";
+import { format } from 'date-fns';
 import LinearProgressWithLabel from '@/components/bot/linearProgressWithLabel'; 
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
@@ -17,7 +18,8 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
   const messagesEndRef = useRef(null);  
   // progress: 메시지 생성 중 표시되는 프로그레스 바의 현재 값입니다.
   const [progress, setProgress] = useState(10);
-// 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동시키는 useEffect
+
+  // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동시키는 useEffect
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isUserTyping]);
@@ -31,6 +33,21 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
       clearInterval(timer);
     };
   }, []);
+
+  // 타임스탬프를 포맷팅하는 함수
+  const formatTime = (timestamp) => {
+    // timestamp가 유효한 값인지 확인
+    if (!timestamp) return '';
+    try {
+      // timestamp가 문자열이 아닌 경우 (예: Date 객체) 처리
+      const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+      return format(date, 'HH:mm');
+    } catch (error) {
+      console.error('Invalid timestamp:', timestamp, error);
+      return '';
+    }
+  };
+
   // 키워드 하이라이팅 함수
   const highlightKeywords = (text) => {
     const keywords = ['important', 'crucial', 'significant', 'key', 'essential'];
@@ -60,7 +77,7 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
             {message.sender === 'bot' && <TextToSpeech text={message.text} />}
             {/* 인터랙티브 옵션이 있는 경우 표시 */}
             {message.sender === 'bot' && message.options && 
-              <InteractiveOptions options={message.options} onSelect={onOptionSelect} />
+                <InteractiveOptions options={message.options} onSelect={onOptionSelect} />
             }
             {/* 봇 메시지에 대한 피드백 버튼 */}
             {message.sender === 'bot' && message.answerId && (
@@ -91,6 +108,7 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
               </div>
             )}
           </div>
+          <div className={styles.messageTime}>{formatTime(message.timestamp)}</div>
         </div>
       ))}
       {/* 메시지 생성 중일 때 표시되는 로딩 인디케이터 */}
@@ -104,10 +122,11 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
           </div>
         </div>
       )}
-       {isUserTyping && (
+      {/* 사용자가 입력 중일 때 표시되는 타이핑 인디케이터 */}
+      {isUserTyping && (
         <div className={`${styles.messageContainer} ${styles.user} ${styles.typing}`}>
           <div className={styles.userAvatar} aria-hidden="true">
-          <span className={styles.typingDot}></span>
+            <span className={styles.typingDot}></span>
             <span className={styles.typingDot}></span>
             <span className={styles.typingDot}></span>
             <RiUserHeartFill />

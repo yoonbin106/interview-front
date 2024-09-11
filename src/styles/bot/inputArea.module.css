@@ -3,8 +3,23 @@
   align-items: center;
   padding: 1rem;
   background-color: #f3f4f6;
+  lex-direction: column;
+  position: relative;
 }
 
+
+.emojiPicker {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  z-index: 1000;
+}
+.emojiPickerWrapper {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  z-index: 1000;
+}
 .inputTextarea {
   flex: 1;
   padding: 0.5rem;
@@ -19,25 +34,36 @@
   border-color: #5A8AF2;
 }
 
-.sendButton, .micButton {
-  padding: 0.75rem;
-  margin-left: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  background-color: white;
-  color: #4b5563;
+.emojiButton,
+.sendButton,
+.micButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 50%;
+  background-color: #f0f0f0;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s;
 }
 
-.sendButton:hover, .micButton:hover {
-  background-color: #5A8AF2;
-  color: white;
+.emojiButton:hover,
+.sendButton:hover,
+.micButton:hover {
+  background-color: #e0e0e0;
 }
 
 .micButton.listening {
   background-color: #ef4444;
   color: white;
+}
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .dark .inputArea {
@@ -50,12 +76,15 @@
   border-color: #4b5563;
 }
 
-.dark .sendButton, .dark .micButton {
-  background-color: #374151;
-  color: #e5e7eb;
-  border-color: #4b5563;
+.dark .emojiButton,
+.dark .sendButton,
+.dark .micButton {
+  background-color: #555;
+  color: #fff;
 }
 
-.dark .sendButton:hover, .dark .micButton:hover {
-  background-color: #5A8AF2;
+.dark .emojiButton:hover,
+.dark .sendButton:hover,
+.dark .micButton:hover {
+  background-color: #666;
 }

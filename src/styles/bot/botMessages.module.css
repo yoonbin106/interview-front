@@ -8,6 +8,10 @@
   margin-bottom: 1rem;
   
 }
+.messageContentWrapper {
+  display: flex;
+  flex-direction: column;
+}
 /* .generating 상태에서 messageContent의 스타일을 조정합니다 */
 .messageContainer.bot .messageContent.generating {
   padding: 0.5rem 1rem;
@@ -30,9 +34,10 @@
 }
 
 .messageContent {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 10px;
   max-width: 70%;
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
 }
 
 .messageContainer.user .messageContent {
@@ -45,10 +50,26 @@
   color: #1f2937;
 }
 
+.user .messageContentWrapper {
+  align-items: flex-end;
+}
+
+.bot .messageContentWrapper {
+  align-items: flex-start;
+}
+
 .messageActions {
   display: flex;
   justify-content: flex-end;
   margin-top: 0.5rem;
+}
+
+.messageTime {
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  align-self: flex-end;
 }
 
 .feedbackButton {
