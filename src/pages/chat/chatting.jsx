@@ -359,12 +359,20 @@ const Chatting = observer(({ closeChatting }) => {
             sendMessage();
         }
     };
-
+    //2024.09.11 추가
+    const handleCloseChatting = () => {
+        setIsChatOpen(false);
+        setMessages([]);
+        currentChatRoomIdRef.current = null;
+        setCurrentChatRoomId(null);
+        getChatroomList(); // 채팅방 목록 갱신
+        closeChatting(); // SpeedDial 컴포넌트에서 전달받은 함수 호출
+    };
     return (
         <div className={`${styles.atchatWrapper} ${isDarkMode ? `${styles.darkMode}` : ''}`}>
 
             <div className={`${styles.chatContainer} ${isDarkMode ? styles.darkMode : ''}`}>
-                <ChattingHeader closeChatting={closeChatting} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+                <ChattingHeader closeChatting={handleCloseChatting} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
                 <div className={styles.chatContent}>
 
                     {!isChatOpen ? (

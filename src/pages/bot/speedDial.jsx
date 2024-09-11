@@ -23,18 +23,21 @@ const SpeedDial = () => {
 
   const handleBotClick = () => {
     if (isBotOpen) {
-      closeBot(); // 챗봇 컨텍스트의 closeBot 함수 호출
-      setIsBotOpen(false);
+      closeBot();
     } else {
       openBot();
-      setIsBotOpen(true);
     }
+    setIsBotOpen(!isBotOpen);
     handleClose();
   };
 
   const handleChattingClick = () => {
     setIsChatOpen(!isChatOpen);
     handleClose();
+  };
+
+  const closeChatting = () => {
+    setIsChatOpen(false);
   };
 
   return (
@@ -63,9 +66,9 @@ const SpeedDial = () => {
             <SpeedDialAction
               key='Chatting'
               icon={
-                  <div className={isChatOpen ? styles.blinking : ''}>
-                    {isChatOpen ? <BsChatHeart size={30} color='#FF0000'/> : <BsChatHeart size={30} color='#5A8AF2'/>}
-                  </div>
+                <div className={isChatOpen ? styles.blinking : ''}>
+                  <BsChatHeartFill size={30} color={isChatOpen ? '#FF0000' :'#5A8AF2'}/>
+                </div>
               }
               tooltipTitle={isChatOpen ? "Chatting (Open)" : "Chatting"}
               onClick={handleChattingClick}
@@ -86,12 +89,11 @@ const SpeedDial = () => {
                 bgcolor: isBotOpen ? 'rgba(255, 0, 0, 0.1)' : 'inherit',
               }}
             />
-            
           </MuiSpeedDial>
         </Box>
       </div>
       <div className={styles.chatContainers}>
-        {isChatOpen && <Chatting onClose={() => setIsChatOpen(false)} />}
+      {isChatOpen && <Chatting closeChatting={() => setIsChatOpen(false)} />}
         {isBotOpen && <Bot onClose={() => setIsBotOpen(false)} />}
       </div>
     </>

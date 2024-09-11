@@ -10,7 +10,7 @@ import { useBotActions } from '@/hooks/useBotAction';
 import { useMessageHandling } from '@/hooks/useMessageHandling';
 import { Snackbar } from '@mui/material';
 
-const Bot = () => {
+const Bot = ({onClose}) => {
   // 채팅 컨텍스트에서 필요한 상태와 함수들을 가져옵니다.
   const {
     isOpen,
@@ -170,12 +170,17 @@ const Bot = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
+  const handleClose = useCallback(() => {
+    endBot();
+    onClose(); // SpeedDial의 상태를 업데이트하는 함수
+  }, [endBot, onClose]);
   // 챗봇이 닫혀있을 때는 아무것도 렌더링하지 않음
   if (!isOpen) return null;
 
+
   return (
     <div className={`${styles.botContainer} ${isDarkMode ? styles.darkMode : ''}`}>
-      <BotHeader endBot={endBot} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+      <BotHeader endBot={handleClose} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       <div className={styles.botContent}>
         {botStartTime && (
           <div className={styles.botInfo}>
