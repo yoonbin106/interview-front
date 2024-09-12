@@ -92,3 +92,21 @@ export const getMockQuestions = async (choosedResume, userId) => {
       console.error("면접 결과를 가져오는 중 오류가 발생하였습니다:", error);
     }
   };
+
+  export const fetchInterviewResult = async (videoId) => {
+    try {
+      const response = await axios.get(`${baseUrl}/fetchinterviewresult`, {
+        params: { videoId: videoId },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.status === 200) {
+        const data = response.data;
+        console.log("가져온 면접 데이터입니다: ", data);
+        return data;
+      }
+    } catch (error) {
+      console.error("면접 결과를 가져오는 중 오류가 발생하였습니다:", error);
+    }
+  };
