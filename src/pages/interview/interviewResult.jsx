@@ -156,18 +156,8 @@ const ResultPage = observer(() => {
         ],
         aiFeedback: "AI 종합 평가:\n" + fetchedInterview.claudeAnalyses[0].improvementSuggestions
       },
-      personalityTraits: [
-        { name: '개방성', score: 75 },
-        { name: '성실성', score: 88 },
-        { name: '외향성', score: 62 },
-        { name: '친화성', score: 79 },
-        { name: '신경성', score: 45 },
-      ],
-      personalityAnalysis: {
-        suitableJobs: ['마케팅 전문가', '영업 관리자', '인사 컨설턴트'],
-        strengths: ['창의적 문제 해결', '팀 협업 능력', '높은 적응력'],
-        improvements: ['스트레스 관리', '세부사항 주의'],
-      },
+      personalityTraits: fetchedInterview.videos[0].filePath,
+      personalityAnalysis: fetchedInterview.videoAnalyses[0].analyzedFilePath,
       gazeData: [
         { 
           time: 0, 
@@ -367,7 +357,7 @@ const ResultPage = observer(() => {
         </Typography>
         <Tabs value={activeTab} onChange={handleTabChange} centered className={styles.tabs}>
           <Tab label="AI종합평가" className={styles.tab} />
-          <Tab label="성격특성" className={styles.tab}/>
+          <Tab label="영상복기" className={styles.tab}/>
           <Tab label="음성 및 시선분석" className={styles.tab}/>
           <Tab label="키워드 및 시간" className={styles.tab}/>
         </Tabs>
@@ -482,48 +472,28 @@ const ResultPage = observer(() => {
             <Grid item xs={12} md={6}>
               <Card className={styles.card}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>성격 특성</Typography>
-                  {interviewResult.personalityTraits.map((trait) => (
-                    <Box key={trait.name} mb={2}>
-                      <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Typography variant="body1">{trait.name}</Typography>
-                        <Typography variant="body2">{trait.score}%</Typography>
-                      </Box>
-                      <LinearProgress 
-                        variant="determinate" 
-                        value={trait.score} 
-                        style={{height: 10, borderRadius: 5}} 
-                      />
-                    </Box>
-                  ))}
+                  {/* 비디오 추가 */}
+                  <Box mt={2}>
+                    <Typography variant="h6" gutterBottom>면접 영상</Typography>
+                    <video width="100%" controls>
+                      <source src={interviewResult.personalityTraits} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xs={12} md={6}>
               <Card className={styles.card}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>성격 분석</Typography>
-                  <Typography variant="body1" style={{ whiteSpace: 'pre-line' }}>
-                    {analyzePersonality(interviewResult.personalityTraits)}
-                  </Typography>
-                  <Typography variant="subtitle1">적합한 직종:</Typography>
-                  <ul>
-                    {interviewResult.personalityAnalysis.suitableJobs.map((job, index) => (
-                      <li key={index}>{job}</li>
-                    ))}
-                  </ul>
-                  <Typography variant="subtitle1">강점:</Typography>
-                  <ul>
-                    {interviewResult.personalityAnalysis.strengths.map((strength, index) => (
-                      <li key={index}>{strength}</li>
-                    ))}
-                  </ul>
-                  <Typography variant="subtitle1">개선점:</Typography>
-                  <ul>
-                    {interviewResult.personalityAnalysis.improvements.map((improvement, index) => (
-                      <li key={index}>{improvement}</li>
-                    ))}
-                  </ul>
+                  {/* 비디오 추가 */}
+                  <Box mt={2}>
+                    <Typography variant="h6" gutterBottom>분석 영상</Typography>
+                    <video width="100%" controls>
+                      <source src={interviewResult.personalityAnalysis} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
