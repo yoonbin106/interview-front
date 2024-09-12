@@ -52,24 +52,27 @@ export default function PopOver({ usersInChatroom, userStore, currentChatRoomId 
                     <h1>참여 중인 유저 목록</h1>
                 </div>
                 <div className={styles.chattingCreateRoomUsersList}>
-                    {usersInChatroom[currentChatRoomId]
-                        ?.filter(user => user.id != userStore.id)
-                        .map(user => (
-                            <div key={user.id} className={styles.chattingCreateRoomUserItem}>
-                                <div className={styles.chattingCreateRoomUserProfile}>
-                                    <Avatar src={user.profileImage} sx={{ width: 50, height: 50 }} />
-                                    {/* src={userProfiles[user.email]} */}
-                                </div>
-                                <div className={styles.chattingCreateRoomUserContent}>
-                                    <div className={styles.chattingCreateRoomUserInfo}>
-                                        {user.username} ({user.email})
+                    {usersInChatroom[currentChatRoomId]?.filter(user => user.id !== userStore.id).length === 0 ? (
+                        <div className={styles.noUsers}>
+                            참여 중인 유저가 존재하지 않습니다.
+                        </div>
+                    ) : (
+                        usersInChatroom[currentChatRoomId]
+                            ?.filter(user => user.id !== userStore.id)
+                            .map(user => (
+                                <div key={user.id} className={styles.chattingCreateRoomUserItem}>
+                                    <div className={styles.chattingCreateRoomUserProfile}>
+                                        <Avatar src={user.profileImage} sx={{ width: 50, height: 50 }} />
+                                        {/* src={userProfiles[user.email]} */}
                                     </div>
-                                    
+                                    <div className={styles.chattingCreateRoomUserContent}>
+                                        <div className={styles.chattingCreateRoomUserInfo}>
+                                            {user.username} ({user.email})
+                                        </div>
+                                    </div>
                                 </div>
-
-                            </div>
-
-                        ))}
+                            ))
+                    )}
                 </div>
             </Popover>
         </div>

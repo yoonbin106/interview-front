@@ -42,16 +42,16 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, usersInCh
 
 
       <div className={styles.chattingMessages}>
-        {messages.map((message) => (
+        {messages.map((message, index) => (
 
           message.senderId == userStore.id ? (
-            <div key={message.id} className={`${styles.messageContainer} ${styles.my}`}>
+            <div key={index} className={`${styles.messageContainer} ${styles.my}`}>
               <div className={styles.messageContent}>
                 <p>{message.text}</p>
               </div>
             </div>
           ) : (
-            <div key={message.id} className={`${styles.messageContainer} ${styles.others}`}>
+            <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
               <div className={styles.recieverAvatar} aria-hidden="true">
                 <Avatar src={getSenderProfileImage(message.senderId)} sx={{ width: 50, height: 50 }}></Avatar>

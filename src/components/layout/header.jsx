@@ -16,11 +16,18 @@ import { observer } from 'mobx-react-lite';
 import { logout } from '@/api/user';  // 로그아웃 API 임포트
 import mqtt from 'mqtt';
 
+import TabPanel from 'components/alarm/tabPanel';
+import axios from 'axios';
+
+
 const Header = observer(() => {
   const [hover, setHover] = useState(false);
   const { authStore, userStore, mqttStore } = useStores();
   const router = useRouter(); // useRouter 훅 사용
   const [isClient, setIsClient] = useState(false);
+
+  const [alarmList, setAlarmList] = useState(0);
+  const [badgeCount, setBadgeCount] = useState(0);
 
   const smoothScroll = (targetPosition, duration) => {
     const startPosition = window.pageYOffset;
@@ -102,28 +109,63 @@ const Header = observer(() => {
     };
   }, []);
 
+  const getAlarm = async (userId) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/alarm/getAlarm',
+        userId,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      // console.log('[header.jsx] getAlarm(): ', response.data);
+      // console.log('[header.jsx] getAlarm().length: ', response.data.length);
+      setAlarmList(response.data);
+      setBadgeCount(response.data.length);
+      return response.data;
+    } catch (error) {
+      console.error('알람 가져오기 중 에러 발생:', error);
+    }
+  }
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getAlarm(userStore.id);
+    }, 100); // 0.5초 간격
+
+    // 컴포넌트가 언마운트될 때 setInterval을 정리
+    return () => clearInterval(intervalId);
+  }, [userStore.id]);
   useEffect(async () => {
     setIsClient(true);
     if (typeof window !== 'undefined') {
       await authStore.checkLoggedIn();
 
       if (authStore.loggedIn) {
+
+        getAlarm(userStore.id);
+
         const mqttClient = mqtt.connect('mqtt://192.168.0.137:1884');
         mqttStore.setMqttClient(mqttClient);
 
         mqttClient.on('connect', () => {
           console.log('Connected to MQTT broker');
+          mqttClient.subscribe(`mqtt/member/${userStore.id}`);
           // setIsConnected(true);
         });
 
-        mqttClient.on('message', (topic, message) => {
-          // console.log('메세지 받음');
-          console.log('Received message:', message.toString());
-          console.log('topic: ', topic);
-          const receivedMessage = JSON.parse(message);
+        mqttClient.on('message', async (topic, message) => {
+          if (topic.startsWith('mqtt/member/')) {  // topic이 일치할 경우
+            console.log('Received message:', message.toString());
+            console.log('topic: ', topic);
+            // const receivedMessage = JSON.parse(message);
+            // alarm 테이블에서 receiverId == userStore.id 와 동일한 경우 > isDisabled 0 인 경우 > 
+            // 알람들 다 갖고오고 state로 저장, tabPanel로 state 넘겨서 type 구분에 따라 출력 달라지게 하기
+            // 개수 따져서 BadgeCount에 넣고 ...
+            // getAlarm 으로 알람들 다 가져오지만 isRead 값만 BadgeCount에 적용
+            // await getAlarm(userStore.id);
+
+            getAlarm(userStore.id);
+          }
 
 
-        
+
 
         });
       }
@@ -224,15 +266,16 @@ const Header = observer(() => {
                       slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
                       sx={{ borderRadius: 40, width: 50, height: 50 }}
                     >
-                      <Badge badgeContent={999} color="danger" variant="solid" size="sm">
+                      <Badge badgeContent={badgeCount} color="danger" variant="solid" size="sm">
                         <NotificationsNoneTwoToneIcon color="action" />
                       </Badge>
                     </MenuButton>
                     <Menu placement="bottom-start" sx={{ width: 400 }}>
-                      <MenuItem>알림</MenuItem>
+                      <TabPanel userId={userStore.id} alarmList={alarmList} setAlarmList={setAlarmList} getAlarm={getAlarm}/>
+                      {/* <MenuItem>알림</MenuItem>
                       <ListDivider />
-                      <MenuItem>채팅 : 안읽은 메시지 1개</MenuItem>
-                      <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem>
+                      <MenuItem>채팅 : 안읽은 메시지 {badgeCount}개</MenuItem>
+                      <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem> */}
                     </Menu>
                   </Dropdown>
                 }

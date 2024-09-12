@@ -19,7 +19,8 @@ const Chatting = observer(({ closeChatting }) => {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [chatRoomList, setChatRoomList] = useState([]);
     const [chatRoomTitle, setChatRoomTitle] = useState([]);
-    
+    const [chatAlarm, setChatAlarm] = useState([]);
+
 
     const { authStore, userStore, mqttStore } = useStores();
     const [users, setUsers] = useState([]); //getAllUsers()
@@ -45,9 +46,8 @@ const Chatting = observer(({ closeChatting }) => {
     const getChatroomList = async () => {
         try {
             const userId = userStore.id;
-            console.log('typeof(userId): ', typeof(userId));
-            const response = await axios.post('http://localhost:8080/api/chat/userChatrooms', 
-                userId, 
+            const response = await axios.post('http://localhost:8080/api/chat/userChatrooms',
+                userId,
                 { headers: { 'Content-Type': 'application/json' } }
             );
             setChatRoomList(response.data);
@@ -58,10 +58,10 @@ const Chatting = observer(({ closeChatting }) => {
     };
 
     const getUserList = async () => {
-        try{
+        try {
             const response = await getAllUsers();
             setUsers(response.data);
-        } 
+        }
         catch (error) {
             console.log('error: ', error);
         }
@@ -75,7 +75,27 @@ const Chatting = observer(({ closeChatting }) => {
         //모든 유저 목록 얻어오기
         getUserList();
 
+        //알람 목록 얻어오기
+        getChatAlarm();
+
     }, []);
+
+    const getChatAlarm = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/alarm/getChatAlarm',
+                userStore.id,
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+            // console.log('[chatting.jsx] getChatAlarm(): ', response.data);
+            // console.log('[chatting.jsx] getChatAlarm().length: ', response.data.length);
+            // setAlarmList(response.data);
+            // setBadgeCount(response.data.length);
+            setChatAlarm(response.data);
+            return response.data;
+        } catch (error) {
+            console.error('알람 가져오기 중 에러 발생:', error);
+        }
+    }
 
     useEffect(() => {
         if (!client) {
@@ -88,27 +108,38 @@ const Chatting = observer(({ closeChatting }) => {
 
             mqttClient.on('message', (topic, message) => {
                 // console.log('메세지 받음');
-                console.log('Received message:', message.toString());
-                const receivedMessage = JSON.parse(message);
+                if (topic.startsWith('mqtt/chat/')) {
+                    console.log('Received message:', message.toString());
+                    const receivedMessage = JSON.parse(message);
 
-                const lastM = `${receivedMessage.sender} : ${receivedMessage.text}`;
-                const lastMTopic = topic.split('/').pop();
+                    const lastM = `${receivedMessage.sender} : ${receivedMessage.text}`;
+                    const lastMTopic = topic.split('/').pop();
 
-                setChatRoomList(prevChatRoomList =>
-                    prevChatRoomList.map(room =>
-                        room.id == lastMTopic ? { ...room, lastMessage: lastM } : room
-                    )
-                );
-                
-                // console.log(receivedMessage);
-                // console.log(receivedMessage.chatroomId);
-                
-                // if (receivedMessage && receivedMessage.chatroomId == currentChatRoomId) {
-                //채팅방에 들어가서 ! 채팅방 아이디값을 얻어왔을때만 그 채팅방에 해당하는 메세지만 화면에 setMessages하기
-                if (receivedMessage && receivedMessage.chatroomId == currentChatRoomIdRef.current) {
-                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                    setChatRoomList(prevChatRoomList =>
+                        prevChatRoomList.map(room =>
+                            room.id == lastMTopic ? { ...room, lastMessage: lastM } : room
+                        )
+                    );
+                    // getChatroomList();
+
+                    // console.log(receivedMessage);
+                    // console.log(receivedMessage.chatroomId);
+
+                    // if (receivedMessage && receivedMessage.chatroomId == currentChatRoomId) {
+                    //채팅방에 들어가서 ! 채팅방 아이디값을 얻어왔을때만 그 채팅방에 해당하는 메세지만 화면에 setMessages하기
+                    if (receivedMessage && receivedMessage.chatroomId == currentChatRoomIdRef.current) {
+                        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                    }
                 }
-                
+                if (topic.startsWith('mqtt/member/')) {
+                    getChatAlarm();
+                    const roomId = JSON.parse(message).chatroomId;
+                    // if(message)
+                    if(roomId == currentChatRoomIdRef.current){
+                        readChatAlarmInChatroom(roomId);
+                    }
+                    
+                }
             });
 
             mqttClient.on('error', (err) => {
@@ -122,18 +153,18 @@ const Chatting = observer(({ closeChatting }) => {
 
             setClient(mqttClient);
         }
-        
+
     }, [client]);
 
     useEffect(() => {
-        if(chatRoomList){
+        if (chatRoomList) {
             // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
             chatRoomList.forEach((list) => {
                 const topic = `mqtt/chat/${list.id}`;
                 client.subscribe(topic);
             })
         }
-        
+
     }, [client, chatRoomList]);
 
     // useEffect(() => {
@@ -143,7 +174,7 @@ const Chatting = observer(({ closeChatting }) => {
     //     // })
 
     //     //아래는 채팅방 들어갔다가 나갈때 토픽 구독/해제 하는 코드
-        
+
     //     if (client && currentChatRoomId) {
     //         const topic = `mqtt/chat/${currentChatRoomId}`;
     //         client.subscribe(topic);
@@ -155,9 +186,25 @@ const Chatting = observer(({ closeChatting }) => {
     //         };
     //     }
     // }, [client, currentChatRoomId]);
-   
+
+    const readChatAlarmInChatroom = async (chatroomId) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/alarm/readChatAlarmInChatroom',
+                { chatroomId: chatroomId, userId: userStore.id},
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+            console.log('[chatting.jsx] readChatAlarmInChatroom(): ', response.data);
+            console.log('[chatting.jsx] readChatAlarmInChatroom().length: ', response.data.length);
+            return response.data;
+        } catch (error) {
+            console.error('채팅방 들어가서 알람 읽기 중 에러 발생:', error);
+        }
+    }
+
     useEffect(() => {
         if (currentChatRoomIdRef.current) {
+            console.log('askdjlaksdfluhefkqjhflkjqn;fjq: ', currentChatRoomIdRef.current);
+            readChatAlarmInChatroom(currentChatRoomIdRef.current);
             //채팅방으로 들어갔을 때 실행될 코드 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             setMessages([]);
             getPastChatting();
@@ -184,8 +231,7 @@ const Chatting = observer(({ closeChatting }) => {
     const onChatClick = (chatRoomId) => {
         // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
 
-        getUsersInChatroom(chatRoomId);
-        // setCurrentChatRoomId(chatRoomId); // React 상태 업데이트
+        // getUsersInChatroom(chatRoomId);
 
         console.log('[onChatClick() 호출]: ', chatRoomId);
         currentChatRoomIdRef.current = chatRoomId; // Ref에 바로 값 저장
@@ -197,6 +243,7 @@ const Chatting = observer(({ closeChatting }) => {
     const handleBackClick = () => {
         setIsChatOpen(false);
         getChatroomList();
+        getChatAlarm();
         // setCurrentChatRoomId('');
         currentChatRoomIdRef.current = '';
         setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
@@ -205,8 +252,8 @@ const Chatting = observer(({ closeChatting }) => {
     //currentChatRoomId : 선택된 채팅방 ID 값 저장돼있듬
     const getPastChatting = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/api/chat/getPastChatting', 
-                currentChatRoomIdRef.current, 
+            const response = await axios.post('http://localhost:8080/api/chat/getPastChatting',
+                currentChatRoomIdRef.current,
                 { headers: { 'Content-Type': 'application/json' } });
 
             const pastMessages = response.data.map(chat => ({
@@ -225,7 +272,7 @@ const Chatting = observer(({ closeChatting }) => {
             pastMessages.map((pastMessage, index) => (
                 setMessages(prev => [...prev, pastMessage])
             ));
-            
+
         } catch (error) {
             console.error('Error get past chatting history:', error);
         }
@@ -253,8 +300,8 @@ const Chatting = observer(({ closeChatting }) => {
         const userIdsForAlarm = await getUserIdsForChatAlarm();
         console.log('userIdsForAlarm: ', userIdsForAlarm);
         console.log('userIdsForAlarm[0]: ', userIdsForAlarm[0]);
-        console.log('typeof(userIdsForAlarm): ', typeof(userIdsForAlarm));
-        console.log('typeof(userIdsForAlarm[0]): ', typeof(userIdsForAlarm[0]));
+        console.log('typeof(userIdsForAlarm): ', typeof (userIdsForAlarm));
+        console.log('typeof(userIdsForAlarm[0]): ', typeof (userIdsForAlarm[0]));
 
         if (inputMessage.trim()) {
 
@@ -338,7 +385,7 @@ const Chatting = observer(({ closeChatting }) => {
                     userId: userStore.id
                 },
             });
-            console.log('getUsersInChatroom(): ', response.data);
+            // console.log('getUsersInChatroom(): ', response.data);
 
             // setUsersInChatroom(response.data);
 
@@ -346,7 +393,7 @@ const Chatting = observer(({ closeChatting }) => {
                 ...prevState,   // 이전 상태를 유지하면서
                 [chatRoomId]: response.data  // 해당 채팅방 ID에 맞는 유저 목록 저장
             }));
-            
+
             return response.data;
         }
         catch (err) {
@@ -376,19 +423,20 @@ const Chatting = observer(({ closeChatting }) => {
                 <div className={styles.chatContent}>
 
                     {!isChatOpen ? (
-                        <ChattingList 
-                            chatRoomList={chatRoomList} 
-                            onChatClick={onChatClick} 
+                        <ChattingList
+                            chatRoomList={chatRoomList}
+                            onChatClick={onChatClick}
                             getChatroomId={getChatroomId}
                             getChatroomList={getChatroomList}
-                            userStore={userStore} 
-                            currentChatRoomId={currentChatRoomId} 
-                            client={client} 
+                            userStore={userStore}
+                            currentChatRoomId={currentChatRoomId}
+                            client={client}
                             getChatroomTitle={getChatroomTitle}
-                            chatRoomTitle={chatRoomTitle} 
+                            chatRoomTitle={chatRoomTitle}
                             exitChatroom={exitChatroom}
                             getUsersInChatroom={getUsersInChatroom}
-                            usersInChatroom={usersInChatroom} />
+                            usersInChatroom={usersInChatroom} 
+                            chatAlarm={chatAlarm} />
                     ) : (
                         <>
                             <div className={styles.chattingBackButtonWrapper}>
@@ -396,11 +444,11 @@ const Chatting = observer(({ closeChatting }) => {
                                     <ArrowBackIosNewRoundedIcon />
                                 </button>
                             </div>
-                            <ChattingMessages 
-                                messages={messages} 
-                                userStore={userStore} 
-                                chatRoomTitle={chatRoomTitle} 
-                                users={users} 
+                            <ChattingMessages
+                                messages={messages}
+                                userStore={userStore}
+                                chatRoomTitle={chatRoomTitle}
+                                users={users}
                                 usersInChatroom={usersInChatroom}
                                 currentChatRoomId={currentChatRoomId} />
                         </>

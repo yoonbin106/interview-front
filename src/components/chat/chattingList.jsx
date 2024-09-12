@@ -6,6 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import ChattingCreateRoom from './chattingCreateRoom';
 import MenuIcon from './menuIcon';
 import axios from 'axios';
+import Badge from '@mui/material/Badge';
 
 const ChattingList = ({
     onChatClick,
@@ -19,12 +20,15 @@ const ChattingList = ({
     exitChatroom,
     getUsersInChatroom,
     usersInChatroom,
+    chatAlarm,
 }) => {
 
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
     const [showEditModal, setShowEditModal] = useState(false);
     const [newChatroomTitle, setNewChatroomTitle] = useState('');
+
+    const [badgeCount, setBadgeCount] = useState(false);
 
     const inputRef = useRef(null);
 
@@ -87,16 +91,15 @@ const ChattingList = ({
         }
     };
 
+    const getBadgeCount = (chatroomId) => {
+        setBadgeCount(chatAlarm.filter(alarm => alarm.chatroomId === chatroomId).length);
+
+    }
+
     const options = [
         { label: '채팅방 이름 수정', action: () => setShowEditModal(true) },
         { label: '채팅방 나가기', action: exitChatroom },
     ];
-
-    const avatarStyles = {
-        position: 'absolute',
-        width: 30, // 기본 크기
-        height: 30,
-    };
 
     return (
         <div className={styles.chattingListContainer}>
@@ -205,6 +208,11 @@ const ChattingList = ({
                                             {list.lastMessage ? list.lastMessage : '채팅내역 없음'}
                                         </div>
                                     </div>
+                                    
+                                </div>
+                                <div className={styles.chattingListAlarmBadge}>
+                                    <Badge badgeContent={chatAlarm.filter(alarm => alarm.chatroomId === list.id).length} color="error" sx={{marginRight: 3}}/>
+                                    {/* <Badge badgeContent={getBadgeCount(list.id)} color="error" sx={{marginRight: 3}}/> */}
                                 </div>
                                 <div>
                                     <MenuIcon options={options} />
