@@ -30,13 +30,13 @@ export default function AdminDeletedComment() {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    setOpenRowIndex(null); //페이지변경시 아코디언 상태 초기화 (모두 닫힘)
+    setOpenRowIndex(null); // 페이지 변경시 아코디언 상태 초기화 (모두 닫힘)
   };
 
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-    setOpenRowIndex(null); //페이지 변경 시 아코디언 상태 초기화
+    setOpenRowIndex(null); // 페이지 변경 시 아코디언 상태 초기화
   };
 
   const toggleRow = (index) => {
@@ -50,6 +50,7 @@ export default function AdminDeletedComment() {
         .then(() => {
           alert("댓글이 영구적으로 삭제되었습니다.");
           setDeletedComments(deletedComments.filter(comment => comment.commentId !== commentId));
+          setOpenRowIndex(null);  // 아코디언 닫기
         })
         .catch(error => {
           console.error('Error deleting comment:', error);
@@ -68,6 +69,7 @@ export default function AdminDeletedComment() {
           .then(() => {
             alert("댓글이 복구되었습니다.");
             setDeletedComments(deletedComments.filter(comment => comment.commentId !== commentId));
+            setOpenRowIndex(null);  // 아코디언 닫기
           })
           .catch(error => {
             console.error('Error restoring comment:', error);
@@ -97,10 +99,10 @@ export default function AdminDeletedComment() {
             <TableBody>
               {paginatedComments.map((row, index) => (
                 <React.Fragment key={index}>
-                  <TableRow>
+                  <TableRow hover onClick={() => toggleRow(index)} style={{ cursor: 'pointer' }}>
                     <TableCell align="center">{row.commentId}</TableCell>
                     <TableCell align="center">
-                      <span onClick={() => toggleRow(index)} className={styles.deletedCommentTableLink}>
+                      <span className={styles.deletedCommentTableLink}>
                         {row.content}
                       </span>
                     </TableCell>
@@ -110,7 +112,7 @@ export default function AdminDeletedComment() {
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
                       <Collapse in={openRowIndex === index} timeout="auto" unmountOnExit>
                         <Box margin={1}>
-                        <p><strong>게시판 제목:</strong> {row.bbs?.title}</p> 
+                          <p><strong>게시판 제목:</strong> {row.bbs?.title}</p> 
                           <p><strong>댓글 등록 날짜:</strong> {new Date(row.createdAt).toLocaleString()}</p> {/* 댓글 등록 날짜 */}
                           <div className={styles.deletedCommentTableButtonContainer}>
                             <Button variant="contained" color="error" onClick={() => handleDelete(row.commentId)}>댓글 영구삭제</Button>
