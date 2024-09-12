@@ -151,11 +151,12 @@ const ResultPage = observer(() => {
         return ((score / 7) * 10).toFixed(1); // 소수점 첫번째 자리까지만 표시
       })(),
       evaluationItems: [
-        { name: '목소리', score: 50 },
-        { name: '눈맞춤', score: 32 },
-        { name: '상냥함', score: 23 },
-        { name: '몸가짐', score: 88 },
-        { name: '침착성', score: 43 },
+        { name: '논리성', score: fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score * 10 },
+        { name: '자신감', score: fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score * 10 },
+        { name: '적절성', score: fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score * 10 },
+        { name: '일관성', score: fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score * 10 },
+        { name: '창의성', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score * 10 },
+        { name: '문제해결능력', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score * 10 },
       ],
     },
     personalityTraits: [
