@@ -100,7 +100,10 @@ const ResultPage = observer(() => {
   useEffect(() => {
     const fetchedInterview = toJS(interviewStore.fetchedInterview);
     console.log('fetchedInterview', fetchedInterview);
-
+    const randomAdjust = (value) => {
+      // -1 또는 1 중 랜덤한 값을 얻어서 20을 곱해 더하거나 뺌
+      return value + (Math.random() < 0.5 ? -10 : 10);
+    };
     // 면접 결과 데이터를 상태로 업데이트
     const result = {
       aiEvaluation: {
@@ -176,11 +179,36 @@ const ResultPage = observer(() => {
         feedback: '면접 동안 대부분 긍정적인 표정을 유지했습니다. 이는 열정과 자신감을 잘 표현한 것으로 보입니다.',
       },
       voiceData: [
-        { time: 0, pitch: 50, volume: 60, speed: 70 },
-        { time: 1, pitch: 55, volume: 65, speed: 75 },
-        { time: 2, pitch: 60, volume: 70, speed: 80 },
-        { time: 3, pitch: 65, volume: 75, speed: 85 },
-        { time: 4, pitch: 70, volume: 80, speed: 90 },
+        { 
+          time: 0, 
+          pitch: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
+          volume: Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000),
+          speed: Math.floor(fetchedInterview.videoAnalyses[0].audioTempo)
+        },
+        { 
+          time: 1, 
+          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
+          volume: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000)),
+          speed: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioTempo))
+        },
+        { 
+          time: 2, 
+          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
+          volume: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000)),
+          speed: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioTempo))
+        },
+        { 
+          time: 3, 
+          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
+          volume: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000)),
+          speed: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioTempo))
+        },
+        { 
+          time: 4, 
+          pitch: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
+          volume: Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000),
+          speed: Math.floor(fetchedInterview.videoAnalyses[0].audioTempo)
+        },
       ],
       voiceAnalysis: {
         averagePitch: 60,
