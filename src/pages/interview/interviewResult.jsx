@@ -123,8 +123,21 @@ const ResultPage = observer(() => {
   // 면접 결과 데이터 (각 탭별로 다른 데이터 사용)
   const interviewResult = {
     aiEvaluation: {
-      grade: 2,
-      overallScore: 86,
+      grade: (() => {
+        const score = fetchedInterview.claudeAnalyses[0].overallScore;
+        if (score >= 90) {
+          return 1;
+        } else if (score >= 80) {
+          return 2;
+        } else if (score >= 70) {
+          return 3;
+        } else if (score >= 60) {
+          return 4;
+        } else {
+          return 5;
+        }
+      })(),
+      overallScore: fetchedInterview.claudeAnalyses[0].overallScore,
       recommendationScore: 92,
       evaluationItems: [
         { name: '목소리', score: 50 },
