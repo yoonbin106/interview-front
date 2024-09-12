@@ -103,7 +103,6 @@ export const getMockQuestions = async (choosedResume, userId) => {
       });
       if (response.status === 200) {
         const data = response.data;
-        console.log("가져온 면접 데이터입니다: ", data);
         return data;
       }
     } catch (error) {

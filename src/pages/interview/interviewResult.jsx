@@ -89,17 +89,36 @@ const ResultPage = observer(() => {
   const [activeTab, setActiveTab] = useState(0);
   const { interviewStore, userStore } = useStores();
   const { videoId } = router.query; // URL에서 videoId 추출
-  // const [interviewResult, setInterviewResult] = useState(null);
+  const [fetchedInterview, setInterviewResult] = useState(null);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
   useEffect(() => {
-    if (videoId) {
-      fetchInterviewResult(videoId); // videoId가 있을 때만 데이터 가져오기
-    }
-  }, [videoId]);
+    // 비동기 데이터를 가져오는 함수 정의
+    const fetchData = async () => {
+      try {
+        if (videoId) {
+          const data = await fetchInterviewResult(videoId); // videoId가 있을 때만 데이터 가져오기
+  
+          // claudeAnalyses가 존재하고, 0번 방의 analysisData가 JSON 문자열이면 파싱
+          if (data.claudeAnalyses && data.claudeAnalyses.length > 0) {
+            const parsedAnalysisData = JSON.parse(data.claudeAnalyses[0].analysisData);
+            data.claudeAnalyses[0].analysisData = parsedAnalysisData;
+          }
+  
+          setInterviewResult(data);
+          console.log("가져온 면접 데이터입니다: ", data); // 상태를 업데이트한 후 data 직접 출력
+        }
+      } catch (error) {
+        console.error("데이터 가져오는 중 오류 발생: ", error);
+      }
+    };
+  
+    // 정의한 비동기 함수 즉시 호출
+    fetchData();
+  }, [videoId]); // videoId가 변경될 때마다 호출
 
   // 면접 결과 데이터 (각 탭별로 다른 데이터 사용)
   const interviewResult = {
