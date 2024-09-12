@@ -11,7 +11,6 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentIcon from '@mui/icons-material/Payment';
-import ArticleIcon from '@mui/icons-material/Article';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import CampaignSharpIcon from '@mui/icons-material/CampaignSharp';
 import WarningSharpIcon from '@mui/icons-material/WarningSharp';
@@ -135,19 +134,11 @@ export default function NestedList() {
         <List component="div" disablePadding>
           {/* 게시글 신고 페이지로 이동 */}
           <ListItemButton className={`${styles.nestedListItemButton} ${styles.cursorPointer}`} onClick={() => handleNavigation('/adminPage/adminReportedPostPage')}>
-            <ListItemText primary="　게시글 신고" />
+            <ListItemText primary="　신고된 게시글" />
           </ListItemButton>
           {/* 댓글 신고 페이지로 이동 */}
           <ListItemButton className={`${styles.nestedListItemButton} ${styles.cursorPointer}`} onClick={() => handleNavigation('/adminPage/adminReportedCommentPage')}>
-            <ListItemText primary="　댓글 신고" />
-          </ListItemButton>
-          {/* 완료 처리된 게시글 관리 페이지로 이동 */}
-          <ListItemButton className={`${styles.nestedListItemButton} ${styles.cursorPointer}`} onClick={() => handleNavigation('/adminPage/adminReportedFinPostPage')}>
-            <ListItemText primary="　완료처리-게시글" />
-          </ListItemButton>
-          {/* 완료 처리된 댓글 관리 페이지로 이동 */}
-          <ListItemButton className={`${styles.nestedListItemButton} ${styles.cursorPointer}`} onClick={() => handleNavigation('/adminPage/adminReportedFinCommentPage')}>
-            <ListItemText primary="　완료처리-댓글" />
+            <ListItemText primary="　신고된 댓글" />
           </ListItemButton>
         </List>
       </Collapse>
