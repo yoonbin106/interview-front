@@ -101,9 +101,21 @@ const ResultPage = observer(() => {
     const fetchedInterview = toJS(interviewStore.fetchedInterview);
     console.log('fetchedInterview', fetchedInterview);
     const randomAdjust = (value) => {
-      // -1 또는 1 중 랜덤한 값을 얻어서 20을 곱해 더하거나 뺌
-      return value + (Math.random() < 0.5 ? -10 : 10);
+      // -10에서 10 사이의 소수점 값을 랜덤으로 더하거나 뺌
+      const randomValue = (Math.random() * 10).toFixed(1); // 0 ~ 10 사이의 소수점 첫째 자리까지 랜덤 값
+      return value + (Math.random() < 0.5 ? -randomValue : +randomValue); // 랜덤하게 더하거나 뺌
     };
+    const randomBdjust = (value) => {
+      // -5에서 5 사이의 랜덤한 소수점 값을 더하거나 뺌
+      const randomValue = (Math.random() * 5).toFixed(1); // 0 ~ 5 사이의 소수점 첫째 자리까지 랜덤 값
+      return value + (Math.random() < 0.5 ? -randomValue : +randomValue); // 랜덤하게 더하거나 뺌
+    };
+    const positive = Number(fetchedInterview.videoSpeechAnalyses[0].sentimentConfidence.toFixed(2));
+    const remaining = 100 - positive; // 100에서 positive를 뺀 값
+
+    // remaining 값을 neutral과 negative가 랜덤하게 나눠 갖게 함
+    const neutral = Number((Math.random() * remaining).toFixed(2)); // 랜덤으로 나눔
+    const negative = Number((remaining - neutral).toFixed(2)); // 남은 값
     // 면접 결과 데이터를 상태로 업데이트
     const result = {
       aiEvaluation: {
@@ -157,19 +169,34 @@ const ResultPage = observer(() => {
         improvements: ['스트레스 관리', '세부사항 주의'],
       },
       gazeData: [
-        { time: 0, gaze: 50 },
-        { time: 1, gaze: 70 },
-        { time: 2, gaze: 60 },
-        { time: 3, gaze: 80 },
-        { time: 4, gaze: 75 },
+        { 
+          time: 0, 
+          gaze: Number(fetchedInterview.videoAnalyses[0].eyeScore.toFixed(2)) // 소수점 둘째 자리까지 반올림
+        },
+        { 
+          time: 1, 
+          gaze: Number(randomBdjust(fetchedInterview.videoAnalyses[0].eyeScore).toFixed(2)) // 랜덤 조정 후 소수점 둘째 자리까지 반올림
+        },
+        { 
+          time: 2, 
+          gaze: Number(randomBdjust(fetchedInterview.videoAnalyses[0].eyeScore).toFixed(2))
+        },
+        { 
+          time: 3, 
+          gaze: Number(randomBdjust(fetchedInterview.videoAnalyses[0].eyeScore).toFixed(2))
+        },
+        { 
+          time: 4, 
+          gaze: Number(fetchedInterview.videoAnalyses[0].eyeScore.toFixed(2)) // 소수점 둘째 자리까지 반올림
+        },
       ],
       expressionData: {
-        positive: 60,
-        neutral: 20,
-        negative: 20,
+        positive: positive,
+        neutral: neutral,
+        negative: negative,
       },
       gazeAnalysis: {
-        averageGaze: 67,
+        averageGaze: Number(fetchedInterview.videoAnalyses[0].eyeScore.toFixed(2)),
         evaluation: '양호',
         feedback: '전반적으로 좋은 눈맞춤을 유지했지만, 일부 순간에 개선이 필요합니다.',
       },
