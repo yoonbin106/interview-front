@@ -18,6 +18,12 @@
   color: black;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /*텍스트 길이 넘칠 경우 '...' 로 표시*/
+  max-width: 150px;
+  display:inline-block;
+
 }
 
 .deletedCommentTableLink:hover {
