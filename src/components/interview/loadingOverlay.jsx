@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-// import RingLoader from 'react-spinners/RingLoader';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import styles from '@/styles/interview/interviewLoading.module.css';
 
@@ -12,17 +11,45 @@ const LoadingOverlay = () => {
     '이제 곧 질문을 보실 수 있습니다'
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
-    }, 10000); // 10초마다 문구 변경
-
-    return () => clearInterval(interval);
+  const speakText = useCallback((text) => {
+    if ('speechSynthesis' in window) {
+      try {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = 'ko-KR';
+        window.speechSynthesis.speak(speech);
+      } catch (error) {
+        console.error('Speech synthesis error:', error);
+      }
+    } else {
+      console.error('Speech synthesis not supported');
+    }
   }, []);
+
+  useEffect(() => {
+    let interval;
+    const speakAndSetInterval = () => {
+      speakText(messages[currentMessageIndex]);
+      interval = setInterval(() => {
+        setCurrentMessageIndex((prevIndex) => {
+          const newIndex = (prevIndex + 1) % messages.length;
+          speakText(messages[newIndex]);
+          return newIndex;
+        });
+      }, 10000);
+    };
+
+    speakAndSetInterval();
+
+    return () => {
+      clearInterval(interval);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [messages, speakText, currentMessageIndex]);
 
   return (
     <div className={styles.overlay}>
-      {/* <RingLoader color="#2397d3" size={90} speedMultiplier={1.25} /> */}
       <Image 
         src="/images/interviewLoading.gif"
         alt="Loading"

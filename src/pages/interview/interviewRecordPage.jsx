@@ -8,7 +8,7 @@ import {
   LinearProgress, IconButton, Fade, useTheme, CircularProgress, 
   Modal, Paper, Grid, Tooltip, Menu, MenuItem,Popover
 } from '@mui/material';
-import { Help, Mic } from '@mui/icons-material';
+import { Help, Mic, VolumeUp } from '@mui/icons-material';
 import { setInterviewData, setStatus } from '../../redux/slices/interviewSlice';
 import styles from '@/styles/interview/interviewRecordPage.module.css';
 import { observer } from 'mobx-react-lite';
@@ -16,14 +16,15 @@ import { useStores } from '@/contexts/storeContext';
 import { getInterviewQuestions, uploadInterviewVideo } from '@/api/interview';
 import userStore from '@/stores/userStore';
 
-// 음성 분석을 위한 가상의 API
+// 가상의 음성 분석 API
 const speechAnalysisAPI = {
   analyze: (audioData) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           speed: Math.random() > 0.5 ? 'normal' : 'slow',
-          volume: Math.random() > 0.5 ? 'good' : 'low'
+          volume: Math.random() > 0.5 ? 'good' : 'low',
+          clarity: Math.random() > 0.5 ? 'clear' : 'unclear'
         });
       }, 1000);
     });
@@ -59,12 +60,27 @@ const InterviewRecordPage = observer(() => {
   const [showHint, setShowHint] = useState(false);
   const [hintAnchorEl, setHintAnchorEl] = useState(null);
   const [warningAnchorEl, setWarningAnchorEl] = useState(null);
+  const theme = useTheme();
+  
 
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const timerRef = useRef(null);
   const speechSynthesisRef = useRef(null);
   const { interviewStore } = useStores();
+
+   // 음성 합성 함수
+   const speakText = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ko-KR';
+    window.speechSynthesis.speak(utterance);
+  };
+
+   // 컴포넌트 마운트 시 가이드 음성 출력
+   useEffect(() => {
+    speakText(`${userStore.username}님 AI ${interviewStore.type == 'mock'?'모의':'실전'} 면접을 시작합니다. 면접 가이드 내용 확인하시고, 준비되시면 답변 시작 버튼을 눌러주세요.`);
+  }, []);
+
 
   useEffect(() => {
     const fetchInterviewData = async () => {
@@ -337,17 +353,17 @@ const handleCloseWarning = () => {
     }
   }, [recordedChunks, status, currentQuestionIndex, dispatch]);
 
-  const analyzeSpeech = useCallback(async () => {
+   // 음성 분석 함수
+   const analyzeSpeech = useCallback(async () => {
     if (!isRecording) return;
-    setIsAnalyzing(true);
     try {
       const audioData = new Blob(recordedChunks, { type: 'audio/webm' });
       const result = await speechAnalysisAPI.analyze(audioData);
       setSpeechFeedback(result);
+      // 음성 피드백 제공
+      speakText(`말하기 속도는 ${result.speed}, 음량은 ${result.volume}, 명확도는 ${result.clarity}입니다.`);
     } catch (error) {
       console.error('Speech analysis failed:', error);
-    } finally {
-      setIsAnalyzing(false);
     }
   }, [isRecording, recordedChunks]);
 
@@ -375,7 +391,7 @@ const handleCloseWarning = () => {
   return (
     <Container maxWidth="lg" className={styles.container}>
       <Typography variant="h4" component="h1" gutterBottom align="center" className={styles.title}>
-        {interviewType === 'mock' ? '모의 면접' : '실전 면접'}
+         AI {interviewType === 'mock' ? '모의 면접' : '실전 면접'}
       </Typography>
       
       {status === 'loading' && (
@@ -392,34 +408,42 @@ const handleCloseWarning = () => {
       {['pending', 'recording', 'uploading', 'ending'].includes(status) && (
         <Grid container spacing={3} className={styles.mainContent}>
           <Grid item xs={12} md={8}>
-            <Box className={styles.videoSection}>
-              <video ref={videoRef} autoPlay muted className={styles.video} />
-              {isRecording && (
-                <Box className={styles.recordingIndicator}>
-                  REC
-                </Box>
-              )}
-              <Fade in={true}>
+          <Card elevation={3} className={styles.videoCard}>
+            <CardContent>
+              <Box className={styles.videoSection}>
+                <video ref={videoRef} autoPlay muted className={styles.video} />
+                {isRecording && (
+                  <Box className={styles.recordingIndicator}>
+                    REC
+                  </Box>
+                )}
                 <Box className={styles.questionOverlay}>
                 <Typography variant="h6">
                   Q{currentQuestionIndex + 1}. {questions[currentQuestionIndex]?.questionText}
                 </Typography>
                 </Box>
-              </Fade>
-            </Box>
-            <Box className={styles.controlsSection}>
+              </Box>
+                
+              </CardContent>
+            </Card>
+             <Box className={styles.controlsSection}>
               <Tooltip title="힌트 요청">
-                <IconButton onClick={handleHintRequest} className={styles.controlButton}>
-                  <Help />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="음성 분석">
-                <IconButton onClick={analyzeSpeech} className={styles.controlButton} disabled={!isRecording || isAnalyzing}>
-                  <Mic />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          
+              <IconButton onClick={handleHintRequest} className={styles.controlButton}>
+                <Help />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="음성 분석">
+              <IconButton onClick={analyzeSpeech} className={styles.controlButton} disabled={!isRecording}>
+                <Mic />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="질문 다시 듣기">
+              <IconButton onClick={() => speakText(questions[currentQuestionIndex]?.questionText)} className={styles.controlButton}>
+                <VolumeUp />
+              </IconButton>
+            </Tooltip>
+          </Box>
+            
             <Fade in={showScript}>
               <Paper elevation={3} className={styles.scriptSection}>
                 <Typography variant="h6" gutterBottom>스크립트 및 키워드</Typography>
@@ -510,26 +534,27 @@ const handleCloseWarning = () => {
             </Card>
             
             <Paper elevation={3} className={styles.feedbackSection}>
-              <Typography variant="h6" gutterBottom>음성 피드백</Typography>
-              <Typography>말하기 속도: {speechFeedback.speed}</Typography>
-              <Typography>음량: {speechFeedback.volume}</Typography>
-            </Paper>
+            <Typography variant="h6" gutterBottom>음성 피드백</Typography>
+            <Typography>말하기 속도: {speechFeedback.speed}</Typography>
+            <Typography>음량: {speechFeedback.volume}</Typography>
+            <Typography>명확도: {speechFeedback.clarity}</Typography>
+          </Paper>
 
-            <Paper elevation={3} className={styles.progressSection}>
-              <Typography variant="h6" gutterBottom>면접 진행 상황</Typography>
-              <Box display="flex" alignItems="center">
-                <LinearProgress 
-                  variant="determinate" 
-                  value={(currentQuestionIndex + 1) / questions.length * 100} 
-                  className={styles.progressBar}
-                />
-                <Typography variant="body2" className={styles.progressText}>
-                  {currentQuestionIndex + 1} / {questions.length}
-                </Typography>
-              </Box>
-            </Paper>
-          </Grid>
+          <Paper elevation={3} className={styles.progressSection}>
+            <Typography variant="h6" gutterBottom>면접 진행 상황</Typography>
+            <Box display="flex" alignItems="center">
+              <LinearProgress 
+                variant="determinate" 
+                value={(currentQuestionIndex + 1) / questions.length * 100} 
+                className={styles.progressBar}
+              />
+              <Typography variant="body2" className={styles.progressText}>
+                {currentQuestionIndex + 1} / {questions.length}
+              </Typography>
+            </Box>
+          </Paper>
         </Grid>
+      </Grid>
       )}
   
       <Modal

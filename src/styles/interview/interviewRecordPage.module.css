@@ -28,7 +28,7 @@
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   background-size: cover;
   background-position: center;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -59,7 +59,7 @@
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 10px;
+  padding: 5px;
 }
 
 .scriptOverlay {
@@ -91,6 +91,7 @@
 .controlsSection {
   display: flex;
   justify-content: center;
+  
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
@@ -100,6 +101,7 @@
 }
 
 .scriptSection {
+  width: 100%;
   margin-top: 1rem;
   padding: 1rem;
   background-color: #f5f5f5;
@@ -108,7 +110,7 @@
 
 .keywords {
   margin-top: 0.5rem;
-  font-weight: bold;
+  font-style: italic;
 }
 
 .timerCard {
@@ -119,22 +121,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 150px;
 }
 
 .timerText {
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
   color: #1976d2;
 }
 
 .timerProgress {
-  height: 10px;
-  border-radius: 5px;
+  height: 15px;
+  border-radius: 10px;
 }
 
 .actionButton {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .feedbackSection, .progressSection {
@@ -195,5 +197,3 @@
 .warningPopover Typography {
   margin-bottom: 8px;
 }
-
-
