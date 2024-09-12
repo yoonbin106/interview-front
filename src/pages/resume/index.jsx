@@ -303,9 +303,6 @@ const ModalContent = styled('div')(
       window.scrollTo(0, 0);
       return;
     }
-    
-    if (form)
-    
     checkAndSetExemptions();
 
     setModalContent('작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?');
@@ -322,7 +319,7 @@ const ModalContent = styled('div')(
             setLoadingSave(true); // 저장 시작 시 로딩 모달 표시
             const pdfData = await generatePDF();
             const formDataToSend = new FormData();
-            formDataToSend.append('file', pdfData);
+            formDataToSend.append('file', new Blob([pdfData], { type: 'application/pdf' }), `${formData.resume_title}.pdf`); // 제목을 파일 이름으로 설정
             formDataToSend.append('title', formData.resume_title);
             formDataToSend.append('email', formData.email);
 
