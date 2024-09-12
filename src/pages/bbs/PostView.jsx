@@ -89,12 +89,28 @@ const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const [liked, setIsLiked] = useState(false);
   const userId = post.userId?.username || 'Anonymous';  // 사용자 아이디 또는 Anonymous
-
+  const [postData, setPost] = useState(post); 
   const postOwnerId = Number(post.userId?.id) || 0;
   const currentUserId = Number(userStore.id) || 0; // 현재 로그인한 사용자의 ID를 userStore에서 가져옵니다.
-
+  
+  
+  const handleLikeClick = async () => {
+    try {
+        const response = await axios.get(
+            `http://localhost:8080/bbs/${id}?likeToggle=${liked}`, 
+            { userId }
+        );
+        console.log('Response data:', response.data);
+        setPost(response.data); // 받은 데이터를 업데이트
+        setIsLiked(!liked);   // 좋아요 상태 토글
+        console.log('Updated postData:', response.data);
+    } catch (error) {
+        console.error("Error toggling like:", error);
+    }
+  };
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -145,6 +161,9 @@ const menuItems = postOwnerId === currentUserId ? [
 ] : [
   <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
 ];
+// 하트 색상과 심볼 결정
+const heartColor = postData.likes === 0 ? 'gray' : (liked ? 'gray' : 'red');  // liked 상태에 따라 색상 변경
+const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');   // liked 상태에 따라 심볼 변경
 
   return (
     <div className={styles.postContainer}>
@@ -152,7 +171,12 @@ const menuItems = postOwnerId === currentUserId ? [
       <div className={styles.postMeta}>
         <div className={styles.author}>{userId}</div>
         <div className={styles.postInfo}>
-          <span>❤️ 5</span>
+          <span 
+            onClick={handleLikeClick} 
+            style={{ fontSize: '20px', cursor: 'pointer', color: heartColor }}
+          >
+            {heartSymbol}{postData.likes}
+          </span>
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton
