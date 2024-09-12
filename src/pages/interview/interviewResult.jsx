@@ -1,5 +1,5 @@
 //src\pages\interview\interviewResult.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -41,6 +41,10 @@ import {
 } from "recharts";
 import AnimatedWordCloud from "components/interview/animatedWordCloud";
 import styles from "styles/interview/InterviewResult.module.css";
+import { observer } from "mobx-react-lite";
+import { useStores } from "contexts/storeContext";
+import { fetchInterviewResult } from "api/interview";
+import { useRouter } from "next/router";
 
 // 스타일드 컴포넌트 정의
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -80,12 +84,22 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   },
 }));
 
-const ResultPage = () => {
+const ResultPage = observer(() => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
+  const { interviewStore, userStore } = useStores();
+  const { videoId } = router.query; // URL에서 videoId 추출
+  // const [interviewResult, setInterviewResult] = useState(null);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
+
+  useEffect(() => {
+    if (videoId) {
+      fetchInterviewResult(videoId); // videoId가 있을 때만 데이터 가져오기
+    }
+  }, [videoId]);
 
   // 면접 결과 데이터 (각 탭별로 다른 데이터 사용)
   const interviewResult = {
@@ -584,6 +598,6 @@ const ResultPage = () => {
       </Box>
     </Container>
   );
-};
+});
 
 export default ResultPage;
