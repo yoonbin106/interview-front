@@ -506,6 +506,32 @@
   margin-right: 10px !important;
 }
 
+.profileImageBox img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+
+.profileImageBox .plusButton {
+  display: none;
+  cursor: pointer;
+}
+
+.profileImageBox .plusButtonVisible {
+  display: block; /* 이미지가 없을 때만 보이도록 설정 */
+}
+
+.profileImageBox img:not(:empty) + .plusButton {
+  display: none; /* 이미지가 있을 때는 숨기기 */
+}
+
+.profileImageBox img:empty + .plusButton {
+  display: block; /* 이미지가 없을 때만 보이도록 설정 */
+}
+
+
 .profileImage {
   width: 100%;
   height: 100%;
