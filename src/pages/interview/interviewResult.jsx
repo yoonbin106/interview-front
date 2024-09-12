@@ -138,7 +138,18 @@ const ResultPage = observer(() => {
         }
       })(),
       overallScore: fetchedInterview.claudeAnalyses[0].overallScore,
-      recommendationScore: 92,
+      recommendationScore: (() => {
+        const logicScore = fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score || 0;
+        const creativityScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score || 0;
+        const problemSolvingScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score || 0;
+        const grammarStructureScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score || 0;
+        const professionalVocabScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.professional_vocab_score || 0;
+        const confidenceScore = fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score || 0;
+        const consistencyScore = fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score || 0;
+        
+        const score = logicScore + creativityScore + problemSolvingScore + grammarStructureScore + professionalVocabScore + confidenceScore + consistencyScore;
+        return ((score / 7) * 10).toFixed(1); // 소수점 첫번째 자리까지만 표시
+      })(),
       evaluationItems: [
         { name: '목소리', score: 50 },
         { name: '눈맞춤', score: 32 },
