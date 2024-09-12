@@ -1,44 +1,82 @@
 .container {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .headerPaper {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  margin-top: 1rem;
+  padding: 2rem;
   margin-bottom: 2rem;
-  background-color: #f5f5f5;
+  background: linear-gradient(45deg, #2196F3 30%, #21CBF3 90%);
+  color: white;
 }
 
 .mainTitle {
-  color: #0D47A1;
+  font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .subtitle {
-  color: #424242;
+  opacity: 0.8;
 }
 
-.optionsContainer {
-  margin-top: 2rem;
+.interviewCard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.interviewCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.cardTitle {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.cardTitle svg {
+  margin-right: 0.5rem;
+}
+
+.featureList {
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+
+  /* 추가된 부분 */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* 모달이 다른 요소 위에 나타나도록 */
 }
 
 @media (max-width: 600px) {
   .container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
   
   .headerPaper {
     padding: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   
   .mainTitle {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
   
   .subtitle {

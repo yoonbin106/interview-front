@@ -18,6 +18,7 @@ import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
+import Image from 'next/image';
 import styles from '@/styles/interview/interviewPreparation.module.css';
 import { getMockQuestions, getRealQuestions } from 'api/interview';
 import LoadingOverlay from '@/components/interview/loadingOverlay'; // 로딩 컴포넌트 임포트
@@ -53,8 +54,15 @@ const InterviewPreparation = observer(() => {
     }
   }, [router.isReady]);
 
-  // Web Speech API 설정
   useEffect(() => {
+    initializeSpeechRecognition();
+    speakText(`${userStore.username}님 AI ${interviewStore.type == 'mock'?'모의':'실전'}면접 응시환경 체크를 시작합니다. 카메라와 마이크를 확인해 주세요.`);
+    return () => {
+      cleanupResources();
+    };
+  }, []);
+
+  const initializeSpeechRecognition = () => {
     if ('webkitSpeechRecognition' in window) {
       recognitionRef.current = new window.webkitSpeechRecognition();
       recognitionRef.current.continuous = true;
@@ -79,13 +87,13 @@ const InterviewPreparation = observer(() => {
     } else {
       console.error('Web Speech API is not supported in this browser.');
     }
+  };
 
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, []);
+  const speakText = (text) => {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'ko-KR';
+    window.speechSynthesis.speak(speech);
+  };
 
    // 카메라와 마이크 준비 상태 체크
   useEffect(() => {
@@ -212,6 +220,41 @@ const InterviewPreparation = observer(() => {
     setTranscript(''); // Reset transcript
     stop();  // Stop listening for speech
   };
+  const cleanupResources = useCallback(() => {
+    // 카메라 스트림 정리
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      interviewStore.setStream(null);
+    }
+  
+    // 오디오 컨텍스트 정리
+    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+      audioContextRef.current.close();
+    }
+  
+    // 애니메이션 프레임 취소
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+  
+    // 음성 인식 정리
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+  
+    // 상태 초기화
+    interviewStore.setCameraReady(false);
+    interviewStore.setMicReady(false);
+    interviewStore.setAudioLevel(0);
+    setTranscript('');
+    setIsListening(false);
+  
+    // 비디오 요소 초기화
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  
+  }, [stream, interviewStore]);
   // 완료 핸들러
   const handleComplete = () => {
     setModalOpen(true);
@@ -268,110 +311,119 @@ const InterviewPreparation = observer(() => {
 
   return (
     <Container maxWidth="lg" className={styles.container}>
-    {isLoading && <LoadingOverlay />} {/* 로딩 상태에 따라 로딩 화면 표시 */}
-    <Fade in={true} timeout={1000}>
-      <Paper className={styles.paper}>
-        <Typography variant="h4" align="center" className={styles.title}>
-           AI 면접 응시환경 체크
-        </Typography>
-        <Stepper activeStep={currentStep - 1} alternativeLabel className={styles.stepper}>
-          {steps.map((step, index) => (
-            <Step key={step.label}>
-              <StepLabel
-                StepIconComponent={() => (
-                  <div className={`${styles.stepIcon} ${currentStep > index ? styles.activeStepIcon : ''}`}>
-                    {step.icon}
-                  </div>
-                )}
-              >
-                {step.label}
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        <Box className={styles.preparationSection}>
-        <Grid container spacing={5}>
-          <Grid item xs={12} md={4}>
-            <Paper elevation={3} className={`${styles.section} ${cameraReady ? styles.sectionReady : ''}`}>
-              <Box className={styles.icon}>
-                <CameraAltIcon fontSize="inherit" />
-              </Box>
-              <Typography variant="h6">얼굴 인식</Typography>
-              <Button
-                className={styles.button}
-                variant="contained"
-                color={cameraReady ? "success" : "primary"}
-                onClick={checkCamera}
-                disabled={cameraReady}
-              >
-                {cameraReady ? 'OK' : '확인하기'}
-              </Button>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Paper elevation={3} className={`${styles.section} ${micReady ? styles.sectionReady : ''}`}>
-              <Box className={styles.icon}>
-                <MicIcon fontSize="inherit" />
-              </Box>
-              <Typography variant="h6">음성 인식</Typography>
-              <Button
-                className={styles.button}
-                variant="contained"
-                color={micReady ? "success" : "primary"}
-                onClick={checkMic}
-                disabled={micReady}
-              >
-                {micReady ? 'OK' : '확인하기'}
-              </Button>
-              {micReady && (
-                <Box className={styles.audioMeter}>
+      {isLoading && <LoadingOverlay />}
+      <Fade in={true} timeout={1000}>
+        <Paper className={styles.paper}>
+          <Typography variant="h4" align="center" className={styles.title}>
+            {userStore.username}님 AI {interviewStore.type == 'mock' ? "모의" : "실전"} 면접 응시환경 체크
+          </Typography>
+          <Stepper activeStep={currentStep - 1} alternativeLabel className={styles.stepper}>
+            {steps.map((step, index) => (
+              <Step key={step.label}>
+                <StepLabel
+                  StepIconComponent={() => (
+                    <div className={`${styles.stepIcon} ${currentStep > index ? styles.activeStepIcon : ''}`}>
+                      {step.icon}
+                    </div>
+                  )}
+                >
+                  {step.label}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <Box className={styles.preparationSection}>
+            <Grid container spacing={5}>
+              <Grid item xs={12} md={4}>
+                <Paper elevation={3} className={`${styles.section} ${cameraReady ? styles.sectionReady : ''}`}>
+                  <Box className={styles.icon}>
+                    {cameraReady ? (
+                      <Image src="/images/videoCalling.gif" width={300} height={300} alt="Face recognized" />
+                    ) : (
+                      <CameraAltIcon fontSize="inherit" />
+                    )}
+                  </Box>
+                  <Typography variant="h6">얼굴 인식</Typography>
+                  <Button
+                    className={styles.button}
+                    variant="contained"
+                    color={cameraReady ? "success" : "primary"}
+                    onClick={checkCamera}
+                    disabled={cameraReady}
+                  >
+                    {cameraReady ? 'OK' : '확인하기'}
+                  </Button>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Paper elevation={3} className={`${styles.section} ${micReady ? styles.sectionReady : ''}`}>
+                  <Box className={styles.icon}>
+                    {micReady ? (
+                      <Image src="/images/mic.gif" width={300} height={300} alt="Voice recognized" />
+                    ) : (
+                      <MicIcon fontSize="inherit" />
+                    )}
+                  </Box>
+                  <Typography variant="h6">음성 인식</Typography>
+                  <Button
+                    className={styles.button}
+                    variant="contained"
+                    color={micReady ? "success" : "primary"}
+                    onClick={checkMic}
+                    disabled={micReady}
+                  >
+                    {micReady ? 'OK' : '확인하기'}
+                  </Button>
+                  {micReady && (
+                    <Box className={styles.audioMeter}>
+                      <Box
+                        className={styles.audioLevel}
+                        style={{ width: `${audioLevel * 100}%` }}
+                      />
+                    </Box>
+                  )}
+                  <Typography variant="h6" className={styles.transcriptTitle}>
+                    <MicIcon color="primary" /> 음성 인식 결과
+                  </Typography>
+                  <Box className={styles.transcriptBox}>
+                    <Typography variant="body1">
+                      {transcript || "'안녕하세요' 라고 말해보세요."}
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4}>
+            <Paper elevation={3} className={styles.section}>
+            <Typography variant="h6">화면 미리보기</Typography>
+                  <Box className={styles.videoContainer}>
+                    {cameraReady ? (
+                      <video ref={videoRef} autoPlay muted className={styles.video}/>
+                    ) : (
+                      <Typography>카메라를 활성화해주세요</Typography>
+                    )}
+                </Box>
+                <Box className={styles.countdownContainer}>
                   <Box
-                    className={styles.audioLevel}
-                    style={{ width: `${audioLevel * 100}%` }}
+                    className={styles.countdownProgress}
+                    style={{ width: `${((5 - countdown) / 5) * 100}%` }}
                   />
                 </Box>
-              )}
-              <Typography variant="h6" className={styles.transcriptTitle}>
-              <MicIcon color="primary" /> 음성 인식 결과
-            </Typography>
-            <Box className={styles.transcriptBox}>
-              <Typography variant="body1">
-                  {transcript || "'안녕하세요' 라고 말해보세요."}
+                <Typography variant="body2" className={styles.countdownText}>
+                  {allReady 
+                    ? countdown > 0 
+                      ? `세팅 ${countdown}초 전` 
+                      : "면접 준비 완료"
+                    : "면접 환경 확인"}
                 </Typography>
-            </Box>
-            </Paper>
+              </Paper>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Paper elevation={3} className={styles.section}>
-              <Typography variant="h6">화면 미리보기</Typography>
-              <Box className={styles.videoContainer}>
-                {cameraReady ? (
-                  <video ref={videoRef} autoPlay muted className={styles.video}/>
-                ) : (
-                  <Typography>카메라를 활성화해주세요</Typography>
-                )}
-              </Box>
-              <Box className={styles.countdownContainer}>
-                <Box
-                  className={styles.countdownProgress}
-                  style={{ width: `${((5 - countdown) / 5) * 100}%` }}
-                />
-              </Box>
-              <Typography variant="body2" className={styles.countdownText}>
-                {allReady 
-                  ? countdown > 0 
-                    ? `세팅 ${countdown}초 전` 
-                    : "면접 준비 완료"
-                  : "면접 환경 확인"}
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-        </Box>
-        <Paper elevation={3} className={styles.tipSection}>
-            <Typography variant="h6" className={styles.tipTitle}><TipsAndUpdatesIcon color="primary" fontSize="large"/> 
+          </Box>
+          <Paper elevation={3} className={styles.tipSection}>
+            <Typography variant="h6" className={styles.tipTitle}>
+              <TipsAndUpdatesIcon color="primary" fontSize="large"/> 
               면접 Tip
-              </Typography>
+            </Typography>
             <List>
               {interviewTips.map((tip, index) => (
                 <ListItem key={index} className={styles.tipContent}>
@@ -383,40 +435,40 @@ const InterviewPreparation = observer(() => {
               ))}
             </List>
           </Paper>
-        <Box className={styles.buttonContainer}>
+          <Box className={styles.buttonContainer}>
           <Button 
-            variant="outlined" 
-            onClick={handleReset}
-            startIcon={<RestartAltIcon />}
-          >
-            웹캠/마이크 다시 체크
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleComplete}
-            disabled={!buttonActive || countdown > 0}
-          >
-            {buttonActive && countdown === 0 ? "면접 시작하기" : `${countdown}초 후 시작`}
-          </Button>
-        </Box>
-      </Paper>
-    </Fade>
+              variant="outlined" 
+              onClick={handleReset}
+              startIcon={<RestartAltIcon />}
+            >
+              웹캠/마이크 다시 체크
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleComplete}
+              disabled={!buttonActive || countdown > 0}
+            >
+              {buttonActive && countdown === 0 ? "면접 시작하기" : `${countdown}초 후 시작`}
+            </Button>
+          </Box>
+        </Paper>
+      </Fade>
       
-<Dialog
-  open={isModalOpen}
-  onClose={handleClose}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
-  PaperProps={{
-    style: {
-      borderRadius: '16px',
-      padding: '24px',
-      width: '500px',  // 모달 창 너비 증가
-      maxWidth: '90vw' // 모바일 화면 고려
-    }
-  }}
->
+      <Dialog
+        open={isModalOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            borderRadius: '16px',
+            padding: '24px',
+            width: '500px',
+            maxWidth: '90vw'
+          }
+        }}
+      >
   <DialogTitle id="alert-dialog-title" className={styles.modalTitle}>
     <Typography variant="h5" component="span">
       면접 시작 준비

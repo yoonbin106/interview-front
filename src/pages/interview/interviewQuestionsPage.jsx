@@ -1,5 +1,5 @@
 //src\pages\interview\interviewQuestionsPage.jsx
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useRouter } from 'next/router';
 import { 
   Container, 
@@ -16,7 +16,7 @@ import { observer } from 'mobx-react-lite';
 import { useStores } from 'contexts/storeContext';
 
 const InterviewQuestionsPage = observer(() => {
-  const { interviewStore } = useStores();
+  const { interviewStore, userStore } = useStores();
   const router = useRouter();
   const activeTab = interviewStore.activeTab;
 
@@ -26,6 +26,18 @@ const InterviewQuestionsPage = observer(() => {
     common: interviewStore.commonQuestions,
     resume: interviewStore.resumeQuestions,
   };
+
+  useEffect(() => {
+    // 페이지 로드 시 음성 안내
+    speakText(`${userStore.username}님, 면접 질문 리스트 페이지입니다. 공통 면접 질문과 이력서 기반 질문 중 총 3개의 질문을 선택해 주세요.`);
+  }, []);
+
+  const speakText = (text) => {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'ko-KR';
+    window.speechSynthesis.speak(speech);
+  };
+
 
   const handleTabChange = (tab) => {
     interviewStore.setActiveTab(tab);

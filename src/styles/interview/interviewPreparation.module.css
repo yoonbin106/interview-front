@@ -1,35 +1,36 @@
 .container {
-  padding-top: 1rem;
+  padding-top: 2rem;
   padding-bottom: 2rem;
 }
 
 .paper {
-  padding: 1rem;
+  padding: 2rem;
   background-color: #FFFFFF;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  color: #0D47A1;
+  color: #1976D2;
   font-weight: 700;
   margin-bottom: 3rem;
 }
 
 .stepper {
-  margin-bottom: 2rem;
-  margin-top: 1rem;
+  margin-bottom: 3rem;
+  margin-top: 2rem;
 }
 
 .stepIcon {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #BBDEFB;
+  background-color: #E3F2FD;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #1976D2;
+  transition: all 0.3s ease;
 }
 
 .activeStepIcon {
@@ -37,14 +38,19 @@
   color: #FFFFFF;
 }
 
+.preparationSection {
+  margin-bottom: 3rem;
+}
+
 .section {
-  padding: 1.5rem;
+  padding: 2rem;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   transition: all 0.3s ease;
+  border-radius: 12px;
 }
 
 .section:hover {
@@ -57,13 +63,13 @@
 }
 
 .icon {
-  font-size: 3rem;
+  font-size: 4rem;
   color: #1976D2;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .button {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   transition: all 0.3s ease;
 }
 
@@ -74,7 +80,7 @@
 
 .videoContainer {
   width: 100%;
-  height: 200px;
+  height: 240px;
   background-color: #F5F5F5;
   display: flex;
   justify-content: center;
@@ -91,84 +97,81 @@
 
 .countdownContainer {
   width: 100%;
-  height: 4px;
+  height: 6px;
   background-color: #E0E0E0;
-  margin-top: 1rem;
-  border-radius: 2px;
+  margin-top: 1.5rem;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .countdownProgress {
   height: 100%;
-  background-color: #00C853;
+  background-color: #4CAF50;
   transition: width 1s linear;
 }
 
 .countdownText {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   text-align: center;
   font-weight: 500;
 }
 
 .transcriptBox {
-  border: 2px solid #007bff;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #f8f9fa;
-  margin-top: 20px;
+  border: 2px solid #1976D2;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #F3F8FF;
+  margin-top: 1.5rem;
+  max-height: 100px;
+  overflow-y: auto;
 }
 
 .audioMeter {
-  width: 55%;
-  height: 10px;
-  background-color: #e9ecef;
-  border-radius: 5px;
+  width: 80%;
+  height: 12px;
+  background-color: #E0E0E0;
+  border-radius: 6px;
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 .audioLevel {
   height: 100%;
-  background-color: #28a745;
+  background-color: #4CAF50;
   transition: width 0.1s ease;
 }
 
-.transcriptSection {
-  margin-top: 2rem;
-  padding: 1rem;
-  background-color: #F3F4F6;
-}
-
-.transcriptTitle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  color: #1976D2;
-}
-
-.transcriptBox {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1rem;
-  overflow-y: auto;
-  border: 1px solid #E0E0E0;
-}
 .tipSection {
   margin-top: 3rem;
   background-color: #E3F2FD;
+  border-radius: 12px;
+  padding: 1.5rem;
 }
+
 .tipTitle {
-  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #1976D2;
+  margin-bottom: 1rem;
 }
-.tipContent{
-  margin-top: -0.5rem;
-  margin-left: 2rem;
+
+.tipContent {
+  padding-left: 1rem;
 }
+
 .buttonContainer {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
+  margin-top: 2rem;
+}
+
+.startButton {
+  background-color: #4CAF50;
+  color: white;
+  &:hover {
+    background-color: #45a049;
+  }
 }
 
 @media (max-width: 960px) {
@@ -186,6 +189,8 @@
     margin-bottom: 1rem;
   }
 }
+
+/* 모달 스타일은 이전과 동일하게 유지 */
 .modalTitle {
   color: #1976D2;
   border-bottom: 2px solid #1976D2;
