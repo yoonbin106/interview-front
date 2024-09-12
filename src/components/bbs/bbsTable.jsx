@@ -64,7 +64,7 @@ export default function PaginationTableNotice({ rows }) {
             <TableCell align="center" className={styles.bbsHeaderCell}>작성자</TableCell>
             <TableCell align="center" className={styles.bbsHeaderCell}>작성날짜</TableCell>
             <TableCell align="center" className={styles.bbsHeaderCell}>조회수</TableCell>
-            <TableCell align="center" className={styles.bbsHeaderCell}>❤️</TableCell>
+            <TableCell align="center" className={styles.bbsHeaderCell}>좋아요</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -82,7 +82,7 @@ export default function PaginationTableNotice({ rows }) {
               <TableCell align="center">{post.username}</TableCell>
               <TableCell align="center">{post.createdAt}</TableCell>
               <TableCell align="center">{post.hitCount || 0}</TableCell>
-              <TableCell align="center">10</TableCell>
+              <TableCell align="center">{post.likes || 0}</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (

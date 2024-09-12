@@ -13,7 +13,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '@/contexts/storeContext';
-import { getInterviewResults } from 'api/interview';
+import { fetchInterviewResult, getInterviewResults } from 'api/interview';
 
 const InterviewResultList = observer(() => {
   const router = useRouter();
@@ -39,9 +39,17 @@ const InterviewResultList = observer(() => {
     }
   };
 
-  const handleAIProofreadClick = (videoId, event) => {
+  const handleAIProofreadClick = async (videoId, event) => {
     event.stopPropagation();
-    router.push(`/interview/interviewResult?videoId=${videoId}`);
+    const data = await fetchInterviewResult(videoId);
+    if (data.claudeAnalyses && data.claudeAnalyses.length > 0) {
+      const parsedAnalysisData = JSON.parse(data.claudeAnalyses[0].analysisData);
+      data.claudeAnalyses[0].analysisData = parsedAnalysisData;
+    }
+    console.log(data);
+    interviewStore.setFetchedInterview(data);
+    // router.push(`/interview/interviewResult?videoId=${videoId}`);
+    router.push(`/interview/interviewResult`);
   };
 
   const handleDeleteClick = (videoId, event) => {
