@@ -26,13 +26,20 @@ class InterviewStore {
     choosedPayment = '';
     choosedResume = '';
 
+    fetchedInterview = '';
+
     constructor() {
         makeAutoObservable(this);
         if (typeof window !== 'undefined') {
             this.loadInterviewData(); // 페이지 로드 시 데이터 복원
         }
     }
-
+    setFetchedInterview(fetchedInterview) {
+        this.fetchedInterview = fetchedInterview;
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('fetchedInterview', fetchedInterview);
+        }
+    }
     setChoosedPayment(choosedPayment) {
         this.choosedPayment = choosedPayment;
         console.log('setChoosedPayment: ', choosedPayment);

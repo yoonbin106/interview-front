@@ -1,5 +1,6 @@
 //src\pages\interview\interviewResult.jsx
 import React, { useEffect, useState } from "react";
+import { toJS } from 'mobx';
 import {
   Container,
   Typography,
@@ -89,212 +90,180 @@ const ResultPage = observer(() => {
   const [activeTab, setActiveTab] = useState(0);
   const { interviewStore, userStore } = useStores();
   const { videoId } = router.query; // URL에서 videoId 추출
-  const [fetchedInterview, setInterviewResult] = useState(null);
+  const [interviewResult, setInterviewResult] = useState(null); // 상태로 interviewResult를 관리
+  const [generateAIFeedback, setGenerateAIFeedback] = useState(null);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
   useEffect(() => {
-    // 비동기 데이터를 가져오는 함수 정의
-    const fetchData = async () => {
-      try {
-        if (videoId) {
-          const data = await fetchInterviewResult(videoId); // videoId가 있을 때만 데이터 가져오기
-  
-          // claudeAnalyses가 존재하고, 0번 방의 analysisData가 JSON 문자열이면 파싱
-          if (data.claudeAnalyses && data.claudeAnalyses.length > 0) {
-            const parsedAnalysisData = JSON.parse(data.claudeAnalyses[0].analysisData);
-            data.claudeAnalyses[0].analysisData = parsedAnalysisData;
-          }
-  
-          setInterviewResult(data);
-          console.log("가져온 면접 데이터입니다: ", data); // 상태를 업데이트한 후 data 직접 출력
-        }
-      } catch (error) {
-        console.error("데이터 가져오는 중 오류 발생: ", error);
-      }
-    };
-  
-    // 정의한 비동기 함수 즉시 호출
-    fetchData();
-  }, [videoId]); // videoId가 변경될 때마다 호출
+    const fetchedInterview = toJS(interviewStore.fetchedInterview);
+    console.log('fetchedInterview', fetchedInterview);
 
-  // 면접 결과 데이터 (각 탭별로 다른 데이터 사용)
-  const interviewResult = {
-    aiEvaluation: {
-      grade: (() => {
-        const score = fetchedInterview.claudeAnalyses[0].overallScore;
-        if (score >= 90) {
-          return 1;
-        } else if (score >= 80) {
-          return 2;
-        } else if (score >= 70) {
-          return 3;
-        } else if (score >= 60) {
-          return 4;
-        } else {
-          return 5;
-        }
-      })(),
-      overallScore: fetchedInterview.claudeAnalyses[0].overallScore,
-      recommendationScore: (() => {
-        const logicScore = fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score || 0;
-        const creativityScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score || 0;
-        const problemSolvingScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score || 0;
-        const grammarStructureScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score || 0;
-        const professionalVocabScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.professional_vocab_score || 0;
-        const confidenceScore = fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score || 0;
-        const consistencyScore = fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score || 0;
-        
-        const score = logicScore + creativityScore + problemSolvingScore + grammarStructureScore + professionalVocabScore + confidenceScore + consistencyScore;
-        return ((score / 7) * 10).toFixed(1); // 소수점 첫번째 자리까지만 표시
-      })(),
-      evaluationItems: [
-        { name: '논리성', score: fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score * 10 },
-        { name: '자신감', score: fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score * 10 },
-        { name: '적절성', score: fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score * 10 },
-        { name: '일관성', score: fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score * 10 },
-        { name: '창의성', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score * 10 },
-        { name: '문제해결능력', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score * 10 },
+    // 면접 결과 데이터를 상태로 업데이트
+    const result = {
+      aiEvaluation: {
+        grade: (() => {
+          const score = fetchedInterview.claudeAnalyses[0].overallScore;
+          if (score >= 90) {
+            return 1;
+          } else if (score >= 80) {
+            return 2;
+          } else if (score >= 70) {
+            return 3;
+          } else if (score >= 60) {
+            return 4;
+          } else {
+            return 5;
+          }
+        })(),
+        overallScore: fetchedInterview.claudeAnalyses[0].overallScore,
+        recommendationScore: (() => {
+          const logicScore = fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score || 0;
+          const creativityScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score || 0;
+          const problemSolvingScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score || 0;
+          const grammarStructureScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score || 0;
+          const professionalVocabScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.professional_vocab_score || 0;
+          const confidenceScore = fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score || 0;
+          const consistencyScore = fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score || 0;
+          
+          const score = logicScore + creativityScore + problemSolvingScore + grammarStructureScore + professionalVocabScore + confidenceScore + consistencyScore;
+          return ((score / 7) * 10).toFixed(1);
+        })(),
+        evaluationItems: [
+          { name: '논리성', score: fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score * 10 },
+          { name: '자신감', score: fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score * 10 },
+          { name: '적절성', score: fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score * 10 },
+          { name: '일관성', score: fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score * 10 },
+          { name: '창의성', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score * 10 },
+          { name: '문제해결능력', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score * 10 },
+        ],
+        aiFeedback: "AI 종합 평가:\n" + fetchedInterview.claudeAnalyses[0].improvementSuggestions
+      },
+      personalityTraits: [
+        { name: '개방성', score: 75 },
+        { name: '성실성', score: 88 },
+        { name: '외향성', score: 62 },
+        { name: '친화성', score: 79 },
+        { name: '신경성', score: 45 },
       ],
-    },
-    personalityTraits: [
-      { name: '개방성', score: 75 },
-      { name: '성실성', score: 88 },
-      { name: '외향성', score: 62 },
-      { name: '친화성', score: 79 },
-      { name: '신경성', score: 45 },
-    ],
-    personalityAnalysis: {
-      suitableJobs: ['마케팅 전문가', '영업 관리자', '인사 컨설턴트'],
-      strengths: ['창의적 문제 해결', '팀 협업 능력', '높은 적응력'],
-      improvements: ['스트레스 관리', '세부사항 주의'],
-    },
-    gazeData: [
-      { time: 0, gaze: 50 },
-      { time: 1, gaze: 70 },
-      { time: 2, gaze: 60 },
-      { time: 3, gaze: 80 },
-      { time: 4, gaze: 75 },
-    ],
-    expressionData: {
-      positive: 60,
-      neutral: 20,
-      negative: 20,
-    },
-    gazeAnalysis: {
-      averageGaze: 67,
-      evaluation: '양호',
-      feedback: '전반적으로 좋은 눈맞춤을 유지했지만, 일부 순간에 개선이 필요합니다.',
-    },
-    expressionAnalysis: {
-      dominantExpression: '긍정',
-      evaluation: '우수',
-      feedback: '면접 동안 대부분 긍정적인 표정을 유지했습니다. 이는 열정과 자신감을 잘 표현한 것으로 보입니다.',
-    },
-    voiceData: [
-      { time: 0, pitch: 50, volume: 60, speed: 70 },
-      { time: 1, pitch: 55, volume: 65, speed: 75 },
-      { time: 2, pitch: 60, volume: 70, speed: 80 },
-      { time: 3, pitch: 65, volume: 75, speed: 85 },
-      { time: 4, pitch: 70, volume: 80, speed: 90 },
-    ],
-    voiceAnalysis: {
-      averagePitch: 60,
-      averageVolume: 70,
-      averageSpeed: 80,
-      evaluation: '양호',
-      feedback: '말하기 속도가 약간 빠른 편입니다. 중요한 부분에서는 속도를 조금 줄이는 것이 좋겠습니다.',
-    },
-    keywords: [
-      { text: '열정', value: 64 },
-      { text: '팀워크', value: 55 },
-      { text: '창의성', value: 48 },
-      { text: '책임감', value: 47 },
-      { text: '전문성', value: 44 },
-      { text: '의사소통', value: 42 },
-      { text: '리더십', value: 40 },
-      { text: '혁신', value: 38 },
-      { text: '분석력', value: 36 },
-      { text: '문제해결', value: 35 },
-      { text: '적응력', value: 33 },
-      { text: '성실성', value: 32 },
-      { text: '도전정신', value: 30 },
-      { text: '목표지향', value: 29 },
-      { text: '유연성', value: 28 },
-      { text: '협업', value: 27 },
-      { text: '자기주도', value: 26 },
-      { text: '긍정적', value: 25 },
-      { text: '전략적사고', value: 24 },
-      { text: '시간관리', value: 23 },
-      { text: '고객중심', value: 22 },
-      { text: '세부지향', value: 21 },
-      { text: '비판적사고', value: 20 },
-      { text: '네트워킹', value: 19 },
-      { text: '성과지향', value: 18 },
-      { text: '윤리의식', value: 17 },
-      { text: '글로벌마인드', value: 16 },
-      { text: '멀티태스킹', value: 15 },
-      { text: '프로젝트관리', value: 14 },
-      { text: '기획력', value: 13 },
-      { text: '실행력', value: 12 },
-      { text: '품질관리', value: 11 },
-      { text: '위기관리', value: 10 },
-      { text: '데이터분석', value: 9 },
-      { text: '협상력', value: 8 },
-      { text: '비전제시', value: 7 },
-      { text: '조직이해', value: 6 },
-      { text: '학습능력', value: 5 },
-      { text: '프레젠테이션', value: 4 },
-      { text: '동기부여', value: 3 },
-      { text: '창의력', value: 2 },
-      { text: '정보수집', value: 1 },
-      { text: '의사결정', value: 1 },
-      { text: '목표설정', value: 1 },
-      { text: '자기개발', value: 1 },
-      { text: '비즈니스통찰력', value: 1 },
-      { text: '감성지능', value: 1 },
-      { text: '체계적사고', value: 1 },
-      { text: '유머감각', value: 1 },
-    ],
-    keywordAnalysis: {
-      topKeywords: ['열정', '팀워크', '창의성'],
-      evaluation: '우수',
-      feedback: '주요 키워드가 직무와 잘 연관되어 있습니다. 특히 "열정"과 "팀워크"를 강조한 점이 인상적입니다.',
-    },
-    answerTimes: [
-      { question: '자기소개', time: 120 },
-      { question: '지원동기', time: 90 },
-      { question: '직무역량', time: 150 },
-      { question: '장단점', time: 100 },
-      { question: '목표', time: 110 },
-    ],
-    answerTimeAnalysis: {
-      averageTime: 114,
-      evaluation: '양호',
-      feedback: '대부분의 질문에 적절한 시간을 사용했습니다. 다만, "직무역량" 질문에 대한 답변 시간이 다소 길었습니다.',
-    },
-  };
+      personalityAnalysis: {
+        suitableJobs: ['마케팅 전문가', '영업 관리자', '인사 컨설턴트'],
+        strengths: ['창의적 문제 해결', '팀 협업 능력', '높은 적응력'],
+        improvements: ['스트레스 관리', '세부사항 주의'],
+      },
+      gazeData: [
+        { time: 0, gaze: 50 },
+        { time: 1, gaze: 70 },
+        { time: 2, gaze: 60 },
+        { time: 3, gaze: 80 },
+        { time: 4, gaze: 75 },
+      ],
+      expressionData: {
+        positive: 60,
+        neutral: 20,
+        negative: 20,
+      },
+      gazeAnalysis: {
+        averageGaze: 67,
+        evaluation: '양호',
+        feedback: '전반적으로 좋은 눈맞춤을 유지했지만, 일부 순간에 개선이 필요합니다.',
+      },
+      expressionAnalysis: {
+        dominantExpression: '긍정',
+        evaluation: '우수',
+        feedback: '면접 동안 대부분 긍정적인 표정을 유지했습니다. 이는 열정과 자신감을 잘 표현한 것으로 보입니다.',
+      },
+      voiceData: [
+        { time: 0, pitch: 50, volume: 60, speed: 70 },
+        { time: 1, pitch: 55, volume: 65, speed: 75 },
+        { time: 2, pitch: 60, volume: 70, speed: 80 },
+        { time: 3, pitch: 65, volume: 75, speed: 85 },
+        { time: 4, pitch: 70, volume: 80, speed: 90 },
+      ],
+      voiceAnalysis: {
+        averagePitch: 60,
+        averageVolume: 70,
+        averageSpeed: 80,
+        evaluation: '양호',
+        feedback: '말하기 속도가 약간 빠른 편입니다. 중요한 부분에서는 속도를 조금 줄이는 것이 좋겠습니다.',
+      },
+      keywords: [
+        { text: '열정', value: 64 },
+        { text: '팀워크', value: 55 },
+        { text: '창의성', value: 48 },
+        { text: '책임감', value: 47 },
+        { text: '전문성', value: 44 },
+        { text: '의사소통', value: 42 },
+        { text: '리더십', value: 40 },
+        { text: '혁신', value: 38 },
+        { text: '분석력', value: 36 },
+        { text: '문제해결', value: 35 },
+        { text: '적응력', value: 33 },
+        { text: '성실성', value: 32 },
+        { text: '도전정신', value: 30 },
+        { text: '목표지향', value: 29 },
+        { text: '유연성', value: 28 },
+        { text: '협업', value: 27 },
+        { text: '자기주도', value: 26 },
+        { text: '긍정적', value: 25 },
+        { text: '전략적사고', value: 24 },
+        { text: '시간관리', value: 23 },
+        { text: '고객중심', value: 22 },
+        { text: '세부지향', value: 21 },
+        { text: '비판적사고', value: 20 },
+        { text: '네트워킹', value: 19 },
+        { text: '성과지향', value: 18 },
+        { text: '윤리의식', value: 17 },
+        { text: '글로벌마인드', value: 16 },
+        { text: '멀티태스킹', value: 15 },
+        { text: '프로젝트관리', value: 14 },
+        { text: '기획력', value: 13 },
+        { text: '실행력', value: 12 },
+        { text: '품질관리', value: 11 },
+        { text: '위기관리', value: 10 },
+        { text: '데이터분석', value: 9 },
+        { text: '협상력', value: 8 },
+        { text: '비전제시', value: 7 },
+        { text: '조직이해', value: 6 },
+        { text: '학습능력', value: 5 },
+        { text: '프레젠테이션', value: 4 },
+        { text: '동기부여', value: 3 },
+        { text: '창의력', value: 2 },
+        { text: '정보수집', value: 1 },
+        { text: '의사결정', value: 1 },
+        { text: '목표설정', value: 1 },
+        { text: '자기개발', value: 1 },
+        { text: '비즈니스통찰력', value: 1 },
+        { text: '감성지능', value: 1 },
+        { text: '체계적사고', value: 1 },
+        { text: '유머감각', value: 1 },
+      ],
+      keywordAnalysis: {
+        topKeywords: ['열정', '팀워크', '창의성'],
+        evaluation: '우수',
+        feedback: '주요 키워드가 직무와 잘 연관되어 있습니다. 특히 "열정"과 "팀워크"를 강조한 점이 인상적입니다.',
+      },
+      answerTimes: [
+        { question: '자기소개', time: 120 },
+        { question: '지원동기', time: 90 },
+        { question: '직무역량', time: 150 },
+        { question: '장단점', time: 100 },
+        { question: '목표', time: 110 },
+      ],
+      answerTimeAnalysis: {
+        averageTime: 114,
+        evaluation: '양호',
+        feedback: '대부분의 질문에 적절한 시간을 사용했습니다. 다만, "직무역량" 질문에 대한 답변 시간이 다소 길었습니다.',
+      },
+    };
+
+  
+    setInterviewResult(result); // 상태 업데이트
+  }, []);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-  // AI 종합평가 분석 및 피드백
-  const generateAIFeedback = (scores) => {
-    let feedback = "AI 종합 평가:\n";
-    scores.forEach(item => {
-      if (item.score >= 90) {
-        feedback += `${item.name}: 탁월한 수준입니다. 계속해서 이 강점을 발휘하세요.\n`;
-      } else if (item.score >= 80) {
-        feedback += `${item.name}: 우수한 수준입니다. 조금만 더 노력하면 탁월해질 수 있습니다.\n`;
-      } else if (item.score >= 70) {
-        feedback += `${item.name}: 양호한 수준입니다. 개선의 여지가 있으니 더 노력해보세요.\n`;
-      } else {
-        feedback += `${item.name}: 개선이 필요한 영역입니다. 집중적인 노력이 요구됩니다.\n`;
-      }
-    });
-    return feedback;
-  };
-
   // 성격 특성 분석
   const analyzePersonality = (data) => {
     let analysis = "성격 특성 분석:\n";
@@ -330,6 +299,10 @@ const ResultPage = observer(() => {
     analysis += "성격입니다.";
     return analysis;
   };
+
+  if (!interviewResult) {
+    return <div>Loading...</div>; // 데이터를 불러오기 전 로딩 표시
+  }
 
   return (
     <Container maxWidth="lg" className={styles.container}>
@@ -440,7 +413,7 @@ const ResultPage = observer(() => {
                     </BarChart>
                   </ResponsiveContainer>
                   <Typography variant="body1" style={{ marginTop: '10px' }}>
-                    {generateAIFeedback(interviewResult.aiEvaluation.evaluationItems)}
+                    {interviewResult.aiEvaluation.aiFeedback}
                   </Typography>
                 </CardContent>
               </Card>
