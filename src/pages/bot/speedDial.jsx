@@ -8,7 +8,8 @@ import styles from '@/styles/bot/bot.module.css';
 import { useChat } from '@/contexts/chatContext';
 import Chatting from 'pages/chat/chatting';
 import Bot from '@/pages/bot/bot';
-import { FaDoorOpen } from 'react-icons/fa6';
+import Image from 'next/image';
+import { RiCameraLensFill } from 'react-icons/ri';
 
 const SpeedDial = () => {
   const [open, setOpen] = useState(false);
@@ -43,50 +44,88 @@ const SpeedDial = () => {
   return (
     <>
       <div className={styles.atbotWrapper}>
-        <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
-          <MuiSpeedDial 
+          <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
+          <MuiSpeedDial
             ariaLabel="SpeedDial menu"
             sx={{
               position: 'fixed',
-              bottom: '12px',
-              right: '12px',
+              bottom: '15px',
+              right: '15px',
               '& .MuiSpeedDial-fab': {
                 bgcolor: '#5A8AF2',
+                animation: `${styles.float} 1.5s ease-in-out infinite`,
                 '&:hover': {
-                  bgcolor: '#4A7AD2',
+                  bgcolor: '#FF00FF',
+                },
+                width: '100px',
+                height: '100px',
+              },
+              '& .MuiSpeedDialIcon-icon': {
+                animation: 'none',
+                '&:hover': {
+                  bgcolor: '#5A8AF2',
+                  animation: `${styles.blinkIcon} 0.5s infinite`, // hover 시 아이콘 깜박임 추가
                 },
               },
             }}
-            icon={<SpeedDialIcon openIcon={<FaDoorOpen size={25} color="red" fontSize="large" />} />}
+            icon={<RiCameraLensFill size={80} color="white" />}
             onClose={handleClose}
             onOpen={handleOpen}
             open={open}
-            direction={isMobile ? "up" : "left"}
-          >
+            direction={isMobile ? 'up' : 'left'}
+            >
             <SpeedDialAction
               key='Chatting'
               icon={
                 <div className={isChatOpen ? styles.blinking : ''}>
-                  <BsChatHeartFill size={30} color={isChatOpen ? '#FF0000' :'#5A8AF2'}/>
+                  <BsChatHeartFill size={60} color={isChatOpen ? '#FF0000' :'#5A8AF2'}/>
                 </div>
               }
               tooltipTitle={isChatOpen ? "Chatting (Open)" : "Chatting"}
               onClick={handleChattingClick}
+              slotProps={{
+                tooltip:{
+                  sx: {                
+                      fontSize: '1rem ', // 원하는 글씨 크기로 조절
+                      padding: '10px 10px', // 패딩 조절 (선택사항)                
+                  }
+                }
+              }}
               sx={{
-                bgcolor: isChatOpen ? 'rgba(255, 0, 0, 0.1)' : 'inherit',
+                bgcolor: isBotOpen ? 'rgba(255, 0, 0, 0.1)' : 'inherit',
+                width: '80px', // 원하는 너비
+                height: '80px', // 원하는 높이
+                '& .MuiSpeedDialAction-fab': {
+                  width: '100%',
+                  height: '100%',
+                },
               }}
             />
             <SpeedDialAction
               key='ChatBot'
               icon={
                 <div className={isBotOpen ? styles.blinking : ''}>
-                  <IoLogoSnapchat size={30} color={isBotOpen ? '#FF0000' : '#5A8AF2'} />
+                  <IoLogoSnapchat size={60} color={isBotOpen ? '#FF0000' : '#5A8AF2'} />
                 </div>
               }
               tooltipTitle={isBotOpen ? "ChatBot (Open)" : "ChatBot"}
               onClick={handleBotClick}
+              slotProps={{
+                tooltip:{
+                  sx: {                
+                      fontSize: '1rem ', // 원하는 글씨 크기로 조절
+                      padding: '10px 10px', // 패딩 조절 (선택사항)                
+                  }
+                }
+              }}
               sx={{
                 bgcolor: isBotOpen ? 'rgba(255, 0, 0, 0.1)' : 'inherit',
+                width: '80px', // 원하는 너비
+                height: '80px', // 원하는 높이
+                '& .MuiSpeedDialAction-fab': {
+                  width: '100%',
+                  height: '100%',
+                },
               }}
             />
           </MuiSpeedDial>

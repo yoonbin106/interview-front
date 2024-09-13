@@ -1,8 +1,8 @@
 .botContainer {
   position: fixed;
-  bottom: 90px;
+  bottom: 150px;
   right: 20px;
-  width: 500px;
+  width: 600px;
   height: 650px;
   max-height: 80vh;
   border-radius: 15px;
@@ -54,19 +54,6 @@
 }
 
 
-/* 툴팁 화살표 */
-.botTooltip::before {
-  content: '';
-  position: fixed;
-  bottom: -12px;
-  right: 0.3rem;
-  width: 0.6rem;
-  height: 2rem;
-  background-color: #9333ea;
-  transform: rotate(140deg);
-  margin-right: -0.5rem;
-  border-radius: 30px;
-}
 /* Wrapper */
 .atbotWrapper {
   position: fixed;
@@ -226,4 +213,37 @@
 
 .blinking {
   animation: blink 2s infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.floatingSpeedDial {
+  animation: float 1s ease-in-out infinite;
+}
+@keyframes blinkBackground {
+  0%, 100% {
+    background-color: #5A8AF2;
+  }
+  50% {
+    background-color: #283593;
+  }
+}
+
+@keyframes blinkIcon {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }

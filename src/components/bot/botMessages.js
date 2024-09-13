@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { BsRobot } from "react-icons/bs";
+import Image from 'next/image';
 import { RiUserHeartFill } from "react-icons/ri";
 import { format } from 'date-fns';
 import LinearProgressWithLabel from '@/components/bot/linearProgressWithLabel'; 
@@ -11,6 +11,7 @@ import TextToSpeech from './textToSpeech';
 import InteractiveOptions from './interactiveOption';
 
 import styles from '@/styles/bot/botMessages.module.css';
+import { BsRobot } from 'react-icons/bs';
 
 // BotMessages 컴포넌트: 채팅 메시지를 표시하고 관리합니다.
 const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionSelect, isUserTyping }) => {
@@ -67,9 +68,23 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
       {messages.map((message, index) => (
         <div key={index} className={`${styles.messageContainer} ${styles[message.sender]}`}>
           {/* 사용자 아바타 */}
-          {message.sender === 'user' && <div className={styles.userAvatar}><RiUserHeartFill /></div>}
+          {message.sender === 'user' && <div className={styles.userAvatar}> 
+          <Image 
+            src="/images/user.gif"
+            alt="user"
+            width={70}
+            height={70}
+            unoptimized
+      /></div>}
           {/* 봇 아바타 */}
-          {message.sender === 'bot' && <div className={styles.botAvatar}><BsRobot /></div>}          
+          {message.sender === 'bot' && <div className={styles.botAvatar}>
+          <Image 
+            src="/images/virtualAssistant.gif"
+            alt="bot"
+            width={80}
+            height={80}
+            unoptimized
+      /></div>}          
           <div className={styles.messageContent}>
             {/* 메시지 내용을 키워드 하이라이팅과 함께 표시 */}
             {highlightKeywords(message.text)}
