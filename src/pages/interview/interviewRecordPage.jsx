@@ -1,12 +1,10 @@
-//src\pages\interview\interviewRecordPage.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { 
   Container, Typography, Box, Button, Card, CardContent, 
   LinearProgress, IconButton, Fade, useTheme, CircularProgress, 
-  Modal, Paper, Grid, Tooltip, Menu, MenuItem,Popover
+  Modal, Paper, Grid, Tooltip, Popover, Stepper, Step, StepLabel
 } from '@mui/material';
 import { Help, Mic, VolumeUp } from '@mui/icons-material';
 import { setInterviewData, setStatus } from '../../redux/slices/interviewSlice';
@@ -16,27 +14,11 @@ import { useStores } from '@/contexts/storeContext';
 import { getInterviewQuestions, uploadInterviewVideo } from '@/api/interview';
 import userStore from '@/stores/userStore';
 
-// 가상의 음성 분석 API
-const speechAnalysisAPI = {
-  analyze: (audioData) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          speed: Math.random() > 0.5 ? 'normal' : 'slow',
-          volume: Math.random() > 0.5 ? 'good' : 'low',
-          clarity: Math.random() > 0.5 ? 'clear' : 'unclear'
-        });
-      }, 1000);
-    });
-  }
-};
-
 const InterviewRecordPage = observer(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [interviewType, setInterviewType] = useState(null);
-  const [candidateData, setCandidateData] = useState(null);
-  const [questions, setQuestions] = useState([]); // 질문 상태를 관리하기 위한 useState
+  const [questions, setQuestions] = useState([]);
   
   const { status, error } = useSelector(state => state.interview);
 
@@ -52,16 +34,12 @@ const InterviewRecordPage = observer(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
-  const [speechFeedback, setSpeechFeedback] = useState({ speed: 'normal', volume: 'good' });
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   
   const [showWarning, setShowWarning] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const [hintAnchorEl, setHintAnchorEl] = useState(null);
   const [warningAnchorEl, setWarningAnchorEl] = useState(null);
+  const [audioData, setAudioData] = useState([]);
   const theme = useTheme();
-  
 
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -69,18 +47,15 @@ const InterviewRecordPage = observer(() => {
   const speechSynthesisRef = useRef(null);
   const { interviewStore } = useStores();
 
-   // 음성 합성 함수
-   const speakText = (text) => {
+  const speakText = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'ko-KR';
     window.speechSynthesis.speak(utterance);
   };
 
-   // 컴포넌트 마운트 시 가이드 음성 출력
-   useEffect(() => {
+  useEffect(() => {
     speakText(`${userStore.username}님 AI ${interviewStore.type == 'mock'?'모의':'실전'} 면접을 시작합니다. 면접 가이드 내용 확인하시고, 준비되시면 답변 시작 버튼을 눌러주세요.`);
   }, []);
-
 
   useEffect(() => {
     const fetchInterviewData = async () => {
@@ -88,24 +63,15 @@ const InterviewRecordPage = observer(() => {
         const interviewType = interviewStore.type;
         if(interviewType === 'mock'){
           const selectedQuestions = interviewStore.selectedQuestions;
-          console.log("interviewType:", interviewType);
-          console.log("selectedQuestions:", selectedQuestions);
-    
           const questionIds = selectedQuestions.map(question => question);
-          console.log(questionIds);
-    
           try {
-            const fetchedQuestions = await getInterviewQuestions(questionIds); // 질문 데이터 가져오기
-            console.log("interviewQuestion: ", fetchedQuestions);
-    
-            // 질문과 상태 세팅
+            const fetchedQuestions = await getInterviewQuestions(questionIds);
             setInterviewType(interviewType);
-            // setCandidateData(candidateData ? JSON.parse(candidateData) : null);
-            setQuestions(fetchedQuestions); // 질문 상태 업데이트
+            setQuestions(fetchedQuestions);
           } catch (error) {
             console.error("Failed to fetch questions:", error);
           }
-        }else{
+        } else {
           setInterviewType(interviewType);
           setQuestions(interviewStore.realQuestions.resumeQuestions);
         }
@@ -113,7 +79,6 @@ const InterviewRecordPage = observer(() => {
     };
   
     fetchInterviewData();
-    // Status나 questions의 변화 감지
     if (status || questions.length > 0) {
       console.log("Status or questions changed:", { status, questionsLength: questions.length });
     }
@@ -128,33 +93,58 @@ const InterviewRecordPage = observer(() => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (interviewType) {
-  //     console.log("Loading questions for interview type:", interviewType);
-  //     dispatch(setStatus('loading'));
-  //     dispatch(loadQuestions({ 
-  //       interviewType, 
-  //       selectedQuestions: interviewType === 'mock' ? selectedQuestions : undefined,
-  //       candidateData: interviewType === 'real' ? candidateData : undefined
-  //     }));
-  //   }
-  // }, [dispatch, interviewType, selectedQuestions, candidateData]);
-
-  // useEffect(() => {
-  //   console.log("Status or questions changed:", { status, questionsLength: questions.length });
-  // }, [status, questions]);
-
-  const getMediaPermission = useCallback(async () => {
-    try {
-      const videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      setStream(videoStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = videoStream;
+  useEffect(() => {
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    const tryGetMedia = async () => {
+      try {
+        const videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        setStream(videoStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = videoStream;
+        }
+      } catch (err) {
+        console.error("미디어 접근 에러:", err);
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(tryGetMedia, 1000);
+        }
       }
-    } catch (err) {
-      console.error("미디어 접근 에러:", err);
+    };
+    
+    if (!stream) {
+      tryGetMedia();
     }
-  }, []);
+    
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
+
+  useEffect(() => {
+    if (isRecording) {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      const microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
+      analyser.fftSize = 256;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+      const updateAudioData = () => {
+        analyser.getByteFrequencyData(dataArray);
+        setAudioData([...dataArray]);
+        if (isRecording) {
+          requestAnimationFrame(updateAudioData);
+        }
+      };
+
+      updateAudioData();
+    }
+  }, [isRecording, stream]);
 
   const startRecording = useCallback(() => {
     if (!stream) {
@@ -162,7 +152,7 @@ const InterviewRecordPage = observer(() => {
       return;
     }
   
-    setRecordedChunks([]); // 녹화 시작 전에 chunk 초기화
+    setRecordedChunks([]);
     const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"' });
 
     mediaRecorder.ondataavailable = (event) => {
@@ -174,7 +164,7 @@ const InterviewRecordPage = observer(() => {
       }
     };
   
-    mediaRecorder.start(1000); // 1초마다 데이터 청크를 받음
+    mediaRecorder.start(1000);
     mediaRecorderRef.current = mediaRecorder;
     setIsRecording(true);
     setTimeLeft(60);
@@ -194,7 +184,7 @@ const InterviewRecordPage = observer(() => {
     if (isRecording) {
       timer = setTimeout(() => {
         setIsSubmitEnabled(true);
-      }, 10000); // 10초 후 활성화
+      }, 10000);
     } else {
       setIsSubmitEnabled(false);
     }
@@ -211,13 +201,36 @@ const InterviewRecordPage = observer(() => {
     }
   }, []);
 
+  // const handleStartAnswer = useCallback(() => {
+  //   let countdown = 3;
+  //   setShowModal(true);
+    
+  //   const countdownInterval = setInterval(() => {
+  //     setCountdownTime(countdown);
+  //     countdown -= 1;
+  //     if (countdown < 0) {
+  //       clearInterval(countdownInterval);
+  //       setShowModal(false);
+  //       dispatch(setStatus('recording'));
+  //       startRecording();
+  //       setRecordingStartTime(Date.now());
+  //       if (questions[currentQuestionIndex]?.question) {
+  //         speakQuestion(questions[currentQuestionIndex].question);
+  //       }
+  //     }
+  //   }, 1000);
+  // }, [dispatch, startRecording, speakQuestion, questions, currentQuestionIndex]);
+
   const handleStartAnswer = useCallback(() => {
+    const initialCountdown = 3;
+    let countdown = initialCountdown;
     setShowModal(true);
-    let countdown = 3;
+    setCountdownTime(initialCountdown);
+    
     const countdownInterval = setInterval(() => {
-      setCountdownTime(countdown);
       countdown -= 1;
-      if (countdown < 0) {
+      setCountdownTime(countdown);
+      if (countdown <= 0) {
         clearInterval(countdownInterval);
         setShowModal(false);
         dispatch(setStatus('recording'));
@@ -229,90 +242,87 @@ const InterviewRecordPage = observer(() => {
       }
     }, 1000);
   }, [dispatch, startRecording, speakQuestion, questions, currentQuestionIndex]);
-  
-// 제출 시 블롭 생성 및 폼 데이터에 추가
-const handleSubmitAnswer = useCallback(() => {
-  if (recordingStartTime && (Date.now() - recordingStartTime) < 10000) {
-    alert("녹화 시간이 너무 짧습니다. 최소 10초 이상 녹화해야 합니다.");
-    return;
-  }
-  const currentTime = Date.now();
-  if (recordingStartTime && currentTime - recordingStartTime < 10000) {
-    setWarningAnchorEl(event.currentTarget);
-    setShowWarning(true);
-  } else {
-    stopRecording();
-    dispatch(setStatus('uploading'));
-    setIsSubmitting(true);
 
-    // 녹화된 데이터를 기반으로 Blob 생성
-    const blob = new Blob(recordedChunks, { type: 'video/mp4' });
-    console.log("블롭 사이즈: ", blob.size); // 0이 아니어야 정상
-    const formData = new FormData();
-    formData.append('video', blob, 'interview.mp4');
-    formData.append('userId', userStore.id);
-    formData.append('questionId', questions[currentQuestionIndex].id);
-    console.log('이거 확인: ', formData.get('video')); // null이면 문제가 있음
+  const handleSubmitAnswer = useCallback(() => {
+    if (recordingStartTime && (Date.now() - recordingStartTime) < 10000) {
+      alert("녹화 시간이 너무 짧습니다. 최소 10초 이상 녹화해야 합니다.");
+      return;
+    }
+    const currentTime = Date.now();
+    if (recordingStartTime && currentTime - recordingStartTime < 10000) {
+      setWarningAnchorEl(event.currentTarget);
+      setShowWarning(true);
+    } else {
+      stopRecording();
+      dispatch(setStatus('uploading'));
+      setIsSubmitting(true);
 
-    uploadInterviewVideo(formData)
-      .then(response => {
-        console.log('Video uploaded successfully', response);
-        // 수정: videoId를 저장
-        dispatch(setInterviewData({
-          questionIndex: currentQuestionIndex,
-          videoId: response.videoId  // 서버에서 반환한 videoId 사용
-        }));
-      })
-      .catch(error => {
-        console.error('Error uploading video:', error);
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-        if (currentQuestionIndex < questions.length - 1) {
-          setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-          dispatch(setStatus('pending'));
-          setTimeLeft(60);
-          setShowStartButton(true);
-          setRecordedChunks([]);
-          setIsRecording(false);
-        } else {
-          dispatch(setStatus('ending'));
-        }
-      });
-  }  
-}, [dispatch, stopRecording, currentQuestionIndex, questions, recordingStartTime, recordedChunks, userStore.id]);
+      const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+      console.log("블롭 사이즈: ", blob.size);
+      const formData = new FormData();
+      formData.append('video', blob, 'interview.mp4');
+      formData.append('userId', userStore.id);
+      formData.append('questionId', questions[currentQuestionIndex].id);
+      console.log('이거 확인: ', formData.get('video'));
 
-//수정 09:56
-const handleNextQuestion = useCallback(() => {
-  if (currentQuestionIndex < questions.length - 1) {
-    setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-    dispatch(setStatus('pending'));
-    setTimeLeft(60);
-    setShowStartButton(true);
-    // 다음 질문을 준비하기 위해 상태 초기화
-    setRecordedChunks([]);
-    setIsRecording(false);
-  } else {
-    dispatch(setStatus('ending'));
-    router.push('/interview/interviewResultList');
-  }
-}, [currentQuestionIndex, questions.length, dispatch, router]);
-// useEffect 내에서 questions 상태 변화 감지
-useEffect(() => {
-  console.log("Questions updated:", questions);
-  if (questions && questions.length > 0) {
-    dispatch(setStatus('pending'));
-  }
-}, [questions, dispatch]);
-useEffect(() => {
-  console.log("Current question index:", currentQuestionIndex);
-  console.log("Current status:", status);
-}, [currentQuestionIndex, status]);
+      uploadInterviewVideo(formData)
+        .then(response => {
+          console.log('Video uploaded successfully', response);
+          dispatch(setInterviewData({
+            questionIndex: currentQuestionIndex,
+            videoId: response.videoId
+          }));
+        })
+        .catch(error => {
+          console.error('Error uploading video:', error);
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+          if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+            dispatch(setStatus('pending'));
+            setTimeLeft(60);
+            setShowStartButton(true);
+            setRecordedChunks([]);
+            setIsRecording(false);
+          } else {
+            dispatch(setStatus('ending'));
+          }
+        });
+    }  
+  }, [dispatch, stopRecording, currentQuestionIndex, questions, recordingStartTime, recordedChunks, userStore.id]);
 
-const handleCloseWarning = () => {
-  setShowWarning(false);
-  setWarningAnchorEl(null);
-};
+  const handleNextQuestion = useCallback(() => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+      dispatch(setStatus('pending'));
+      setTimeLeft(60);
+      setShowStartButton(true);
+      setRecordedChunks([]);
+      setIsRecording(false);
+    } else {
+      dispatch(setStatus('ending'));
+      router.push('/interview/interviewResultList');
+    }
+  }, [currentQuestionIndex, questions.length, dispatch, router]);
+
+  useEffect(() => {
+    console.log("Questions updated:", questions);
+    if (questions && questions.length > 0) {
+      dispatch(setStatus('pending'));
+    }
+  }, [questions, dispatch]);
+
+  useEffect(() => {
+    console.log("Current question index:", currentQuestionIndex);
+    console.log("Current status:", status);
+  }, [currentQuestionIndex, status]);
+
+  const handleCloseWarning = () => {
+    setShowWarning(false);
+    setWarningAnchorEl(null);
+  };
+
   useEffect(() => {
     if (isRecording && timeLeft > 0) {
       timerRef.current = setInterval(() => {
@@ -331,17 +341,6 @@ const handleCloseWarning = () => {
   }, [isRecording, timeLeft, stopRecording, handleNextQuestion, dispatch]);
 
   useEffect(() => {
-    if (!stream) {
-      getMediaPermission();
-    }
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [stream, getMediaPermission]);
-
-  useEffect(() => {
     if (recordedChunks.length > 0 && status === 'uploading') {
       const blob = new Blob(recordedChunks, {
         type: 'video/webm'
@@ -353,61 +352,99 @@ const handleCloseWarning = () => {
     }
   }, [recordedChunks, status, currentQuestionIndex, dispatch]);
 
-   // 음성 분석 함수
-   const analyzeSpeech = useCallback(async () => {
-    if (!isRecording) return;
-    try {
-      const audioData = new Blob(recordedChunks, { type: 'audio/webm' });
-      const result = await speechAnalysisAPI.analyze(audioData);
-      setSpeechFeedback(result);
-      // 음성 피드백 제공
-      speakText(`말하기 속도는 ${result.speed}, 음량은 ${result.volume}, 명확도는 ${result.clarity}입니다.`);
-    } catch (error) {
-      console.error('Speech analysis failed:', error);
-    }
-  }, [isRecording, recordedChunks]);
-
-    useEffect(() => {
-    if (isRecording) {
-      const interval = setInterval(analyzeSpeech, 10000);
-      return () => clearInterval(interval);
-    }
-  }, [isRecording, analyzeSpeech]);
-  
   const handleHintRequest = useCallback(() => {
     setShowScript((prev) => !prev);
   }, []);
 
-  const handleCloseHint = () => {
-    setShowHint(false);
-    setHintAnchorEl(null);
-  };
   const handleGuideClose = () => setShowGuide(false);
 
   if (!interviewType) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <Container maxWidth="lg" className={styles.container}>
-      <Typography variant="h4" component="h1" gutterBottom align="center" className={styles.title}>
-         AI {interviewType === 'mock' ? '모의 면접' : '실전 면접'}
-      </Typography>
-      
-      {status === 'loading' && (
-        <Box className={styles.loadingBox}>
-          <CircularProgress />
-          <Typography>면접 정보를 불러오는 중입니다...</Typography>
-        </Box>
-      )}
+  // Stepper 컴포넌트
+  const InterviewStepper = () => (
+    <Stepper activeStep={currentQuestionIndex} alternativeLabel>
+      {questions.map((_, index) => (
+        <Step key={index}>
+          <StepLabel>{`질문 ${index + 1}`}</StepLabel>
+        </Step>
+      ))}
+    </Stepper>
+  );
 
-      {status === 'failed' && (
-        <Typography color="error">오류 발생: {error}</Typography>
-      )}
-  
-      {['pending', 'recording', 'uploading', 'ending'].includes(status) && (
-        <Grid container spacing={3} className={styles.mainContent}>
-          <Grid item xs={12} md={8}>
+  // 원형 타이머 컴포넌트
+  const CircularTimer = ({ timeLeft }) => (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress
+        variant="determinate"
+        value={(timeLeft / 60) * 100}
+        size={120}
+        thickness={4}
+      />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="h4" component="div" color="textSecondary">
+          {timeLeft}
+        </Typography>
+      </Box>
+    </Box>
+  );
+
+  //  오디오 시각화 컴포넌트
+  const AudioVisualizer = ({ audioData }) => (
+    <Box 
+      display="flex" 
+      justifyContent="center" 
+      alignItems="flex-end" 
+      height={180} // 높이를 늘려 더 많은 공간 확보
+      width="100%" // 전체 너비 사용
+    >
+      {audioData.map((value, index) => (
+        <div
+          key={index}
+          style={{
+            width: `${100 / audioData.length}%`, // 너비를 균등하게 분배
+            height: `${value / 2}px`,
+            backgroundColor: '#1976d2',
+            margin: '0 1px', // 바 사이에 작은 간격 추가
+            transition: 'height 0.1s ease', // 부드러운 높이 변화
+          }}
+        />
+      ))}
+    </Box>
+  );
+
+return (
+  <Container maxWidth="lg" className={styles.container}>
+    <Typography variant="h4" component="h1" gutterBottom align="center" className={styles.title}>
+       AI {interviewType === 'mock' ? '모의 면접' : '실전 면접'}
+    </Typography>
+    
+    <InterviewStepper />
+    
+    {status === 'loading' && (
+      <Box className={styles.loadingBox}>
+        <CircularProgress />
+        <Typography>면접 정보를 불러오는 중입니다...</Typography>
+      </Box>
+    )}
+
+    {status === 'failed' && (
+      <Typography color="error">오류 발생: {error}</Typography>
+    )}
+
+    {['pending', 'recording', 'uploading', 'ending'].includes(status) && (
+      <Grid container spacing={3} className={styles.mainContent}>
+        <Grid item xs={12} md={8}>
           <Card elevation={3} className={styles.videoCard}>
             <CardContent>
               <Box className={styles.videoSection}>
@@ -418,23 +455,17 @@ const handleCloseWarning = () => {
                   </Box>
                 )}
                 <Box className={styles.questionOverlay}>
-                <Typography variant="h6">
-                  Q{currentQuestionIndex + 1}. {questions[currentQuestionIndex]?.questionText}
-                </Typography>
+                  <Typography variant="h6">
+                    Q{currentQuestionIndex + 1}. {questions[currentQuestionIndex]?.questionText}
+                  </Typography>
                 </Box>
               </Box>
-                
-              </CardContent>
-            </Card>
-             <Box className={styles.controlsSection}>
-              <Tooltip title="힌트 요청">
+            </CardContent>
+          </Card>
+          <Box className={styles.controlsSection}>
+            <Tooltip title="힌트 요청">
               <IconButton onClick={handleHintRequest} className={styles.controlButton}>
                 <Help />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="음성 분석">
-              <IconButton onClick={analyzeSpeech} className={styles.controlButton} disabled={!isRecording}>
-                <Mic />
               </IconButton>
             </Tooltip>
             <Tooltip title="질문 다시 듣기">
@@ -443,172 +474,156 @@ const handleCloseWarning = () => {
               </IconButton>
             </Tooltip>
           </Box>
-            
-            <Fade in={showScript}>
-              <Paper elevation={3} className={styles.scriptSection}>
-                <Typography variant="h6" gutterBottom>스크립트 및 키워드</Typography>
-                <Typography variant="body2">
-                  {questions[currentQuestionIndex]?.script}
-                </Typography>
-                <Typography variant="body2" className={styles.keywords}>
-                  키워드: {typeof questions[currentQuestionIndex]?.keywords === 'string' 
-                    ? questions[currentQuestionIndex].keywords 
-                    : questions[currentQuestionIndex]?.keywords?.join(', ')}
-                </Typography>
-              </Paper>
-            </Fade>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Card className={styles.timerCard}>
-              <CardContent>
-                <Box className={styles.timerBox}>
-                  <Typography variant="h2" className={styles.timerText}>
-                    {timeLeft}
-                  </Typography>
-                </Box>
-                <LinearProgress variant="determinate" value={(timeLeft / 60) * 100} className={styles.timerProgress} />
-                <Box mt={3}>
-                {status === 'pending' && (
+          
+          <Fade in={showScript}>
+            <Paper elevation={3} className={styles.scriptSection}>
+              <Typography variant="h6" gutterBottom>스크립트 및 키워드</Typography>
+              <Typography variant="body2">
+                {questions[currentQuestionIndex]?.script}
+              </Typography>
+              <Typography variant="body2" className={styles.keywords}>
+                키워드: {typeof questions[currentQuestionIndex]?.keywords === 'string' 
+                  ? questions[currentQuestionIndex].keywords 
+                  : questions[currentQuestionIndex]?.keywords?.join(', ')}
+              </Typography>
+            </Paper>
+          </Fade>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card className={styles.timerCard}>
+            <CardContent>
+              <Box className={styles.timerBox}>
+                <CircularTimer timeLeft={timeLeft} />
+              </Box>
+              <Box mt={3}>
+              {status === 'pending' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleStartAnswer}
+                  fullWidth
+                  size="large"
+                  className={styles.actionButton}
+                >
+                  답변 시작
+                </Button>
+              )}
+              {status === 'recording' && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSubmitAnswer}
+                  fullWidth
+                  size="large"
+                  className={styles.actionButton}
+                  disabled={!isSubmitEnabled}
+                >
+                  답변 제출
+                </Button>
+              )}
+                
+                <Popover
+                  open={showWarning}
+                  anchorEl={warningAnchorEl}
+                  onClose={handleCloseWarning}
+                  anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
+                  <Box className={styles.warningPopover}>
+                    <Typography>
+                      답변 시간이 10초 이상 되어야 제출 가능합니다.
+                    </Typography>
+                    <Button onClick={handleCloseWarning} color="primary">
+                      확인
+                    </Button>
+                  </Box>
+                </Popover>
+                {(status === 'uploading' || status === 'ending') && (
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleStartAnswer}
+                    onClick={handleNextQuestion}
                     fullWidth
                     size="large"
+                    disabled={isSubmitting}
                     className={styles.actionButton}
                   >
-                    답변 시작
+                    {status === 'ending' ? '결과 보기' : '다음 문제'}
                   </Button>
                 )}
-                {status === 'recording' && (
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleSubmitAnswer}
-                    fullWidth
-                    size="large"
-                    className={styles.actionButton}
-                  >
-                    답변 제출
-                  </Button>
-                )}
-    
-                  
-                  <Popover
-                    open={showWarning}
-                    anchorEl={warningAnchorEl}
-                    onClose={handleCloseWarning}
-                    anchorOrigin={{
-                      vertical: 'center',
-                      horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                  >
-                    <Box className={styles.warningPopover}>
-                      <Typography>
-                        답변 시간이 10초 이상 되어야 제출 가능합니다.
-                      </Typography>
-                      <Button onClick={handleCloseWarning} color="primary">
-                        확인
-                      </Button>
-                    </Box>
-                  </Popover>
-                  {(status === 'uploading' || status === 'ending') && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleNextQuestion}
-                      fullWidth
-                      size="large"
-                      disabled={isSubmitting}
-                      className={styles.actionButton}
-                    >
-                      {status === 'ending' ? '결과 보기' : '다음 문제'}
-                    </Button>
-                  )}
-                </Box>
-              </CardContent>
-            </Card>
-            
-            <Paper elevation={3} className={styles.feedbackSection}>
-            <Typography variant="h6" gutterBottom>음성 피드백</Typography>
-            <Typography>말하기 속도: {speechFeedback.speed}</Typography>
-            <Typography>음량: {speechFeedback.volume}</Typography>
-            <Typography>명확도: {speechFeedback.clarity}</Typography>
+              </Box>
+            </CardContent>
+          </Card>
+          
+          <Paper elevation={4} className={styles.feedbackSection} sx={{ height: 250 }}>
+            <Typography variant="h6" gutterBottom>오디오 시각화</Typography>
+            <AudioVisualizer audioData={audioData} />
           </Paper>
 
-          <Paper elevation={3} className={styles.progressSection}>
-            <Typography variant="h6" gutterBottom>면접 진행 상황</Typography>
-            <Box display="flex" alignItems="center">
-              <LinearProgress 
-                variant="determinate" 
-                value={(currentQuestionIndex + 1) / questions.length * 100} 
-                className={styles.progressBar}
-              />
-              <Typography variant="body2" className={styles.progressText}>
-                {currentQuestionIndex + 1} / {questions.length}
-              </Typography>
-            </Box>
-          </Paper>
+          
         </Grid>
       </Grid>
-      )}
-  
-      <Modal
-        open={status === 'generating' || showModal || isSubmitting}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box className={styles.modal}>
-          {status === 'generating' && (
-            <>
-              <Typography id="modalTitle" variant="h6" component="h2">
-                면접 문제를 생성중입니다
-              </Typography>
-              <CircularProgress className={styles.modalProgress} />
-            </>
-          )}
-          {showModal && (
-            <>
-              <Typography id="modal-title" variant="h6" component="h2">
-                {countdownTime}초 후에 면접이 시작됩니다
-              </Typography>
-              <Typography id="modal-description" className={styles.modalDescription}>
-                60초 이내에 답변하셔야 합니다.
-              </Typography>
-            </>
-          )}
-          {isSubmitting && (
-            <>
-              <Typography id="modal-title" variant="h6" component="h2">
-                답변을 제출중입니다
-              </Typography>
-              <CircularProgress className={styles.modalProgress} />
-            </>
-          )}
-        </Box>
-      </Modal>
+    )}
 
-      <Modal open={showGuide} onClose={handleGuideClose}>
-        <Box className={styles.guideModal}>
-          <Typography variant="h6" gutterBottom>면접 가이드</Typography>
-          <Typography variant="body1">
-            1. 카메라와 마이크를 확인하세요.<br />
-            2. 질문을 주의 깊게 듣고 생각한 후 답변하세요.<br />
-            3. 명확하고 간결하게 답변하세요.<br />
-            4. 긍정적인 태도를 유지하세요.<br />
-            5. 시간을 잘 관리하세요.
-          </Typography>
-          <Button onClick={handleGuideClose} variant="contained" color="primary" style={{marginTop: '1rem'}}>
-            이해했습니다
-          </Button>
-        </Box>
-      </Modal>
-    </Container>
-  );
+    <Modal
+      open={status === 'generating' || showModal || isSubmitting}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <Box className={styles.modal}>
+        {status === 'generating' && (
+          <>
+            <Typography id="modalTitle" variant="h6" component="h2">
+              면접 문제를 생성중입니다
+            </Typography>
+            <CircularProgress className={styles.modalProgress} />
+          </>
+        )}
+        {showModal && (
+          <>
+            <Typography id="modal-title" variant="h6" component="h2">
+              {countdownTime}초 후에 면접이 시작됩니다
+            </Typography>
+            <Typography id="modal-description" className={styles.modalDescription}>
+              60초 이내에 답변하셔야 합니다.
+            </Typography>
+          </>
+        )}
+        {isSubmitting && (
+          <>
+            <Typography id="modal-title" variant="h6" component="h2">
+              답변을 제출중입니다
+            </Typography>
+            <CircularProgress className={styles.modalProgress} />
+          </>
+        )}
+      </Box>
+    </Modal>
+
+    <Modal open={showGuide} onClose={handleGuideClose}>
+      <Box className={styles.guideModal}>
+        <Typography variant="h6" gutterBottom>면접 가이드</Typography>
+        <Typography variant="body1">
+          1. 카메라와 마이크를 확인하세요.<br />
+          2. 질문을 주의 깊게 듣고 생각한 후 답변하세요.<br />
+          3. 명확하고 간결하게 답변하세요.<br />
+          4. 긍정적인 태도를 유지하세요.<br />
+          5. 시간을 잘 관리하세요.
+        </Typography>
+        <Button onClick={handleGuideClose} variant="contained" color="primary" style={{marginTop: '1rem'}}>
+          이해했습니다
+        </Button>
+      </Box>
+    </Modal>
+    
+  </Container>
+);
 });
 
 export default InterviewRecordPage;
