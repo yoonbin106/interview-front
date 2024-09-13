@@ -28,8 +28,6 @@ const ChattingList = ({
     const [showEditModal, setShowEditModal] = useState(false);
     const [newChatroomTitle, setNewChatroomTitle] = useState('');
 
-    const [badgeCount, setBadgeCount] = useState(false);
-
     const inputRef = useRef(null);
 
     // useEffect(() => {
@@ -53,7 +51,8 @@ const ChattingList = ({
     }, [showEditModal]);
 
     useEffect(() => {
-        getChatroomList();
+        // 이 코드가 없으면 채팅방 실시간 업데이트가 안됨 근데 있으면 무한루프 돌아
+        // getChatroomList();
         chatRoomList.forEach((room) => {
             getUsersInChatroom(room.id);  // 각 채팅방에 대해 유저 목록을 가져옴
         });
@@ -91,11 +90,6 @@ const ChattingList = ({
             setShowEditModal(false);
         }
     };
-
-    const getBadgeCount = (chatroomId) => {
-        setBadgeCount(chatAlarm.filter(alarm => alarm.chatroomId === chatroomId).length);
-
-    }
 
     const options = [
         { label: '채팅방 이름 수정', action: () => setShowEditModal(true) },

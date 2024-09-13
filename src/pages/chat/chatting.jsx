@@ -3,7 +3,6 @@ import styles from '../../styles/chat/chatting.module.css';
 import ChattingHeader from '../../components/chat/chattingHeader';
 import ChattingMessages from '../../components/chat/chattingMessages';
 import ChattingInputArea from '../../components/chat/chattingInputArea';
-import mqtt from 'mqtt';
 import ChattingList from 'components/chat/chattingList';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { useStores } from '@/contexts/storeContext';
@@ -11,18 +10,18 @@ import { observer } from 'mobx-react-lite';
 import axios from 'axios';
 import { getAllUsers } from 'api/user';
 
-
 const Chatting = observer(({ closeChatting }) => {
+    const { userStore, mqttStore } = useStores();
+
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
+
     const [chatRoomList, setChatRoomList] = useState([]);
     const [chatRoomTitle, setChatRoomTitle] = useState([]);
     const [chatAlarm, setChatAlarm] = useState([]);
 
-
-    const { authStore, userStore, mqttStore } = useStores();
     const [users, setUsers] = useState([]); //getAllUsers()
     const [usersInChatroom, setUsersInChatroom] = useState([]);
 
@@ -32,17 +31,15 @@ const Chatting = observer(({ closeChatting }) => {
     const [currentChatRoomId, setCurrentChatRoomId] = useState(null); // 현재 선택된 채팅방의 ID (전달용)
     const currentChatRoomIdRef = useRef(null); // 현재 선택된 채팅방의 ID 즉시 적용
 
-    // const getAllChatroomList = async () => {
-    //     try {
-    //         const response = await axios.get('http://localhost:8080/api/chat/allChatroomList'); 
-    //         // 그대로 갖고오지말고 user id (나의 id) 전달해서 chatroomUsers 테이블에서 chatroom_id로 접근. 가져와서 그 findByID(chatroom_id)
-    //         setChatRoomList(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching chat rooms:', error);
-    //     }
-    // };
-
-    //getChatroomList
+    useEffect(() => {
+        //채팅방 목록 얻어오기
+        getChatroomList();
+        //모든 유저 목록 얻어오기
+        getUserList();
+        //알람 목록 얻어오기
+        getChatAlarm();
+    }, []);
+    
     const getChatroomList = async () => {
         try {
             const userId = userStore.id;
@@ -50,8 +47,10 @@ const Chatting = observer(({ closeChatting }) => {
                 userId,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            setChatRoomList(response.data);
-            // console.log('response.data (ChatRoomList): ', response.data);
+            // if (JSON.stringify(chatRoomList) !== JSON.stringify(response.data)) {
+            //     setChatRoomList(response.data); // 목록이 다를 때만 업데이트
+            // }
+            setChatRoomList(response.data); // 목록이 다를 때만 업데이트
         } catch (error) {
             console.error('Error fetching chat rooms:', error);
         }
@@ -66,30 +65,15 @@ const Chatting = observer(({ closeChatting }) => {
             console.log('error: ', error);
         }
     }
-
-    useEffect(() => {
-        //채팅방 목록 얻어오기
-        // getAllChatroomList();
-        getChatroomList();
-
-        //모든 유저 목록 얻어오기
-        getUserList();
-
-        //알람 목록 얻어오기
-        getChatAlarm();
-
-    }, []);
-
+    
+    // 채팅 알람 가져오기
     const getChatAlarm = async () => {
         try {
             const response = await axios.post('http://localhost:8080/api/alarm/getChatAlarm',
                 userStore.id,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            // console.log('[chatting.jsx] getChatAlarm(): ', response.data);
-            // console.log('[chatting.jsx] getChatAlarm().length: ', response.data.length);
-            // setAlarmList(response.data);
-            // setBadgeCount(response.data.length);
+            // 채팅 알람 상태 저장
             setChatAlarm(response.data);
             return response.data;
         } catch (error) {
@@ -117,10 +101,10 @@ const Chatting = observer(({ closeChatting }) => {
 
                     setChatRoomList(prevChatRoomList =>
                         prevChatRoomList.map(room =>
-                            room.id == lastMTopic ? { ...room, lastMessage: lastM } : room
+                            room.id == lastMTopic ? { ...room, lastMessage: lastM, updatedTime: new Date().toISOString() } : room
                         )
                     );
-                    getChatroomList();
+                    // getChatroomList();
 
                     // console.log(receivedMessage);
                     // console.log(receivedMessage.chatroomId);
@@ -132,7 +116,7 @@ const Chatting = observer(({ closeChatting }) => {
                     }
                 }
                 if (topic.startsWith('mqtt/member/')) {
-                    
+                    console.log('topic.startsWith(mqtt/member/');
                     const roomId = JSON.parse(message).chatroomId;
                     // if(message)
                     if(roomId == currentChatRoomIdRef.current){
@@ -140,7 +124,7 @@ const Chatting = observer(({ closeChatting }) => {
                         
                     }
                     getChatAlarm();
-        
+                    // getChatroomList();
                     
                 }
             });
@@ -169,6 +153,12 @@ const Chatting = observer(({ closeChatting }) => {
         }
 
     }, [client, chatRoomList]);
+
+    // useEffect(() => {
+    //     console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
+        
+
+    // }, [client, chatRoomList]);
 
     // useEffect(() => {
     //     // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
