@@ -17,6 +17,7 @@
 
 .content {
   margin-top: 50px;
+  min-height: 900px;
 }
 
 body {
