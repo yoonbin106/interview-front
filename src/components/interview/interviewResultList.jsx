@@ -33,7 +33,10 @@ const InterviewResultList = observer(() => {
     const userId = userStore.id;
     try {
       const response = await getInterviewResults(userId);
-      setVideos(response);
+      // uploadDate를 기준으로 내림차순 정렬
+      const sortedVideos = response.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+      
+      setVideos(sortedVideos);
     } catch (error) {
       console.error('면접 데이터를 불러오는 중 오류 발생:', error);
     }

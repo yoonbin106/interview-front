@@ -53,6 +53,7 @@ const ChattingList = ({
     }, [showEditModal]);
 
     useEffect(() => {
+        getChatroomList();
         chatRoomList.forEach((room) => {
             getUsersInChatroom(room.id);  // 각 채팅방에 대해 유저 목록을 가져옴
         });
