@@ -214,36 +214,3 @@
 .blinking {
   animation: blink 2s infinite;
 }
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-30px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.floatingSpeedDial {
-  animation: float 1s ease-in-out infinite;
-}
-@keyframes blinkBackground {
-  0%, 100% {
-    background-color: #5A8AF2;
-  }
-  50% {
-    background-color: #283593;
-  }
-}
-
-@keyframes blinkIcon {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}

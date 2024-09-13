@@ -53,7 +53,6 @@ const SpeedDial = () => {
               right: '15px',
               '& .MuiSpeedDial-fab': {
                 bgcolor: '#5A8AF2',
-                animation: `${styles.float} 1.5s ease-in-out infinite`,
                 '&:hover': {
                   bgcolor: '#FF00FF',
                 },
@@ -64,7 +63,6 @@ const SpeedDial = () => {
                 animation: 'none',
                 '&:hover': {
                   bgcolor: '#5A8AF2',
-                  animation: `${styles.blinkIcon} 0.5s infinite`, // hover 시 아이콘 깜박임 추가
                 },
               },
             }}
