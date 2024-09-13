@@ -62,7 +62,6 @@ export default function AdminDeletedComment() {
   // 댓글 복구
   const handleRestore = (commentId, postDeleted) => {
     if (postDeleted) {
-      alert("게시글이 삭제되어 있어 댓글을 복구할 수 없습니다.");
     } else {
       if (window.confirm("댓글을 복구하시겠습니까?")) {
         axios.post(`http://localhost:8080/api/admindeleted/restorecomment/${commentId}`)

@@ -42,35 +42,36 @@ export default function AdminReportedComment() {
     setOpenRowIndex(openRowIndex === index ? null : index);
   };
 
-  // 댓글 영구 삭제
-  const handleDelete = (commentId) => {
-    if (window.confirm("댓글을 영구적으로 삭제하시겠습니까?")) {
-      axios.delete(`http://localhost:8080/api/adminreported/deletecomment/${commentId}`)
-        .then(() => {
-          alert("댓글이 영구적으로 삭제되었습니다.");
-          setReportedComments(reportedComments.filter(comment => comment.id !== commentId));
-        })
-        .catch(error => {
-          console.error('Error deleting comment:', error);
-          alert('댓글 삭제 중 오류가 발생했습니다.');
-        });
-    }
-  };
-
+ // 댓글 영구 삭제
+const handleDelete = (commentId) => {
+  if (window.confirm("댓글을 영구적으로 삭제하시겠습니까?")) {
+    axios.delete(`http://localhost:8080/api/adminreported/deletecomment/${commentId}`)
+      .then(() => {
+        alert("댓글이 영구적으로 삭제되었습니다.");
+        setReportedComments(reportedComments.filter(comment => comment.commentId !== commentId)); // 상태 업데이트
+          setOpenRowIndex(null);  // 아코디언 닫기
+      })
+      .catch(error => {
+        console.error('댓글 삭제 중 오류 발생:', error);
+        alert('댓글 삭제 중 오류가 발생했습니다.');
+      });
+  }
+};
   // 댓글 복구
-  const handleRestore = (reportId) => {
-    if (window.confirm("댓글을 복구하시겠습니까?")) {
-      axios.put(`http://localhost:8080/api/adminreported/restorecomment/${reportId}`)
-        .then(() => {
-          alert("댓글이 복구되었습니다.");
-          setReportedComments(reportedComments.filter(comment => comment.id !== reportId));
-        })
-        .catch(error => {
-          console.error('Error restoring comment:', error);
-          alert('댓글 복구 중 오류가 발생했습니다.');
-        });
-    }
-  };
+const handleRestore = (reportId) => {
+  if (window.confirm("댓글을 복구하시겠습니까?")) {
+    axios.put(`http://localhost:8080/api/adminreported/restorecomment/${reportId}`)
+      .then(() => {
+        alert("댓글이 복구되었습니다.");
+        setReportedComments(reportedComments.filter(comment => comment.reportId !== reportId)); // 상태 업데이트
+          setOpenRowIndex(null);  // 아코디언 닫기
+      })
+      .catch(error => {
+        console.error('댓글 복구 중 오류 발생:', error);
+        alert('댓글 복구 중 오류가 발생했습니다.');
+      });
+  }
+};
 
   return (
     <div>
@@ -119,7 +120,7 @@ export default function AdminReportedComment() {
                           </a>
                         </p>
                         <div className={styles.reportedCommentTableButtonContainer}>
-                          <Button variant="contained" color="error" onClick={() => handleDelete(row.reportId)}>댓글 영구삭제</Button>
+                          <Button variant="contained" color="error" onClick={() => handleDelete(row.commentId)}>댓글 영구삭제</Button>
                           <Button variant="contained" color="primary" onClick={() => handleRestore(row.reportId)}>댓글 복구</Button>
                         </div>
                       </Box>
