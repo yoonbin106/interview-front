@@ -119,7 +119,7 @@ function ResumeForm2() {
     setLoading(true);
 
     try {
-      const endpoint = type === 'selfIntroduction' ? 'chatgpt' : 'chatgpt-motivation';
+      const endpoint = type === 'selfIntroduction' ? 'chatgpt-self' : 'chatgpt-motivation';
       const response = await axios.post(`http://localhost:8080/api/${endpoint}`, {
         text,
       });
