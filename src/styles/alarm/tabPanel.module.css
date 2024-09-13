@@ -67,6 +67,8 @@
     border: 1px solid #e0e0e0;
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .alarmItem:hover {       
@@ -93,6 +95,7 @@
 .alarmText {
     display: flex; 
     align-items: flex-start;
+    max-width: 100%;
 }
 
 .alarmMessage {
@@ -117,7 +120,6 @@
     font-weight: bold;
     font-size: 16px;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 }
 
@@ -128,6 +130,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 4px;
+    max-width: 220px;
 }
 
 .deleteButton {

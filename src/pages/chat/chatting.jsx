@@ -132,12 +132,15 @@ const Chatting = observer(({ closeChatting }) => {
                     }
                 }
                 if (topic.startsWith('mqtt/member/')) {
-                    getChatAlarm();
+                    
                     const roomId = JSON.parse(message).chatroomId;
                     // if(message)
                     if(roomId == currentChatRoomIdRef.current){
                         readChatAlarmInChatroom(roomId);
+                        
                     }
+                    getChatAlarm();
+        
                     
                 }
             });
@@ -203,7 +206,6 @@ const Chatting = observer(({ closeChatting }) => {
 
     useEffect(() => {
         if (currentChatRoomIdRef.current) {
-            console.log('askdjlaksdfluhefkqjhflkjqn;fjq: ', currentChatRoomIdRef.current);
             readChatAlarmInChatroom(currentChatRoomIdRef.current);
             //채팅방으로 들어갔을 때 실행될 코드 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             setMessages([]);
@@ -224,20 +226,15 @@ const Chatting = observer(({ closeChatting }) => {
         currentChatRoomIdRef.current = chatRoomId;
 
         getChatroomTitle(chatRoomId);
-
-        // console.log('onChatClick() - currentChatRoomId: ', currentChatRoomId);
     }
 
     const onChatClick = (chatRoomId) => {
-        // setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
 
         // getUsersInChatroom(chatRoomId);
 
         console.log('[onChatClick() 호출]: ', chatRoomId);
         currentChatRoomIdRef.current = chatRoomId; // Ref에 바로 값 저장
         setIsChatOpen(true);
-        // 채팅 하나하나 각각 눌렀을때 ?
-        // getPastChatting();
     };
 
     const handleBackClick = () => {
@@ -335,6 +332,26 @@ const Chatting = observer(({ closeChatting }) => {
             //         senderId: userStore.id
             //     }));
         }
+    };
+
+
+    // 읽었을때 그거 처리 파이썬으로 보내고 거기서 isRead 1로 수정하고 mqtt로도 publish 해주기
+    // 읽었을때 채팅방, 유저아이디 보내서 그걸루...isRead할 컬럼 찾기
+    // readChatAlarmInChatroom => readChatMessage
+    const readChatAlarm = async () => {
+
+            const readChatMessageData = {
+                type: 'chat',
+                chatroomId: currentChatRoomIdRef.current,
+                userId: userStore.id
+            };
+
+            try {
+                await axios.post('http://192.168.0.137:8000/readChatAlarm', readChatMessageData);
+            } catch (error) {
+                console.error("메시지 읽음 처리 중 오류 발생:", error);
+            }
+        
     };
 
 
