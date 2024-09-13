@@ -115,10 +115,11 @@ const Header = observer(() => {
         userId,
         { headers: { 'Content-Type': 'application/json' } }
       );
+      const unreadAlarms = response.data.filter(alarm => alarm.isRead === 0);
       // console.log('[header.jsx] getAlarm(): ', response.data);
       // console.log('[header.jsx] getAlarm().length: ', response.data.length);
       setAlarmList(response.data);
-      setBadgeCount(response.data.length);
+      setBadgeCount(unreadAlarms.length);
       return response.data;
     } catch (error) {
       console.error('알람 가져오기 중 에러 발생:', error);
