@@ -54,7 +54,7 @@ const SpeedDial = () => {
               '& .MuiSpeedDial-fab': {
                 bgcolor: '#5A8AF2',
                 '&:hover': {
-                  bgcolor: '#FF00FF',
+                  bgcolor: '#2F72E3',
                 },
                 width: '100px',
                 height: '100px',
