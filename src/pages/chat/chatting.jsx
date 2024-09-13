@@ -120,7 +120,7 @@ const Chatting = observer(({ closeChatting }) => {
                             room.id == lastMTopic ? { ...room, lastMessage: lastM } : room
                         )
                     );
-                    // getChatroomList();
+                    getChatroomList();
 
                     // console.log(receivedMessage);
                     // console.log(receivedMessage.chatroomId);
