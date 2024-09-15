@@ -30,8 +30,8 @@ const AdminDeletedPost = () => {
         const fetchDeletedPosts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/admindeleted/deletedposts');
-                // 내림차순 정렬 (최신 글이 위로)
-                const sortedPosts = response.data.sort((a, b) => new Date(b.deleted_date) - new Date(a.deleted_date));
+                // deletedAt 필드를 기준으로 내림차순 정렬
+                const sortedPosts = response.data.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
                 console.log('API 응답 데이터:', response.data);
                 setDeletedPosts(sortedPosts);
                 setFilteredDeletedPost(sortedPosts);
@@ -139,8 +139,8 @@ const AdminDeletedPost = () => {
                                             <TableCell align="center" className={styles.deletedPostTableLink}>
                                                     {row.title}
                                             </TableCell>
-                                            <TableCell align="center">{row.userId.username}</TableCell>
-                                            <TableCell align="center">{formatDate(row.deleted_date)}</TableCell>
+                                            <TableCell align="center">{row.username}</TableCell>
+                                            <TableCell align="center">{formatDate(row.deletedAt)}</TableCell>
                                         </TableRow>
                                     ))}
                                     {emptyRows > 0 && (

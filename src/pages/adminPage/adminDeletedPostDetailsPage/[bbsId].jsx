@@ -77,15 +77,15 @@ export default function AdminDeletedPostDetailsPage() {
                 {post ? (
                     <div className={styles.deletedPostDetailsWrapper}>
                         <h4><strong>{post.title}</strong></h4>
-                        <p className={styles.deletedPostDetailsDate}>{new Date(post.deleted_date).toLocaleString()}</p>
+                        <p className={styles.deletedPostDetailsDate}>{new Date(post.deletedAt).toLocaleString()}</p>
                         <hr />
                         <div className={styles.deletedPostDetailsContent}>
-                            <p><strong>작성자:</strong> {post.userId.username}</p><br />
+                            <p><strong>작성자:</strong> {post.username}</p><br />
                             <hr />
                             <p><strong>글 내용:</strong> {post.content}</p>
                             <br />
                             <hr />
-                            <p><strong>게시글 삭제 날짜:</strong> {new Date(post.deleted_date).toLocaleString()}</p>
+                            <p><strong>게시글 삭제 날짜:</strong>  {post.deletedAt ? new Date(post.deletedAt).toLocaleString() : '삭제 날짜 없음'}</p>
                             <br />
                             <hr />
                         </div>

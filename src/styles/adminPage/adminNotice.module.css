@@ -109,6 +109,11 @@
     text-overflow: ellipsis;
   }
   
+  
+.noticeDateCell {
+  white-space: nowrap; /* 한 줄로 고정 */
+}
+
   /* 달력 기본 스타일 */
   .calendar {
     width: 100%;

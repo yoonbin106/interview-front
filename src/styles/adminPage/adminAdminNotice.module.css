@@ -23,8 +23,6 @@
   text-decoration: underline;
 }
 
-
-
 /* 레이아웃 및 컨테이너 스타일 */
 .adminNoticeContainer {
   display: flex;
@@ -142,4 +140,9 @@
 
 .adminAdminNoticeRegisterButton:hover {
   background-color: #0056b3;
+}
+
+/* 작성날짜가 한 줄로 나오도록 white-space 설정 */
+.adminNoticeDateCell {
+  white-space: nowrap; /* 한 줄로 고정 */
 }

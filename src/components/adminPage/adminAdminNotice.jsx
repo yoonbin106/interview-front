@@ -52,7 +52,7 @@ const PaginationTableAdminAdminNotice = ({rows,page,rowsPerPage}) => {
                       {row.adminNoticeTitle}
                   </TableCell>
                   <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
-                  <TableCell align="center">
+                  <TableCell align="center" className={styles.adminNoticeDateCell}>
                     {new Date(row.adminNoticeCreatedTime).toLocaleString('ko-KR',{
                         year: 'numeric',
                         month:'2-digit',

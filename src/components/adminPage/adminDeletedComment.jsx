@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem, Typography, Divider } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Collapse, Button, Select, MenuItem, Divider } from '@mui/material';
 import styles from '@/styles/adminPage/adminDeletedComment.module.css';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import axios from 'axios';
@@ -16,7 +16,10 @@ export default function AdminDeletedComment() {
   React.useEffect(() => {
     axios.get('http://localhost:8080/api/admindeleted/deleted-comments')
       .then(response => {
-        setDeletedComments(response.data);
+        console.log('받아오는 데이터:',response)
+        // 삭제된 날짜 기준으로 오름차순 정렬
+        const sortedData = response.data.sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt));
+        setDeletedComments(sortedData);
       })
       .catch(error => {
         console.error('Error fetching deleted comments:', error);
@@ -93,6 +96,7 @@ export default function AdminDeletedComment() {
                 <TableCell align="center" className={styles.deletedCommentTableHeaderCell}>댓글 번호</TableCell>
                 <TableCell align="center" className={styles.deletedCommentTableHeaderCell}>내용</TableCell>
                 <TableCell align="center" className={styles.deletedCommentTableHeaderCell}>작성자</TableCell>
+                <TableCell align="center" className={styles.deletedCommentTableHeaderCell}>삭제된 날짜</TableCell> {/* 삭제된 날짜 열 추가 */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -106,12 +110,13 @@ export default function AdminDeletedComment() {
                       </span>
                     </TableCell>
                     <TableCell align="center">{row.username}</TableCell>
+                    <TableCell align="center">{new Date(row.deletedAt).toLocaleString()}</TableCell> {/* 삭제된 날짜 표시 */}
                   </TableRow>
                   <TableRow>
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
                       <Collapse in={openRowIndex === index} timeout="auto" unmountOnExit>
                         <Box margin={1}>
-                          <p><strong>게시판 제목:</strong> {row.bbs?.title}</p> 
+                          <p><strong>게시판 제목:</strong> {row.bbsTitle}</p>
                           <p><strong>댓글 등록 날짜:</strong> {new Date(row.createdAt).toLocaleString()}</p> {/* 댓글 등록 날짜 */}
                           <div className={styles.deletedCommentTableButtonContainer}>
                             <Button variant="contained" color="error" onClick={() => handleDelete(row.commentId)}>댓글 영구삭제</Button>

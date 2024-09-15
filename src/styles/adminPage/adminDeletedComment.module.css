@@ -42,3 +42,11 @@
   white-space: nowrap;
   font-size: 40px;
 }
+
+.deletedCommentSearchButton {
+  background-color: #5A8AF2;
+  &:hover {
+      background-color: #357ABD;
+  }
+  height: 56px;
+}
