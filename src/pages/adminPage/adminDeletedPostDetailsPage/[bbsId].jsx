@@ -97,7 +97,7 @@ export default function AdminDeletedPostDetailsPage() {
                             {comments.length > 0 ? (
                                 comments.map(comment => (
                                     <div key={comment.commentId} className={styles.comment}>
-                                       <p><strong>{comment.user ? comment.user.username : 'Unknown'}:</strong> {comment.content}</p>                                        
+                                       <p><strong>{comment.username}:</strong> {comment.content}</p>                                        
                                        <p className={styles.commentDate}>{new Date(comment.createdAt).toLocaleString()}</p>
                                     </div>
                                 ))

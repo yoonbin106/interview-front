@@ -55,8 +55,8 @@ const AdminUser = ({ allData }) => {
     };
 
     // 상세보기 버튼 클릭 시 페이지 이동 핸들러
-    const handleViewDetails = (row) => {
-        router.push(`/adminPage/adminUserDetailsPage`); // 상세보기 페이지로 이동
+    const handleViewDetails = (email) => {
+        router.push(`/adminPage/adminUserDetailsPage/${email}`); // 상세보기 페이지로 이동
     };
 
     // 다음 페이지로 이동하는 핸들러
@@ -142,7 +142,7 @@ const AdminUser = ({ allData }) => {
                                     <Button
                                         variant="contained"
                                         className={styles.adminUserViewDetailsButton}
-                                        onClick={() => handleViewDetails(result)}
+                                        onClick={() => handleViewDetails(result.email)}
                                     >
                                         상세보기
                                     </Button>
