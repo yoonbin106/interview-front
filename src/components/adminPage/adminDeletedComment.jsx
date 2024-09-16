@@ -86,7 +86,7 @@ export default function AdminDeletedComment() {
       <div>
         <Box display="flex" alignItems="center" mb={2}>
           <DeleteTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2', marginRight: '8px' }} />
-          <h2 className={styles.deletedCommentTitle}>삭제된 댓글</h2>
+          <h2 className={styles.deletedCommentTitle}>𝐃𝐞𝐥𝐞𝐭𝐞𝐝 𝐂𝐨𝐦𝐦𝐞𝐧𝐭</h2>
         </Box>
         <Divider sx={{ borderBottomWidth: 2, backgroundColor: '#999', mb: 2 }} />
         <TableContainer component={Paper} className={styles.deletedCommentTableContainer}>

@@ -7,6 +7,7 @@ import styles from '@/styles/adminPage/adminUser.module.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GroupTwoToneIcon from '@mui/icons-material/GroupTwoTone';
+import axios from 'axios';
 
 const AdminUser = ({ allData }) => {
     const [searchCondition, setSearchCondition] = useState(''); // 검색 조건 상태 관리
@@ -14,7 +15,21 @@ const AdminUser = ({ allData }) => {
     const [sortedResults, setSortedResults] = useState([]); // 정렬된 결과 상태 관리
     const [page, setPage] = useState(0); // 현재 페이지 상태 관리
     const [rowsPerPage, setRowsPerPage] = useState(5); // 페이지 당 표시할 항목 수 상태 관리
+    const [totalUsers, setTotalUsers] = useState(0); //회원 수 상태 추가
     const router = useRouter(); // 페이지 이동을 위한 Next.js useRouter 사용
+
+    //회원 수 가져오는 API 호출
+    useEffect(() => {
+        const fetchUserCount = async () => {
+            try{
+                const response = await axios.get('http://localhost:8080/api/auth/users/count');
+                setTotalUsers(response.data);//회원 수 설정
+            } catch(error){
+                console.error('Error fetching user count:', error);
+            }
+        };
+        fetchUserCount();
+    }, []);
 
     // 컴포넌트가 처음 렌더링될 때 데이터 정렬 및 초기화
     useEffect(() => {
@@ -81,6 +96,7 @@ const AdminUser = ({ allData }) => {
                     𝐒𝐞𝐚𝐫𝐜𝐡 𝐔𝐬𝐞𝐫
                 </Typography>
             </Box>
+           
             <div>
             <Divider sx={{ my: 2, borderBottomWidth: 3,  borderColor: '#999' }} /> 
             </div>
@@ -116,7 +132,10 @@ const AdminUser = ({ allData }) => {
                     </Button>
                 </Box>
             </Box>
-    
+                 {/*회원 수 출력*/}
+            <Typography variant="h6" gutterBottom>
+                [전체 회원 수] : {totalUsers} 명
+            </Typography>
             {/* 회원정보 테이블 */}
             <TableContainer component={Paper} className={styles.adminUserTableContainer}>
                 <Table className={styles.adminUserTable}>

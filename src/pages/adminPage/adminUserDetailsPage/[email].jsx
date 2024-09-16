@@ -63,6 +63,7 @@ const AdminUserDetails = observer(() => {
         profileImage: selectedFile, // 업로드된 이미지 파일 처리
       };
 
+      // 사용자 정보 업데이트 요청
       await viewUserStore.updateUserDetails(
         updatedUser.email,
         updatedUser.username,
@@ -70,6 +71,9 @@ const AdminUserDetails = observer(() => {
         updatedUser.birth,
         updatedUser.profileImage // 이미지가 있으면 전송
       );
+
+      // 사용자 정보 업데이트 후 다시 가져오기
+      await viewUserStore.fetchUserByEmail(updatedUser.email);
 
       alert("사용자 정보가 성공적으로 업데이트되었습니다.");
       setEditMode(false); // 수정 모드 종료
