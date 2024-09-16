@@ -8,6 +8,7 @@ import userStore from 'stores/userStore';
 import ReportModal from '@/pages/bbs/reportModal';
 
 
+
 const PostView = () => {
   const [comments, setComments] = useState([
     { id: 1, author: '까떼메야', content: '좋아요!나~ 놀러오세요!나~', date: '2024.07.24' },
@@ -18,7 +19,7 @@ const PostView = () => {
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
-
+  const [liked, setIsLiked] = useState(false);
   
   
   useEffect(() => {
@@ -31,6 +32,12 @@ const PostView = () => {
           // 댓글을 가져오는 부분 수정
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);  // 변수명 수정
           setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터를 설정
+
+           // 좋아요 상태 가져오기
+          const likeResponse = await axios.post(`http://localhost:8080/bbs/${id}/like`, {
+            params: { userId }
+          });
+          setIsLiked(likeResponse.data.userLiked);
         } catch (error) {
           console.error('Failed to fetch post:', error);
         } finally {
@@ -89,22 +96,32 @@ const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [liked, setIsLiked] = useState(false);
-  const userId = post.userId?.username || 'Anonymous';  // 사용자 아이디 또는 Anonymous
+  const [liked, setIsLiked] = useState(post.userLiked || false);
+  {/*const userId = post.userId?.username || 'Anonymous';*/}  // 사용자 아이디 또는 Anonymous
+  const userId = userStore.id || 'Anonymous';
   const [postData, setPost] = useState(post); 
   const postOwnerId = Number(post.userId?.id) || 0;
   const currentUserId = Number(userStore.id) || 0; // 현재 로그인한 사용자의 ID를 userStore에서 가져옵니다.
   
+ 
   
   const handleLikeClick = async () => {
     try {
-        const response = await axios.get(
-            `http://localhost:8080/bbs/${id}?likeToggle=${liked}`, 
-            { userId }
+        
+        const response = await axios.post(
+            `http://localhost:8080/bbs/${id}/like`, 
+            null,
+            { 
+              params: {
+                likeToggle: !liked,  // 현재 좋아요 상태를 반전시킨 값
+                userId: userId          // 사용자 ID를 쿼리 파라미터로 추가
+              }
+            }
+            
         );
         console.log('Response data:', response.data);
         setPost(response.data); // 받은 데이터를 업데이트
-        setIsLiked(!liked);   // 좋아요 상태 토글
+        setIsLiked(response.data);   // 좋아요 상태 토글
         console.log('Updated postData:', response.data);
     } catch (error) {
         console.error("Error toggling like:", error);
@@ -171,12 +188,14 @@ const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');
       <div className={styles.postMeta}>
         <div className={styles.author}>{userId}</div>
         <div className={styles.postInfo}>
+          
           <span 
             onClick={handleLikeClick} 
             style={{ fontSize: '20px', cursor: 'pointer', color: heartColor }}
           >
             {heartSymbol}{postData.likes}
           </span>
+          
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton

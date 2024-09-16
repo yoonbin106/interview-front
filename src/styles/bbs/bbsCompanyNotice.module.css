@@ -1,0 +1,116 @@
+/* bbsCompanyNotice.module.css */
+
+/* 테이블 관련 스타일 */
+.companyNoticeTableContainer {
+    margin-top: 20px;
+  }
+  
+  .companyNoticeTableHeaderCell {
+    font-weight: bold;
+    background-color: #5A8AF2;
+    color: white;
+    width: 150px;
+    white-space:nowrap;
+  }
+  
+  .companyNoticeTableLink {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .companyNoticeTableLink:hover {
+    text-decoration: underline;
+  }
+  
+  /* 레이아웃 및 컨테이너 스타일 */
+  .companyNoticeContainer {
+    display: flex;
+    margin: 30px 30px 30px 30px;
+    width: 100%;
+    height:1000px ;
+    justify-content: center;
+  }
+  
+  .companyNoticeSidebar {
+    border: solid 2px;
+    border-color: #DEFFF5;
+    margin: 10px 20px 10px 10px;
+    min-width: 200px;
+  }
+  
+  .companyNoticeContent {
+    background-color: white;
+    padding: 20px;
+    margin: 10px 10px 10px 10px;
+    border: solid 2px;
+    border-color: #DEFFF5;
+    min-width: 500px;
+    width: 1080px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  
+  .companyNoticeMainContainer {
+    padding: 20px;
+  }
+  
+  .companyNoticeTitle {
+    margin: 15px;
+    white-space: nowrap;
+    font-size: 30px;
+    font-weight:bold;
+  }
+  .companyNoticeTitleContainer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  
+  .companyNoticeTitleDivider {
+    border: 0;
+    height: 2px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .companyNoticeGridContainer {
+    margin-top: 20px;
+    max-width: 100%;
+  }
+  
+  .companyNoticeGridItem {
+    height: 56px;
+  }
+  
+  .companyNoticeSearchButton {
+    background-color: #5A8AF2;
+    &:hover {
+        background-color: #357ABD;
+    }
+    height: 56px;
+  }
+  .companyNoticeTitleCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  
+  
+  .companyNoticeButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  
+  .companyNoticeRegisterButton {
+    background-color: #5A8AF2;
+    margin-bottom : 20px;
+    padding: 10px 30px;
+  }
+  
+  .companyNoticeRegisterButton:hover {
+    background-color: #0056b3;
+  }

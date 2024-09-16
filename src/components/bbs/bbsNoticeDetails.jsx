@@ -1,105 +1,140 @@
-//adminNoticeDetails.jsx
-
-import React,{useState} from 'react';
-import{Button,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Paper,TextField,Typography,} from '@mui/material';
-import {useRouter} from 'next/router';
+import React, { useState, useEffect } from 'react';
+import { Button, Paper, TextField, Typography } from '@mui/material';
+import dynamic from 'next/dynamic';
 import styles from '@/styles/bbs/bbsNoticeDetails.module.css';
-import sidebar from '@/styles/bbs/bbsPage.module.css';
-import NestedList from '@/components/bbs/bbsSidebar';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
 
-const NoticeDetails=()=> {
+// Quill.js 동적 import 설정
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+const BbsNoticeDetails = ({ noticeData }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedNotice, setEditedNotice] = useState(noticeData || {});
+    
     const router = useRouter();
-    const [open,setOpen] = useState(false);
-    const [isEditing,setIsEditing] = useState(false);
-    const [editedNotice, setEditedNotice] = useState({
-        title: '2024년 하반기 공휴일 안내',
-        content: `안녕하세요.\n\n2024년 하반기 공휴일 일정을 안내드립니다.\n\n` +
-            `1. 8월 15일 (목) : 광복절\n` +
-            `2. 9월 13일 (금) ~ 9월 15일 (일) : 추석 연휴\n` +
-            `3. 10월 3일 (목) : 개천절\n` +
-            `4. 10월 9일 (수) : 한글날\n` +
-            `5. 12월 25일 (수) : 성탄절\n\n` +
-            `위 공휴일 동안 서비스 운영에 변동 사항이 있을 시 추가 공지를 통해 안내드리겠습니다.\n` +
-            `고객 여러분의 많은 양해 부탁드리며, 행복한 휴일 보내시길 바랍니다.\n\n감사합니다.`,
-        date: '2024-07-15',
-    });
+    const { noticeId } = router.query;
+
+    useEffect(() => {
+        if (!noticeData && noticeId) {
+            const fetchNotice = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/notice/${noticeId}`);
+                    setEditedNotice(response.data);
+                } catch (error) {
+                    console.error('Error fetching notice:', error);
+                }
+            };
+            fetchNotice();
+        }
+    }, [noticeId, noticeData]);
 
     
 
-    //입력 필드 값 변경 핸들러
-    const handleChange =(event) => {
-        const{name,value} = event.target;
+
+    const handleGoBack = () => {
+        router.push('/bbs/noticePage');
+    };
+
+    const handleChange = (value) => {
         setEditedNotice((prevNotice) => ({
             ...prevNotice,
-            [name]:value,
+            noticeContent: value,
         }));
     };
 
-    // 목록 버튼 클릭 핸들러
-    const handleGoToList = () => {
-        router.push('/bbs/noticePage'); // 공지사항 목록 페이지로 리다이렉트
-    };
+    if (!editedNotice.noticeTitle) {
+        return <div>Loading...</div>;
+    }
+
+    const renderHeader = () => (
+        <div className={styles.noticeDetailsHeader}>
+            {isEditing ? (
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="제목"
+                    name="noticeTitle"
+                    value={editedNotice.noticeTitle || ''}
+                    onChange={(e) =>
+                        setEditedNotice((prevNotice) => ({
+                            ...prevNotice,
+                            noticeTitle: e.target.value,
+                        }))
+                    }
+                    inputProps={{ style: { fontWeight: 'bold', fontSize: '1.5rem' } }}
+                />
+            ) : (
+                <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedNotice.noticeTitle}</h2>
+            )}
+            <p className={styles.noticeDetailsDate}>
+                {new Date(editedNotice.noticeCreatedTime).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                })}
+            </p>
+        </div>
+    );
+
+    const renderContent = () => (
+        <div className={styles.noticeDetailsContent}>
+            {isEditing ? (
+                <ReactQuill
+                    value={editedNotice.noticeContent}
+                    onChange={handleChange}
+                    placeholder="내용을 입력하세요" // Placeholder 추가
+                    modules={{
+                        toolbar: [
+                            [{ header: '1' }, { header: '2' }, { font: [] }],
+                            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+                            ['link', 'image', 'video'],
+                            ['clean'],
+                        ],
+                    }}
+                    formats={[
+                        'header', 'font', 'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'list', 'bullet', 'indent',
+                        'link', 'image', 'video'
+                    ]}
+                />
+            ) : (
+                <div className={styles.quillContent} dangerouslySetInnerHTML={{ __html: editedNotice.noticeContent }} />
+            )}
+        </div>
+    );
+
+    const renderButtons = () => (
+        <div className={styles.noticeDetailsButtonsContainer}>
+                <>
+                    <Button variant="contained" className={styles.noticeListButton} onClick={handleGoBack}>
+                        목록으로 돌아가기
+                    </Button>
+                </>
+           
+        </div>
+    );
 
     return (
-        <div className={sidebar.container}>
-        <div className={sidebar.sidebar}>
-            <NestedList/>
-        </div>
-        <div className={sidebar.content}>
-        <div className={styles.noticeDetailsContainer}>
-           <Paper elevation={3} className={styles.noticeDetailsPaper}>
-                <Typography variant="h6" gutterBottom className={styles.noticeDetailsGrayText}>
-                    [전체 공지사항]
-                </Typography>
-                <div className={styles.noticeDetailsHeader}>
-                    {isEditing ? (
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            label="제목"
-                            name="title"
-                            value={editedNotice.title}
-                            onChange={handleChange}
-                        />
-                    ) : (
-                        <h2>{editedNotice.title}</h2>
-                    )}
-                    <p>{editedNotice.date}</p>
-                </div>
-                <div className={styles.noticeDetailsContent}>
-                    {isEditing ? (
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            multiline
-                            rows={10}
-                            label="내용"
-                            name="content"
-                            value={editedNotice.content}
-                            onChange={handleChange}
-                        />
-                    ) : (
-                        editedNotice.content
-                    )}
-                </div>
-                
+        <div className={styles.noticeContent}>
+            <div className={styles.noticeDetailsContainer}>
+                <Paper elevation={3} className={styles.noticeDetailsPaper}>
+                    <Typography variant="h6" gutterBottom className={styles.noticeDetailsDate}>
+                        [전체 공지사항]
+                    </Typography>
+                    {renderHeader()}
+                    {renderContent()}
+                    {renderButtons()}
+                </Paper>
 
-                {/* 이전글 / 다음글 기능 */}
-                <div className={styles.noticeDetailsNavButtons}>
-                    <Button>&lt; 이전글</Button>
-                    <Button>다음글 &gt;</Button>
-                </div>
-                {/* 목록 버튼 추가 */}
-                <div className={styles.noticeDetailsListButton}>
-                    <Button variant="contained" color="primary" onClick={handleGoToList}>
-                        목록
-                    </Button>
-                </div>
-            </Paper>
-        </div>
-        </div>
+                
+            </div>
         </div>
     );
 };
 
-export default NoticeDetails;
+export default BbsNoticeDetails;
