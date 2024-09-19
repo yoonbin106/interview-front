@@ -130,3 +130,14 @@
 .commentInput button:hover {
   background-color: #0056b3;
 }
+
+.commentContainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 세로 가운데 정렬을 위한 옵션 */
+  
+}
+
+.commentContent{
+  flex-grow: 1; /* 댓글 내용이 아이콘 버튼을 밀어내도록 설정 */
+}

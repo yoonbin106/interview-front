@@ -71,7 +71,8 @@ const Bbs = () => {
                 return item.title.toLowerCase().includes(lowercasedFilter);
             }
             if (searchCategory === 'author') {
-                return item.author.toLowerCase().includes(lowercasedFilter);
+                console.log(item.username); 
+                return item.username && item.username.toLowerCase().includes(lowercasedFilter);
             }
             return false;
         });
@@ -112,15 +113,12 @@ const Bbs = () => {
                             </div>
                             <div className={styles.boardHeader}>
                                 <div className={styles.info}>
-                                    000 키워드로 검색된 글 <br /> {filteredPosts.length}개의 글
+                                {searchTerm 
+                                    ? `'${searchTerm}' 키워드로 검색된 글` 
+                                    : '전체 글 목록'}
+                                 <br /> {filteredPosts.length}개의 글
                                 </div>
-                                <div className={styles.boardHeaderControl}>
-                                    <select onChange={handleRowsPerPageChange} value={rowsPerPage}>
-                                        <option value={10}>10개씩</option>
-                                        <option value={20}>20개씩</option>
-                                        <option value={30}>30개씩</option>
-                                    </select>
-                                </div>
+                                
                                 <div className={styles.boardHeaderControl}>
                                     <select onChange={handleSortCriteriaChange} value={sortCriteria}>
                                         <option value="bbsId">글 번호</option>
@@ -138,7 +136,7 @@ const Bbs = () => {
                                             <TableCell align="center" className={styles.bbsHeaderCell}>작성자</TableCell>
                                             <TableCell align="center" className={styles.bbsHeaderCell}>작성날짜</TableCell>
                                             <TableCell align="center" className={styles.bbsHeaderCell}>조회수</TableCell>
-                                            <TableCell align="center" className={styles.bbsHeaderCell}>좋아요</TableCell>
+                                            
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -156,7 +154,7 @@ const Bbs = () => {
                                                 <TableCell align="center">{post.username}</TableCell>
                                                 <TableCell align="center">{new Date(post.createdAt).toLocaleDateString()}</TableCell>
                                                 <TableCell align="center">{post.hitCount || 0}</TableCell>
-                                                <TableCell align="center">{post.likes || 0}</TableCell>
+                                                
                                             </TableRow>
                                         ))}
                                     </TableBody>
