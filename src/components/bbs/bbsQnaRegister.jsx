@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import {useRouter} from 'next/router';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import styles from '@/styles/bbs/bbsQnaRegister.module.css';
 import axios from 'axios';
@@ -11,8 +10,8 @@ const BbsQnaRegister = observer(() => {
   const [category, setCategory] = useState('계정 및 로그인');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const router = useRouter();
-  
+  const [password, setPassword] = useState(''); // 비밀번호 입력 필드 추가
+
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
@@ -25,27 +24,30 @@ const BbsQnaRegister = observer(() => {
     setContent(event.target.value);
   };
 
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
   const handleSubmit = async() => {
-    if (!title || !content) {
-      alert('제목과 내용을 모두 입력해주세요.');
+    if (!title || !content || !password) {
+      alert('제목, 내용, 비밀번호를 모두 입력해주세요.');
       return;
     }
 
     const qnaData = {
-      category: category, //선택된 카테고리 (String 값)
+      category: category, // 선택된 카테고리
       qnaTitle: title,
       qnaQuestion: content,
-      id: userStore.id
+      qnaPassword: password, // 비밀번호 필드 추가
+      email: userStore.email // 이메일 추가
     };
 
-    try{
-      await axios.post('http://localhost:8080/api/qna',qnaData);
-      
+    try {
+      await axios.post('http://localhost:8080/api/qna', qnaData);
       alert('문의가 성공적으로 등록되었습니다.');
-
       window.location.href = 'http://localhost:3000/bbs/bbsQnaListPage';
-    }catch (error) {
-      console.error('문의 등록 중 오류 발생:',error);
+    } catch (error) {
+      console.error('문의 등록 중 오류 발생:', error);
       alert('문의 등록에 실패했습니다.');
     }
   };
@@ -89,6 +91,16 @@ const BbsQnaRegister = observer(() => {
         className={styles.bbsQnaRegisterTextField}
       />
 
+      <TextField
+        variant="outlined"
+        fullWidth
+        placeholder="비밀번호를 입력해주세요." // 비밀번호 입력 필드 추가
+        type="password"
+        value={password}
+        onChange={handlePasswordChange}
+        className={styles.bbsQnaRegisterTextField}
+      />
+
       <div className={styles.bbsQnaRegisterCharacterCount}>{content.length} / 1000자</div>
 
       <Button
@@ -99,17 +111,6 @@ const BbsQnaRegister = observer(() => {
       >
         문의 등록
       </Button>
-
-      <div className={styles.bbsQnaRegisterInfoText}>
-        - 고객님의 문의는 1:1 문의를 통해 신속하고 정확하게 답변드리겠습니다.<br />
-        - 아이디/비밀번호 관련 문의는 개인정보 보호를 위해 일부 안내에 제한이 있을 수 있습니다. 먼저 사이트 내에서 아이디 및 비밀번호 찾기를 시도해 보세요.<br/>
-        - 결제 관련 문의 시에는 결제 내역, 이용권 이름, 결제 일자, 결제자명 등의 정보를 제공해 주시면 보다 정확한 답변을 드릴 수 있습니다.<br/>
-        - 기타 사항 문의하실 때는 서비스와 관련된 구체적인 상황과 함께 문의 내용을 상세히 적어 주시면 더 신속하고 정확한 지원이 가능합니다."<br/>
-        - 자주 묻는 질문(FAQ)을 통해 궁금하신 내용을 빠르게 확인하실 수 있습니다.<br />
-        <br/>
-        - 접수된 문의는 운영시간 내에 확인 후 답변드리며, 주말 및 공휴일에는 답변이 지연될 수 있습니다.<br />
-        - 최대한 빠른 답변을 드리기 위해 노력하겠으며, 문의가 밀릴 경우 답변 시간이 다소 늦어질 수 있음을 양해 부탁드립니다.
-      </div>
     </div>
   );
 });

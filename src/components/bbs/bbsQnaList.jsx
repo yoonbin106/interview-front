@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Box, Typography, Collapse } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead, Box, Typography, Collapse, TextField, Button } from '@mui/material';
 import axios from 'axios';
 import styles from '@/styles/bbs/bbsQnaList.module.css';
 
@@ -8,10 +8,12 @@ const BbsQnaList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // 에러 상태를 저장하는 상태
   const [openRowIndexes, setOpenRowIndexes] = useState([]); // 여러 행을 동시에 열기 위한 상태
+  const [inputPasswords, setInputPasswords] = useState({}); // 비밀번호 입력 상태 저장
+  const [verifiedIndexes, setVerifiedIndexes] = useState([]); // 비밀번호 검증된 문의글을 저장
 
   // Qna 상태를 텍스트로 변환하는 함수 추가
   const getStatusText = (status) => {
-    switch(status) {
+    switch (status) {
       case 'N':
         return '문의 확인 전';
       case 'T':
@@ -23,11 +25,30 @@ const BbsQnaList = () => {
     }
   };
 
+  //시간 표시 format
+  const formatDateTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    return date.toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+
+  //이메일 포맷을 처리하는 함수(앞 4글자만 보이고, 나머지는 *로 대체)
+  const formatEmail = (email) => {
+    const [localPart, domain] = email.split('@');
+    const maskedLocalPart = localPart.length > 4 ? localPart.slice(0,4) + '*'.repeat(localPart.length-4) : localPart;
+    return `${maskedLocalPart}@${domain}`
+  }
   useEffect(() => {
     const fetchQnaData = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/qna');
-        const sortedData = response.data.sort((a,b) => new Date(b.qnaCreatedTime) - new Date(a.qnaCreatedTime));
+        const sortedData = response.data.sort((a, b) => new Date(b.qnaCreatedTime) - new Date(a.qnaCreatedTime));
         setQnaData(sortedData);
       } catch (error) {
         setError('데이터를 가져오는 중 오류가 발생했습니다.');
@@ -44,13 +65,34 @@ const BbsQnaList = () => {
   const toggleRow = (index) => {
     setOpenRowIndexes((prevOpenIndexes) => {
       if (prevOpenIndexes.includes(index)) {
-        // 이미 열려있는 행이면 닫기
-        return prevOpenIndexes.filter((i) => i !== index);
+        return prevOpenIndexes.filter((i) => i !== index); // 이미 열려있는 행이면 닫기
       } else {
-        // 열려있지 않은 행이면 열기
-        return [...prevOpenIndexes, index];
+        return [...prevOpenIndexes, index]; // 열려있지 않은 행이면 열기
       }
     });
+  };
+
+  // 비밀번호 입력 핸들러
+  const handlePasswordChange = (e, index) => {
+    setInputPasswords({ ...inputPasswords, [index]: e.target.value });
+  };
+
+  // 비밀번호 확인 핸들러
+  const handleVerifyPassword = async (index, qnaId) => {
+    const password = inputPasswords[index];
+    try {
+      const response = await axios.get(`http://localhost:8080/api/qna/${qnaId}`, {
+        params: { password: password }
+      });
+      if (response.status === 200) {
+        setVerifiedIndexes((prev) => [...prev, index]); // 비밀번호가 맞으면 해당 문의글을 검증된 리스트에 추가
+      } else {
+        alert('비밀번호가 올바르지 않습니다.');
+      }
+    } catch (error) {
+      console.error('비밀번호 확인 중 오류 발생:', error);
+      alert('비밀번호 확인에 실패했습니다.');
+    }
   };
 
   if (error) {
@@ -59,7 +101,7 @@ const BbsQnaList = () => {
 
   return (
     <div className={styles.bbsQnaListContainer}>
-      <Typography variant="h3" gutterBottom align="left" style={{fontWeight:'bold'}} >
+      <Typography variant="h3" gutterBottom align="left" style={{ fontWeight: 'bold' }}>
         1:1 문의내역
       </Typography>
       {qnaData.length === 0 ? (
@@ -72,59 +114,82 @@ const BbsQnaList = () => {
           <p className={styles.bbsQnaListEmptyText}>문의하신 내역이 없습니다.</p>
         </div>
       ) : (
-
         <TableContainer component={Paper} className={styles.bbsQnaListTableContainer}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell align="center" className={styles.bbsQnaListHeaderCell}>글 번호</TableCell>
                 <TableCell align="center" className={styles.bbsQnaListHeaderCell}>카테고리</TableCell>
-                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>제목</TableCell>
-                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>작성날짜</TableCell>
+                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>작성자</TableCell>
+                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>이메일</TableCell>
+                <TableCell align="center" className={styles.bbsQnaListHeaderCell}>문의등록날짜</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {qnaData.map((row,index) => (
+              {qnaData.map((row, index) => (
                 <React.Fragment key={row.qnaId}>
-                <TableRow hover onClick={() => toggleRow(index)} style={{ cursor: 'pointer'}}>
-                  <TableCell align="center">{row.qnaId}</TableCell> {/* 글 번호 표시 */}
-                  <TableCell align="center">[{row.qnaCategory}]</TableCell> {/* 카테고리 표시 */}
-                  <TableCell align="center">{row.qnaTitle}</TableCell>
-                  <TableCell align="center">{row.qnaCreatedTime}</TableCell> {/* 작성 날짜 표시 */}
+                  <TableRow hover onClick={() => toggleRow(index)} style={{ cursor: 'pointer' }}>
+                    <TableCell align="center">{row.qnaId}</TableCell> {/* 글 번호 표시 */}
+                    <TableCell align="center">[{row.qnaCategory}]</TableCell> {/* 카테고리 표시 */}
+                    <TableCell align="center">{row.user.username}</TableCell>
+                    <TableCell align="center">{formatEmail(row.user.email)}</TableCell> {/* 작성 날짜 표시 */}
+                   <TableCell align="center">{formatDateTime(row.qnaCreatedTime)}</TableCell> {/* 등록 날짜 표시 */}
                   </TableRow>
                   <TableRow>
-                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                      {/* Collapse 컴포넌트로 내용 표시 */}
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
                       <Collapse in={openRowIndexes.includes(index)} timeout="auto" unmountOnExit>
                         <Box margin={1}>
-                          <Typography variant="body1">
-                            <strong>문의 카테고리:　</strong>{row.qnaCategory}
-                          </Typography> {/* 내용 표시 */}
-                          <Typography variant="body1">
-                            <strong>작성날짜:　</strong>{row.qnaCreatedTime}
-                          </Typography>
-                          <br/>
-                          <Typography variant="body1">
-                            <strong>문의내역:　</strong>
-                            {row.qnaQuestion}
-                          </Typography>
-                          <br/>
-                          <Box marginTop={2} padding={2} style={{ backgroundColor: '#f9f9f9', border: '1px solid #ddd' }}>
-                            <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-                              관리자 확인 상태:
-                            </Typography>
-                            <Typography variant="body1" style={{ marginLeft: '8px' }}>
-                              {getStatusText(row.qnaStatus)}
-                            </Typography>
-                            <br/>
-                            <Typography variant="body1" style={{ fontWeight: 'bold', marginTop: '16px' }}>
-                              답변:
-                            </Typography>
-                            <Typography variant="body1" 
-                            style={{ marginLeft: '8px',color: row.qnaAnswer ? 'black' : 'gray', }}>
-                              {row.qnaAnswer ? row.qnaAnswer : '최대한 빠른 시일 내에 답변 드리겠습니다.'}
-                            </Typography>
-                          </Box>
+                          {/* 비밀번호가 맞으면 내용 보여주기 */}
+                          {verifiedIndexes.includes(index) ? (
+                            <>
+                              <Typography variant="body1">
+                                <strong>문의 카테고리:　</strong>{row.qnaCategory}
+                              </Typography>
+                              <Typography variant="body1">
+                                <strong>문의 제목:　</strong>{row.qnaTitle}
+                              </Typography>
+                              <br />
+                              <Typography variant="body1">
+                                <strong>문의내역:　</strong>
+                                {row.qnaQuestion}
+                              </Typography>
+                              <br />
+                              <Box marginTop={2} padding={2} style={{ backgroundColor: '#f9f9f9', border: '1px solid #ddd' }}>
+                                <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                                  관리자 확인 상태:
+                                </Typography>
+                                <Typography variant="body1" style={{ marginLeft: '8px' }}>
+                                  {getStatusText(row.qnaStatus)}
+                                </Typography>
+                                <br />
+                                <Typography variant="body1" style={{ fontWeight: 'bold', marginTop: '16px' }}>
+                                  답변:
+                                </Typography>
+                                <Typography variant="body1" style={{ marginLeft: '8px', color: row.qnaAnswer ? 'black' : 'gray' }}>
+                                  {row.qnaAnswer ? row.qnaAnswer : '최대한 빠른 시일 내에 답변 드리겠습니다.'}
+                                </Typography>
+                              </Box>
+                            </>
+                          ) : (
+                            <Box margin={1}>
+                              <TextField
+                                variant="outlined"
+                                label="비밀번호를 입력해주세요."
+                                type="password"
+                                fullWidth
+                                value={inputPasswords[index] || ''}
+                                onChange={(e) => handlePasswordChange(e, index)}
+                              />
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleVerifyPassword(index, row.qnaId)}
+                                className={styles.bbsQnaRegisterSubmitButton}
+                              >
+                                비밀번호 입력
+                              </Button>
+                            </Box>
+                          )}
                         </Box>
                       </Collapse>
                     </TableCell>

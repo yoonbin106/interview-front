@@ -18,7 +18,7 @@ const AdminQnaDetails = ({ onSubmit }) => {
             try {
                 // qnaId가 존재하는지 확인
                 if (qnaId) {
-                    const response = await axios.get(`http://localhost:8080/api/qna/${qnaId}`);
+                    const response = await axios.get(`http://localhost:8080/api/qna/details/${qnaId}`);
                     setQnaDetail(response.data);
                     setResponse(response.data.qnaAnswer || '');
                     setCategory(response.data.qnaCategory);
@@ -61,7 +61,7 @@ const AdminQnaDetails = ({ onSubmit }) => {
             qnaStatus: qnaStatus,
         };
 
-        axios.put(`http://localhost:8080/api/qna/${qnaId}`, updateQna)
+        axios.put(`http://localhost:8080/api/qna/answer/${qnaId}`, updateQna)
             .then(() => {
                 alert(`답변을 등록하였습니다. 문의상태가 '${getStatusText(qnaStatus)}'(으)로 변경되었습니다.`);
                 router.push('http://localhost:3000/adminPage/adminQnaPage');
