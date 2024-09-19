@@ -130,3 +130,40 @@
 .commentInput button:hover {
   background-color: #0056b3;
 }
+
+.reportedContainer {
+  background-color: #5A8AF2; /* 밝은 경고 배경 색 */
+  border: 1px solid #11100b; /* 경계선 색 */
+  border-radius: 4px; /* 살짝 둥근 모서리 */
+  padding: 16px; /* 안쪽 여백 */
+  margin-bottom: 16px; /* 아래 여백 */
+  color: #ffffff; /* 경고 메시지 텍스트 색 */
+  font-weight: bold; /* 텍스트를 굵게 */
+  font-size: 20px; /* 텍스트 크기 */
+  text-align: center; /* 가운데 정렬 */
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 8px; /* 아이콘과 텍스트 사이의 여백 */
+  font-size: 30px; /* 아이콘 크기 */
+  vertical-align: middle; /* 텍스트와 아이콘을 중간 정렬 */
+}
+
+.reportedCommentContainer{
+  background-color: #e1e1e2; /* 밝은 경고 배경 색 */
+
+  border-radius: 4px; /* 살짝 둥근 모서리 */
+  padding: 1px; /* 안쪽 여백 */
+  margin-bottom: 4px; /* 아래 여백 */
+  color: #000000; /* 경고 메시지 텍스트 색 */
+  font-weight: bold; /* 텍스트를 굵게 */
+  font-size: 13px; /* 텍스트 크기 */
+  text-align: left; /* 가운데 정렬 */
+}
+.commentIcon{
+  display: inline-block;
+  margin-right: 8px; /* 아이콘과 텍스트 사이의 여백 */
+  font-size: 15px; /* 아이콘 크기 */
+  vertical-align: middle; /* 텍스트와 아이콘을 중간 정렬 */
+}

@@ -30,8 +30,9 @@ const AdminReportedPost = () => {
         const fetchReportedPosts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/adminreported/reportedposts');
+                const filteredPosts = response.data.filter(post => post.deletedReason === 1);
                 // 내림차순 정렬 (최신 글이 위로)
-                const sortedPosts = response.data.sort((a, b) => new Date(b.reportedAt) - new Date(a.reportedAt));
+                const sortedPosts = filteredPosts.sort((a, b) => new Date(b.reportedAt) - new Date(a.reportedAt));
                 console.log('API 응답 데이터:', response.data);
                 setReportedPosts(sortedPosts);
                 setFilteredReportedPost(sortedPosts);

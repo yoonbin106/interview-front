@@ -49,7 +49,7 @@ export default function AdminReportedPostDetailsPage() {
     const handleRestore = () => {
         if (typeof window !== 'undefined') {
             if (window.confirm("게시글을 [신고->일반] 게시글로 복구하시겠습니까?")) {
-                axios.put(`http://localhost:8080/api/adminreported/restorepost/${reportId}`)
+                axios.put(`http://localhost:8080/api/adminreported/updatestatus/${reportId}/VISIBLE`)
                     .then(() => {
                         alert('게시글이 복구되었습니다.');
                         router.push('/adminPage/adminReportedPostPage');

@@ -11,10 +11,9 @@ const PostView = () => {
   const [comments, setComments] = useState([]);
   const router = useRouter();
   const { id, increment } = router.query;  // URL 파라미터에서 ID를 가져옴
-  const [post, setPost] = useState(null); // 포스트 데이터를 저장할 상태
+  const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
-  const [liked, setIsLiked] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -23,16 +22,10 @@ const PostView = () => {
           const incrementValue = increment === 'false' ? 'false' : 'true';
           const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=${incrementValue}`);
           setPost(response.data);
-
-          // 댓글을 가져오는 부분 수정
+          
+          // 댓글 가져오기
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);
-          setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터를 설정
-
-          // 좋아요 상태 가져오기
-          const likeResponse = await axios.post(`http://localhost:8080/bbs/${id}/like`, {
-            params: { userId: userStore.id }
-          });
-          setIsLiked(likeResponse.data.userLiked);
+          setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터 설정
         } catch (error) {
           console.error('Failed to fetch post:', error);
         } finally {
@@ -48,13 +41,8 @@ const PostView = () => {
     return <div>Loading...</div>;
   }
 
-  if (!post) {
+  if (!post || Object.keys(post).length === 0) {
     return <div>No post found</div>;
-  }
-
-  // 신고된 게시물일 경우 해당 메시지 출력
-  if (post.deletedReason === 1) {
-    return <div>신고된 게시글입니다.</div>;
   }
 
   const openReportModal = () => {
@@ -71,19 +59,19 @@ const PostView = () => {
         <PostContent post={post} openReportModal={openReportModal} />
         <div className={styles.divider}></div>
         <h3>댓글</h3>
-        <CommentList comments={comments} setComments={setComments} />
+        <CommentList comments={comments} setComments={setComments} />  {/* 댓글 리스트 */}
         <div className={styles.divider}></div>
         <h3>댓글 쓰기</h3>
-        <CommentInput postId={id} setComments={setComments} />
+        <CommentInput postId={id} setComments={setComments} />  {/* 댓글 입력 */}
       </div>
 
-      {/* 신고 모달 컴포넌트 추가 */}
-      <ReportModal 
-        open={isReportModalOpen} 
-        onClose={closeReportModal} 
+      {/* 신고 모달 */}
+      <ReportModal
+        open={isReportModalOpen}
+        onClose={closeReportModal}
         postId={id}
-        postAuthor={post.username}  // 작성자 이름 전달
-        postContent={post.content}  // 게시글 내용 전달
+        postAuthor={post.username}
+        postContent={post.content}
       />
     </div>
   );
@@ -93,31 +81,35 @@ const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [liked, setIsLiked] = useState(post.userLiked || false);
-  const userId = userStore.id || 'Anonymous';  // 사용자 아이디 또는 Anonymous
-  const [postData, setPost] = useState(post); 
+  const [liked, setIsLiked] = useState(false);
+  const userId = post.userId?.username || 'Anonymous';
+  const [postData, setPost] = useState(post);
   const postOwnerId = Number(post.userId?.id) || 0;
-  const currentUserId = Number(userStore.id) || 0; // 현재 로그인한 사용자의 ID를 userStore에서 가져옴
+  const currentUserId = Number(userStore.id) || 0; 
+
+  // 신고된 게시글 처리
+  if (post.deletedReason === 1) {
+    return (
+      <div className={styles.reportedContainer}>
+        <span className={styles.icon}>⚠️</span>
+        신고 접수된 게시글, 현재 관리자의 검토가 진행 중입니다.
+      </div>
+    );
+  }
 
   const handleLikeClick = async () => {
     try {
-      const response = await axios.post(
-        `http://localhost:8080/bbs/${id}/like`, 
-        null,
-        { 
-          params: {
-            likeToggle: !liked,  // 현재 좋아요 상태를 반전시킨 값
-            userId: userId          // 사용자 ID를 쿼리 파라미터로 추가
-          }
-        }
+      const response = await axios.get(
+        `http://localhost:8080/bbs/${id}?likeToggle=${liked}`,
+        { userId }
       );
-      setPost(response.data); // 받은 데이터를 업데이트
-      setIsLiked(response.data);   // 좋아요 상태 토글
+      setPost(response.data);
+      setIsLiked(!liked);
     } catch (error) {
       console.error("Error toggling like:", error);
     }
   };
-  
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -135,16 +127,16 @@ const PostContent = ({ post, openReportModal }) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
         const response = await axios.delete(`http://localhost:8080/bbs/${id}`, {
-          params: { userId: userStore.id },  // userId를 query parameter로 전달
+          params: { userId: userStore.id },
         });
-  
+
         if (response.status === 200) {
           router.push('/bbs');
         } else {
           alert('삭제를 실패하였습니다');
         }
       } catch (error) {
-        console.error('Error deleting post:', error); // 오류 발생 시 콘솔에 상세 정보 출력
+        console.error('Error deleting post:', error);
         alert('삭제를 실패하였습니다');
       }
     }
@@ -152,11 +144,10 @@ const PostContent = ({ post, openReportModal }) => {
   };
 
   const handleReport = () => {
-    openReportModal();  // 신고 모달 열기
-    handleClose();  // 메뉴 닫기
+    openReportModal();
+    handleClose();
   };
 
-  // 내 게시물에서는 수정/삭제 버튼만, 다른 사람의 게시물에서는 신고 버튼만 보이도록 조건 처리
   const menuItems = postOwnerId === currentUserId ? [
     <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
     <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>
@@ -164,9 +155,8 @@ const PostContent = ({ post, openReportModal }) => {
     <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
   ];
 
-  // 하트 색상과 심볼 결정
-  const heartColor = postData.likes === 0 ? 'gray' : (liked ? 'gray' : 'red');  // liked 상태에 따라 색상 변경
-  const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');   // liked 상태에 따라 심볼 변경
+  const heartColor = postData.likes === 0 ? 'gray' : (liked ? 'gray' : 'red');
+  const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');
 
   return (
     <div className={styles.postContainer}>
@@ -174,13 +164,12 @@ const PostContent = ({ post, openReportModal }) => {
       <div className={styles.postMeta}>
         <div className={styles.author}>{userId}</div>
         <div className={styles.postInfo}>
-          <span 
-            onClick={handleLikeClick} 
+          <span
+            onClick={handleLikeClick}
             style={{ fontSize: '20px', cursor: 'pointer', color: heartColor }}
           >
             {heartSymbol}{postData.likes}
           </span>
-          
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton
@@ -225,6 +214,7 @@ const PostContent = ({ post, openReportModal }) => {
   );
 };
 
+
 // 댓글 목록 컴포넌트
 const CommentList = ({ comments, setComments }) => {
   return (
@@ -236,14 +226,24 @@ const CommentList = ({ comments, setComments }) => {
   );
 };
 
+// 신고된 댓글 처리 추가
 const CommentItem = ({ comment, setComments }) => {
-  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
-  const [newContent, setNewContent] = useState(comment.content); // 수정할 댓글 내용
+  const [isEditing, setIsEditing] = useState(false); 
+  const [newContent, setNewContent] = useState(comment.content); 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태
+  const [isReportModalOpen, setReportModalOpen] = useState(false); 
   
-  const commentOwnerId = Number(comment.user?.id) || 0;  // 댓글 작성자의 ID를 숫자로 변환하여 처리
-  const currentUserId = Number(userStore.id) || 0;  // 현재 로그인한 사용자 ID를 숫자로 변환하여 처리
+  const commentOwnerId = Number(comment.user?.id) || 0;  
+  const currentUserId = Number(userStore.id) || 0;  
+
+  if (comment.deletedReason === 1) {
+    return (
+      <div className={styles.reportedCommentContainer}>
+        <span className={styles.commentIcon}>⚠️</span>
+        신고 접수된 댓글, 현재 관리자의 검토가 진행 중입니다.
+      </div>
+    );
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -254,24 +254,24 @@ const CommentItem = ({ comment, setComments }) => {
   };
 
   const handleEditClick = () => {
-    setIsEditing(true); // 수정 모드로 전환
+    setIsEditing(true);
     handleClose();
   };
 
   const handleSaveClick = async () => {
     try {
-      const commentId = comment.commentId;  // 수정할 댓글의 ID
+      const commentId = comment.commentId;  
       const response = await axios.put(`http://localhost:8080/bbs/comments/${commentId}`, {
-        content: newContent,  // 수정된 내용
+        content: newContent,  
       });
-  
+
       if (response.status === 200) {
         setComments((prevComments) =>
           prevComments.map((c) => 
-            c.commentId === commentId ? { ...c, content: newContent } : c // 특정 commentId에 맞는 댓글만 수정
+            c.commentId === commentId ? { ...c, content: newContent } : c 
           )
         );
-        setIsEditing(false); // 수정 모드 종료
+        setIsEditing(false); 
       } else {
         console.error("Failed to update comment:", response.statusText);
       }
@@ -295,12 +295,12 @@ const CommentItem = ({ comment, setComments }) => {
   };
 
   const openReportModal = () => {
-    setReportModalOpen(true);  // 신고 모달 열기
+    setReportModalOpen(true);
     handleClose();
   };
 
   const closeReportModal = () => {
-    setReportModalOpen(false);  // 신고 모달 닫기
+    setReportModalOpen(false);
   };
   
   return (
@@ -335,22 +335,21 @@ const CommentItem = ({ comment, setComments }) => {
         </>
       )}
 
-      {/* 신고 모달 */}
       <ReportModal 
         open={isReportModalOpen} 
         onClose={closeReportModal} 
-        commentId={comment.commentId}  // 댓글 ID 전달
-        commentAuthor={comment.username}  // 댓글 작성자 전달
-        commentContent={comment.content}  // 댓글 내용 전달
+        commentId={comment.commentId}
+        commentAuthor={comment.username}
+        commentContent={comment.content}
       />
     </div>
   );
 };
 
-// 댓글 입력 컴포넌트 (서버로 등록 요청)
+// 댓글 입력 컴포넌트
 const CommentInput = ({ postId, setComments }) => {
   const [content, setContent] = useState('');
-  const userId = userStore.id; // 현재 로그인한 사용자 ID 가져오기
+  const userId = userStore.id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -363,13 +362,13 @@ const CommentInput = ({ postId, setComments }) => {
 
         const newComment = response.data;
         setComments((prevComments) => [...prevComments, newComment]);
-        setContent('');  // 입력 필드 초기화
+        setContent(''); 
       } catch (error) {
         console.error('Failed to add comment:', error);
       }
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className={styles.commentInput}>
       <input

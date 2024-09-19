@@ -22,8 +22,12 @@ export default function AdminReportedComment() {
     axios.get('http://localhost:8080/api/adminreported/reportedcomments')
       .then(response => {
         console.log('Fetched reported comments:', response.data);
-        setReportedComments(response.data);
-        setFilteredComments(response.data); // 초기 데이터 설정
+
+         // deletedReason이 1인 댓글만 필터링
+      const filteredData = response.data.filter(comment => comment.deletedReason === 1);
+
+        setReportedComments(filteredData);
+        setFilteredComments(filteredData); // 초기 데이터 설정
       })
       .catch(error => {
         console.error('Error fetching reported comments:', error);
@@ -93,13 +97,13 @@ export default function AdminReportedComment() {
   };
 
   // 댓글 복구
-  const handleRestore = (reportId) => {
+  const handleRestore = (commentId) => {  // 수정: commentId를 매개변수로 사용
     if (window.confirm("댓글을 복구하시겠습니까?")) {
-      axios.put(`http://localhost:8080/api/adminreported/restorecomment/${reportId}`)
+      axios.put(`http://localhost:8080/api/adminreported/restorecomment/${commentId}`)  // commentId로 복구 요청
         .then(() => {
           alert("댓글이 복구되었습니다.");
           router.reload();
-          setReportedComments(reportedComments.filter(comment => comment.reportId !== reportId)); // 상태 업데이트
+          setReportedComments(reportedComments.filter(comment => comment.commentId !== commentId)); // 상태 업데이트
           setOpenRowIndex(null);  // 아코디언 닫기
         })
         .catch(error => {
@@ -159,7 +163,7 @@ export default function AdminReportedComment() {
                         </p>
                         <div className={styles.reportedCommentTableButtonContainer}>
                           <Button variant="contained" color="error" onClick={() => handleDelete(row.commentId)}>댓글 영구삭제</Button>
-                          <Button variant="contained" color="primary" onClick={() => handleRestore(row.reportId)}>댓글 복구</Button>
+                          <Button variant="contained" color="primary" onClick={() => handleRestore(row.commentId)}>댓글 복구</Button>  {/* 수정: commentId 전달 */}
                         </div>
                       </Box>
                     </Collapse>
