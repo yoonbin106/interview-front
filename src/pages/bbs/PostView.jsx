@@ -14,24 +14,28 @@ const PostView = () => {
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
-
+  
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
         try {
           const incrementValue = increment === 'false' ? 'false' : 'true';
           const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=${incrementValue}`);
-          setPost(response.data);
+         
+          // 포맷팅된 날짜를 추가하여 상태 업데이트
+          const postData = response.data;
+          const formattedDate = new Date(postData.createdAt).toLocaleTimeString('ko-KR', {
+              hour: '2-digit',
+              minute: '2-digit',
+          });
+
+          setPost({ ...postData, formattedDate });
           
           // 댓글 가져오기
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);
           setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터를 설정
 
-          // 좋아요 상태 가져오기
-          const likeResponse = await axios.post(`http://localhost:8080/bbs/${id}/like`, {
-            params: { userId: userStore.id }
-          });
-          setIsLiked(likeResponse.data.userLiked);
+          
         } catch (error) {
             console.error('Failed to fetch post:', error);
         } finally {
@@ -103,24 +107,7 @@ const PostContent = ({ post, openReportModal }) => {
     );
   }
 
-  const handleLikeClick = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/bbs/${id}/like`, 
-        null,
-        { 
-          params: {
-            likeToggle: !liked,  // 현재 좋아요 상태를 반전시킨 값
-            userId: userId          // 사용자 ID를 쿼리 파라미터로 추가
-          }
-        }
-      );
-      setPost(response.data); // 받은 데이터를 업데이트
-      setIsLiked(response.data);   // 좋아요 상태 토글
-    } catch (error) {
-      console.error("Error toggling like:", error);
-    }
-  };
+  
   
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -167,22 +154,16 @@ const PostContent = ({ post, openReportModal }) => {
     <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
   ];
 
-  // 하트 색상과 심볼 결정
-  const heartColor = postData.likes === 0 ? 'gray' : (liked ? 'gray' : 'red');  // liked 상태에 따라 색상 변경
-  const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');   // liked 상태에 따라 심볼 변경
+  
 
   return (
     <div className={styles.postContainer}>
       <h2>{post.title}</h2>
       <div className={styles.postMeta}>
-        <div className={styles.author}>{post.username}</div>
+        <div className={styles.author}>
+            {post.username} <span className={styles.postTime}>({post.formattedDate})</span>
+        </div>
         <div className={styles.postInfo}>
-          <span 
-            onClick={handleLikeClick} 
-            style={{ fontSize: '20px', cursor: 'pointer', color: heartColor }}
-          >
-            {heartSymbol}{postData.likes}
-          </span>
           
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
