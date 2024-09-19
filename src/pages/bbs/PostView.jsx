@@ -25,9 +25,15 @@ const PostView = () => {
           
           // 댓글 가져오기
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);
-          setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터 설정
+          setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터를 설정
+
+          // 좋아요 상태 가져오기
+          const likeResponse = await axios.post(`http://localhost:8080/bbs/${id}/like`, {
+            params: { userId: userStore.id }
+          });
+          setIsLiked(likeResponse.data.userLiked);
         } catch (error) {
-          console.error('Failed to fetch post:', error);
+            console.error('Failed to fetch post:', error);
         } finally {
           setLoading(false);
         }
@@ -81,9 +87,9 @@ const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [liked, setIsLiked] = useState(false);
-  const userId = post.userId?.username || 'Anonymous';
-  const [postData, setPost] = useState(post);
+  const [liked, setIsLiked] = useState(post.userLiked || false);
+  const userId = userStore.id || 'Anonymous';  // 사용자 아이디 또는 Anonymous
+  const [postData, setPost] = useState(post); 
   const postOwnerId = Number(post.userId?.id) || 0;
   const currentUserId = Number(userStore.id) || 0; 
 
@@ -99,17 +105,23 @@ const PostContent = ({ post, openReportModal }) => {
 
   const handleLikeClick = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/bbs/${id}?likeToggle=${liked}`,
-        { userId }
+      const response = await axios.post(
+        `http://localhost:8080/bbs/${id}/like`, 
+        null,
+        { 
+          params: {
+            likeToggle: !liked,  // 현재 좋아요 상태를 반전시킨 값
+            userId: userId          // 사용자 ID를 쿼리 파라미터로 추가
+          }
+        }
       );
-      setPost(response.data);
-      setIsLiked(!liked);
+      setPost(response.data); // 받은 데이터를 업데이트
+      setIsLiked(response.data);   // 좋아요 상태 토글
     } catch (error) {
       console.error("Error toggling like:", error);
     }
   };
-
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -155,21 +167,23 @@ const PostContent = ({ post, openReportModal }) => {
     <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
   ];
 
-  const heartColor = postData.likes === 0 ? 'gray' : (liked ? 'gray' : 'red');
-  const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');
+  // 하트 색상과 심볼 결정
+  const heartColor = postData.likes === 0 ? 'gray' : (liked ? 'gray' : 'red');  // liked 상태에 따라 색상 변경
+  const heartSymbol = postData.likes === 0 ? '🤍' : (liked ? '🤍' : '❤️');   // liked 상태에 따라 심볼 변경
 
   return (
     <div className={styles.postContainer}>
       <h2>{post.title}</h2>
       <div className={styles.postMeta}>
-        <div className={styles.author}>{userId}</div>
+        <div className={styles.author}>{post.username}</div>
         <div className={styles.postInfo}>
-          <span
-            onClick={handleLikeClick}
+          <span 
+            onClick={handleLikeClick} 
             style={{ fontSize: '20px', cursor: 'pointer', color: heartColor }}
           >
             {heartSymbol}{postData.likes}
           </span>
+          
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton
@@ -318,20 +332,22 @@ const CommentItem = ({ comment, setComments }) => {
         </>
       ) : (
         <>
-          <p>{comment.content}</p>
-          <IconButton size="small" aria-label="more actions" onClick={handleClick}>
-            <MoreVertIcon />
-          </IconButton>
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-            {commentOwnerId === currentUserId ? (
-              <>
-                <MenuItem onClick={handleEditClick}>수정</MenuItem>
-                <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
-              </>
-            ) : (
-              <MenuItem onClick={openReportModal}>신고</MenuItem>
-            )}
-          </Menu>
+          <div className={styles.commentContainer}>
+            <p className={styles.commentContent}>{comment.content}</p>
+            <IconButton size="small" aria-label="more actions" onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+              {commentOwnerId === currentUserId ? (
+                <>
+                  <MenuItem onClick={handleEditClick}>수정</MenuItem>
+                  <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
+                </>
+              ) : (
+                <MenuItem onClick={openReportModal}>신고</MenuItem>
+              )}
+            </Menu>
+          </div>
         </>
       )}
 
