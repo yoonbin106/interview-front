@@ -28,7 +28,7 @@ const PaginationTableAdminCompanyNotice = ({rows,page,rowsPerPage}) => {
         router.push(`/bbs/bbsCompanyNoticeDetailsPage/${companyNoticeId}`)
     }
     return (
-        <TableContainer component={Paper} className={styles.companyoticeTableContainer}>
+        <TableContainer component={Paper} className={styles.companyNoticeTableContainer}>
           <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
             <TableHead>
               <TableRow>
