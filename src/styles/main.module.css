@@ -48,6 +48,14 @@
   text-align: center;
   z-index: 2;
 }
+
+.mainImages .buttonContainer { /* 버튼을 담을 새로운 컨테이너 */
+  display: flex;
+  flex-direction: row !important; /* 가로 정렬 */
+  gap: 20px; /* 버튼 간격 */
+  justify-content: center; /* 버튼들을 부모 컨테이너 안에서 중앙 정렬 */
+}
+
 .image1, .image2, .image3, .image4, .image5 {
   background-size: cover; /* 여기서 cover 사용 */
   background-position: center;
@@ -102,7 +110,7 @@
   color: #92b4fd;
 }
 
-.mainButton {
+.mainButtonOne {
   text-decoration: none;
   font-size: 16px;
   padding: 10px 20px;
@@ -111,6 +119,32 @@
   display: flex;
   justify-content: center;
   background-color: #5A8AF2;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.mainButtonOne:hover {
+  background-color: #0056b3;
+}
+
+.mainButtonTwo {
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  align-items: center;
+  color: #5A8AF2;
+  font-weight: bold;
+  cursor: pointer;
+}
+.mainButtonTwo:hover{
+   background-color: #0056b3;
   color: white;
 }
 
@@ -204,11 +238,13 @@
 .mainIntroBoxInTitle{
   font-size: 35px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: white;
 }
 .mainIntroBoxInSubtitleFrame{
   height: 135px;
+  margin-bottom: 10px;
+
 }
 .mainIntroBoxInSubtitle{
   font-size: 20px;
@@ -619,7 +655,7 @@
 
 .mainIntroProgressBarBase {
   height: 8px;
-  background-color: grey; /* 기본 회색 바 */
+  background-color: rgb(192, 192, 192); /* 기본 회색 바 */
   width: 280px;
   position: absolute;
   top: 0;

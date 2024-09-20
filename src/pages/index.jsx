@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '@/styles/main.module.css';
 import MainEconomicNews from '../components/mainEconomicNews.jsx';//추인철추가
+import { useRouter } from 'next/router';
 
 
 
@@ -10,6 +11,8 @@ function Home() {
     const [timer, setTimer] = useState(null);
     const slidesToShow = 4;  // 한 화면에 보여줄 슬라이드 개수
     const slideWidth = 100 / slidesToShow;  // 슬라이드 하나의 너비 (퍼센트)
+    const systemInfoRef = useRef(null);
+    const router = useRouter();
 
     useEffect(() => {
         setCurrentIndex(0);
@@ -85,6 +88,18 @@ function Home() {
         setCurrentIndex(index);  // 클릭된 인덱스로 상태 업데이트
     };
 
+    
+
+
+    const handleServiceIntroClick = () => {
+        if (systemInfoRef.current){
+            systemInfoRef.current.scrollIntoView({behavior:'smooth'});
+        }
+    }
+
+    const handleButtonClick = () => {
+        router.push('/resume/resumeList');
+    };
 
 
     useEffect(() => {
@@ -128,17 +143,23 @@ function Home() {
 
                     </div>
                     <div className={styles.mainSubtitle}>
+                        AI 기반 이력서 등록 및 모의 면접 서비스 제공<br/>
                         포커스잡에 오신걸 환영합니다
                     </div>
-                    <a className={styles.mainButton} href="#">
-                        AI 서비스 체험하기
+                    <div className={styles.buttonContainer}>
+                    <a className={styles.mainButtonOne} onClick={handleServiceIntroClick}>
+                        서비스 소개
+                    </a>
+                    <a className={styles.mainButtonTwo} onClick={handleButtonClick}>
+                        AI 면접 시작하기
                         {/* 로그인X=>로그인으로 */}
                         {/* 로그인O=>면접페이지으로 */}
                     </a>
+                    </div>
                 </div>
             </div>
             {/*두번째 화면  */}
-            <div className={styles.container2} id="systemInfo">
+            <div className={styles.container2} id="systemInfo" ref={systemInfoRef}>
                 <div className={styles.mainIntroFrameW}>
                     <div className={styles.mainIntroFrameH}>
 
@@ -156,11 +177,7 @@ function Home() {
                                     <div className={styles.mainIntroBoxInSubtitle}>{contentList[currentIndex].subtitle1}</div>
                                     <div className={styles.mainIntroBoxInSubtitle}>{contentList[currentIndex].subtitle2}</div>
                                 </div>
-                                <div className={styles.mainIntroBoxInButtonFrame}>
-                                    <a href={contentList[currentIndex].href} className={styles.mainIntroBoxInButton}>
-                                        {contentList[currentIndex].buttonText}
-                                    </a>
-                                </div>
+                    
                                 {/* 진행 바를 여러 개 생성 */}
                                 <div className={styles.mainIntroProgress}>
                                     {contentList.map((_, index) => (

@@ -23,7 +23,23 @@ const InterviewResultList = observer(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const [videosPerPage] = useState(5); // 페이지당 5개의 비디오를 표시하도록 설정
   const accordionRefs = useRef([]);
-  const { interviewStore, userStore } = useStores();
+  const { interviewStore, userStore, authStore } = useStores();
+
+  useEffect(() => {
+    if (!authStore) {
+      console.error('authStore is undefined');
+      return;
+    }
+    // 로그인 상태를 확인
+    authStore.checkLoggedIn();
+
+    if (!authStore.loggedIn) {
+      // 로그아웃 상태라면 메인 페이지로 이동
+      alert('로그인해야 접속이 가능합니다.');
+      router.push('/');
+    }
+  }, [authStore, router]);
+
 
   useEffect(() => {
     fetchVideos();

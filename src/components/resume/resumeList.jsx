@@ -14,6 +14,7 @@ import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import modalStyles from '@/styles/resume/modalStyles.module.css';
+import { useStores } from '@/contexts/storeContext';
 
 
 const ResumeList = () => {
@@ -27,8 +28,24 @@ const ResumeList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchText, setSearchText] = useState('');
   const [resumeToDelete, setResumeToDelete] = useState(null);
+  const { userStore, authStore } = useStores();
   const accordionRefs = useRef([]); // 아코디언을 참조하기 위한 배열
 
+  useEffect(() => {
+    if (!authStore) {
+      console.error('authStore is undefined');
+      return;
+    }
+    // 로그인 상태를 확인
+    authStore.checkLoggedIn();
+
+    if (!authStore.loggedIn) {
+      // 로그아웃 상태라면 메인 페이지로 이동
+      alert('로그인해야 접속이 가능합니다.');
+      router.push('/');
+    }
+  }, [authStore, router]);
+  
   useEffect(() => {
     document.body.style.overflowY = 'scroll';
     return () => {
@@ -84,22 +101,53 @@ const ResumeList = () => {
       console.error('이력서 삭제 중 오류 발생:', error);
     }
   };
+
+
+
   const handleDownloadClick = async (resumeId, event) => {
     event.stopPropagation();
     try {
-      const response = await axios.get(`http://localhost:8080/api/resume/download/${resumeId}`, {
-        responseType: 'blob',
-      });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'resume.pdf');
-      document.body.appendChild(link);
-      link.click();
+        const response = await axios.get(`http://localhost:8080/api/resume/download/${resumeId}`, {
+            responseType: 'blob',
+        });
+
+        // Content-Disposition 헤더에서 파일명 추출
+        const contentDisposition = response.headers['content-disposition'];
+        let filename = '이력서.pdf'; // 기본 파일명 설정
+
+        if (contentDisposition) {
+            // filename* 형식을 처리하는 정규 표현식
+            const match = contentDisposition.match(/filename\*=UTF-8''(.+)/);
+            if (match && match[1]) {
+                filename = decodeURIComponent(match[1]); // 디코딩된 파일명
+            } else {
+                // 기본 filename 형식 처리
+                const matchFallback = contentDisposition.match(/filename(?:\*|)=(["']?)(.*?)\1/);
+                if (matchFallback && matchFallback[2]) {
+                    filename = decodeURIComponent(matchFallback[2]); // 디코딩된 파일명
+                }
+            }
+        }
+
+        
+        console.log('Response 헤더:', response.headers);
+        console.log('Content-Disposition 헤더:', contentDisposition);
+        console.log('최종 다운로드 파일명:', filename);
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename); //동적으로 설정된 파일명 사용
+        document.body.appendChild(link);
+        link.click();
+
+        // 메모리 해제
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
     } catch (error) {
-      console.error('이력서 다운로드 중 오류 발생:', error);
+        console.error('이력서 다운로드 중 오류 발생:', error);
     }
-  };
+};
 
   const closeModal = () => {
     setIsDeleteModalOpen(false);
