@@ -196,15 +196,18 @@ const PostContent = ({ post, openReportModal }) => {
                 href={`http://localhost:8080/bbs/${id}/files/${fileName}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
+                className={styles.fileLink}
               >
-                {fileName}
+                
+                <div className={styles.fileName}>📄{fileName}</div> {/* 파일 이름 */}
               </a>
             </div>
           ))
         ) : (
-          <p>파일이 없습니다.</p>
+          <p></p>
         )}
       </div>
+
     </div>
   );
 };
