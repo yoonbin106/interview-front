@@ -52,3 +52,27 @@
     margin-top: 15px;
   }
 
+  .bbsQnaGridContainer{
+    margin-top: 20px;
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+   
+  }
+  .bbsQnaGridItemInput{
+    flex-grow:3;
+    margin-right:10px;
+  }
+  .bbsQnaGridItemButton{
+    flex-grow: 1;
+  }
+  .bbsQnaSearchButton{
+    background-color: #5A8AF2;
+    &:hover {
+        background-color: #357ABD;
+    }
+    height: 56px;
+  }
