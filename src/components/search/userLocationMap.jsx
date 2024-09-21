@@ -17,19 +17,40 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
     const [isMapInitialized, setIsMapInitialized] = useState(false);
 
     useEffect(() => {
-        const script = document.createElement('script');
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=08e8f7e5d84e3b83d217c292b2ae3bef&libraries=services,clusterer`;
-        script.async = true;
-        script.onload = () => {
-            console.log('Kakao Map script loaded');
-            initializeUserLocation();
+        // 비동기 작업을 수행하는 함수 정의
+        const loadKakaoMapScript = async () => {
+            try {
+                const existingScript = document.querySelector('script[src*="dapi.kakao.com"]');
+                if (existingScript) {
+                    console.log('Kakao Map script already loaded');
+                    initializeUserLocation();
+                    return;
+                }
+    
+                const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY; // 환경 변수에서 API 키를 가져옴
+                const script = document.createElement('script');
+                script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}&libraries=services,clusterer`;
+                script.async = true;
+    
+                script.onload = () => {
+                    console.log('Kakao Map script loaded');
+                    initializeUserLocation();
+                };
+    
+                document.head.appendChild(script);
+    
+                return () => {
+                    document.head.removeChild(script);
+                };
+            } catch (error) {
+                console.error("카카오 맵 스크립트 로딩 중 오류 발생:", error);
+            }
         };
-        document.head.appendChild(script);
-
-        return () => {
-            document.head.removeChild(script);
-        };
+    
+        // 비동기 함수 호출
+        loadKakaoMapScript();
     }, []);
+    
 
     const initializeUserLocation = () => {
         navigator.geolocation.getCurrentPosition(

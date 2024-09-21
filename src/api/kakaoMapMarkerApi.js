@@ -1,12 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 
 const KakaoMap = ({ companies }) => {
+
+    
     const mapRef = useRef(null);
     const clustererRef = useRef(null); // 클러스터링을 위한 ref
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=08e8f7e5d84e3b83d217c292b2ae3bef&libraries=services,clusterer`; // 클러스터링 추가
+        const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY; // 환경 변수에서 API 키를 가져옴
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}&libraries=services,clusterer`; // 클러스터링 추가
+       
         script.async = true;
 
         script.onload = () => {
