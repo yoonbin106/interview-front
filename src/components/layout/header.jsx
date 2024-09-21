@@ -218,7 +218,7 @@ const Header = observer(() => {
               onMouseEnter={() => setHover(true)}
             >
               <a href="#" className={styles.navLink}>소개</a>
-              <a href="#" className={styles.navLink}>회사 검색</a>
+              <a href="#" className={styles.navLink}>진로 찾기</a>
               <a href="#" className={styles.navLink}>AI 서비스</a>
               <a href="#" className={styles.navLink}>커뮤니티</a>
               <a href="#" className={styles.navLink}>고객센터</a>
@@ -305,7 +305,7 @@ const Header = observer(() => {
                     >이용권 구매</a>
                   </div>
                   <div className={styles.subMenus}>
-                    <a href="/search" className={styles.subMenu}>상세 검색</a>
+                    <a href="/search" className={styles.subMenu}>회사 검색</a>
                     <a href="/survey" className={styles.subMenu}>적성 탐색</a>
                   </div>
                   <div className={styles.subMenus}>
