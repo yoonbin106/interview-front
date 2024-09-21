@@ -25,6 +25,7 @@ function ResumeForm() {
   const [extraAddress, setExtraAddress] = useState('');
   const [specificAddress, setSpecificAddress] = useState('');
   const [educationFields, setEducationFields] = useState([{ school_name: '', major: '', start_date: '', end_date: '', graduation_status: '' }]);
+  const [educationErrors, setEducationErrors] = useState([{school_name: false, major: false, start_date: false, end_date: false, graduation_status: false}]);
   const [careerFields, setCareerFields] = useState([{ company_name: '', join_date: '', leave_date: '', position: '', job_description: '' }]);
   const [languageFields, setLanguageFields] = useState([{ language: '', language_level: '', language_score: '' }]);
   const [awardFields, setAwardFields] = useState([{ contest_name: '', contest_award: '', contest_date: '' }]);
@@ -46,18 +47,7 @@ function ResumeForm() {
   const [modalContent, setModalContent] = useState('');
   const [showTitleError, setShowTitleError] = useState(false);
   const [profileImageError, setProfileImageError] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [birthError, setBirthError] = useState(false);
   const [genderError, setGenderError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [postcodeError, setPostcodeError] = useState(false);
-  const [schoolNameErrors, setSchoolNameErrors] = useState([]);
-  const [majorErrors, setMajorErrors] = useState([]);
-  const [startDateErrors, setStartDateErrors] = useState([]);
-  const [endDateErrors, setEndDateErrors] = useState([]);
-  const [graduationStatusErrors, setGraduationStatusErrors] = useState([]);
-  
   const [showSelfIntroError, setShowSelfIntroError] = useState(false);
   const [showMotivationError, setShowMotivationError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,35 +71,6 @@ function ResumeForm() {
     address: userStore.address || ''
   });
 
-  const setSchoolNameError = (isError, index) => {
-    const updatedErrors = [...schoolNameErrors];
-    updatedErrors[index] = isError;
-    setSchoolNameErrors(updatedErrors);
-  };
-
-  const setMajorError = (isError, index) => {
-    const updatedErrors = [...majorErrors];
-    updatedErrors[index] = isError;
-    setMajorErrors(updatedErrors);
-  };
-
-  const setStartDateError = (isError, index) => {
-    const updatedErrors = [...startDateErrors];
-    updatedErrors[index] = isError;
-    setStartDateErrors(updatedErrors);
-  };
-
-  const setEndDateError = (isError, index) => {
-    const updatedErrors = [...endDateErrors];
-    updatedErrors[index] = isError;
-    setEndDateErrors(updatedErrors);
-  };
-
-  const setGraduationStatusError = (isError, index) => {
-    const updatedErrors = [...graduationStatusErrors];
-    updatedErrors[index] = isError;
-    setGraduationStatusErrors(updatedErrors);
-  };
   const toggleSidebarHeight = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -315,27 +276,52 @@ const ModalContent = styled('div')(
     }
   };
   
-  const handleFieldChange = (index, e, fields, setFields) => {
+  const handleFieldChange = (index, e, fields, setFields, errors, setErrors) => {
     const { name, value } = e.target;
+
+    //모든 필드 업데이트
     const updatedFields = [...fields];
     updatedFields[index][name] = value;
     setFields(updatedFields);
-  };
+
+    // 학력필드 에러 업데이트
+    const updatedErrors = [...errors];
+    if (value.trim() !== '') {
+      updatedErrors[index][name] = false;
+    } else {
+      updatedErrors[index][name] = true;
+    }
+    
+    setErrors(updatedErrors);
+    };
+
   // 필드추가 +버튼용
   const addField = (fields, setFields, newField) => {
     setFields([...fields, newField]);
+
+  //학력 필드 추가 시 오류 상태 추가
+    setEducationErrors([...educationErrors, {
+      school_name: false,
+      major: false,
+      start_date: false,
+      end_date: false,
+      graduation_status: false,
+    }]);
   };
+
   // 필드제거 x버튼용
   const removeField = (index, fields, setFields) => {
     const updatedFields = fields.filter((_, i) => i !== index);
     setFields(updatedFields);
   };
+
   // 취소버튼용
   const handleCancel = () => {
     setModalContent('이력서 작성을 취소하시겠습니까?');
     setIsModalOpen(true);
   };
 
+  //이력서 저장버튼용
   const handleSubmit = (e) => {
     e.preventDefault();
   
@@ -351,27 +337,11 @@ const ModalContent = styled('div')(
       hasError = true;
     }
   
-    // 2. 인적사항 유효성 검사
+    // 2. 인적사항 섹션 유효성 검사
+
+    //프로필 이미지 유효성 검사
     if (!profileImage) {
       setProfileImageError(true);
-      if (!hasError) {
-        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
-      }
-      hasError = true;
-    }
-  
-    // 이름 유효성 검사
-    if (formData.name.trim() === '') {
-      setNameError(true);
-      if (!hasError) {
-        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
-      }
-      hasError = true;
-    }
-  
-    // 생년월일 유효성 검사
-    if (formData.birth.trim() === '') {
-      setBirthError(true);
       if (!hasError) {
         firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
       }
@@ -387,78 +357,12 @@ const ModalContent = styled('div')(
       hasError = true;
     }
   
-    // 이메일 유효성 검사
-    if (formData.email.trim() === '') {
-      setEmailError(true);
-      if (!hasError) {
-        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
-      }
-      hasError = true;
-    }
-  
-    // 휴대전화번호 유효성 검사
-    if (formData.phone.trim() === '') {
-      setPhoneError(true);
-      if (!hasError) {
-        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
-      }
-      hasError = true;
-    }
-  
-  
-  
-    // 3. 학력 유효성 검사
-    if (educationFields.length > 0) {
-      let hasError = false; // hasError 초기화
-      
-    educationFields.forEach((field, index) => {
+   
+    
 
-      //학교 이름 유효성 검사
-      if (field.school_name.trim() === '') {
-        setSchoolNameError(true, index);
-        hasError = true;
-      } else {
-        setSchoolNameError(false, index); // 오류 없으면 초기화
-      }
-  
-      // 전공 유효성 검사
-      if (field.major.trim() === '') {
-        setMajorError(true, index);
-        if (!hasError) {
-          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
-        }
-        hasError = true;
-      }
-  
-      // 입학 유효성 검사
-      if (field.start_date.trim() === '') {
-        setStartDateError(true, index);
-        if (!hasError) {
-          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
-        }
-        hasError = true;
-      }
-  
-      // 졸업 유효성 검사
-      if (field.end_date.trim() === '') {
-        setEndDateError(true, index);
-        if (!hasError) {
-          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
-        }
-        hasError = true;
-      }
-  
-      // 졸업 구분 유효성 검사
-      if (field.graduation_status.trim() === '') {
-        setGraduationStatusError(true, index);
-        if (!hasError) {
-          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
-        }
-        hasError = true;
-      }
-    });
-  }
-  
+
+
+
     // 자기소개 유효성 검사
     if (selfIntroduction.trim() === '') {
       setShowSelfIntroError(true);
@@ -476,7 +380,47 @@ const ModalContent = styled('div')(
       }
       hasError = true;
     }
-  
+    
+     //3.학력 섹션 유효성 검사
+     const newEducationErrors = [...educationErrors];
+     educationFields.forEach((field, index) => {
+       let fieldHasError = false;
+   
+       // 개별 필드 유효성 검사
+       if (field.school_name.trim() === '') {
+         newEducationErrors[index].school_name = true;
+         fieldHasError = true;
+       }
+   
+       if (field.major.trim() === '') {
+         newEducationErrors[index].major = true;
+         fieldHasError = true;
+       }
+   
+       if (field.start_date === '') {
+         newEducationErrors[index].start_date = true;
+         fieldHasError = true;
+       }
+   
+       if (field.end_date === '') {
+         newEducationErrors[index].end_date = true;
+         fieldHasError = true;
+       }
+   
+       if (field.graduation_status === '') {
+         newEducationErrors[index].graduation_status = true;
+         fieldHasError = true;
+       }
+   
+       // 첫 번째 오류 필드로 스크롤 이동 설정
+       if (fieldHasError && !hasError) {
+         firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
+         hasError = true;
+       }
+     });
+   
+     setEducationErrors(newEducationErrors);
+
     // 첫 번째 에러 필드로 스크롤
     if (firstErrorField) {
       firstErrorField();
@@ -921,26 +865,15 @@ const applyColorToQuotes = (text) => {
               </div>
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
-                  <div className={styles.formInlineValid}>
-                 
+                  <div className={styles.formInlineValid}>                 
                   <label className={`${styles.label} ${styles.required}`}>이메일</label>
-                  {emailError && (
-                <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft:'5px' }}>
-                  ※ 필수 입력입니다
-                </div>
-            )}
                   </div>
                   <input type="email" className={styles.input} placeholder="이메일"  value={formData.email} />
                 </div>
                 <div className={styles.formGroup}>
-                <div className={styles.formInlineValid}>
+  
                   <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
-                  {phoneError && (
-                <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft:'5px' }}>
-                  ※ 필수 입력입니다
-                </div>
-            )}
-                  </div>
+
                   <input type="text" className={styles.phoneNumInput} placeholder="휴대전화번호" value={formData.phone} />
                 </div>
               </div>
@@ -1038,61 +971,94 @@ const applyColorToQuotes = (text) => {
     <div className={styles.formGroupInlineVertical}>
       <div className={styles.formGroupInline}>
         <div className={styles.formGroup} style={{ flex: 1 }}>
-
+          <div className={styles.formInlineValid}>
           <label className={styles.label}>학교</label>
-
+          {educationErrors[index].school_name && (
+          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+            ※ 필수 입력입니다.
+          </div>
+        )}
+          </div>
           <input
             type="text"
             placeholder="학교 이름 입력"
             name="school_name"
             className={styles.input}
             value={field.school_name}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors)}
           />
+
         </div>
         <div className={styles.formGroup} style={{ marginLeft: '30px', flex: 1 }}>
-       
+        <div className={styles.formInlineValid}>
           <label className={styles.label}>전공</label>
+          {educationErrors[index].major && (
+          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+            ※ 필수 입력입니다.
+          </div>
+        )}
+        </div>
           <input
             type="text"
             placeholder="전공 입력"
             name="major"
             className={styles.input}
             value={field.major}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors)}
           />
         </div>
       </div>
       <div className={styles.formGroupInline}>
         <div className={styles.formGroup}>
+        <div className={styles.formInlineValid}>
           <label className={styles.label}>입학</label>
+          {educationErrors[index].start_date && (
+          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+            ※ 필수 입력입니다.
+          </div>
+        )}
+        </div>
           <input
             type="month"
             placeholder="----년 --월"
             name="start_date"
             className={styles.input}
             value={field.start_date}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors)}
           />
         </div>
         <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+        <div className={styles.formInlineValid}>
           <label className={styles.label}>졸업</label>
+          {educationErrors[index].end_date && (
+          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+            ※ 필수 입력입니다.
+          </div>
+        )}  
+        </div>  
           <input
             type="month"
             placeholder="----년 --월"
             name="end_date"
             className={styles.input}
             value={field.end_date}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields,educationErrors, setEducationErrors )}
           />
         </div>
         <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+        <div className={styles.formInlineValid}>
           <label className={styles.label}>졸업구분</label>
+                {educationErrors[index].graduation_status && (
+        <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+          ※ 필수 선택입니다.
+        </div>
+      )}
+      </div>
           <select
             name="graduation_status"
             value={field.graduation_status}
             className={styles.select}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields ,educationErrors, setEducationErrors)}
           >
             <option value="">---</option>
             <option value="graduated">졸업</option>
