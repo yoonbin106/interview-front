@@ -3,7 +3,7 @@ import styles from '@/styles/adminPage/adminPage.module.css';
 import axios from 'axios';
 import NestedList from 'components/adminPage/adminSideMenu';
 import AdminFaq from 'components/adminPage/adminFaq';
-
+import {withAdminAuth} from '@/utils/withAdminAuth';
 
 const AdminFaqPage = () => {
     const [faqs,setFaqs] = useState([]);//FAQ데이터를 담는 상태
@@ -68,4 +68,4 @@ const AdminFaqPage = () => {
     );
 };
 
-export default AdminFaqPage;
+export default withAdminAuth(AdminFaqPage);

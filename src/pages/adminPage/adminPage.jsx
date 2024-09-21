@@ -2,6 +2,8 @@
 
 import React from 'react';
 import AdminMain from '@/components/adminPage/adminMain'; // AdminMain 컴포넌트를 불러옵니다.
+import {withAdminAuth} from '@/utils/withAdminAuth';
+
 const AdminMainPage = () => {
     return (
         <div>
@@ -11,4 +13,4 @@ const AdminMainPage = () => {
     );
 };
 
-export default AdminMainPage;
+export default withAdminAuth(AdminMainPage);

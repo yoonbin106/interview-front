@@ -5,8 +5,9 @@ import React from 'react';
 import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import DeletedComment from 'components/adminPage/adminDeletedComment';
+import { withAdminAuth } from '@/utils/withAdminAuth';
 
-export default function AdminDeletedCommentPage() {
+ function AdminDeletedCommentPage() {
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
@@ -19,3 +20,4 @@ export default function AdminDeletedCommentPage() {
         </div>
     );
 }
+export default withAdminAuth(AdminDeletedCommentPage);

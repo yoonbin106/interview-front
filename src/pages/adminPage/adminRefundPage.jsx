@@ -4,8 +4,9 @@ import React from 'react';
 import AdminRefund from '@/components/adminPage/adminRefund';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import styles from '@/styles/adminPage/adminPage.module.css';
+import { withAdminAuth } from '@/utils/withAdminAuth';
 
-export default function AdminRefundPage() {
+ function AdminRefundPage() {
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
@@ -17,3 +18,4 @@ export default function AdminRefundPage() {
         </div>
     );
 }
+export default withAdminAuth(AdminRefundPage);

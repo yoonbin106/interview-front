@@ -3,6 +3,7 @@ import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import AdminUser from '@/components/adminPage/adminUser';
 import { getAllUsers } from 'api/user';
+import {withAdminAuth} from '@/utils/withAdminAuth';
 
 const AdminUserPage = () => {
     const [processedData, setProcessedData] = useState([]); // 상태로 processedData를 정의
@@ -37,4 +38,4 @@ const AdminUserPage = () => {
     );
 };
 
-export default AdminUserPage;
+export default withAdminAuth(AdminUserPage);

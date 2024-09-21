@@ -2,6 +2,7 @@
 
 import React from 'react';
 import AdminNotice from 'components/adminPage/adminNotice';
+import {withAdminAuth} from '@/utils/withAdminAuth';
 
 const AdminNoticePage = () => {
     return (
@@ -12,4 +13,4 @@ const AdminNoticePage = () => {
     );
 };
 
-export default AdminNoticePage;
+export default withAdminAuth(AdminNoticePage);

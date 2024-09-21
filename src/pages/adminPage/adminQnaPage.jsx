@@ -2,9 +2,10 @@
 
 import React from 'react';
 import AdminQna from '@/components/adminPage/adminQna';
+import {withAdminAuth} from '@/utils/withAdminAuth';
 
 const AdminQnaPage = () => {
     return <AdminQna />;
 };
 
-export default AdminQnaPage;
+export default withAdminAuth(AdminQnaPage);

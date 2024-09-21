@@ -4,6 +4,7 @@ import styles from '@/styles/adminPage/adminPage.module.css';
 import NestedList from '@/components/adminPage/adminSideMenu';
 import axios from 'axios';
 import AdminNoticeDetails from 'components/adminPage/adminNoticeDetails';
+import {withAdminAuth} from '@/utils/withAdminAuth';
 
 const AdminNoticeDetailsPage = () => {
     const router = useRouter();
@@ -47,4 +48,4 @@ const AdminNoticeDetailsPage = () => {
     );
 };
 
-export default AdminNoticeDetailsPage;
+export default withAdminAuth(AdminNoticeDetailsPage, 'admin');
