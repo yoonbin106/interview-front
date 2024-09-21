@@ -57,10 +57,14 @@
 }
 
 .genderSelect {
-  width: 80%; /* 너비를 조절해서 박스 사이즈를 줄입니다 */
-  max-width: 200px; /* 원하는 최대 너비를 설정합니다 */
-  color: #78838d !important;
-  height: 37.25px;
+  padding: 5px;
+  font-size: 16px !important;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 190px;
+  max-width: 190px;
+  box-sizing: border-box;
+  color: #6c757d;
 }
 
 .genderButton {
@@ -184,6 +188,12 @@
   margin-left: 0;
   padding-left: 0;
 }
+.formInlineValid{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .personalInfo {
   margin-top: 30px;
   display: flex;
@@ -310,8 +320,10 @@
   font-size: 16px !important;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  width: 100%;
+  width: 100px;
+  max-width: 100px;
   box-sizing: border-box;
+  color: #6c757d;
 
 }
 .militarySelect{
@@ -456,7 +468,7 @@
 }
 .phoneNumInput {
   width:100% !important;
-  max-width: 300px;
+  max-width: 307px;
 }
 
 .react-datepicker-wrapper {

@@ -45,6 +45,21 @@ function ResumeForm() {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [showTitleError, setShowTitleError] = useState(false);
+  const [profileImageError, setProfileImageError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [birthError, setBirthError] = useState(false);
+  const [genderError, setGenderError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
+  const [postcodeError, setPostcodeError] = useState(false);
+  const [schoolNameErrors, setSchoolNameErrors] = useState([]);
+  const [majorErrors, setMajorErrors] = useState([]);
+  const [startDateErrors, setStartDateErrors] = useState([]);
+  const [endDateErrors, setEndDateErrors] = useState([]);
+  const [graduationStatusErrors, setGraduationStatusErrors] = useState([]);
+  
+  const [showSelfIntroError, setShowSelfIntroError] = useState(false);
+  const [showMotivationError, setShowMotivationError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -54,6 +69,7 @@ function ResumeForm() {
     military_start_date: '',
     military_end_date: '',
     military_rank: '',
+    desired_company: '',
     desired_salary: '',
     desired_start_date: '',
     gender: '',
@@ -65,6 +81,35 @@ function ResumeForm() {
     address: userStore.address || ''
   });
 
+  const setSchoolNameError = (isError, index) => {
+    const updatedErrors = [...schoolNameErrors];
+    updatedErrors[index] = isError;
+    setSchoolNameErrors(updatedErrors);
+  };
+
+  const setMajorError = (isError, index) => {
+    const updatedErrors = [...majorErrors];
+    updatedErrors[index] = isError;
+    setMajorErrors(updatedErrors);
+  };
+
+  const setStartDateError = (isError, index) => {
+    const updatedErrors = [...startDateErrors];
+    updatedErrors[index] = isError;
+    setStartDateErrors(updatedErrors);
+  };
+
+  const setEndDateError = (isError, index) => {
+    const updatedErrors = [...endDateErrors];
+    updatedErrors[index] = isError;
+    setEndDateErrors(updatedErrors);
+  };
+
+  const setGraduationStatusError = (isError, index) => {
+    const updatedErrors = [...graduationStatusErrors];
+    updatedErrors[index] = isError;
+    setGraduationStatusErrors(updatedErrors);
+  };
   const toggleSidebarHeight = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -121,7 +166,7 @@ function ResumeForm() {
     const isMilitaryEmpty = !formData.military_service_type && !formData.military_start_date && !formData.military_end_date && !formData.military_rank;
     setIsMilitaryExempt(isMilitaryEmpty);
   
-    const isWorkConditionEmpty = !formData.desired_salary && !formData.desired_start_date;
+    const isWorkConditionEmpty =!formData.desired_company && !formData.desired_salary && !formData.desired_start_date;
     setIsWorkConditionExempt(isWorkConditionEmpty);
   };
   
@@ -205,19 +250,16 @@ const ModalContent = styled('div')(
 
   //프로필 사진 변경 처리
   const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setProfileImage(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+      setProfileImageError(false); // 에러 초기화
+    } else {
+      setProfileImageError(true); // 이미지가 없을 경우 에러 설정
     }
   };
 
-  //네임-밸류 설정용
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+ 
 
   // 자기소개 2000자 이하 작성용
   const handleSelfIntroductionChange = (e) => {
@@ -294,20 +336,169 @@ const ModalContent = styled('div')(
     setIsModalOpen(true);
   };
 
-  //이력서 등록 버튼 , 유효성 체크
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
+    let hasError = false;
+    let firstErrorField = null;
+  
+    // 1. 이력서 제목 유효성 검사
     if (formData.resume_title.trim() === '') {
       setShowTitleError(true);
-      window.scrollTo(0, 0);
-      return;
+      if (!hasError) {
+        firstErrorField = () => window.scrollTo(0, 0); // 이력서 제목으로 스크롤
+      }
+      hasError = true;
     }
-    checkAndSetExemptions();
+  
+    // 2. 인적사항 유효성 검사
+    if (!profileImage) {
+      setProfileImageError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 이름 유효성 검사
+    if (formData.name.trim() === '') {
+      setNameError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 생년월일 유효성 검사
+    if (formData.birth.trim() === '') {
+      setBirthError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 성별 유효성 검사
+    if (!formData.gender || !['male', 'female', 'other'].includes(formData.gender)) {
+      setGenderError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 이메일 유효성 검사
+    if (formData.email.trim() === '') {
+      setEmailError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 휴대전화번호 유효성 검사
+    if (formData.phone.trim() === '') {
+      setPhoneError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.personalInfo.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+  
+  
+    // 3. 학력 유효성 검사
+    if (educationFields.length > 0) {
+      let hasError = false; // hasError 초기화
+      
+    educationFields.forEach((field, index) => {
 
+      //학교 이름 유효성 검사
+      if (field.school_name.trim() === '') {
+        setSchoolNameError(true, index);
+        hasError = true;
+      } else {
+        setSchoolNameError(false, index); // 오류 없으면 초기화
+      }
+  
+      // 전공 유효성 검사
+      if (field.major.trim() === '') {
+        setMajorError(true, index);
+        if (!hasError) {
+          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        hasError = true;
+      }
+  
+      // 입학 유효성 검사
+      if (field.start_date.trim() === '') {
+        setStartDateError(true, index);
+        if (!hasError) {
+          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        hasError = true;
+      }
+  
+      // 졸업 유효성 검사
+      if (field.end_date.trim() === '') {
+        setEndDateError(true, index);
+        if (!hasError) {
+          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        hasError = true;
+      }
+  
+      // 졸업 구분 유효성 검사
+      if (field.graduation_status.trim() === '') {
+        setGraduationStatusError(true, index);
+        if (!hasError) {
+          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        hasError = true;
+      }
+    });
+  }
+  
+    // 자기소개 유효성 검사
+    if (selfIntroduction.trim() === '') {
+      setShowSelfIntroError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.selfIntroduction.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 지원동기 유효성 검사
+    if (motivation.trim() === '') {
+      setShowMotivationError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.motivation.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
+  
+    // 첫 번째 에러 필드로 스크롤
+    if (firstErrorField) {
+      firstErrorField();
+    }
+  
+    // 에러가 있으면 종료
+    if (hasError) return;
+  
+    checkAndSetExemptions();
     setModalContent('작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?');
     setIsModalOpen(true);
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+    
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -322,6 +513,7 @@ const ModalContent = styled('div')(
             formDataToSend.append('file', new Blob([pdfData], { type: 'application/pdf' }), `${formData.resume_title}.pdf`); // 제목을 파일 이름으로 설정
             formDataToSend.append('title', formData.resume_title);
             formDataToSend.append('email', formData.email);
+            formDataToSend.append('desired_company', formData.desired_company); 
 
             const uploadResponse = await axios.post('http://localhost:8080/api/resume/upload', formDataToSend, {
                 headers: {
@@ -660,7 +852,7 @@ const applyColorToQuotes = (text) => {
       
             {showTitleError && (
               <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
-                ※ 이력서 제목을 입력하세요
+                ※ 필수 입력입니다
               </div>
             )}
           </div>
@@ -680,38 +872,75 @@ const applyColorToQuotes = (text) => {
                     <input
                       id="file-input"
                       type="file"
-                      onChange={handleImageChange}
+                      onChange={(e) => {
+                        handleImageChange(e);
+                      }}
                       className={styles.hiddenFileInput}
                     />
                   </div>
+                  {profileImageError && (
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+                ※ 필수 첨부입니다
+              </div>
+            )}
                 </div>
             <div className={styles.personalInfo}>
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
                   <label className={`${styles.label} ${styles.required}`}>이름</label>
-                  <input type="text" placeholder="이름" value={formData.name} readOnly />
+                  <input type="text" placeholder="이름" value={formData.name} readOnly  />
+                  
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
                   <label className={`${styles.label} ${styles.required}`}>생년월일</label>
                   <input type="text" placeholder="생년월일" value={formData.birth} />
+                 
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
-                  <label className={`${styles.label} ${styles.required}`}>성별</label>
-                  <select name="gender" onChange={handleChange} className={`${styles.genderSelect} ${styles.select}`}>
+                <div className={styles.formInlineValid}>
+                  <label className={`${styles.label} ${styles.required}`} >성별</label>
+                  {genderError && (
+                <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft:'5px' }}>
+                  ※ 필수 선택입니다
+                </div>
+            )}
+            </div>
+                  <select name="gender"  onChange={(e) => {
+                      const value = e.target.value;
+                      setFormData({ ...formData, gender: value });
+                      setGenderError(value.trim() === '' || !['male', 'female', 'other'].includes(value)); // 에러 상태 업데이트
+                    }} className={`${styles.genderSelect}`} >
                     <option value="">선택하세요</option>
                     <option value="male">남자</option>
                     <option value="female">여자</option>
                     <option value="other">기타</option>
                   </select>
+                  
                 </div>
+               
               </div>
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
+                  <div className={styles.formInlineValid}>
+                 
                   <label className={`${styles.label} ${styles.required}`}>이메일</label>
-                  <input type="email" className={styles.input} placeholder="이메일"  value={formData.email} readOnly />
+                  {emailError && (
+                <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft:'5px' }}>
+                  ※ 필수 입력입니다
+                </div>
+            )}
+                  </div>
+                  <input type="email" className={styles.input} placeholder="이메일"  value={formData.email} />
                 </div>
                 <div className={styles.formGroup}>
+                <div className={styles.formInlineValid}>
                   <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
+                  {phoneError && (
+                <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft:'5px' }}>
+                  ※ 필수 입력입니다
+                </div>
+            )}
+                  </div>
                   <input type="text" className={styles.phoneNumInput} placeholder="휴대전화번호" value={formData.phone} />
                 </div>
               </div>
@@ -719,7 +948,7 @@ const applyColorToQuotes = (text) => {
           </div>
 
           <div className={styles.formGroup} style={{ marginTop: '30px' }}>
-            <label className={`${styles.label} ${styles.required}`}>우편번호</label>
+            <label className={`${styles.label} ${styles.required}`}>주소</label>
             <div className="input-group mb-2">
                 <input
                   type="text"
@@ -727,8 +956,8 @@ const applyColorToQuotes = (text) => {
                   id="zipcode"
                   placeholder="우편번호"
                   value={postcode}
-                  
                 />
+
                 <button
                   type="button"
                   className="btn btn-outline-secondary"
@@ -809,7 +1038,9 @@ const applyColorToQuotes = (text) => {
     <div className={styles.formGroupInlineVertical}>
       <div className={styles.formGroupInline}>
         <div className={styles.formGroup} style={{ flex: 1 }}>
+
           <label className={styles.label}>학교</label>
+
           <input
             type="text"
             placeholder="학교 이름 입력"
@@ -820,6 +1051,7 @@ const applyColorToQuotes = (text) => {
           />
         </div>
         <div className={styles.formGroup} style={{ marginLeft: '30px', flex: 1 }}>
+       
           <label className={styles.label}>전공</label>
           <input
             type="text"
@@ -1285,7 +1517,21 @@ const applyColorToQuotes = (text) => {
               <label className={styles.checklabel}>해당 없음</label>
             </div>
             <div className={styles.formGroupInline}>
-              <div className={styles.formGroup}>
+            <div className={styles.formGroup}>
+                <label className={styles.label}>입사 희망 기업명</label>
+                <input
+                  type="text"
+                  placeholder="기업명"
+                  name="desired_company"
+                  className={`${styles.input} ${isWorkConditionExempt ? styles.disabledInput : ''}`}
+                  value={formData.desired_company}
+                  onChange={handleChange}
+                  disabled={isWorkConditionExempt}
+                />
+              </div>
+
+
+              <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
                 <label className={styles.label}>희망 연봉</label>
                 <input
                   type="text"
@@ -1298,7 +1544,7 @@ const applyColorToQuotes = (text) => {
                 />
               </div>
               <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-                <label className={styles.label}>희망 입사날짜</label>
+                <label className={styles.label}>희망 입사 날짜</label>
                 <input
                   type="month"
                   name="desired_start_date"
@@ -1338,11 +1584,22 @@ const applyColorToQuotes = (text) => {
           <pre
             contenteditable="true"
             value={selfIntroduction}
-            onInput={handleSelfIntroductionChange}
+            onInput={(e) => {
+              handleSelfIntroductionChange(e);
+              if (e.target.innerText.trim() !== '') {
+                setShowSelfIntroError(false);
+              }
+            }}
             onPaste={handlePaste} 
             maxLength="2000"
           />
+
           <div className={styles.charCounter}>{selfIntroduction.length}/2000</div>
+          {showSelfIntroError && (
+              <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
+                ※ 자기소개를 입력하세요
+              </div>
+            )}
         </div>
       </div>
 
@@ -1373,13 +1630,23 @@ const applyColorToQuotes = (text) => {
           )}
           <pre
             contentEditable="true"
-            onInput={handleMotivationChange}
+            onInput={(e) => {
+              handleMotivationChange(e);
+              if (e.target.innerText.trim() !== '') {
+                setShowMotivationError(false);
+              }
+            }}
             maxLength="2000"
             onPaste={handlePaste}
             value={motivation}
           >
           </pre>
           <div className={styles.charCounter}>{motivation.length}/2000</div>
+          {showMotivationError && (
+              <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
+                ※ 지원동기를 입력하세요
+              </div>
+            )}
         </div>
       </div>
             
