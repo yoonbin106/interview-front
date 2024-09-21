@@ -12,6 +12,28 @@
     display: block ; /* 보일 때 */
 }
 
+/* 스크롤바 디자인 */
+.result-container::-webkit-scrollbar {
+    width: 14px; /* 스크롤바 두께 */
+    height: 14px; /* 스크롤바 높이 */
+}
+
+.result-container::-webkit-scrollbar-track {
+    background: #ebebeb; /* 트랙 배경색 */
+    border-radius: 10px; /* 둥근 모서리 */
+}
+
+.result-container::-webkit-scrollbar-thumb {
+    background-color: #007bff; /* 스크롤바 색상 */
+    border-radius: 10px; /* 둥근 모서리 */
+    border: 2px solid #ebebeb; /* 스크롤바 테두리 색상 */
+}
+
+.result-container::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3; /* 호버 시 스크롤바 색상 변경 */
+}
+
+
 .no-results-popup {
     position: fixed;
     top: 60px;
