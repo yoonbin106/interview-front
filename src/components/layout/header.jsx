@@ -125,14 +125,14 @@ const Header = observer(() => {
       console.error('알람 가져오기 중 에러 발생:', error);
     }
   }
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      getAlarm(userStore.id);
-    }, 100); // 0.5초 간격
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     getAlarm(userStore.id);
+  //   }, 100); // 0.5초 간격
 
-    // 컴포넌트가 언마운트될 때 setInterval을 정리
-    return () => clearInterval(intervalId);
-  }, [userStore.id]);
+  //   // 컴포넌트가 언마운트될 때 setInterval을 정리
+  //   return () => clearInterval(intervalId);
+  // }, [userStore.id]);
 
   useEffect(async () => {
     setIsClient(true);
