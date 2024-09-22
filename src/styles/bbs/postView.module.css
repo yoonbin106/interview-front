@@ -11,6 +11,7 @@
   font-family: Arial, sans-serif;
   color: #333;
   line-height: 1.6;
+  min-height: 50vh;
   
 }
 
@@ -113,6 +114,7 @@
 /* Comments List */
 .commentList {
   margin-top: 20px;
+  
 }
 
 .commentItem {
@@ -178,4 +180,8 @@
 .commentContent {
   flex: 1; /* 댓글 내용이 가능한 한 많은 공간을 차지하게 함 */
   margin-right: 8px; /* 아이콘과의 간격을 추가 */
+}
+
+.reportedContainer{
+  min-height: 30vh;
 }

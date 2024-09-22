@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
+import { TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, Typography, Chip, Tooltip } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,8 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import Link from 'next/link';
 import axios from 'axios';
 import styles from '@/styles/bbs/bbs.module.css';
-
+import ForumIcon from '@mui/icons-material/Forum';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // 기본 CSS를 가져옵니다.
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
+
 
 const Bbs = () => {
     const [posts, setPosts] = useState([]);
@@ -24,7 +27,7 @@ const Bbs = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [page, setPage] = useState(0);
     const [sortCriteria, setSortCriteria] = useState('bbsId');
-
+    const [date, setDate] = useState(new Date());
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -71,7 +74,8 @@ const Bbs = () => {
                 return item.title.toLowerCase().includes(lowercasedFilter);
             }
             if (searchCategory === 'author') {
-                return item.author.toLowerCase().includes(lowercasedFilter);
+                
+                return item.username && item.username.toLowerCase().includes(lowercasedFilter);
             }
             return false;
         });
@@ -105,33 +109,48 @@ const Bbs = () => {
                     <div style={{ position: 'relative', padding: '20px', display: 'flex', justifyContent: 'center' }}>
                         <div style={{ width: '90%' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h2 style={{ margin: 15, whiteSpace: 'nowrap' }}>자유 게시판</h2>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <ForumIcon sx={{ marginRight: 1, color: 'primary.main', fontSize: 40 }} />
+                                    <Typography variant="h5" className={styles.bbsTitle}>
+                                        자유 게시판
+                                    </Typography>
+                                </Box>
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                                     <RegisterButton to="/bbs/bbsRegisterPage" />
                                 </div>
+                                <hr className={styles.bbsTitleDivider} />
                             </div>
+                             {/* 테이블 가로 길이에 맞춘 달력 */}
+                             <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                                <Box sx={{ width: '100%' }}>
+                                    <Calendar
+                                        value={date}
+                                        onChange={setDate}
+                                        locale="en-US"
+                                        className={styles.calendar}
+                                    />
+                                </Box>
+                            </Box>
                             <div className={styles.boardHeader}>
                                 <div className={styles.info}>
-                                    000 키워드로 검색된 글 <br /> {filteredPosts.length}개의 글
+                                    {searchTerm 
+                                        ? `'${searchTerm}' 키워드로 검색된 글` 
+                                        : '전체 글 목록'}
+                                    <br /> {filteredPosts.length}개의 글
                                 </div>
                                 <div className={styles.boardHeaderControl}>
-                                    <select onChange={handleRowsPerPageChange} value={rowsPerPage}>
-                                        <option value={10}>10개씩</option>
-                                        <option value={20}>20개씩</option>
-                                        <option value={30}>30개씩</option>
-                                    </select>
-                                </div>
-                                <div className={styles.boardHeaderControl}>
-                                    <select onChange={handleSortCriteriaChange} value={sortCriteria}>
-                                        <option value="bbsId">글 번호</option>
-                                        <option value="createdAt">작성 날짜</option>
-                                    </select>
+                                    <Select onChange={handleSortCriteriaChange} value={sortCriteria}>
+                                        <MenuItem value="bbsId">글 번호</MenuItem>
+                                        <MenuItem value="createdAt">작성 날짜</MenuItem>
+                                    </Select>
+                                    
                                 </div>
                             </div>
+                            
                             {/* 필터링된 게시판 테이블로 렌더링 */}
-                            <TableContainer component={Paper} className={styles.bbsTableContainer}>
+                            <TableContainer component={Paper} className={styles.bbsTableContainer} style={{ overflow: 'hidden' }}>
                                 <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
-                                    <TableHead>
+                                    <TableHead sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>
                                         <TableRow>
                                             <TableCell align="center" className={styles.bbsHeaderCell}>글 번호</TableCell>
                                             <TableCell align="center" className={styles.bbsHeaderCell}>제목</TableCell>
@@ -145,11 +164,15 @@ const Bbs = () => {
                                             ? filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             : filteredPosts
                                         ).map((post) => (
-                                            <TableRow key={post.bbsId}>
+                                            <TableRow key={post.bbsId} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
                                                 <TableCell align="center">{post.bbsId}</TableCell>
                                                 <TableCell align="center">
                                                     <Link href={`/bbs/postView?id=${post.bbsId}`} style={{ textDecoration: 'none', color: 'black' }}>
-                                                        {post.title}
+                                                        <Tooltip title={post.title} arrow>
+                                                            <Typography variant="body2" sx={{ cursor: 'pointer', fontWeight: 'bold', color: '#4A90E2' }}>
+                                                                {post.title}
+                                                            </Typography>
+                                                        </Tooltip>
                                                     </Link>
                                                 </TableCell>
                                                 <TableCell align="center">{post.username}</TableCell>
@@ -160,7 +183,7 @@ const Bbs = () => {
                                     </TableBody>
                                 </Table>
                             </TableContainer>
-
+                           
                             {/* 검색 필터 */}
                             <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
                                 <Grid item xs={3}>
