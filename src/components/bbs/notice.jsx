@@ -19,7 +19,7 @@ const Notice = () => {
     const [filteredNotices, setFilteredNotices] = useState([]); // 필터링된 공지사항
     const [rowsPerPage, setRowsPerPage] = useState(10); // 페이지당 게시물 수
     const [page, setPage] = useState(0); // 현재 페이지
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredNotices.length) : 0;
     useEffect(() => {
         const fetchNoticeData = async () => {
           try {
