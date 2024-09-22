@@ -54,7 +54,48 @@ class ViewUserStore {
       throw error;
     }
   }
+  //사용자 비활성화
+  async deactivateUser(email){
+    try{
+      const response = await axios.post('/api/auth/deactivateUser',{email},{
+        headers: {
+          'Authorization' : `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status ===20) {
+        this.viewedUser.isActivated = 0; //비활성화 상태 업데이트
+        alert('사용자가 성공적으로 비활성화되었습니다.');
+      } else{
+        alert('비활성화 요청 처리 중 오류가 발생했습니다.');
+      }
+    } catch(error){
+      console.error('사용자를 비활성화하는 중 오류가 발생했습니다:',error);
+      alert('비활성화 요청 처리 중 오류가 발생했습니다.');
+    }
+  }
 
+  //사용자 탈퇴
+  async deleteUser(email){
+    try{
+      const response = await axios.post('/api/auth/deleteUser', {email}, {
+        headers: {
+          'Authorization':`Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if(response.status===200){
+        this.viewedUser.isDeleted = 1; //탈퇴 상태 업데이트
+        this.viewedUser.deletedTime = new Date().toISOString();//탈퇴 시간 설정
+        alert('사용자가 성공적으로 탈퇴되었습니다.');
+      } else {
+        alert('탈퇴 요청 처리 중 오류가 발생했습니다.');
+      }
+    } catch (error){
+      console.error('사용자를 탈퇴하는 중 오류가 발생했습니다:',error);
+      alert('탈퇴 요청 처리 중 오류가 발생했습니다.');
+    }
+  }
   clearViewedUser() {
     this.viewedUser = null;
   }
