@@ -69,7 +69,14 @@ const Bbs = () => {
 
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
+        if (searchCategory === ''){
+            // 선택 기준이 빈 문자열일 때, 전체 게시글을 반환
+            setFilteredPosts(posts);
+            setPage(0);
+            return;
+        }
         const filteredData = posts.filter(item => {
+            
             if (searchCategory === 'title') {
                 return item.title.toLowerCase().includes(lowercasedFilter);
             }
