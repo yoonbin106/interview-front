@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -43,6 +44,7 @@ function a11yProps(index) {
 }
 
 export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, closeMenu }) {
+    const router = useRouter();
     const [value, setValue] = useState(0);
     const { setAlarmChatroomId, setAlarmUserId, setIsChatOpen } = useChatRoom();
 
@@ -110,15 +112,32 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
         }
     }
 
+    const readBbsAlarm = async (id) => {
+
+        try {
+            const response = await axios.post('http://192.168.0.137:8000/readBbsAlarm', { id },
+            );
+            return response.data;
+        } catch (error) {
+            console.error('알람 지우기 처리 중 에러 발생:', error);
+        }
+    }
+
 
 
     const chatAlarms = (alarmList || []).filter(alarm => alarm.type === 'chat');
     const bbsAlarms = (alarmList || []).filter(alarm => alarm.type === 'bbs');
 
-    const alarmClick = (alarm) => {
+    const chatAlarmClick = (alarm) => {
         setAlarmChatroomId(alarm.chatroomId); // chatroomId 설정
         setAlarmUserId(userId); // userId 설정
         setIsChatOpen(true); // Chatting 열기
+        closeMenu();
+    };
+
+    const bbsAlarmClick = (bbsId, id) => {
+        router.push(`/bbs/postView?id=${bbsId}`);
+        readBbsAlarm(id);
         closeMenu();
     };
 
@@ -147,11 +166,18 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
                         alarmList.map((alarm) => (
                             <div key={alarm.id}
                                 className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}
-                                onClick={() => alarmClick(alarm)}>
+                                onClick={() => {
+                                    if (alarm.type == 'chat') {
+                                        chatAlarmClick(alarm);
+                                    }
+                                    else if (alarm.type == 'bbs') {
+                                        bbsAlarmClick(alarm.bbsId, alarm.id);
+                                    }
+                                }}>
                                 <div className={styles.alarmText}>
 
                                     <div className={styles.alarmMessage}>
-                                        {alarm.type === 'chat' ?
+                                        {alarm.type == 'chat' ?
                                             <MessageSquareMore size={35} strokeWidth={2} />
                                             : <ClipboardPen size={35} strokeWidth={2} />}
                                     </div>
@@ -185,7 +211,12 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
                 <div className={styles.alarmContainer}>
                     {chatAlarms.length > 0 ? (
                         chatAlarms.map((alarm) => (
-                            <div key={alarm.id} className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}>
+                            <div key={alarm.id} className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}
+                                onClick={() => {
+                                    if (alarm.type == 'chat') {
+                                        chatAlarmClick(alarm);
+                                    }
+                                }}>
                                 <div className={styles.alarmText}>
 
                                     <div className={styles.alarmMessage}>
@@ -217,7 +248,12 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
                 <div className={styles.alarmContainer}>
                     {bbsAlarms.length > 0 ? (
                         bbsAlarms.map((alarm) => (
-                            <div key={alarm.id} className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}>
+                            <div key={alarm.id} className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}
+                                onClick={() => {
+                                    if (alarm.type == 'bbs') {
+                                        
+                                    }
+                                }}>
                                 <div className={styles.alarmText}>
 
                                     <div className={styles.alarmMessage}>

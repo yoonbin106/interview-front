@@ -14,30 +14,30 @@ const PostView = () => {
   const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
-  
+
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
         try {
           const incrementValue = increment === 'false' ? 'false' : 'true';
           const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=${incrementValue}`);
-         
+
           // 포맷팅된 날짜를 추가하여 상태 업데이트
           const postData = response.data;
           const formattedDate = new Date(postData.createdAt).toLocaleTimeString('ko-KR', {
-              hour: '2-digit',
-              minute: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
           });
 
           setPost({ ...postData, formattedDate });
-          
+
           // 댓글 가져오기
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);
           setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터를 설정
 
-          
+
         } catch (error) {
-            console.error('Failed to fetch post:', error);
+          console.error('Failed to fetch post:', error);
         } finally {
           setLoading(false);
         }
@@ -72,7 +72,7 @@ const PostView = () => {
         <CommentList comments={comments} setComments={setComments} />  {/* 댓글 리스트 */}
         <div className={styles.divider}></div>
         <h3>댓글 쓰기</h3>
-        <CommentInput postId={id} setComments={setComments} />  {/* 댓글 입력 */}
+        <CommentInput post={post} postId={id} setComments={setComments} />  {/* 댓글 입력 */}
       </div>
 
       {/* 신고 모달 */}
@@ -93,9 +93,9 @@ const PostContent = ({ post, openReportModal }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [liked, setIsLiked] = useState(post.userLiked || false);
   const userId = userStore.id || 'Anonymous';  // 사용자 아이디 또는 Anonymous
-  const [postData, setPost] = useState(post); 
+  const [postData, setPost] = useState(post);
   const postOwnerId = Number(post.userId?.id) || 0;
-  const currentUserId = Number(userStore.id) || 0; 
+  const currentUserId = Number(userStore.id) || 0;
 
   // 신고된 게시글 처리
   if (post.deletedReason === 1) {
@@ -107,8 +107,8 @@ const PostContent = ({ post, openReportModal }) => {
     );
   }
 
-  
-  
+
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -154,17 +154,17 @@ const PostContent = ({ post, openReportModal }) => {
     <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
   ];
 
-  
+
 
   return (
     <div className={styles.postContainer}>
       <h2>{post.title}</h2>
       <div className={styles.postMeta}>
         <div className={styles.author}>
-            {post.username} <span className={styles.postTime}>({post.formattedDate})</span>
+          {post.username} <span className={styles.postTime}>({post.formattedDate})</span>
         </div>
         <div className={styles.postInfo}>
-          
+
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton
@@ -192,13 +192,13 @@ const PostContent = ({ post, openReportModal }) => {
         {post.files && Object.keys(post.files).length > 0 ? (
           Object.keys(post.files).map((fileName, index) => (
             <div key={index} className={styles.fileItem}>
-              <a 
-                href={`http://localhost:8080/bbs/${id}/files/${fileName}`} 
-                target="_blank" 
+              <a
+                href={`http://localhost:8080/bbs/${id}/files/${fileName}`}
+                target="_blank"
                 rel="noopener noreferrer"
                 className={styles.fileLink}
               >
-                
+
                 <div className={styles.fileName}>📄{fileName}</div> {/* 파일 이름 */}
               </a>
             </div>
@@ -226,13 +226,13 @@ const CommentList = ({ comments, setComments }) => {
 
 // 신고된 댓글 처리 추가
 const CommentItem = ({ comment, setComments }) => {
-  const [isEditing, setIsEditing] = useState(false); 
-  const [newContent, setNewContent] = useState(comment.content); 
+  const [isEditing, setIsEditing] = useState(false);
+  const [newContent, setNewContent] = useState(comment.content);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isReportModalOpen, setReportModalOpen] = useState(false); 
-  
-  const commentOwnerId = Number(comment.user?.id) || 0;  
-  const currentUserId = Number(userStore.id) || 0;  
+  const [isReportModalOpen, setReportModalOpen] = useState(false);
+
+  const commentOwnerId = Number(comment.user?.id) || 0;
+  const currentUserId = Number(userStore.id) || 0;
 
   if (comment.deletedReason === 1) {
     return (
@@ -258,18 +258,18 @@ const CommentItem = ({ comment, setComments }) => {
 
   const handleSaveClick = async () => {
     try {
-      const commentId = comment.commentId;  
+      const commentId = comment.commentId;
       const response = await axios.put(`http://localhost:8080/bbs/comments/${commentId}`, {
-        content: newContent,  
+        content: newContent,
       });
 
       if (response.status === 200) {
         setComments((prevComments) =>
-          prevComments.map((c) => 
-            c.commentId === commentId ? { ...c, content: newContent } : c 
+          prevComments.map((c) =>
+            c.commentId === commentId ? { ...c, content: newContent } : c
           )
         );
-        setIsEditing(false); 
+        setIsEditing(false);
       } else {
         console.error("Failed to update comment:", response.statusText);
       }
@@ -300,7 +300,7 @@ const CommentItem = ({ comment, setComments }) => {
   const closeReportModal = () => {
     setReportModalOpen(false);
   };
-  
+
   return (
     <div className={styles.commentItem}>
       <strong>{comment.username}</strong>
@@ -335,9 +335,9 @@ const CommentItem = ({ comment, setComments }) => {
         </>
       )}
 
-      <ReportModal 
-        open={isReportModalOpen} 
-        onClose={closeReportModal} 
+      <ReportModal
+        open={isReportModalOpen}
+        onClose={closeReportModal}
         commentId={comment.commentId}
         commentAuthor={comment.username}
         commentContent={comment.content}
@@ -347,7 +347,7 @@ const CommentItem = ({ comment, setComments }) => {
 };
 
 // 댓글 입력 컴포넌트
-const CommentInput = ({ postId, setComments }) => {
+const CommentInput = ({ post, postId, setComments }) => {
   const [content, setContent] = useState('');
   const userId = userStore.id;
 
@@ -362,13 +362,34 @@ const CommentInput = ({ postId, setComments }) => {
 
         const newComment = response.data;
         setComments((prevComments) => [...prevComments, newComment]);
-        setContent(''); 
+        setContent('');
       } catch (error) {
         console.error('Failed to add comment:', error);
       }
+
+      // 알림을 위한 메세지 전송
+      const messageData = {
+        text: content,
+        bbsId: post.bbsId.toString(),
+        bbsTitle: post.title,
+        sender: userStore.username,
+        senderId: userStore.id.toString(),
+        receiverId: post.userId.id.toString(),
+        contentId: postId.toString(),
+        timestamp: new Date().toISOString(),
+        type: 'bbs'
+      };
+
+      try {
+        // 파이썬 FastAPI 서버로 메시지 보내기
+        await axios.post('http://192.168.0.137:8000/sendComment', messageData);
+      } catch (error) {
+        console.error("댓글 알람 전송 중 오류 발생:", error);
+      }
     }
+
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className={styles.commentInput}>
       <input
