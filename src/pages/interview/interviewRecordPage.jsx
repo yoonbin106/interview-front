@@ -263,6 +263,7 @@ const InterviewRecordPage = observer(() => {
       formData.append('video', blob, 'interview.mp4');
       formData.append('userId', userStore.id);
       formData.append('questionId', questions[currentQuestionIndex].id);
+      formData.append('questionText', questions[currentQuestionIndex].questionText); // 질문 내용 추가
       console.log('이거 확인: ', formData.get('video'));
 
       uploadInterviewVideo(formData)

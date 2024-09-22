@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { RiUserHeartFill } from "react-icons/ri";
 import { format } from 'date-fns';
@@ -14,15 +14,48 @@ import styles from '@/styles/bot/botMessages.module.css';
 import { BsRobot } from 'react-icons/bs';
 
 // BotMessages 컴포넌트: 채팅 메시지를 표시하고 관리합니다.
-const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionSelect, isUserTyping }) => {
-  // messagesEndRef: 메시지 목록의 끝을 참조하는 ref입니다.
-  const messagesEndRef = useRef(null);  
-  // progress: 메시지 생성 중 표시되는 프로그레스 바의 현재 값입니다.
+const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, isUserTyping, setMessages }) => {
+  
+  const messagesEndRef = useRef(null);
+  const [prevMessagesLength, setPrevMessagesLength] = useState(0);
+  const [prevIsGenerating, setPrevIsGenerating] = useState(false);
   const [progress, setProgress] = useState(10);
+  const [highlightedMessages, setHighlightedMessages] = useState([]);
 
-  // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동시키는 useEffect
   useEffect(() => {
+    const newHighlightedMessages = messages.map(message => ({
+      ...message,
+      highlightedText: highlightKeywords(message.text)
+    }));
+    setHighlightedMessages(newHighlightedMessages);
+  }, [messages]);
+  
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > prevMessagesLength) {
+      scrollToBottom();
+      setPrevMessagesLength(messages.length);
+    }
+  }, [messages, prevMessagesLength, scrollToBottom]);
+
+  useEffect(() => {
+    if (isGenerating && !prevIsGenerating) {
+      // 봇이 답변 생성을 시작할 때
+      scrollToBottom();
+    } else if (!isGenerating && prevIsGenerating) {
+      // 봇이 답변 생성을 완료했을 때
+      setTimeout(scrollToBottom, 100); // 약간의 지연을 주어 메시지가 렌더링될 시간을 줍니다
+    }
+    setPrevIsGenerating(isGenerating);
+  }, [isGenerating, prevIsGenerating, scrollToBottom]);
+  
+  useEffect(() => {
+    if (messages.length > 0 || isUserTyping) {
+      scrollToBottom();
+    }
   }, [messages, isUserTyping]);
   
   // 프로그레스 바 애니메이션을 위한 useEffect
@@ -36,65 +69,62 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
   }, []);
 
   // 타임스탬프를 포맷팅하는 함수
-  const formatTime = (timestamp) => {
-    // timestamp가 유효한 값인지 확인
+  const formatTime = useCallback((timestamp) => {
     if (!timestamp) return '';
     try {
-      // timestamp가 문자열이 아닌 경우 (예: Date 객체) 처리
-      const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+      const date = new Date(timestamp);
       return format(date, 'HH:mm');
     } catch (error) {
       console.error('Invalid timestamp:', timestamp, error);
       return '';
     }
-  };
+  }, []);
 
-  // 키워드 하이라이팅 함수
-  const highlightKeywords = (text) => {
-    const keywords = ['important', 'crucial', 'significant', 'key', 'essential'];
-    let highlightedText = text;
-
-    keywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-      highlightedText = highlightedText.replace(regex, `<span class="${styles.highlight}">$&</span>`);
-    });
-
+  const highlightKeywords = useCallback((text) => {
+    const keywords = ['중요한', '결정적인', '핵심', '필수적인', '중대한', '면접', '취업', '이력서','챗봇', 'force', 'focusjob'];
+    const regex = new RegExp(`(${keywords.join('|')})`, 'gi');
+    const highlightedText = text.replace(regex, `<span class="${styles.highlight}">$1</span>`);
     return <span dangerouslySetInnerHTML={{ __html: highlightedText }} />;
-  };
+  }, []);
+
+  const handleOptionSelect = useCallback((option) => {
+    console.log('Selected option:', option);
+    setMessages(prevMessages => [...prevMessages, { text: `Selected option: ${option}`, sender: 'user' }]);
+    // 필요한 경우 여기서 추가 로직을 구현할 수 있습니다.
+  }, [setMessages]);
 
   return (
     <div className={styles.botMessages}>
-      {/* 메시지 목록을 순회하며 각 메시지를 렌더링합니다. */}
       {messages.map((message, index) => (
         <div key={index} className={`${styles.messageContainer} ${styles[message.sender]}`}>
-          {/* 사용자 아바타 */}
-          {message.sender === 'user' && <div className={styles.userAvatar}> 
-          <Image 
-            src="/images/user.gif"
-            alt="user"
-            width={70}
-            height={70}
-            unoptimized
-      /></div>}
-          {/* 봇 아바타 */}
-          {message.sender === 'bot' && <div className={styles.botAvatar}>
-          <Image 
-            src="/images/virtualAssistant.gif"
-            alt="bot"
-            width={80}
-            height={80}
-            unoptimized
-      /></div>}          
+          {message.sender === 'user' && (
+            <div className={styles.userAvatar}> 
+              <Image 
+                src="/images/user.gif"
+                alt="user"
+                width={70}
+                height={70}
+                unoptimized
+              />
+            </div>
+          )}
+          {message.sender === 'bot' && (
+            <div className={styles.botAvatar}>
+              <Image 
+                src="/images/virtualAssistant.gif"
+                alt="bot"
+                width={80}
+                height={80}
+                unoptimized
+              />
+            </div>
+          )}          
           <div className={styles.messageContent}>
-            {/* 메시지 내용을 키워드 하이라이팅과 함께 표시 */}
             {highlightKeywords(message.text)}
-            {/* 봇 메시지에 대해 Text-to-Speech 기능 추가 */}
             {message.sender === 'bot' && <TextToSpeech text={message.text} />}
-            {/* 인터랙티브 옵션이 있는 경우 표시 */}
             {message.sender === 'bot' && message.options && 
-                <InteractiveOptions options={message.options} onSelect={onOptionSelect} />
+              <InteractiveOptions options={message.options} onSelect={handleOptionSelect} />
             }
-            {/* 봇 메시지에 대한 피드백 버튼 */}
             {message.sender === 'bot' && message.answerId && (
               <div className={styles.messageActions}>
                 {!feedbacks[message.answerId] && (
@@ -113,7 +143,6 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
                     </button>
                   </>
                 )}
-                {/* 피드백이 이미 주어진 경우 아이콘 표시 */}
                 {feedbacks[message.answerId] === 'liked' && (
                   <ThumbUpAltIcon style={{ color: '#5A8AF2' }} />
                 )}
@@ -126,8 +155,7 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
           <div className={styles.messageTime}>{formatTime(message.timestamp)}</div>
         </div>
       ))}
-      {/* 메시지 생성 중일 때 표시되는 로딩 인디케이터 */}
-      {isGenerating && (
+        {isGenerating && (
         <div className={`${styles.messageContainer} ${styles.bot}`}>
           <div className={styles.botAvatar} aria-hidden="true">
             <BsRobot />
@@ -137,7 +165,6 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
           </div>
         </div>
       )}
-      {/* 사용자가 입력 중일 때 표시되는 타이핑 인디케이터 */}
       {isUserTyping && (
         <div className={`${styles.messageContainer} ${styles.user} ${styles.typing}`}>
           <div className={styles.userAvatar} aria-hidden="true">
@@ -148,10 +175,9 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
           </div>
         </div>
       )}
-      {/* 메시지 목록의 끝을 나타내는 div */}
       <div ref={messagesEndRef} />
     </div>
   );
 };
 
-export default BotMessages;
+export default React.memo(BotMessages);
