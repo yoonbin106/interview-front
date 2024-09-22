@@ -14,13 +14,14 @@ import styles from '@/styles/bbs/bbs.module.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 CSS를 가져옵니다.
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
+import { useRouter } from 'next/router';
 
 
 const Bbs = () => {
-    const [posts, setPosts] = useState([]);
+    const [post, setPost] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const router = useRouter();
     const [searchCategory, setSearchCategory] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredPosts, setFilteredPosts] = useState([]);
@@ -33,7 +34,7 @@ const Bbs = () => {
             try {
                 const response = await axios.get('http://localhost:8080/bbs');
                 let sortedPosts = [...response.data].sort((a, b) => b.bbsId - a.bbsId);
-                setPosts(sortedPosts);
+                setPost(sortedPosts);
                 setFilteredPosts(sortedPosts);
                 setLoading(false);
             } catch (error) {
@@ -47,8 +48,8 @@ const Bbs = () => {
     }, []);
 
     useEffect(() => {
-        if (posts.length > 0) {
-            let sortedPosts = [...posts];
+        if (post.length > 0) {
+            let sortedPosts = [...post];
             if (sortCriteria === 'bbsId') {
                 sortedPosts.sort((a, b) => b.bbsId - a.bbsId);
             } else if (sortCriteria === 'createdAt') {
@@ -56,7 +57,12 @@ const Bbs = () => {
             }
             setFilteredPosts(sortedPosts);
         }
-    }, [sortCriteria, posts]);
+    }, [sortCriteria, post]);
+
+
+    const handleClick = (bbsId) => {
+        router.push(`/bbs/postView?id=${bbsId}`)
+    }
 
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
@@ -71,11 +77,11 @@ const Bbs = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
         if (searchCategory === ''){
             // 선택 기준이 빈 문자열일 때, 전체 게시글을 반환
-            setFilteredPosts(posts);
+            setFilteredPosts(post);
             setPage(0);
             return;
         }
-        const filteredData = posts.filter(item => {
+        const filteredData = post.filter(item => {
             
             if (searchCategory === 'title') {
                 return item.title.toLowerCase().includes(lowercasedFilter);
@@ -174,13 +180,14 @@ const Bbs = () => {
                                             <TableRow key={post.bbsId} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
                                                 <TableCell align="center">{post.bbsId}</TableCell>
                                                 <TableCell align="center">
-                                                    <Link href={`/bbs/postView?id=${post.bbsId}`} style={{ textDecoration: 'none', color: 'black' }}>
+                                                    <div style={{ textDecoration: 'none', color: 'black' }}>
                                                         <Tooltip title={post.title} arrow>
-                                                            <Typography variant="body2" sx={{ cursor: 'pointer', fontWeight: 'bold', color: '#4A90E2' }}>
+                                                            <Typography variant="body2" sx={{ cursor: 'pointer', fontWeight: 'bold', color: '#4A90E2' }}
+                                                                onClick={() => handleClick(post.bbsId)}>
                                                                 {post.title}
                                                             </Typography>
                                                         </Tooltip>
-                                                    </Link>
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell align="center">{post.username}</TableCell>
                                                 <TableCell align="center">{new Date(post.createdAt).toLocaleDateString()}</TableCell>

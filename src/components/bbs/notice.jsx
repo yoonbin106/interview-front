@@ -114,7 +114,7 @@ const Notice = () => {
                                             onClick={() => handleRowClick(row.noticeId)}
                                             style={{cursor:'pointer'}}>
                                             <TableCell align="center">{row.noticeId}</TableCell>
-                                            <TableCell align="center" className={styles.adminNoticeTitleCell}>
+                                            <TableCell align="center" className={styles.NoticeTitleCell}>
                                                 {row.noticeTitle}
                                             </TableCell>
                                             <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
