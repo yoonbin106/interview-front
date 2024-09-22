@@ -192,7 +192,8 @@ const Bot = ({onClose}) => {
           feedbacks={feedbacks} 
           addFeedback={addFeedback} 
           isGenerating={isGenerating}
-          isUserTyping={isUserTyping}  // 이 부분을 변경
+          isUserTyping={isUserTyping}
+          setMessages={setMessages}  // setMessages 함수를 props로 전달
         />
         {showMusicPlayer && 
           <BotMusicPlayer 
