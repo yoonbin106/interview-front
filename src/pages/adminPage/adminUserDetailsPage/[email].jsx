@@ -68,6 +68,7 @@ const AdminUserDetails = observer(() => {
         profileImage: selectedFile || viewUserStore.viewedUser.profileImage,
       };
 
+
       // 사용자 정보 업데이트 요청
       await viewUserStore.updateUserDetails(
         updatedUser.email,
