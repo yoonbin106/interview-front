@@ -51,15 +51,16 @@ const Notice = () => {
     const handleSearch = () => {
         const lowercasedFilter = searchTerm.toLowerCase();
         const filteredData = noticeData.filter(item => {
-            if (searchCategory === 'title') {
-                return item.title.toLowerCase().includes(lowercasedFilter);
-            }
-            if (searchCategory === 'author') {
-                return item.author.toLowerCase().includes(lowercasedFilter);
-            }
-            return false;
+            const matchesSearch = searchCategory === 'title'
+                ? item.noticeTitle.toLowerCase().includes(lowercasedFilter)
+                : searchCategory === 'author'
+                ? item.user.username.toLowerCase().includes(lowercasedFilter)
+                : true; // 검색어 필터링
+    
+            return matchesSearch;
         });
         setFilteredNotices(filteredData);
+        setPage(0); // 검색 시 첫 페이지로 이동
     };
 
     // 페이지당 게시물 개수 변경 핸들러
