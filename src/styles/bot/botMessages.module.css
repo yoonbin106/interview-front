@@ -25,6 +25,13 @@
   display: flex;
   align-items: flex-end;
 }
+.highlight {
+  background-color: #ffeb3b;
+  color: #212121;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-weight: bold;
+}
 
 .userAvatar {
   margin-left: 0.5rem; 

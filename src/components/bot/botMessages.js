@@ -15,12 +15,19 @@ import { BsRobot } from 'react-icons/bs';
 
 // BotMessages 컴포넌트: 채팅 메시지를 표시하고 관리합니다.
 const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionSelect, isUserTyping }) => {
-  // messagesEndRef: 메시지 목록의 끝을 참조하는 ref입니다.
+  
   const messagesEndRef = useRef(null);  
-  // progress: 메시지 생성 중 표시되는 프로그레스 바의 현재 값입니다.
   const [progress, setProgress] = useState(10);
+  const [highlightedMessages, setHighlightedMessages] = useState([]);
 
-  // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동시키는 useEffect
+  useEffect(() => {
+    const newHighlightedMessages = messages.map(message => ({
+      ...message,
+      highlightedText: highlightKeywords(message.text)
+    }));
+    setHighlightedMessages(newHighlightedMessages);
+  }, [messages]);
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isUserTyping]);
@@ -37,10 +44,8 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
 
   // 타임스탬프를 포맷팅하는 함수
   const formatTime = (timestamp) => {
-    // timestamp가 유효한 값인지 확인
     if (!timestamp) return '';
     try {
-      // timestamp가 문자열이 아닌 경우 (예: Date 객체) 처리
       const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
       return format(date, 'HH:mm');
     } catch (error) {
@@ -51,14 +56,14 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
 
   // 키워드 하이라이팅 함수
   const highlightKeywords = (text) => {
-    const keywords = ['important', 'crucial', 'significant', 'key', 'essential'];
+    const keywords = ['중요한', '결정적인', '핵심', '필수적인', '중대한', '면접', '취업', '이력서','챗봇', 'force', 'focusjob'];
     let highlightedText = text;
 
     keywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-      highlightedText = highlightedText.replace(regex, `<span class="${styles.highlight}">$&</span>`);
+      const regex = new RegExp(`(${keyword})`, 'gi');
+      highlightedText = highlightedText.replace(regex, `<span class="${styles.highlight}">$1</span>`);
     });
-
+  
     return <span dangerouslySetInnerHTML={{ __html: highlightedText }} />;
   };
 
@@ -148,7 +153,6 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, onOptionS
           </div>
         </div>
       )}
-      {/* 메시지 목록의 끝을 나타내는 div */}
       <div ref={messagesEndRef} />
     </div>
   );
