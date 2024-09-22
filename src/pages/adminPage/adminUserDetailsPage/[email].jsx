@@ -81,7 +81,6 @@ const AdminUserDetails = observer(() => {
       await viewUserStore.fetchUserByEmail(updatedUser.email);
 
       alert("사용자 정보가 성공적으로 업데이트되었습니다.");
-      window.location.reload();
       setEditMode(false); // 수정 모드 종료
     } catch (error) {
       alert("사용자 정보를 업데이트하는 중 오류가 발생했습니다.");
@@ -95,7 +94,7 @@ const AdminUserDetails = observer(() => {
         params: { email: user.email }, 
       });
       alert(response.data);
-      window.location.reload();
+      await viewUserStore.fetchUserByEmail(user.email);
     } catch (error) {
       console.error('사용자 비활성화 중 오류가 발생했습니다:', error);
       alert('비활성화 요청 중 오류가 발생했습니다.');
@@ -109,7 +108,7 @@ const AdminUserDetails = observer(() => {
         params: { email: user.email },
       });
       alert(response.data);
-      window.location.reload();
+      await viewUserStore.fetchUserByEmail(user.email);
     } catch (error) {
       console.error('사용자 활성화 중 오류가 발생했습니다:', error);
       alert('활성화 요청 중 오류가 발생했습니다.');
@@ -123,7 +122,7 @@ const AdminUserDetails = observer(() => {
         params: { email: user.email },
       });
       alert(response.data);
-      window.location.reload();
+      router.push('/adminPage/adminUserPage');
     } catch (error) {
       console.error('사용자 탈퇴 중 오류가 발생했습니다:', error);
       alert('탈퇴 요청 중 오류가 발생했습니다.');
