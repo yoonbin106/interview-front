@@ -10,6 +10,7 @@ import Bot from '@/pages/bot/bot';
 import SpeedDial from '@/pages/bot/speedDial';
 import { Provider, useDispatch } from 'react-redux';
 import { ChatProvider } from '@/contexts/chatContext';
+import { ChatRoomProvider } from '@/contexts/chatRoomContext';
 import { createTheme } from '@mui/material/styles';
 
 const queryClient = new QueryClient();
@@ -28,8 +29,9 @@ function MyApp({ Component, pageProps }) {
       <Provider store={store}>
         <StoreProvider>
           <ChatProvider>
-            <div className="app">
-              {/* <ThemeProvider theme={theme}> */}
+            <ChatRoomProvider>
+              <div className="app">
+                {/* <ThemeProvider theme={theme}> */}
                 <Header />
                 <div className="content">
                   <Component {...pageProps} />
@@ -39,6 +41,7 @@ function MyApp({ Component, pageProps }) {
                 <Bot />
                 {/* </ThemeProvider> */}
               </div>
+            </ChatRoomProvider>
           </ChatProvider>
         </StoreProvider>
       </Provider>

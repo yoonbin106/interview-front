@@ -29,6 +29,18 @@ const Header = observer(() => {
   const [alarmList, setAlarmList] = useState(0);
   const [badgeCount, setBadgeCount] = useState(0);
 
+  const [menuOpen, setMenuOpen] = useState(false); // 메뉴 열림/닫힘 상태 관리
+
+    // 메뉴 열기/닫기 토글 함수
+    const toggleMenu = () => {
+        setMenuOpen((prevOpen) => !prevOpen);
+    };
+
+    // 메뉴를 강제로 닫는 함수 (TabPanel에서 사용할 수 있도록 전달)
+    const closeMenu = () => {
+        setMenuOpen(false);
+    };
+
   const smoothScroll = (targetPosition, duration) => {
     const startPosition = window.pageYOffset;
     const distance = targetPosition - startPosition;
@@ -267,17 +279,24 @@ const Header = observer(() => {
                       slots={{ root: IconButton }}
                       slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
                       sx={{ borderRadius: 40, width: 50, height: 50 }}
+                      onClick={toggleMenu}
                     >
                       <Badge badgeContent={badgeCount} color="danger" variant="solid" size="sm">
                         <NotificationsNoneTwoToneIcon color="action" />
                       </Badge>
                     </MenuButton>
-                    <Menu placement="bottom-start" sx={{ width: 400 }}>
-                      <TabPanel userId={userStore.id} alarmList={alarmList} setAlarmList={setAlarmList} getAlarm={getAlarm}/>
-                      {/* <MenuItem>알림</MenuItem>
-                      <ListDivider />
-                      <MenuItem>채팅 : 안읽은 메시지 {badgeCount}개</MenuItem>
-                      <MenuItem>고객센터 : 안읽은 메시지 1개</MenuItem> */}
+                    <Menu 
+                      open={menuOpen}
+                      onClose={closeMenu}
+                      placement="bottom-start" 
+                      sx={{ width: 400 }}>
+                      <TabPanel 
+                        userId={userStore.id} 
+                        alarmList={alarmList} 
+                        setAlarmList={setAlarmList} 
+                        getAlarm={getAlarm}
+                        closeMenu={closeMenu}/>
+                      
                     </Menu>
                   </Dropdown>
                 }

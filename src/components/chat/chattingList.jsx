@@ -91,6 +91,29 @@ const ChattingList = ({
         }
     };
 
+    const formatTime = (timestamp) => {
+
+        // 마지막 메시지의 날짜
+        const messageDate = new Date(timestamp);
+        const now = new Date();
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+
+        const month = messageDate.toLocaleString('default', { month: 'numeric' });
+        const day = messageDate.toLocaleString('default', { day: 'numeric' });
+
+        // 마지막 메시지의 날짜가 오늘이면 시간만 반환
+        if (messageDate.toDateString() === now.toDateString()) {
+            return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // 시간만 반환
+        }  // 마지막 메시지의 날짜가 어제이면 "어제" 반환
+        else if (messageDate.toDateString() === yesterday.toDateString()) {
+            return "어제";
+        } 
+        else {
+            return `${month} ${day}`;
+        }
+    };
+
     const options = [
         { label: '채팅방 이름 수정', action: () => setShowEditModal(true) },
         { label: '채팅방 나가기', action: exitChatroom },
@@ -107,11 +130,11 @@ const ChattingList = ({
                                 <MessageSquareDiff />
                             </button>
                         </div>
-                        <div className={styles.chattingListSettings}>
+                        {/* <div className={styles.chattingListSettings}>
                             <button>
                                 <Settings />
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                     {chatRoomList.length === 0 ? (
                         <div className={styles.noChatroom}>
@@ -164,29 +187,29 @@ const ChattingList = ({
                                             </>
                                         ) : usersInChatroom[list.id] && usersInChatroom[list.id].length >= 4 ? (
                                             <>
-                                            <Avatar
-                                                src={usersInChatroom[list.id][0].profileImage}
-                                                className="avatar"
-                                                style={{ width: 25, height: 25, top: '-0px', left: '0px' }}
-                                            />
-                                            <Avatar
-                                                src={usersInChatroom[list.id][1].profileImage}
-                                                className="avatar"
-                                                style={{ width: 25, height: 25, top: '-25px', left: '25px' }}
-                                            />
-                                            <Avatar
-                                                src={usersInChatroom[list.id][2].profileImage}
-                                                className="avatar"
-                                                style={{ width: 25, height: 25, top: '-25px', left: '0px' }}
-                                            />
-                                            <Avatar
-                                                src={usersInChatroom[list.id][3].profileImage}
-                                                className="avatar"
-                                                style={{ width: 25, height: 25, top: '-50px', left: '25px' }}
-                                            />
-                                        </>
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][0].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 25, height: 25, top: '-0px', left: '0px' }}
+                                                />
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][1].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 25, height: 25, top: '-25px', left: '25px' }}
+                                                />
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][2].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 25, height: 25, top: '-25px', left: '0px' }}
+                                                />
+                                                <Avatar
+                                                    src={usersInChatroom[list.id][3].profileImage}
+                                                    className="avatar"
+                                                    style={{ width: 25, height: 25, top: '-50px', left: '25px' }}
+                                                />
+                                            </>
                                         ) : usersInChatroom[list.id] && usersInChatroom[list.id].length == 0 && (
-                                            <Avatar sx={{ width: 50, height: 50 }}/>
+                                            <Avatar sx={{ width: 50, height: 50 }} />
                                         )}
 
 
@@ -203,14 +226,21 @@ const ChattingList = ({
                                             {list.lastMessage ? list.lastMessage : '채팅내역 없음'}
                                         </div>
                                     </div>
-                                    
+
                                 </div>
-                                <div className={styles.chattingListAlarmBadge}>
+                                <div className={styles.verticalContainer}>
+                                    <div className={styles.messageTime}>{formatTime(list.updatedTime)}</div>
+                                    <div className={styles.chattingListAlarmBadge}>
+                                        <Badge badgeContent={chatAlarm.filter(alarm => alarm.chatroomId === list.id).length} color="error" sx={{ marginLeft: 4 }} />
+                                    </div>
+                                </div>
+
+                                {/* <div className={styles.chattingListAlarmBadge}>
                                     <Badge badgeContent={chatAlarm.filter(alarm => alarm.chatroomId === list.id).length} color="error" sx={{marginRight: 3}}/>
-                                    {/* <Badge badgeContent={getBadgeCount(list.id)} color="error" sx={{marginRight: 3}}/> */}
-                                </div>
+                                </div> */}
+
                                 <div>
-                                    <MenuIcon options={options} />
+                                    <MenuIcon options={options} sx={{ marginRight: 15 }} />
                                 </div>
                             </div>
                         ))

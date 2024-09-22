@@ -16,6 +16,21 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, usersInCh
     // console.log('user: ', user);
     return user ? user.profileImage : '';
   };
+  
+  const formatTime = (timestamp) => {
+
+    // 마지막 메시지의 날짜
+    const messageDate = new Date(timestamp);
+    const now = new Date();
+
+    // 마지막 메시지의 날짜가 오늘이면 시간만 반환
+    if (messageDate.toDateString() === now.toDateString()) {
+      return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // 시간만 반환
+    } else {
+      // 어제 또는 그 이전이면 날짜와 시간 모두 반환
+      return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // 날짜와 시간 모두 반환
+    }
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
@@ -49,30 +64,30 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, usersInCh
               <div className={styles.messageContent}>
                 <p>{message.text}</p>
               </div>
+              <div className={styles.messageTime}>{formatTime(message.timestamp)}</div>
             </div>
           ) : (
             <div key={index} className={`${styles.messageContainer} ${styles.others}`}>
 
               <div className={styles.recieverAvatar} aria-hidden="true">
                 <Avatar src={getSenderProfileImage(message.senderId)} sx={{ width: 50, height: 50 }}></Avatar>
-                {/* 보내는 사람 아이디: {message.senderId} */}
               </div>
 
               <div className={styles.othersMessageInfo}>
-
                 <div className={styles.othersMessageSender}>
                   {message.sender}
                 </div>
-
-                <div>
+                <div className={styles.messageContentFlex}>
                   <div className={styles.messageContent}>
                     {message.text}
                   </div>
+                  <div className={styles.messageTimeOther}>{formatTime(message.timestamp)}</div>
                 </div>
-
               </div>
+            
             </div>
           )
+          
 
         ))}
 

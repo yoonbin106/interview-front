@@ -3,9 +3,8 @@
 
   padding: 50px 10px 5px 2px;
   margin: 20px;
-  
+  overflow-x: hidden;
 }
-
 
 .messageContainer {
   display: flex;
@@ -30,8 +29,6 @@
   border-radius: 1rem;
   word-wrap: break-word;
 }
-
-
 
 .othersMessageInfo {
   display: flex;
@@ -61,8 +58,6 @@
   background-color: #f3f4f6;
   color: #1f2937;
 }
-
-
 
 .chattingMessageHeader {
   display: flex;
@@ -102,5 +97,25 @@
 }
 
 
+.messageTime {
+  color: #a1a1a1;
+  font-size: 0.75em;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  align-self: flex-end;
+}
 
+.messageTimeOther{
+  color: #a1a1a1;
+  font-size: 0.75em;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  align-self: flex-end;
+}
 
+.messageContentFlex {
+  width: 410px;
+  display: flex;
+}

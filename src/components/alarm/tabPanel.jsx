@@ -9,6 +9,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
+import { useChatRoom } from '@/contexts/chatRoomContext';
+
 import { MessageSquareMore, ClipboardPen } from 'lucide-react';
 
 function CustomTabPanel(props) {
@@ -40,8 +42,9 @@ function a11yProps(index) {
     };
 }
 
-export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm }) {
+export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, closeMenu }) {
     const [value, setValue] = useState(0);
+    const { setAlarmChatroomId, setAlarmUserId, setIsChatOpen } = useChatRoom();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -112,6 +115,13 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm }) 
     const chatAlarms = (alarmList || []).filter(alarm => alarm.type === 'chat');
     const bbsAlarms = (alarmList || []).filter(alarm => alarm.type === 'bbs');
 
+    const alarmClick = (alarm) => {
+        setAlarmChatroomId(alarm.chatroomId); // chatroomId 설정
+        setAlarmUserId(userId); // userId 설정
+        setIsChatOpen(true); // Chatting 열기
+        closeMenu();
+    };
+
     return (
         <div className={styles.tabPanelContainer}>
             <div className={styles.tabBarContainer}>
@@ -135,7 +145,9 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm }) 
                 <div className={styles.alarmContainer}>
                     {alarmList.length > 0 ? (
                         alarmList.map((alarm) => (
-                            <div key={alarm.id} className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}>
+                            <div key={alarm.id}
+                                className={`${styles.alarmItem} ${alarm.isRead === 0 ? styles.unread : styles.read}`}
+                                onClick={() => alarmClick(alarm)}>
                                 <div className={styles.alarmText}>
 
                                     <div className={styles.alarmMessage}>
@@ -149,14 +161,20 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm }) 
                                     </div>
 
                                 </div>
-                                <IconButton
-                                    aria-label="delete"
-                                    onClick={() => deleteAlarm(alarm.id)}
-                                    className={styles.deleteButton}
-                                >
-                                    <ClearIcon />
-                                </IconButton>
+                                <div>
+                                    <IconButton                                        
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteAlarm(alarm.id);
+                                        }}
+                                        className={styles.deleteButton}
+                                    >
+                                        <ClearIcon />
+                                    </IconButton>
+                                </div>
+
                             </div>
+
                         ))
                     ) : (
                         <div>전체 알림이 없습니다.</div>

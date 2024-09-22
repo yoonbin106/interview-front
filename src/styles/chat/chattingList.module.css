@@ -19,6 +19,7 @@
 
 .chattingListCreate {
     margin-left: 15px;
+    margin-right: 15px;
 }
 
 .chattingListCreate:hover {
@@ -26,7 +27,6 @@
 }
 
 .chattingListSettings {
-    margin-left: 15px;
     margin-right: 5px;
 }
 
@@ -64,13 +64,13 @@
     /* margin: 20px; */
     padding: 20px;
     display: flex;
-    width: 100%;
+    min-width: 380px;
 }
 
 .chattingListProfile {
     margin-right: 20px;
     position: relative;
-    width: 50px;
+    min-width: 50px;
     height: 50px;
 }
 
@@ -93,6 +93,30 @@
     text-overflow: ellipsis;
     max-width: 280px;
 }
+
+.verticalContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+}
+
+.chattingListAlarmBadge {
+    justify-content: center;
+    align-items: center; 
+    width: 100%; 
+}
+
+.messageTime {
+    width: 55px;
+    color: #a1a1a1;
+    font-size: 0.75em;
+    /* margin-top: 5px; */
+    /* margin-bottom: 3px; */
+    /* margin-left: 10px; */
+    margin-right: 10px;
+    /* align-self: flex-end; */
+  }
 
 .noChatroom {
     margin-top: 50px;
@@ -186,3 +210,4 @@
     width: 30px;
     height: 30px;
 }
+

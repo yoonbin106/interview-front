@@ -6,6 +6,7 @@ import { BsChatHeart, BsChatHeartFill } from "react-icons/bs";
 import { IoLogoSnapchat } from "react-icons/io5";
 import styles from '@/styles/bot/bot.module.css';
 import { useChat } from '@/contexts/chatContext';
+import { useChatRoom } from '@/contexts/chatRoomContext';
 import Chatting from 'pages/chat/chatting';
 import Bot from '@/pages/bot/bot';
 import Image from 'next/image';
@@ -13,7 +14,10 @@ import { RiCameraLensFill } from 'react-icons/ri';
 
 const SpeedDial = () => {
   const [open, setOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const { alarmChatroomId, alarmUserId, isChatOpen, setIsChatOpen } = useChatRoom();
+  // const [isChatOpen, setIsChatOpen] = useState(false);
+
   const [isBotOpen, setIsBotOpen] = useState(false);
   const { openBot, closeBot } = useChat();
   const theme = useTheme();
@@ -130,7 +134,7 @@ const SpeedDial = () => {
         </Box>
       </div>
       <div className={styles.chatContainers}>
-      {isChatOpen && <Chatting closeChatting={() => setIsChatOpen(false)} />}
+      {isChatOpen && <Chatting closeChatting={() => setIsChatOpen(false)} alarmChatroomId={alarmChatroomId} alarmUserId={alarmUserId}/>}
         {isBotOpen && <Bot onClose={() => setIsBotOpen(false)} />}
       </div>
     </>

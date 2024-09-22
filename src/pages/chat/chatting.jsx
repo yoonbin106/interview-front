@@ -199,7 +199,7 @@ const Chatting = observer(({ closeChatting }) => {
             readChatAlarmInChatroom(currentChatRoomIdRef.current);
             //채팅방으로 들어갔을 때 실행될 코드 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             setMessages([]);
-            getPastChatting();
+            getPastChatting(currentChatRoomIdRef.current);
         }
     }, [currentChatRoomIdRef.current]);
 
@@ -237,10 +237,10 @@ const Chatting = observer(({ closeChatting }) => {
     };
 
     //currentChatRoomId : 선택된 채팅방 ID 값 저장돼있듬
-    const getPastChatting = async () => {
+    const getPastChatting = async (chatroomId) => {
         try {
             const response = await axios.post('http://localhost:8080/api/chat/getPastChatting',
-                currentChatRoomIdRef.current,
+                chatroomId,
                 { headers: { 'Content-Type': 'application/json' } });
 
             const pastMessages = response.data.map(chat => ({
