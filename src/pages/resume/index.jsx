@@ -277,53 +277,54 @@ const ModalContent = styled('div')(
     }
   };
   
-  const handleFieldChange = (index, e, fields, setFields, errors, setErrors) => {
+  const handleFieldChange = (index, e, fields, setFields, errors, setErrors, isEducationField = false) => {
     const { name, value } = e.target;
 
-    //모든 필드 업데이트
+    // 모든 필드 업데이트
     const updatedFields = [...fields];
     updatedFields[index][name] = value;
     setFields(updatedFields);
 
-    // 학력 필드 에러 업데이트
-  const updatedErrors = errors ? [...errors] : []; // errors 배열이 없으면 빈 배열로 초기화
-  if (!updatedErrors[index]) {
-    updatedErrors[index] = {}; // 현재 index가 없는 경우 빈 객체로 초기화
-  }
+    // 학력 필드일 경우에만 오류 업데이트
+    if (isEducationField) {
+        const updatedErrors = [...errors]; // 기존 오류 상태 유지
+        if (!updatedErrors[index]) {
+            updatedErrors[index] = {}; // 현재 index가 없는 경우 빈 객체로 초기화
+        }
 
-  if (value.trim() !== '') {
-    updatedErrors[index][name] = false;
-  } else {
-    updatedErrors[index][name] = true;
-  }
-
-  setErrors(updatedErrors);
+        updatedErrors[index][name] = value.trim() === ''; // 값이 비어 있으면 true
+        setErrors(updatedErrors);
+    }
 };
 
   // 필드추가 +버튼용
-  const addField = (fields, setFields, newField, errors, setErrors) => {
+  const addField = (fields, setFields, newField, errors, setErrors, isEducationField = false) => {
     setFields([...fields, newField]);
   
     // 학력 필드 추가 시 오류 상태 추가
-    setErrors([
-      ...errors,
-      {
-        school_name: false,
-        major: false,
-        start_date: false,
-        end_date: false,
-        graduation_status: false,
-      },
-    ]);
+    if (isEducationField) {
+      setErrors([
+        ...errors,
+        {
+          school_name: false,
+          major: false,
+          start_date: false,
+          end_date: false,
+          graduation_status: false,
+        },
+      ]);
+    }
   };
 
   // 필드제거 x버튼용
-  const removeField = (index, fields, setFields, errors, setErrors) => {
+  const removeField = (index, fields, setFields, isEducationField = false) => {
     const updatedFields = fields.filter((_, i) => i !== index);
     setFields(updatedFields);
   
-    const updatedErrors = errors.filter((_, i) => i !== index);
-    setErrors(updatedErrors);
+    if (isEducationField) {
+      const updatedErrors = educationErrors.filter((_, i) => i !== index);
+      setEducationErrors(updatedErrors);
+    }
   };
 
   // 취소버튼용
@@ -980,21 +981,19 @@ const applyColorToQuotes = (text) => {
 {educationFields.map((field, index) => (
   <div key={index} className={styles.formSection} style={{ position: 'relative' }}>
     {index > 0 && (
-      
       <ClearIcon
-    className={styles.clearIcon}
-    onClick={() => removeField(index, educationFields, setEducationFields, educationErrors, setEducationErrors)}
-    style={{
-    position: 'absolute',
-    right: '-15px',
-    top: '10px',
-    cursor: 'pointer',
-    color: '#6c757d',
-    padding: '13px',
-    boxSizing: 'content-box',
-  }}
-/>
-
+        className={styles.clearIcon}
+        onClick={() => removeField(index, educationFields, setEducationFields, true)} // isEducationField를 true로 설정
+        style={{
+          position: 'absolute',
+          right: '-15px',
+          top: '10px',
+          cursor: 'pointer',
+          color: '#6c757d',
+          padding: '13px',
+          boxSizing: 'content-box',
+        }}
+      />
     )}
 
     {index > 0 && <div className={styles.formGroupSeparator}></div>}
@@ -1003,12 +1002,12 @@ const applyColorToQuotes = (text) => {
       <div className={styles.formGroupInline}>
         <div className={styles.formGroup} style={{ flex: 1 }}>
           <div className={styles.formInlineValid}>
-          <label className={styles.label}>학교</label>
-          {educationErrors[index].school_name && (
-          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
-            ※ 필수 입력입니다.
-          </div>
-        )}
+            <label className={styles.label}>학교</label>
+            {educationErrors[index]?.school_name && ( // 안전하게 접근
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+                ※ 필수 입력입니다.
+              </div>
+            )}
           </div>
           <input
             type="text"
@@ -1016,80 +1015,83 @@ const applyColorToQuotes = (text) => {
             name="school_name"
             className={styles.input}
             value={field.school_name}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors, true)}
           />
+        </div>
 
-        </div>
         <div className={styles.formGroup} style={{ marginLeft: '30px', flex: 1 }}>
-        <div className={styles.formInlineValid}>
-          <label className={styles.label}>전공</label>
-          {educationErrors[index].major && (
-          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
-            ※ 필수 입력입니다.
+          <div className={styles.formInlineValid}>
+            <label className={styles.label}>전공</label>
+            {educationErrors[index]?.major && ( // 안전하게 접근
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+                ※ 필수 입력입니다.
+              </div>
+            )}
           </div>
-        )}
-        </div>
           <input
             type="text"
             placeholder="전공 입력"
             name="major"
             className={styles.input}
             value={field.major}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors, true)}
           />
         </div>
       </div>
+
       <div className={styles.formGroupInline}>
         <div className={styles.formGroup}>
-        <div className={styles.formInlineValid}>
-          <label className={styles.label}>입학</label>
-          {educationErrors[index].start_date && (
-          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
-            ※ 필수 입력입니다.
+          <div className={styles.formInlineValid}>
+            <label className={styles.label}>입학</label>
+            {educationErrors[index]?.start_date && ( // 안전하게 접근
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+                ※ 필수 입력입니다.
+              </div>
+            )}
           </div>
-        )}
-        </div>
           <input
             type="month"
             placeholder="----년 --월"
             name="start_date"
             className={styles.input}
             value={field.start_date}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors, true)}
           />
         </div>
+
         <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-        <div className={styles.formInlineValid}>
-          <label className={styles.label}>졸업</label>
-          {educationErrors[index].end_date && (
-          <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
-            ※ 필수 입력입니다.
+          <div className={styles.formInlineValid}>
+            <label className={styles.label}>졸업</label>
+            {educationErrors[index]?.end_date && ( // 안전하게 접근
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+                ※ 필수 입력입니다.
+              </div>
+            )}
           </div>
-        )}  
-        </div>  
           <input
             type="month"
             placeholder="----년 --월"
             name="end_date"
             className={styles.input}
             value={field.end_date}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields,educationErrors, setEducationErrors )}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors, true)}
           />
         </div>
+
         <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-        <div className={styles.formInlineValid}>
-          <label className={styles.label}>졸업구분</label>
-                {educationErrors[index].graduation_status && (
-        <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
-          ※ 필수 선택입니다.
-        </div>
-      )}
-      </div>
+          <div className={styles.formInlineValid}>
+            <label className={styles.label}>졸업구분</label>
+            {educationErrors[index]?.graduation_status && ( // 안전하게 접근
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left' }}>
+                ※ 필수 선택입니다.
+              </div>
+            )}
+          </div>
           <select
             name="graduation_status"
             value={field.graduation_status}
             className={styles.select}
-            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields ,educationErrors, setEducationErrors)}
+            onChange={(e) => handleFieldChange(index, e, educationFields, setEducationFields, educationErrors, setEducationErrors, true)}
           >
             <option value="">---</option>
             <option value="graduated">졸업</option>
@@ -1099,8 +1101,6 @@ const applyColorToQuotes = (text) => {
         </div>
       </div>
     </div>
-
-    
   </div>
 ))}
 
@@ -1112,113 +1112,119 @@ const applyColorToQuotes = (text) => {
       educationFields,
       setEducationFields,
       { school_name: '', major: '', start_date: '', end_date: '', graduation_status: '' },
-      educationErrors, // 추가된 에러 상태 인자
-      setEducationErrors // 에러 상태 업데이트 함수
+      true // isEducationField
     )
   }
 >
   + 학력 추가
 </button>
 
+
           <hr className={styles.hr} />
 
           <h2 className={styles.sectionHeader} ref={sectionsRef.career}>경력사항</h2>
-            <div className={styles.militaryCheckboxContainer}>
-              <input
-                type="checkbox"
-                className={styles.checkbox}
-                checked={isCareerExempt}
-                onChange={handleCareerExemptChange}
-              />
-              <label className={styles.checklabel}>해당 없음</label>
-            </div>
+<div className={styles.militaryCheckboxContainer}>
+  <input
+    type="checkbox"
+    className={styles.checkbox}
+    checked={isCareerExempt}
+    onChange={handleCareerExemptChange}
+  />
+  <label className={styles.checklabel}>해당 없음</label>
+</div>
 
-            {careerFields.map((field, index) => (
-              <div key={index} className={styles.formSection} style={{ position: 'relative' }}>
-                {index > 0 && (
-      
-                <ClearIcon
-                  className={styles.clearIcon} 
-                  onClick={() => removeField(index, careerFields, setCareerFields)} 
-                  style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }}
-                />
-              )}
-                {index > 0 && <div className={styles.formGroupSeparator}></div>}
+{careerFields.map((field, index) => (
+  <div key={index} className={styles.formSection} style={{ position: 'relative' }}>
+    {index > 0 && (
+      <ClearIcon
+        className={styles.clearIcon} 
+        onClick={() => removeField(index, careerFields, setCareerFields)} 
+        style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }}
+      />
+    )}
+    {index > 0 && <div className={styles.formGroupSeparator}></div>}
 
-                <div className={styles.formGroupInlineVertical}>
-                  <div className={styles.formGroupInline}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.label}>회사명</label>
-                      <input
-                        type="text"
-                        placeholder="회사 이름 입력"
-                        name="company_name"
-                        className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
-                        value={field.company_name}
-                        onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields)}
-                        disabled={isCareerExempt}
-                      />
-                    </div>
-                    <div className={styles.formGroup} style={{ width: '200px', marginLeft: '30px' }}>
-                      <label className={styles.label}>입사날짜</label>
-                      <input
-                        type="month"
-                        name="join_date"
-                        className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
-                        value={field.join_date}
-                        onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields)}
-                        disabled={isCareerExempt}
-                      />
-                    </div>
-                    <div className={styles.formGroup} style={{ width: '200px', marginLeft: '47px' }}>
-                      <label className={styles.label}>퇴사날짜</label>
-                      <input
-                        type="month"
-                        name="leave_date"
-                        className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
-                        value={field.leave_date}
-                        onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields)}
-                        disabled={isCareerExempt}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.formGroupInline}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.label}>직위/직책</label>
-                      <input
-                        type="text"
-                        placeholder="직위/직책 입력"
-                        name="position"
-                        className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
-                        value={field.position}
-                        onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields)}
-                        disabled={isCareerExempt}
-                      />
-                    </div>
-                    <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
-                      <label className={styles.label}>업무내용</label>
-                      <input
-                        type="text"
-                        placeholder="업무내용 입력"
-                        name="job_description"
-                        className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
-                        value={field.job_description}
-                        onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields)}
-                        disabled={isCareerExempt}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button
-              type="button"
-              className={`${styles.add} ${styles.button}`}
-              onClick={() => addField(careerFields, setCareerFields, { company_name: '', join_date: '', leave_date: '', position: '', job_description: '' })}
-              disabled={isCareerExempt}
-            >
-              + 경력 추가
-            </button>
+    <div className={styles.formGroupInlineVertical}>
+      <div className={styles.formGroupInline}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>회사명</label>
+          <input
+            type="text"
+            placeholder="회사 이름 입력"
+            name="company_name"
+            className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
+            value={field.company_name}
+            onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields, false)} // 유효성 검사 없음
+            disabled={isCareerExempt}
+          />
+        </div>
+        <div className={styles.formGroup} style={{ width: '200px', marginLeft: '30px' }}>
+          <label className={styles.label}>입사날짜</label>
+          <input
+            type="month"
+            name="join_date"
+            className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
+            value={field.join_date}
+            onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields, false)} // 유효성 검사 없음
+            disabled={isCareerExempt}
+          />
+        </div>
+        <div className={styles.formGroup} style={{ width: '200px', marginLeft: '47px' }}>
+          <label className={styles.label}>퇴사날짜</label>
+          <input
+            type="month"
+            name="leave_date"
+            className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
+            value={field.leave_date}
+            onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields, false)} // 유효성 검사 없음
+            disabled={isCareerExempt}
+          />
+        </div>
+      </div>
+      <div className={styles.formGroupInline}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>직위/직책</label>
+          <input
+            type="text"
+            placeholder="직위/직책 입력"
+            name="position"
+            className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
+            value={field.position}
+            onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields, false)} // 유효성 검사 없음
+            disabled={isCareerExempt}
+          />
+        </div>
+        <div className={styles.formGroup} style={{ marginLeft: '30px' }}>
+          <label className={styles.label}>업무내용</label>
+          <input
+            type="text"
+            placeholder="업무내용 입력"
+            name="job_description"
+            className={`${styles.input} ${isCareerExempt ? styles.disabledInput : ''}`}
+            value={field.job_description}
+            onChange={(e) => handleFieldChange(index, e, careerFields, setCareerFields, false)} // 유효성 검사 없음
+            disabled={isCareerExempt}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+))}
+
+<button
+  type="button"
+  className={`${styles.add} ${styles.button}`}
+  onClick={() => addField(
+    careerFields, 
+    setCareerFields, 
+    { company_name: '', join_date: '', leave_date: '', position: '', job_description: '' },
+    [], // 오류 상태를 사용하지 않으므로 빈 배열 전달
+    () => {}, // 상태 업데이트 함수도 필요 없음
+    false // 학력 필드가 아니므로 false 전달
+  )}
+>
+  + 경력 추가
+</button>
 
           <hr className={styles.hr} />
 
@@ -1238,7 +1244,7 @@ const applyColorToQuotes = (text) => {
                 {index > 0 && (
                 <ClearIcon
                   className={styles.clearIcon} 
-                  onClick={() => removeField(index, languageFields, setLanguageFields)} 
+                  onClick={() => removeField(index, languageFields, setLanguageFields, false)} 
                   style={{ position: 'absolute', right: '8px', top: '27px', cursor: 'pointer', color: '#6c757d' }}
                 />
                 )}
@@ -1254,7 +1260,7 @@ const applyColorToQuotes = (text) => {
                         name="language"
                         className={`${styles.input} ${isLanguageExempt ? styles.disabledInput : ''}`}
                         value={field.language}
-                        onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
+                        onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields, false)}
                         disabled={isLanguageExempt}
                       />
                     </div>
@@ -1266,7 +1272,7 @@ const applyColorToQuotes = (text) => {
                         name="language_level"
                         className={`${styles.input} ${isLanguageExempt ? styles.disabledInput : ''}`}
                         value={field.language_level}
-                        onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
+                        onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields, false)}
                         disabled={isLanguageExempt}
                       />
                     </div>
@@ -1278,7 +1284,7 @@ const applyColorToQuotes = (text) => {
                         name="language_score"
                         className={`${styles.input} ${isLanguageExempt ? styles.disabledInput : ''}`}
                         value={field.language_score}
-                        onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields)}
+                        onChange={(e) => handleFieldChange(index, e, languageFields, setLanguageFields, false)}
                         disabled={isLanguageExempt}
                       />
                     </div>
@@ -1289,7 +1295,11 @@ const applyColorToQuotes = (text) => {
             <button
               type="button"
               className={`${styles.add} ${styles.button}`}
-              onClick={() => addField(languageFields, setLanguageFields, { language: '', language_level: '', language_score: '' })}
+              onClick={() => addField(languageFields, setLanguageFields, { language: '', language_level: '', language_score: '' },
+                [], // 오류 상태를 사용하지 않으므로 빈 배열 전달
+                () => {}, // 상태 업데이트 함수도 필요 없음
+                false // 학력 필드가 아니므로 false 전달
+              )}
               disabled={isLanguageExempt}
             >
               + 외국어 추가
@@ -1329,7 +1339,7 @@ const applyColorToQuotes = (text) => {
                       name="contest_name"
                       className={`${styles.input} ${isAwardExempt ? styles.disabledInput : ''}`}
                       value={field.contest_name}
-                      onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
+                      onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields, false)}
                       disabled={isAwardExempt}
                     />
                   </div>
@@ -1341,7 +1351,7 @@ const applyColorToQuotes = (text) => {
                       name="contest_award"
                       className={`${styles.input} ${isAwardExempt ? styles.disabledInput : ''}`}
                       value={field.contest_award}
-                      onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
+                      onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields, false)}
                       disabled={isAwardExempt}
                     />
                   </div>
@@ -1352,7 +1362,7 @@ const applyColorToQuotes = (text) => {
                       name="contest_date"
                       className={`${styles.input} ${isAwardExempt ? styles.disabledInput : ''}`}
                       value={field.contest_date}
-                      onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields)}
+                      onChange={(e) => handleFieldChange(index, e, awardFields, setAwardFields, false)}
                       disabled={isAwardExempt}
                     />
                   </div>
@@ -1362,7 +1372,11 @@ const applyColorToQuotes = (text) => {
             <button
               type="button"
               className={`${styles.add} ${styles.button}`}
-              onClick={() => addField(awardFields, setAwardFields, { contest_name: '', contest_award: '', contest_date: '' })}
+              onClick={() => addField(awardFields, setAwardFields, { contest_name: '', contest_award: '', contest_date: '' },
+                [], // 오류 상태를 사용하지 않으므로 빈 배열 전달
+                () => {}, // 상태 업데이트 함수도 필요 없음
+                false // 학력 필드가 아니므로 false 전달
+              )}
               disabled={isAwardExempt}
             >
               + 입상경력 추가
@@ -1402,7 +1416,7 @@ const applyColorToQuotes = (text) => {
                       name="certificate_name"
                       className={`${styles.input} ${isCertificateExempt ? styles.disabledInput : ''}`}
                       value={field.certificate_name}
-                      onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
+                      onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields, false)}
                       disabled={isCertificateExempt}
                     />
                   </div>
@@ -1414,7 +1428,7 @@ const applyColorToQuotes = (text) => {
                       name="certificate_issuer"
                       className={`${styles.input} ${isCertificateExempt ? styles.disabledInput : ''}`}
                       value={field.certificate_issuer}
-                      onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
+                      onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields, false)}
                       disabled={isCertificateExempt}
                     />
                   </div>
@@ -1425,7 +1439,7 @@ const applyColorToQuotes = (text) => {
                       name="certificate_date"
                       className={`${styles.input} ${isCertificateExempt ? styles.disabledInput : ''}`}
                       value={field.certificate_date}
-                      onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields)}
+                      onChange={(e) => handleFieldChange(index, e, certificateFields, setCertificateFields, false)}
                       disabled={isCertificateExempt}
                     />
                   </div>
@@ -1435,7 +1449,11 @@ const applyColorToQuotes = (text) => {
             <button
               type="button"
               className={`${styles.add} ${styles.button}`}
-              onClick={() => addField(certificateFields, setCertificateFields, { certificate_name: '', certificate_issuer: '', certificate_date: '' })}
+              onClick={() => addField(certificateFields, setCertificateFields, { certificate_name: '', certificate_issuer: '', certificate_date: '' },
+                [], // 오류 상태를 사용하지 않으므로 빈 배열 전달
+                () => {}, // 상태 업데이트 함수도 필요 없음
+                false // 학력 필드가 아니므로 false 전달
+              )}
               disabled={isCertificateExempt}
             >
               + 자격증 추가
