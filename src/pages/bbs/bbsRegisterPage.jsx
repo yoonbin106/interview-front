@@ -82,58 +82,7 @@ const BbsRegister = observer(() => {
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
                             </Grid>
-                            <Grid item container spacing={1} xs={12} alignItems="center">
-                                <Grid item>
-                                    <Typography variant="body1">글꼴 크기:</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Select
-                                        value={fontSize}
-                                        onChange={handleFontSizeChange}
-                                        variant="outlined"
-                                        size="small"
-                                    >
-                                        {[...Array(30).keys()].map(i => (
-                                            <MenuItem key={i} value={i + 10}>{i + 10}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={toggleFontWeight}>
-                                        <FormatBoldIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={toggleFontStyle}>
-                                        <FormatItalicIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={toggleTextDecoration}>
-                                        <FormatUnderlinedIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={() => handleTextAlign('left')}>
-                                        <FormatAlignLeftIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={() => handleTextAlign('center')}>
-                                        <FormatAlignCenterIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={() => handleTextAlign('right')}>
-                                        <FormatAlignRightIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={() => handleTextAlign('justify')}>
-                                        <FormatAlignJustifyIcon />
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
+                           
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
