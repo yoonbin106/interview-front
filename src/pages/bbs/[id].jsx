@@ -39,10 +39,7 @@ const PostPage = () => {
     return <div>No post found</div>;
   }
 
-  // 게시글이 신고 처리된 경우를 확인하는 조건
-  if (post.deletedReason === 1) {
-    return <div>신고 처리된 글입니다</div>;
-  }
+  
 
   return (
     <div>

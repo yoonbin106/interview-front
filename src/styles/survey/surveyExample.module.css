@@ -49,7 +49,7 @@
     justify-content: center;
     align-items: center;
     width: 1140px;
-    height: 440px;
+    height: 580px;
     background-color: white;
     border-radius: 8px;
 }
@@ -184,7 +184,7 @@
     color: white;
     border-width: 1px;
     border-radius: 8px;
-    background-color: #9CB8F5;
+    background-color: #5A8AF2;
     cursor: pointer;
     text-decoration: none;
 }

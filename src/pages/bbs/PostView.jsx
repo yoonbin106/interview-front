@@ -101,7 +101,7 @@ const PostContent = ({ post, openReportModal }) => {
   if (post.deletedReason === 1) {
     return (
       <div className={styles.reportedContainer}>
-        <span className={styles.icon}>⚠️</span>
+        <span className={styles.reportedIcon}>⚠️</span>
         신고 접수된 게시글, 현재 관리자의 검토가 진행 중입니다.
       </div>
     );
