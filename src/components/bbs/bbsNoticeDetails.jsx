@@ -68,15 +68,19 @@ const BbsNoticeDetails = ({ noticeData }) => {
             ) : (
                 <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedNotice.noticeTitle}</h2>
             )}
-            <p className={styles.noticeDetailsDate}>
-                {new Date(editedNotice.noticeCreatedTime).toLocaleString('ko-KR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                })}
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <p className={styles.noticeDetailsDate}>
+                    {new Date(editedNotice.noticeCreatedTime).toLocaleString('ko-KR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })}
+                </p>
+                {editedNotice.user && (
+                    <Typography variant="body1" className={styles.noticeDetailsAuthor}>
+                        작성자: {editedNotice.user.username}
+                    </Typography>
+                )}
+            </div>
         </div>
     );
 

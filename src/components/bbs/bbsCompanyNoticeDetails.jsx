@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Paper, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, Paper, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TableCell } from '@mui/material';
 import dynamic from 'next/dynamic';
 import styles from '@/styles/bbs/bbsCompanyNoticeDetails.module.css';
 import axios from 'axios';
@@ -87,27 +87,42 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
 
     const renderHeader = () => (
         <div className={styles.bbsCompanyNoticeDetailsHeader}>
-            {isEditing ? (
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="제목"
-                    name="adminNoticeTitle"
-                    value={editedCompanyNotice.companyNoticeTitle || ''}
-                    onChange={(e) =>
-                        setEditedCompanyNotice(prevNotice => ({
-                            ...prevNotice,
-                            companyNoticeTitle: e.target.value
-                        }))
-                    }
-                    inputProps={{ style: { fontWeight: 'bold', fontSize: '1.5rem' } }}
-                />
-            ) : (
-                <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedCompanyNotice.companyNoticeTitle}</h2>
-            )}
-            <p className={styles.bbsCompanyNoticeDetailsDate}>{editedCompanyNotice.companyNoticeCreatedTime}</p>
+          {isEditing ? (
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="제목"
+              name="adminNoticeTitle"
+              value={editedCompanyNotice.companyNoticeTitle || ''}
+              onChange={(e) =>
+                setEditedCompanyNotice(prevNotice => ({
+                  ...prevNotice,
+                  companyNoticeTitle: e.target.value
+                }))
+              }
+              inputProps={{ style: { fontWeight: 'bold', fontSize: '1.5rem' } }}
+            />
+          ) : (
+            <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
+              {editedCompanyNotice.companyNoticeTitle}
+            </h2>
+          )}
+      
+          {/* 작성일자와 작성자를 수평 배치 */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+                <p className={styles.companyNoticeDetailsDate}>
+                    {new Date(editedCompanyNotice.companyNoticeCreatedTime).toLocaleString('ko-KR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })}
+                </p>
+            <Typography variant="subtitle1" style={{ marginLeft: '1px' }}>
+              작성자: {editedCompanyNotice.user?.username}
+            </Typography>
+          </div>
         </div>
-    );
+      );
+      
 
     const renderContent = () => (
         <div className={styles.bbsCompanyNoticeDetailsContent}>
@@ -139,11 +154,7 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
         </div>
     );
 
-    const renderAuthor = () => (
-        <div className={styles.bbsCompanyNoticeAuthor}>
-            <Typography variant="subtitle1">작성자: {editedCompanyNotice.user?.username}</Typography>
-        </div>
-    );
+   
 
     const renderButtons = () => (
         <div className={styles.bbsCompanyNoticeDetailsButtonsContainer}>
@@ -164,7 +175,6 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
                         [기업 공지사항]
                     </Typography>
                     {renderHeader()}
-                    {renderAuthor()}
                     {renderContent()}
                     {renderButtons()}
                 </Paper>
