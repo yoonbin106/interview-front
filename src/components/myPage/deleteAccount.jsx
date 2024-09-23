@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from '@/styles/myPage/deleteAccount.module.css';
 import LockIcon from '@mui/icons-material/Lock';
@@ -7,6 +7,11 @@ import { useStores } from '@/contexts/storeContext';
 
 const DeleteAccount = observer(() => {
   const { userStore } = useStores();
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    setEmail(userStore.email);
+  }, []);
 
   return (
     <main className={styles.formContact}>
@@ -26,7 +31,7 @@ const DeleteAccount = observer(() => {
                 <span className={styles.emailLabel}>이메일</span>
               </div>
               <div className={styles.inputWrapper}>
-                <span className={styles.emailValue}>{userStore.email}</span>
+                <span className={styles.emailValue}>{email}</span>
               </div>
           </div>
 

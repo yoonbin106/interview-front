@@ -28,19 +28,22 @@
   // import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderTop: '2px solid #dddddd',
+    borderBottom: '2px solid #dddddd',
     [`&.${tableCellClasses.body}`]: {
       fontSize: 16,
     },
     // 새로운 스타일 추가
     '&.first-column': {
       // backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
+      color: theme.palette.common.black,
       textAlign: 'center',
     },
     width: '150px',
   }));
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    borderBottom: '2px solid #dddddd',
     '&:last-child td, &:last-child th': {
       border: 0,
     },
@@ -338,17 +341,17 @@
             <Table sx={{ minWidth: '700px', height: '224px', backgroundColor:'white',borderRadius:'8px'}} aria-label="customized table">
               <TableBody sx={{borderRadius:'8px'}}>
                 <StyledTableRow>
-                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이름</StyledTableCell>
+                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#eeeeee'}}>이름</StyledTableCell>
                   <StyledTableCell>
                     <TextField required id="name" defaultValue={userInfo.username} variant="standard" />
                   </StyledTableCell>
-                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>성별</StyledTableCell>
+                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#eeeeee'}}>성별</StyledTableCell>
                   <StyledTableCell>
                     <TextField required id="name" defaultValue={userInfo.gender} disabled variant="standard" />
                   </StyledTableCell>
                   </StyledTableRow>
                   <StyledTableRow>
-                  <StyledTableCell component="th" scope="row" className="first-column" sx={{ height: '48px', backgroundColor: '#cdcdcd' }}>
+                  <StyledTableCell component="th" scope="row" className="first-column" sx={{ height: '48px', backgroundColor: '#eeeeee' }}>
                     생년월일
                   </StyledTableCell>
                   <StyledTableCell>
@@ -397,13 +400,13 @@
                       />
                     </Popover>
                   </StyledTableCell>
-                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>연락처</StyledTableCell>
+                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#eeeeee'}}>연락처</StyledTableCell>
                   <StyledTableCell colSpan={5}>
                     <TextField required id="name" disabled defaultValue={userInfo.phone} variant="standard" InputProps={{ readOnly: true }}/>
                   </StyledTableCell>
                 </StyledTableRow>
                 <StyledTableRow>
-                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'80px',backgroundColor:'#cdcdcd'}}>주소</StyledTableCell>
+                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'80px',backgroundColor:'#eeeeee'}}>주소</StyledTableCell>
 
                   <StyledTableCell colSpan={5}>
                     <TextField 
@@ -446,7 +449,7 @@
 
                 </StyledTableRow>
                 <StyledTableRow>
-                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#cdcdcd'}}>이메일</StyledTableCell>
+                  <StyledTableCell component="th" scope="row" className="first-column"sx={{height:'48px',backgroundColor:'#eeeeee'}}>이메일</StyledTableCell>
                   <StyledTableCell colSpan={5}>
                     <TextField required id="name" defaultValue={userInfo.email} disabled variant="standard" InputProps={{ readOnly: true, }}/>
                   </StyledTableCell>

@@ -11,18 +11,23 @@ import Paper from '@mui/material/Paper';
 import { useStores } from '@/contexts/storeContext';
 import { observer } from 'mobx-react-lite';
 import { getPayInfoByUserId } from 'api/user';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderTop: '2px solid #aaaaaa',
+    borderBottom: '2px solid #aaaaaa',
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
+        backgroundColor: '#eeeeee',
+        color: theme.palette.common.black,
         textAlign: 'center',
         padding: '8px',  // 헤더 셀의 패딩을 줄임
+        height: 50,
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         textAlign: 'center',
         padding: '8px',  // 바디 셀의 패딩을 줄임
+        height: 65,
     },
 }));
 
@@ -67,19 +72,21 @@ const PaymentHistory = observer(() => {
             <h1 className={styles.formTitle}>결제 내역</h1>
             <section className={styles.infoBox}>
                 <div className={styles.infoHeader}>
+                    <CampaignIcon sx={{ fontSize: 40 }} />
                     <span className={styles.infoLabel}>안내</span>
                 </div>
-                <p className={styles.infoContent}>
+
+                <div className={styles.infoContent}>
                     결제하신 내역을 보실 수 있습니다. <br /> <br />
                     - 결제를 취소하고 싶으시면 문의사항에 문의해주시길 바랍니다. <br />
                     - 횟수를 1번이라도 사용하시면 환불이 불가능한점 유의해주시길 바랍니다. <br />
                     - 환불문의시 주문번호, 상품명, 이메일 적어주시면 환불처리 도와드립니다.
-                </p>
+                </div>
             </section>
 
             <div className={styles.interviewContent}>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 700, height: 350, align: 'center' }} aria-label="customized table">
+                    <Table sx={{ minWidth: 700, align: 'center' }} aria-label="customized table">
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell>주문번호</StyledTableCell>
@@ -104,7 +111,7 @@ const PaymentHistory = observer(() => {
                                 ))
                             ) : (
                                 <StyledTableRow>
-                                    <StyledTableCell colSpan={6} sx={{alignContent: 'center'}}>
+                                    <StyledTableCell colSpan={6} sx={{ alignContent: 'center' }}>
                                         결제 내역이 존재하지 않습니다.
                                     </StyledTableCell>
                                 </StyledTableRow>

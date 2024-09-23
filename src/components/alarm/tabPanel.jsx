@@ -136,6 +136,7 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
     };
 
     const bbsAlarmClick = (bbsId, id) => {
+        console.log('bbsId, id: ', bbsId, id);
         router.push(`/bbs/postView?id=${bbsId}`);
         readBbsAlarm(id);
         closeMenu();

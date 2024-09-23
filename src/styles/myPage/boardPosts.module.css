@@ -1,29 +1,30 @@
 .formContact {
-    width: 1000px;
-    min-width: 500px;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    font-family: sans-serif;
-  }
+  width: 1000px;
+  min-width: 500px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+}
 
 .formTitle {
-    color: #000;
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1;
-    align-self: flex-start;
-  }
+  color: #000;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  align-self: flex-start;
+  margin-bottom: 50px;
+}
 
-  .formSubTitle {
-    margin: 40px 0 20px 0;
-  }
+.formSubTitle {
+  margin: 10px 0 20px 0;
+}
 
-  .tablePagination {
-    display: flex;
-    margin: 25px auto;
-    justify-content: center;
-    justify-items: center;
-    /* margin: 20px 0 20px 0; */
-    width: 500px;
-  }
+.tablePagination {
+  display: flex;
+  margin: 25px auto;
+  justify-content: center;
+  justify-items: center;
+  /* margin: 20px 0 20px 0; */
+  width: 500px;
+}

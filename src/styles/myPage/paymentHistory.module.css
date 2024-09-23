@@ -19,41 +19,48 @@
 }
 
 .infoBox {
-  background-color: #e4e4e4;
+  /* background-color: #e4e4e4; */
+  border-radius: 8px;
+  justify-content: flex-start;
   display: flex;
-  margin-top: 20px; /* 위쪽 마진 줄임 */
+  margin-top: 40px;
   width: 100%;
   max-width: 1167px;
   align-items: flex-start;
   color: #000;
-  flex-wrap: wrap;
-  padding: 20px; /* 패딩 줄임 */
-  gap: 15px; /* 내부 요소 간격 조절 */
+  /* flex-wrap: wrap; */
+  padding-top: 0px;
+  padding-left: 15px;
+  padding-bottom: 30px;
+  padding-right: 120px;
 }
 
 .infoHeader {
+  height: 40px;
+  width: 90px;
   display: flex;
   gap: 11px;
-  font-size: 14px; /* 폰트 크기를 조금 줄임 */
+  font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
-  line-height: 1.2; /* 줄 간격을 조금 더 늘림 */
+  line-height: 1;
+  margin-left: 38px;
 }
 
 .infoLabel {
+  font-size: 20px;
   justify-content: start;
   margin: auto 0;
 }
 
 .infoContent {
-  margin-top: 10px; /* 위쪽 마진 줄임 */
-  font-size: 16px; /* 폰트 크기를 조금 줄임 */
+  margin-top: 10px;
   font-weight: 400;
-  line-height: 1.4; /* 줄 간격을 조금 더 늘림 */
-  flex-grow: 1;
-  width: 950px; /* 너비 줄임 */
-  flex-basis: auto;
-  padding-left: 20px; /* 왼쪽 패딩 줄임 */
+  line-height: 20px;
+  height: 100px;
+  width: 800px;
+  padding-left: 40px;
+  color: #616161;
 }
 
 .interviewContent {

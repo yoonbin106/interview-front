@@ -23,19 +23,23 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderTop: '2px solid #aaaaaa',
+    borderBottom: '2px solid #aaaaaa',
     whiteSpace: 'nowrap',          // 텍스트를 한 줄로 유지
     overflow: 'hidden',            // 넘치는 부분을 숨김
     textOverflow: 'ellipsis',      // 넘치는 텍스트를 '...'로 표시
     // maxWidth: '200px',
+    
 
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
+        backgroundColor: '#eeeeee',
+        color: theme.palette.common.black,
         textAlign: 'center',
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         textAlign: 'center',
+        height: 65,
     },
 }));
 
@@ -63,7 +67,6 @@ const BoardPosts = observer(() => {
         getMyBbsComment();
         getMyBbsPost();
     }, []);
-
 
     const handlePostPageChange = (event, value) => {
         setCurrentPostPage(value);
@@ -135,10 +138,10 @@ const BoardPosts = observer(() => {
 
             <div className={styles.tableContent}>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 700, height: 200, align: 'center' }} aria-label="customized table">
+                    <Table sx={{ minWidth: 700, align: 'center', tableLayout: 'fixed' }} aria-label="customized table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell style={{ width: '50px' }}>번호</StyledTableCell>
+                                <StyledTableCell style={{ width: '70px' }}>번호</StyledTableCell>
                                 <StyledTableCell style={{ width: '180px', maxWidth: '200px' }}>제목</StyledTableCell>
                                 <StyledTableCell style={{ width: '450px' }}>내용</StyledTableCell>
                                 <StyledTableCell style={{ width: '110px' }}>작성일</StyledTableCell>
@@ -149,7 +152,7 @@ const BoardPosts = observer(() => {
                             {currentPosts.map((post) => (
 
                                 <StyledTableRow key={post.bbsId}>
-                                    <StyledTableCell style={{ width: '50px' }}>{post.bbsId}</StyledTableCell>
+                                    <StyledTableCell style={{ width: '70px' }}>{post.bbsId}</StyledTableCell>
                                     <StyledTableCell
                                         onClick={() => handleRowClick(post.bbsId)}
                                         style={{ cursor: 'pointer', width: '180px', maxWidth: '200px' }}
@@ -184,12 +187,12 @@ const BoardPosts = observer(() => {
 
             <div className={styles.tableContent}>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 700, height: 200, align: 'center' }} aria-label="customized table">
+                    <Table sx={{ minWidth: 700, align: 'center', tableLayout: 'fixed' }} aria-label="customized table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell style={{ width: '50px' }}>번호</StyledTableCell>
-                                <StyledTableCell style={{ width: '180px', maxWidth: '200px' }}>제목</StyledTableCell>
-                                <StyledTableCell style={{ width: '450px' }}>내용</StyledTableCell>
+                                <StyledTableCell style={{ width: '70px' }}>번호</StyledTableCell>
+                                <StyledTableCell style={{ width: '180px', maxWidth: '200px' }}>게시글 제목</StyledTableCell>
+                                <StyledTableCell style={{ width: '450px' }}>댓글 내용</StyledTableCell>
                                 <StyledTableCell style={{ width: '110px' }}>작성일</StyledTableCell>
                                 <StyledTableCell style={{ width: '120px' }}></StyledTableCell>
                             </TableRow>
@@ -199,7 +202,7 @@ const BoardPosts = observer(() => {
 
                                 <StyledTableRow key={comment.commentId}>
 
-                                    <StyledTableCell style={{ width: '50px' }}>{comment.commentId}</StyledTableCell>
+                                    <StyledTableCell style={{ width: '70px' }}>{comment.commentId}</StyledTableCell>
                                     <StyledTableCell style={{ width: '180px', maxWidth: '200px' }}>{comment.bbsTitle}</StyledTableCell>
                                     <StyledTableCell
                                         onClick={() => handleRowClick(comment.bbsId)}

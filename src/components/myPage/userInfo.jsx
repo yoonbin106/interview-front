@@ -13,17 +13,21 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useStores } from '@/contexts/storeContext';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  borderTop: '2px solid #dddddd',
+  borderBottom: '2px solid #dddddd',
   [`&.${tableCellClasses.body}`]: {
     fontSize: 16,
   },
   '&.first-column': {
-    color: theme.palette.common.white,
+    color: theme.palette.common.black,
     textAlign: 'center',
+    backgroundColor: '#eeeeee'
   },
   width: '150px',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  borderBottom: '2px solid #dddddd',
   '&:last-child td, &:last-child th': {
     border: 0,
   },

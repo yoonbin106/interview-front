@@ -115,24 +115,12 @@ export default function SideMenu(theme) {
 
       <Divider sx={{ borderColor: grey[400] }} />
 
-      <ListItemButton onClick={() => handleClick('inquiry')}>
-        <ListItemText primary="문의 현황" />
-        {openItems.inquiry ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={openItems.inquiry} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <a href="/myPage/inquiryHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <ListItemButton sx={nestedListItemButtonStyle}>
-              <ListItemText primary="문의내역" />
-            </ListItemButton>
-          </a>
-          <a href="/myPage/reportHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <ListItemButton sx={nestedListItemButtonStyle}>
-              <ListItemText primary="신고 내역" />
-            </ListItemButton>
-          </a>
-        </List>
-      </Collapse>
+      
+      <a href="/myPage/reportHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <ListItemButton>
+          <ListItemText primary="신고 내역" />
+        </ListItemButton>
+      </a>
 
       <Divider sx={{ borderColor: grey[400] }} />
 
