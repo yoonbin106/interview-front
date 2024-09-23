@@ -396,45 +396,55 @@ const ModalContent = styled('div')(
     }
 
     
-     //5.학력 섹션 유효성 검사
-     const newEducationErrors = [...educationErrors];
-     educationFields.forEach((field, index) => {
-       let fieldHasError = false;
-   
-       //학교명
-       if (field.school_name.trim() === '') {
-         newEducationErrors[index].school_name = true;
-         fieldHasError = true;
-       }
-       //전공
-       if (field.major.trim() === '') {
-         newEducationErrors[index].major = true;
-         fieldHasError = true;
-       }
-       //입학
-       if (field.start_date === '') {
-         newEducationErrors[index].start_date = true;
-         fieldHasError = true;
-       }
-       //졸업
-       if (field.end_date === '') {
-         newEducationErrors[index].end_date = true;
-         fieldHasError = true;
-       }
-       //졸업구분
-       if (field.graduation_status === '') {
-         newEducationErrors[index].graduation_status = true;
-         fieldHasError = true;
-       }
-       // 첫 번째 오류 필드로 스크롤 이동 설정
-       if (fieldHasError && !hasError) {
-         firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
-         hasError = true;
-       }
-     });
-   
-     setEducationErrors(newEducationErrors);
+      // 5. 학력 섹션 유효성 검사
+    const newEducationErrors = educationErrors.map((error) => ({ ...error })); // 깊은 복사
+    educationFields.forEach((field, index) => {
+        let fieldHasError = false;
 
+        // 학교명
+        if (field.school_name.trim() === '') {
+            if (!newEducationErrors[index]) newEducationErrors[index] = {}; // 초기화
+            newEducationErrors[index].school_name = true;
+            fieldHasError = true;
+        }
+
+        // 전공
+        if (field.major.trim() === '') {
+            if (!newEducationErrors[index]) newEducationErrors[index] = {}; // 초기화
+            newEducationErrors[index].major = true;
+            fieldHasError = true;
+        }
+
+        // 입학
+        if (field.start_date === '') {
+            if (!newEducationErrors[index]) newEducationErrors[index] = {}; // 초기화
+            newEducationErrors[index].start_date = true;
+            fieldHasError = true;
+        }
+
+        // 졸업
+        if (field.end_date === '') {
+            if (!newEducationErrors[index]) newEducationErrors[index] = {}; // 초기화
+            newEducationErrors[index].end_date = true;
+            fieldHasError = true;
+        }
+
+        // 졸업구분
+        if (field.graduation_status === '') {
+            if (!newEducationErrors[index]) newEducationErrors[index] = {}; // 초기화
+            newEducationErrors[index].graduation_status = true;
+            fieldHasError = true;
+        }
+
+        // 첫 번째 오류 필드로 스크롤 이동 설정
+        if (fieldHasError && !hasError) {
+            firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
+            hasError = true;
+        }
+    });
+
+    setEducationErrors(newEducationErrors);
+    
     // 첫 번째 에러 필드로 스크롤
     if (firstErrorField) {
       firstErrorField();
