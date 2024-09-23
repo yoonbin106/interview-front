@@ -91,9 +91,6 @@ const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [liked, setIsLiked] = useState(post.userLiked || false);
-  const userId = userStore.id || 'Anonymous';  // 사용자 아이디 또는 Anonymous
-  const [postData, setPost] = useState(post);
   const postOwnerId = Number(post.userId?.id) || 0;
   const currentUserId = Number(userStore.id) || 0;
 

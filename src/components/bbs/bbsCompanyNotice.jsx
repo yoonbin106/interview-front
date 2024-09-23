@@ -10,13 +10,15 @@ import TableHead from '@mui/material/TableHead';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { TextField, Grid, FormControl, InputLabel } from '@mui/material';
+import { TextField, Grid, FormControl, InputLabel, Typography, ListItemIcon } from '@mui/material';
 import NestedList from '@/components/bbs/bbsSidebar';
 import { useRouter } from 'next/router';
 
 
 import styles from '@/styles/bbs/bbsCompanyNotice.module.css';
 import axios from 'axios';
+import { FaBuilding } from 'react-icons/fa';
+
 
 
 const PaginationTableAdminCompanyNotice = ({rows,page,rowsPerPage}) => {
@@ -146,18 +148,16 @@ const BbsCompanyNotice = () => {
                 <NestedList />
             </div>
             <div className={styles.companyNoticeContent}>
-                <div className={styles.companyNoticeMainContainer}>
-                    <div style={{ display: 'flex', alignItems: 'center',justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                    
-                            <h2 className={styles.companyNoticeTitle}>기업 공지</h2>
-                        </div>
-                        
-                    </div>
-                    <hr className={styles.companyNoticeTitleDivider} />
-                    </div>
-
-                    
+                
+                    <Box sx={{ padding: 2, display: 'flex', alignItems: 'center' }}>
+                        <ListItemIcon sx={{ fontSize: 40, color: '#1976d2'  }} >
+                            <FaBuilding />
+                        </ListItemIcon>
+                        <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold' }}>
+                            기업 공지
+                        </Typography>
+                    </Box>
+    
                     <PaginationTableAdminCompanyNotice
                         rows={filteredNotices}
                         page={page}
@@ -249,7 +249,7 @@ const BbsCompanyNotice = () => {
                         </Select>
                     </Box>
                 </div>
-            </div>
+        </div>
     );
 };
 

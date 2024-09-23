@@ -3,6 +3,8 @@
 /* 테이블 관련 스타일 */
 .companyNoticeTableContainer {
     margin-top: 20px;
+    
+    
   }
   
   .companyNoticeTableHeaderCell {
@@ -51,6 +53,7 @@
   
   .companyNoticeMainContainer {
     padding: 20px;
+   
   }
   
   .companyNoticeTitle {
