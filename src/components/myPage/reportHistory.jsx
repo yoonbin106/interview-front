@@ -16,6 +16,10 @@ import axios from 'axios';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderTop: '2px solid #aaaaaa',
     borderBottom: '2px solid #dddddd',
+    whiteSpace: 'nowrap',          // 텍스트를 한 줄로 유지
+    overflow: 'hidden',            // 넘치는 부분을 숨김
+    textOverflow: 'ellipsis',      // 넘치는 텍스트를 '...'로 표시
+
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#eeeeee',
         color: theme.palette.common.black,
@@ -89,7 +93,7 @@ const ReportHistory = observer(() => {
             // 내림차순 정렬 (최신 글이 위로)
             const sortedReportPosts = filteredPosts.sort((a, b) => new Date(b.reportedAt) - new Date(a.reportedAt));
             setReportPosts(sortedReportPosts);
-            console.log('신고한 게시글 response.data: ', sortedReportPosts);
+            // console.log('신고한 게시글 response.data: ', sortedReportPosts);
         } catch (error) {
             console.error('신고한 게시글 불러오기 중 에러 발생:', error);
         }
@@ -102,34 +106,26 @@ const ReportHistory = observer(() => {
 
             <div className={styles.interviewContent}>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 700, align: 'center' }} aria-label="customized table">
+                    <Table sx={{ minWidth: 700, tableLayout: 'fixed' }} aria-label="customized table"> {/* table-layout: fixed 설정 */}
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>번호</StyledTableCell>
-                                <StyledTableCell>제목</StyledTableCell>
-                                <StyledTableCell>내용</StyledTableCell>
-                                <StyledTableCell>신고사유</StyledTableCell>
-                                <StyledTableCell>처리상태</StyledTableCell>
-                                <StyledTableCell>신고날짜</StyledTableCell>
+                                <StyledTableCell sx={{ width: '90px' }}>번호</StyledTableCell>
+                                <StyledTableCell sx={{ width: '150px' }}>제목</StyledTableCell>
+                                <StyledTableCell sx={{ width: '200px' }}>내용</StyledTableCell>
+                                <StyledTableCell sx={{ width: '120px' }}>신고사유</StyledTableCell>
+                                <StyledTableCell sx={{ width: '100px' }}>처리상태</StyledTableCell>
+                                <StyledTableCell sx={{ width: '180px' }}>신고날짜</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {reportPosts.map((post) => (
-
-                                <StyledTableRow key={post.reportId} 
-                                // onClick={() =>
-                                //     handleRowClick(post.reportId)}
-                                //     style={{ cursor: 'pointer' }}  
-                                >
-
-                                    <StyledTableCell>{post.reportId}</StyledTableCell>
-                                    <StyledTableCell width={200}>{post.title}</StyledTableCell>
-                                    <StyledTableCell>{post.content}</StyledTableCell>
-                                    <StyledTableCell>{post.reason}</StyledTableCell>
-                                    
-                                    <StyledTableCell>{post.status == 'PENDING' ? '검토중' : '신고완료'}</StyledTableCell>
-                                    <StyledTableCell>{formatDate(post.reportedAt)}</StyledTableCell>
-
+                                <StyledTableRow key={post.reportId}>
+                                    <StyledTableCell sx={{ width: '90px' }}>{post.reportId}</StyledTableCell>
+                                    <StyledTableCell sx={{ width: '150px' }}>{post.title}</StyledTableCell>
+                                    <StyledTableCell sx={{ width: '200px' }}>{post.content}</StyledTableCell>
+                                    <StyledTableCell sx={{ width: '120px' }}>{post.reason}</StyledTableCell>
+                                    <StyledTableCell sx={{ width: '100px' }}>{post.status == 'PENDING' ? '검토중' : '신고완료'}</StyledTableCell>
+                                    <StyledTableCell sx={{ width: '180px' }}>{formatDate(post.reportedAt)}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
