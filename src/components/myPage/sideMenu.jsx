@@ -90,7 +90,8 @@ export default function SideMenu(theme) {
 
       <Divider sx={{ borderColor: grey[400] }} />
 
-      <a href="/myPage/interviewHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
+      {/* <a href="/myPage/interviewHistory" style={{ textDecoration: 'none', color: 'inherit' }}> */}
+      <a href="/interview/interviewResultList" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton>
           <ListItemText primary="모의 면접 내역" />
         </ListItemButton>
@@ -122,7 +123,7 @@ export default function SideMenu(theme) {
         <List component="div" disablePadding>
           <a href="/myPage/inquiryHistory" style={{ textDecoration: 'none', color: 'inherit' }}>
             <ListItemButton sx={nestedListItemButtonStyle}>
-              <ListItemText primary="1:1 문의내역" />
+              <ListItemText primary="문의내역" />
             </ListItemButton>
           </a>
           <a href="/myPage/reportHistory" style={{ textDecoration: 'none', color: 'inherit' }}>

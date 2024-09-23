@@ -41,22 +41,24 @@ const PaymentHistory = observer(() => {
         const fetchPaymentInfo = async () => {
             try {
                 const paymentInfo = await getPayInfoByUserId(userStore.id);
-    
-                const newRows = paymentInfo.data.map((info) => ({
-                    no: info.orderId || '주문번호가 없습니다.',
-                    paymentProduct: info.orderName || '주문내역이 없습니다',
-                    paymentMethod: info.payMethod || '결제수단이 없습니다',
-                    payment: info.price ? info.price.toString() : '결제금액이 없습니다',
-                    date: info.approvedAt ? info.approvedAt.split('T')[0] : '결제일시 정보가 없습니다',
-                    useCount: info.useCount != null ? info.useCount.toString() : '사용가능 횟수가 없습니다',
-                }));
-    
-                setRows(newRows); // rows에 여러 항목을 추가
+                if (paymentInfo) {
+                    const newRows = paymentInfo.data.map((info) => ({
+                        no: info.orderId || '주문번호가 없습니다.',
+                        paymentProduct: info.orderName || '주문내역이 없습니다',
+                        paymentMethod: info.payMethod || '결제수단이 없습니다',
+                        payment: info.price ? info.price.toString() : '결제금액이 없습니다',
+                        date: info.approvedAt ? info.approvedAt.split('T')[0] : '결제일시 정보가 없습니다',
+                        useCount: info.useCount != null ? info.useCount.toString() : '사용가능 횟수가 없습니다',
+                    }));
+
+                    setRows(newRows); // rows에 여러 항목을 추가
+                }
+
             } catch (error) {
                 console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
             }
         };
-    
+
         fetchPaymentInfo();
     }, [userStore]);
 
@@ -89,17 +91,24 @@ const PaymentHistory = observer(() => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-
-                                <StyledTableRow key={row.no}>
-                                    <StyledTableCell>{row.no}</StyledTableCell>
-                                    <StyledTableCell>{row.paymentProduct}</StyledTableCell>
-                                    <StyledTableCell>{row.paymentMethod}</StyledTableCell>
-                                    <StyledTableCell>{row.payment} 원</StyledTableCell>
-                                    <StyledTableCell>{row.date}</StyledTableCell>
-                                    <StyledTableCell>{row.useCount}</StyledTableCell>
+                            {rows && rows.length > 0 ? (
+                                rows.map((row) => (
+                                    <StyledTableRow key={row.no}>
+                                        <StyledTableCell>{row.no}</StyledTableCell>
+                                        <StyledTableCell>{row.paymentProduct}</StyledTableCell>
+                                        <StyledTableCell>{row.paymentMethod}</StyledTableCell>
+                                        <StyledTableCell>{row.payment} 원</StyledTableCell>
+                                        <StyledTableCell>{row.date}</StyledTableCell>
+                                        <StyledTableCell>{row.useCount}</StyledTableCell>
+                                    </StyledTableRow>
+                                ))
+                            ) : (
+                                <StyledTableRow>
+                                    <StyledTableCell colSpan={6} sx={{alignContent: 'center'}}>
+                                        결제 내역이 존재하지 않습니다.
+                                    </StyledTableCell>
                                 </StyledTableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

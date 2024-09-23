@@ -1,9 +1,13 @@
-import React from "react";
+import React from 'react';
+import { observer } from 'mobx-react-lite';
 import styles from '@/styles/myPage/deleteAccount.module.css';
 import LockIcon from '@mui/icons-material/Lock';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useStores } from '@/contexts/storeContext';
 
-function DeleteAccount() {
+const DeleteAccount = observer(() => {
+  const { userStore } = useStores();
+
   return (
     <main className={styles.formContact}>
       <h1 className={styles.title}>회원 탈퇴</h1>
@@ -22,7 +26,7 @@ function DeleteAccount() {
                 <span className={styles.emailLabel}>이메일</span>
               </div>
               <div className={styles.inputWrapper}>
-                <span className={styles.emailValue}>example01@gmail.com</span>
+                <span className={styles.emailValue}>{userStore.email}</span>
               </div>
           </div>
 
@@ -41,15 +45,15 @@ function DeleteAccount() {
 
       {/* <hr className={styles.divider} /> */}
       <div className={styles.buttonGroup}>
-        <button type="button" className={styles.button}>
+        {/* <button type="button" className={styles.button}>
           <span className={styles.buttonText}>취소</span>
-        </button>
+        </button> */}
         <button type="submit" className={styles.button}>
-          <span className={styles.buttonText}>변경</span>
+          <span className={styles.buttonText}>확인</span>
         </button>
       </div>
     </main>
   );
-}
+});
 
 export default DeleteAccount;

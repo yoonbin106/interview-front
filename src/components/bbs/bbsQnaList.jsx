@@ -126,8 +126,8 @@ const BbsQnaList = () => {
 
   return (
     <div className={styles.bbsQnaListContainer}>
-      <Typography variant="h3" gutterBottom align="left" style={{ fontWeight: 'bold' }}>
-        1:1 문의내역
+      <Typography variant="h4" gutterBottom align="left" style={{ fontWeight: 'bold' }}>
+        문의내역
       </Typography>
 
       {filteredQnaData.length === 0 ? (
