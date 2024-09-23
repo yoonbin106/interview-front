@@ -59,8 +59,7 @@ const PaginationTableAdminCompanyNotice = ({rows,page,rowsPerPage}) => {
                         year: 'numeric',
                         month:'2-digit',
                         day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
+                        
                     })}
                   </TableCell>
                 </TableRow>
@@ -157,7 +156,7 @@ const BbsCompanyNotice = () => {
                             기업 공지
                         </Typography>
                     </Box>
-    
+
                     <PaginationTableAdminCompanyNotice
                         rows={filteredNotices}
                         page={page}

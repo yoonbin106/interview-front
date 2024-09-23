@@ -20,17 +20,17 @@ const NestedList = () => {
       <List>
         {/* 전체 공지사항으로 이동 */}
         <ListItem button onClick={() => handleNavigation('/bbs/noticePage')}>
-          <ListItemIcon>
+          <ListItemIcon sx={{ minWidth: '30px' }}>
             <FaBell />
           </ListItemIcon>
-          <ListItemText primary="전체 공지사항" />
+          <ListItemText primary="전체 공지사항" sx={{marginLeft: '-6px'}}/>
         </ListItem>
         {/* 기업별 공지사항으로 이동 */}
         <ListItem button onClick={() => handleNavigation('/bbs/bbsCompanyNoticePage')}>
-          <ListItemIcon>
+          <ListItemIcon sx={{ minWidth: '30px' }}>
             <FaBuilding />
           </ListItemIcon>
-          <ListItemText primary="기업별 공지사항" />
+          <ListItemText primary="기업별 공지사항"  sx={{ marginLeft: '-8px' }}/>
         </ListItem>
       </List>
     </div>
