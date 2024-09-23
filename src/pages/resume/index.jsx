@@ -48,6 +48,7 @@ function ResumeForm() {
   const [showTitleError, setShowTitleError] = useState(false);
   const [profileImageError, setProfileImageError] = useState(false);
   const [genderError, setGenderError] = useState(false);
+  const [postcodeError,setPostcodeError] = useState(false);
   const [showSelfIntroError, setShowSelfIntroError] = useState(false);
   const [showMotivationError, setShowMotivationError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -257,7 +258,7 @@ const ModalContent = styled('div')(
     setMotivation(text);
   };
 
-  //한스펠 맞춤법 검사용
+  //한스펠 맞춤법 검사
   const handleProofread = async (text) => {
     if (text.trim() === '') {
       setProofreadResult([]);
@@ -339,7 +340,7 @@ const ModalContent = styled('div')(
   
     // 2. 인적사항 섹션 유효성 검사
 
-    //프로필 이미지 유효성 검사
+    //프로필 이미지
     if (!profileImage) {
       setProfileImageError(true);
       if (!hasError) {
@@ -348,7 +349,7 @@ const ModalContent = styled('div')(
       hasError = true;
     }
   
-    // 성별 유효성 검사
+    //성별
     if (!formData.gender || !['male', 'female', 'other'].includes(formData.gender)) {
       setGenderError(true);
       if (!hasError) {
@@ -356,14 +357,16 @@ const ModalContent = styled('div')(
       }
       hasError = true;
     }
-  
-   
+    //상세주소
+    if (specificAddress.trim() === '') {
+      setPostcodeError(true);
+      if (!hasError) {
+        firstErrorField = () => sectionsRef.address.current.scrollIntoView({ behavior: 'smooth' });
+      }
+      hasError = true;
+    }
     
-
-
-
-
-    // 자기소개 유효성 검사
+    //3.자기소개
     if (selfIntroduction.trim() === '') {
       setShowSelfIntroError(true);
       if (!hasError) {
@@ -372,7 +375,7 @@ const ModalContent = styled('div')(
       hasError = true;
     }
   
-    // 지원동기 유효성 검사
+    //4.지원동기
     if (motivation.trim() === '') {
       setShowMotivationError(true);
       if (!hasError) {
@@ -380,38 +383,38 @@ const ModalContent = styled('div')(
       }
       hasError = true;
     }
+
     
-     //3.학력 섹션 유효성 검사
+     //5.학력 섹션 유효성 검사
      const newEducationErrors = [...educationErrors];
      educationFields.forEach((field, index) => {
        let fieldHasError = false;
    
-       // 개별 필드 유효성 검사
+       //학교명
        if (field.school_name.trim() === '') {
          newEducationErrors[index].school_name = true;
          fieldHasError = true;
        }
-   
+       //전공
        if (field.major.trim() === '') {
          newEducationErrors[index].major = true;
          fieldHasError = true;
        }
-   
+       //입학
        if (field.start_date === '') {
          newEducationErrors[index].start_date = true;
          fieldHasError = true;
        }
-   
+       //졸업
        if (field.end_date === '') {
          newEducationErrors[index].end_date = true;
          fieldHasError = true;
        }
-   
+       //졸업구분
        if (field.graduation_status === '') {
          newEducationErrors[index].graduation_status = true;
          fieldHasError = true;
        }
-   
        // 첫 번째 오류 필드로 스크롤 이동 설정
        if (fieldHasError && !hasError) {
          firstErrorField = () => sectionsRef.education.current.scrollIntoView({ behavior: 'smooth' });
@@ -433,6 +436,8 @@ const ModalContent = styled('div')(
     setModalContent('작성 내용은 PDF 파일로 저장됩니다<br/>이력서를 저장하시겠습니까?');
     setIsModalOpen(true);
   };
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -576,15 +581,14 @@ const generatePDF = async () => {
     }));
   }, [userStore.username, userStore.email]);
 
+  //자기소개 AI첨삭
   const handleAiProofread = async (text) => {
     if (text.trim() === '') {
         setAiProofreadResult([{ message: "입력된 텍스트가 없습니다." }]);
         setIsAiProofreadSidebarOpen(true);
         return;
     }
-
     setLoading(true);
-
     try {
         const response = await axios.post('http://localhost:8080/api/chatgpt-self', {
             text,
@@ -602,12 +606,10 @@ const generatePDF = async () => {
                 }
                 return <span key={index} dangerouslySetInnerHTML={applyColorToQuotes(item)} />;
             });
-
             setAiProofreadResult([{ message: formattedText }]);
         } else {
             setAiProofreadResult([{ message: "AI 첨삭 결과를 불러오지 못했습니다." }]);
         }
-
         setIsAiProofreadSidebarOpen(true);
     } catch (error) {
         console.error('AI 첨삭 중 오류 발생:', error);
@@ -787,26 +789,29 @@ const applyColorToQuotes = (text) => {
                 value={formData.resume_title}
                 className={styles.input}
                 onChange={(e) => {
-                  setFormData({ ...formData, resume_title: e.target.value });
-                  if (e.target.value.trim() !== '') {
-                   setShowTitleError(false);
+                  const newTitle = e.target.value;
+                  setFormData({ ...formData, resume_title: newTitle });
+                  if (newTitle.trim() === '') {
+                    setShowTitleError(true);
+                  } else {
+                    setShowTitleError(false);
                   }
                 }}
               />
       
             {showTitleError && (
-              <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
-                ※ 필수 입력입니다
+              <div style={{ color: 'red', fontSize: '16px', marginTop: '10px', textAlign: 'left' }}>
+                ※ 이력서 제목을 입력하세요
               </div>
             )}
           </div>
 
           <hr className={styles.hr} />
 
-          <h2 className={styles.sectionHeader_personal} ref={sectionsRef.personalInfo}>인적사항</h2>
+          <h2 className={`${styles.sectionHeader_personal}  ${styles.requiredTwo}`} ref={sectionsRef.personalInfo}>인적사항</h2>
               <div className={styles.profileSection}>
                 <div className={`${styles.formGroup} ${styles.profileImageUpload}`}>
-                  <label className={`${styles.label} ${styles.required}`}>프로필 사진</label>
+                  <label className={`${styles.label}`}>프로필 사진</label>
                   <div className={styles.profileImageBox} onClick={() => document.getElementById('file-input').click()}>
                     {profileImage ? (
                       <img src={profileImage} alt="Profile" style={{ display: 'inline-block' }} />
@@ -831,18 +836,16 @@ const applyColorToQuotes = (text) => {
             <div className={styles.personalInfo}>
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
-                  <label className={`${styles.label} ${styles.required}`}>이름</label>
+                  <label className={`${styles.label}`}>이름</label>
                   <input type="text" placeholder="이름" value={formData.name} readOnly  />
-                  
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
-                  <label className={`${styles.label} ${styles.required}`}>생년월일</label>
+                  <label className={`${styles.label}`}>생년월일</label>
                   <input type="text" placeholder="생년월일" value={formData.birth} />
-                 
                 </div>
                 <div className={styles.formGroup} style={{ marginLeft: '15px' }}>
                 <div className={styles.formInlineValid}>
-                  <label className={`${styles.label} ${styles.required}`} >성별</label>
+                  <label className={`${styles.label}`} >성별</label>
                   {genderError && (
                 <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft:'5px' }}>
                   ※ 필수 선택입니다
@@ -866,13 +869,13 @@ const applyColorToQuotes = (text) => {
               <div className={styles.formInline}>
                 <div className={styles.formGroup}>
                   <div className={styles.formInlineValid}>                 
-                  <label className={`${styles.label} ${styles.required}`}>이메일</label>
+                  <label className={`${styles.label}`}>이메일</label>
                   </div>
                   <input type="email" className={styles.input} placeholder="이메일"  value={formData.email} />
                 </div>
                 <div className={styles.formGroup}>
   
-                  <label className={`${styles.label} ${styles.required}`}>휴대전화번호</label>
+                  <label className={`${styles.label}`}>휴대전화번호</label>
 
                   <input type="text" className={styles.phoneNumInput} placeholder="휴대전화번호" value={formData.phone} />
                 </div>
@@ -881,7 +884,14 @@ const applyColorToQuotes = (text) => {
           </div>
 
           <div className={styles.formGroup} style={{ marginTop: '30px' }}>
-            <label className={`${styles.label} ${styles.required}`}>주소</label>
+          <div className={styles.formInlineValid}>
+            <label className={`${styles.label}`}>주소</label>
+                      {postcodeError && (
+              <div style={{ color: 'red', fontSize: '14px', textAlign: 'left', marginLeft: '5px' }}>
+                ※ 우편번호 및 상세주소를 입력하세요.
+              </div>
+            )}
+          </div>  
             <div className="input-group mb-2">
                 <input
                   type="text"
@@ -901,7 +911,7 @@ const applyColorToQuotes = (text) => {
                   우편번호 검색
                 </button>
               </div>
-            
+              
           </div>
           <div className={styles.formGroup_address}>
 
@@ -918,11 +928,22 @@ const applyColorToQuotes = (text) => {
               <div className={styles.formGroupInline_address}>
                 <input
                   type="text"
+                  name="specificAddress"
                   className={styles.formControl_address}
                   id="specificAddress"
                   placeholder="상세주소"
                   value={specificAddress}
-                  onChange={(e) => setSpecificAddress(e.target.value)}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    setSpecificAddress(newValue);
+              
+                    // 입력값이 비어있으면 오류 상태 유지
+                    if (newValue.trim() === '') {
+                      setPostcodeError(true);
+                    } else {
+                      setPostcodeError(false); // 입력이 있으면 오류 해제
+                    }
+                  }}
                 />
                 <input
                   type="text"
@@ -1545,15 +1566,17 @@ const applyColorToQuotes = (text) => {
         </div>
         <div className={styles.textareaContainer}>
       {selfIntroduction.length === 0 && (
-        <div className={styles.placeholder}>본인을 소개하는 글을 작성해주세요.</div>
+        <div className={styles.placeholder}>본인을 소개하는 글을 작성해주세요</div>
       )}
           <pre
             contenteditable="true"
             value={selfIntroduction}
             onInput={(e) => {
               handleSelfIntroductionChange(e);
-              if (e.target.innerText.trim() !== '') {
-                setShowSelfIntroError(false);
+              if (e.target.innerText.trim() === '') {
+                setShowSelfIntroError(true); // 입력이 없으면 오류 상태 유지
+              } else {
+                setShowSelfIntroError(false); // 입력이 있으면 오류 해제
               }
             }}
             onPaste={handlePaste} 
@@ -1562,8 +1585,8 @@ const applyColorToQuotes = (text) => {
 
           <div className={styles.charCounter}>{selfIntroduction.length}/2000</div>
           {showSelfIntroError && (
-              <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
-                ※ 자기소개를 입력하세요
+              <div style={{ color: 'red', fontSize: '16px', marginTop: '10px', textAlign: 'left' }}>
+                ※ 자기소개를 입력해주세요
               </div>
             )}
         </div>
@@ -1592,14 +1615,16 @@ const applyColorToQuotes = (text) => {
         </div>
         <div className={styles.textareaContainer}>
           {motivation.length === 0 && (
-            <div className={styles.placeholder}>회사에 지원하게 된 동기를 작성해주세요.</div>
+            <div className={styles.placeholder}>회사에 지원하게 된 동기를 작성해주세요</div>
           )}
           <pre
             contentEditable="true"
             onInput={(e) => {
               handleMotivationChange(e);
-              if (e.target.innerText.trim() !== '') {
-                setShowMotivationError(false);
+              if (e.target.innerText.trim() === '') {
+                setShowMotivationError(true); // 입력이 없으면 오류 상태 유지
+              } else {
+                setShowMotivationError(false); // 입력이 있으면 오류 해제
               }
             }}
             maxLength="2000"
@@ -1609,8 +1634,8 @@ const applyColorToQuotes = (text) => {
           </pre>
           <div className={styles.charCounter}>{motivation.length}/2000</div>
           {showMotivationError && (
-              <div style={{ color: 'red', fontSize: '14px', marginTop: '10px', textAlign: 'left' }}>
-                ※ 지원동기를 입력하세요
+              <div style={{ color: 'red', fontSize: '16px', marginTop: '10px', textAlign: 'left' }}>
+                ※ 지원동기를 입력해주세요
               </div>
             )}
         </div>

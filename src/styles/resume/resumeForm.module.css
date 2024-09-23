@@ -261,7 +261,7 @@
   position: absolute;
   top: 0;
   color: red;
-  font-size: 0.5em !important;
+  font-size: 0.6em !important;
 }
 
 .input[type="text"],
@@ -509,7 +509,7 @@
 
 .profileImageBox {
   width: 160px;
-  height: 160px;
+  height: 200px;
   border: 1px dashed #ced4da;
   display: flex;
   justify-content: center;
@@ -521,7 +521,7 @@
 
 .profileImageBox img {
   width: 160px;
-  height: 160px;
+  height: 195px;
   object-fit: cover;
   border-radius: 4px;
 }
@@ -656,15 +656,14 @@
 }
 
 .formGroupSeparator {
-  border-bottom: 1px dashed #ced4da;
+  border-bottom: 2px dashed #ced4da;
   margin: 15px 0;
 }
 
 .hr {
-  margin-top: 30px;
-  margin-bottom: 25px;
-  border: none; /* 원하는 대로 변경 가능 */
-  border-top: 1px solid #8d8d8d; /* hr의 선 스타일을 지정 */
+  margin-top: 22px;
+  margin-bottom: 22px;
+  border-top: 2px solid #868585; /* hr의 선 스타일을 지정 */
 }
 .disabledLabel {
   color: #adb5bd !important;
