@@ -86,12 +86,7 @@ const AdminUser = ({ allData }) => {
 
     const totalPages = Math.ceil(sortedResults.length / rowsPerPage); // 전체 페이지 수 계산
 
-   // 프로필 업데이트 함수
-   const handleProfileUpdate = (updatedProfile) => {
-    // profile 업데이트 시 기존 프로필이 유지되도록 처리
-    userStore.setProfile(updatedProfile || userStore.profile);
-};
-    
+ 
     return (
         <Box className={styles.adminUserContainer}>
             <Box display="flex" alignItems="center">
