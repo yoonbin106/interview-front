@@ -337,8 +337,9 @@ const Header = observer(() => {
 
                   </div>
                   <div className={styles.subMenus}>
-                    <a href="/bbs/bbsFaqPage" className={styles.subMenu}>문의사항</a>
                     <a href="/bbs/noticePage" className={styles.subMenu}>공지사항</a>
+                    <a href="/bbs/bbsFaqPage" className={styles.subMenu}>문의사항</a>
+                    
                   </div>
                 </div>
                 <div className={styles.emptyMenuFrame}></div>
