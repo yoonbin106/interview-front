@@ -13,32 +13,25 @@ const LoadingOverlay = () => {
 
   const speakText = useCallback((text) => {
     if ('speechSynthesis' in window) {
-      try {
-        const speech = new SpeechSynthesisUtterance(text);
-        speech.lang = 'ko-KR';
-        window.speechSynthesis.speak(speech);
-      } catch (error) {
-        console.error('Speech synthesis error:', error);
-      }
-    } else {
-      console.error('Speech synthesis not supported');
+      // 이전 음성을 취소
+      window.speechSynthesis.cancel();
+
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = 'ko-KR';
+      window.speechSynthesis.speak(speech);
     }
   }, []);
 
   useEffect(() => {
-    let interval;
-    const speakAndSetInterval = () => {
-      speakText(messages[currentMessageIndex]);
-      interval = setInterval(() => {
-        setCurrentMessageIndex((prevIndex) => {
-          const newIndex = (prevIndex + 1) % messages.length;
-          speakText(messages[newIndex]);
-          return newIndex;
-        });
-      }, 10000);
-    };
+    // 첫 번째 메시지 즉시 재생
+    speakText(messages[currentMessageIndex]);
 
-    speakAndSetInterval();
+    const interval = setInterval(() => {
+      setCurrentMessageIndex((prevIndex) => {
+        const newIndex = (prevIndex + 1) % messages.length;
+        return newIndex;
+      });
+    }, 10000);
 
     return () => {
       clearInterval(interval);
@@ -46,7 +39,12 @@ const LoadingOverlay = () => {
         window.speechSynthesis.cancel();
       }
     };
-  }, [messages, speakText, currentMessageIndex]);
+  }, []);
+
+  // 메시지가 변경될 때마다 새로운 음성 출력
+  useEffect(() => {
+    speakText(messages[currentMessageIndex]);
+  }, [currentMessageIndex, speakText, messages]);
 
   return (
     <div className={styles.overlay}>

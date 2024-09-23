@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { 
   Container, Typography, Box, Button, Card, CardContent, 
   LinearProgress, IconButton, Fade, useTheme, CircularProgress, 
@@ -9,6 +10,7 @@ import {
 import { Help, Mic, VolumeUp } from '@mui/icons-material';
 import { setInterviewData, setStatus } from '../../redux/slices/interviewSlice';
 import styles from '@/styles/interview/interviewRecordPage.module.css';
+import InterviewSubmissionModal from '@/components/interview/interviewSubmissionModal';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '@/contexts/storeContext';
 import { getInterviewQuestions, uploadInterviewVideo } from '@/api/interview';
@@ -103,12 +105,20 @@ const InterviewRecordPage = observer(() => {
         setStream(videoStream);
         if (videoRef.current) {
           videoRef.current.srcObject = videoStream;
+          // 비디오 요소에 이벤트 리스너 추가
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current.play().catch(e => console.error("Video play failed:", e));
+          };
         }
       } catch (err) {
         console.error("미디어 접근 에러:", err);
         if (retryCount < maxRetries) {
           retryCount++;
+          console.log(`Retrying to get media... Attempt ${retryCount}`);
           setTimeout(tryGetMedia, 1000);
+        } else {
+          console.error("Failed to access media after multiple attempts");
+          // 여기에 사용자에게 오류를 알리는 로직 추가
         }
       }
     };
@@ -122,6 +132,19 @@ const InterviewRecordPage = observer(() => {
         stream.getTracks().forEach(track => track.stop());
       }
     };
+  }, [stream]);
+
+  // 비디오 요소 참조를 위한 useCallback 훅
+  const setVideoRef = useCallback(node => {
+    if (node) {
+      videoRef.current = node;
+      if (stream) {
+        node.srcObject = stream;
+        node.onloadedmetadata = () => {
+          node.play().catch(e => console.error("Video play failed:", e));
+        };
+      }
+    }
   }, [stream]);
 
   useEffect(() => {
@@ -201,26 +224,6 @@ const InterviewRecordPage = observer(() => {
     }
   }, []);
 
-  // const handleStartAnswer = useCallback(() => {
-  //   let countdown = 3;
-  //   setShowModal(true);
-    
-  //   const countdownInterval = setInterval(() => {
-  //     setCountdownTime(countdown);
-  //     countdown -= 1;
-  //     if (countdown < 0) {
-  //       clearInterval(countdownInterval);
-  //       setShowModal(false);
-  //       dispatch(setStatus('recording'));
-  //       startRecording();
-  //       setRecordingStartTime(Date.now());
-  //       if (questions[currentQuestionIndex]?.question) {
-  //         speakQuestion(questions[currentQuestionIndex].question);
-  //       }
-  //     }
-  //   }, 1000);
-  // }, [dispatch, startRecording, speakQuestion, questions, currentQuestionIndex]);
-
   const handleStartAnswer = useCallback(() => {
     const initialCountdown = 3;
     let countdown = initialCountdown;
@@ -263,6 +266,7 @@ const InterviewRecordPage = observer(() => {
       formData.append('video', blob, 'interview.mp4');
       formData.append('userId', userStore.id);
       formData.append('questionId', questions[currentQuestionIndex].id);
+      formData.append('choosedResume', interviewStore.choosedResume);
       formData.append('questionText', questions[currentQuestionIndex].questionText); // 질문 내용 추가
       console.log('이거 확인: ', formData.get('video'));
 
@@ -368,7 +372,7 @@ const InterviewRecordPage = observer(() => {
     <Stepper activeStep={currentQuestionIndex} alternativeLabel>
       {questions.map((_, index) => (
         <Step key={index}>
-          <StepLabel>{`질문 ${index + 1}`}</StepLabel>
+          <StepLabel>{`Question ${index + 1}`}</StepLabel>
         </Step>
       ))}
     </Stepper>
@@ -376,26 +380,35 @@ const InterviewRecordPage = observer(() => {
 
   // 원형 타이머 컴포넌트
   const CircularTimer = ({ timeLeft }) => (
-    <Box position="relative" display="inline-flex">
-      <CircularProgress
-        variant="determinate"
-        value={(timeLeft / 60) * 100}
-        size={120}
-        thickness={4}
-      />
-      <Box
-        top={0}
-        left={0}
-        bottom={0}
-        right={0}
-        position="absolute"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Typography variant="h4" component="div" color="textSecondary">
-          {timeLeft}
-        </Typography>
+    <Box position="relative" display="inline-flex" flexDirection="column" alignItems="center">
+      <Typography variant="h6" component="div" color="textPrimary" gutterBottom>
+        남은 시간
+      </Typography>
+      <Box position="relative" display="inline-flex">
+        <CircularProgress
+          variant="determinate"
+          value={(timeLeft / 60) * 100}
+          size={150}
+          thickness={7}
+        />
+        <Box
+          top={0}
+          left={0}
+          bottom={0}
+          right={0}
+          position="absolute"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="h4" component="div" color="textSecondary">
+            {timeLeft}
+          </Typography>
+          <Typography variant="subtitle1" component="div" color="textSecondary">
+            sec
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
@@ -452,7 +465,13 @@ return (
                 <video ref={videoRef} autoPlay muted className={styles.video} />
                 {isRecording && (
                   <Box className={styles.recordingIndicator}>
-                    REC
+                    <Image 
+                      src="/images/recording.gif"
+                      alt="Loading"
+                      width={80}
+                      height={80}
+                      unoptimized
+                    />
                   </Box>
                 )}
                 <Box className={styles.questionOverlay}>
@@ -490,13 +509,13 @@ return (
             </Paper>
           </Fade>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} mt={-2}>
           <Card className={styles.timerCard}>
             <CardContent>
-              <Box className={styles.timerBox}>
+              <Box className={styles.timerBox} mt={1}>
                 <CircularTimer timeLeft={timeLeft} />
               </Box>
-              <Box mt={3}>
+              <Box mt={4.5}>
               {status === 'pending' && (
                 <Button
                   variant="contained"
@@ -598,11 +617,11 @@ return (
         )}
         {isSubmitting && (
           <>
-            <Typography id="modal-title" variant="h6" component="h2">
-              답변을 제출중입니다
-            </Typography>
-            <CircularProgress className={styles.modalProgress} />
-          </>
+          <Typography id="modal-title" variant="h6" component="h2">
+            답변을 제출중입니다
+          </Typography>
+          <CircularProgress className={styles.modalProgress} />
+        </>
         )}
       </Box>
     </Modal>
@@ -618,7 +637,7 @@ return (
           5. 시간을 잘 관리하세요.
         </Typography>
         <Button onClick={handleGuideClose} variant="contained" color="primary" style={{marginTop: '1rem'}}>
-          이해했습니다
+          확인 완료
         </Button>
       </Box>
     </Modal>
