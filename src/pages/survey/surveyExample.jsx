@@ -64,6 +64,11 @@ const SurveyExample = () => {
             <div className={styles.surveyMain}>
               <section className={styles.surveyMainSection}>
                 <div className="example-container">
+                <div className={styles.surveyTitle}>직업가치관검사</div>
+                <div className={styles.surveySubTitle}>
+                  <div className={styles.surveySubTitleLine}>커리어넷의 진로심리검사를 제공합니다.</div>
+                  <div className={styles.surveySubTitleLine}>커리어넷 진로심리검사 API는 이용량에 따라 사용이 제한될 수 있습니다.</div>
+                </div>
                   <div className={styles.surveyTitle}>검사예시</div>
                   <div className={styles.surveySubTitle}>
                     <div className={styles.surveySubTitleLine}>
@@ -186,15 +191,10 @@ const SurveyExample = () => {
                 </div>
 
                 <div className={styles.surveyStartButtonFrame}>
-                  <button
-                    className={styles.surveyHomeButton}
-                    onClick={() => router.push('/survey')}
-                  >
-                    홈
-                  </button>
+                 
                   <ToastContainer autoClose={5000} />
                   <button className={styles.surveyNextButton} onClick={handleNextPage}>
-                    다음
+                    시작하기
                   </button>
                 </div>
               </section>
