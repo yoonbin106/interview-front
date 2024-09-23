@@ -53,8 +53,7 @@ const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent 
     <Modal open={open} onClose={onClose}>
       <div className={styles.modalContent}>
         <Typography variant="h5" gutterBottom>신고하기</Typography>
-        <Typography variant="subtitle1">작성자: {postAuthor}</Typography> {/* 동적으로 작성자 표시 */}
-        <Typography variant="subtitle1">내용: {postContent}</Typography> {/* 동적으로 내용 표시 */}
+       
 
         <FormControl component="fieldset" className={styles.formControl}>
           <Typography variant="subtitle2" gutterBottom>사유 선택</Typography>

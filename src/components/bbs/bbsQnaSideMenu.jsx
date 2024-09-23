@@ -51,7 +51,7 @@ export default function BbsQnaSideMenu() {
 
       {/* 1:1문의 섹션 */}
       <ListItemButton onClick={() => handleClick('qna')} className={styles.BbsQnaSideMenuCursorPointer}>
-        <ListItemText primary="　1:1 문의관리" />
+        <ListItemText primary="　문의관리" />
         {openItems.qna ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openItems.qna} timeout="auto" unmountOnExit>
@@ -79,7 +79,7 @@ export default function BbsQnaSideMenu() {
             <ListItemText primary="　　전체 공지사항" />
           </ListItemButton>
           {/* 기업별 공지사항 페이지로 이동 */}
-          <ListItemButton className={`${styles.BbsQnaSideMenuItemButton} ${styles.BbsQnaSideMenuCursorPointer}`} onClick={() => handleNavigation('/bbs/')}>
+          <ListItemButton className={`${styles.BbsQnaSideMenuItemButton} ${styles.BbsQnaSideMenuCursorPointer}`} onClick={() => handleNavigation('/bbs/bbsCompanyNoticePage')}>
             <ListItemText primary="　　기업별 공지사항" />
           </ListItemButton>
         </List>
