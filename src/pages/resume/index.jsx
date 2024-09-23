@@ -285,35 +285,45 @@ const ModalContent = styled('div')(
     updatedFields[index][name] = value;
     setFields(updatedFields);
 
-    // 학력필드 에러 업데이트
-    const updatedErrors = [...errors];
-    if (value.trim() !== '') {
-      updatedErrors[index][name] = false;
-    } else {
-      updatedErrors[index][name] = true;
-    }
-    
-    setErrors(updatedErrors);
-    };
+    // 학력 필드 에러 업데이트
+  const updatedErrors = errors ? [...errors] : []; // errors 배열이 없으면 빈 배열로 초기화
+  if (!updatedErrors[index]) {
+    updatedErrors[index] = {}; // 현재 index가 없는 경우 빈 객체로 초기화
+  }
+
+  if (value.trim() !== '') {
+    updatedErrors[index][name] = false;
+  } else {
+    updatedErrors[index][name] = true;
+  }
+
+  setErrors(updatedErrors);
+};
 
   // 필드추가 +버튼용
-  const addField = (fields, setFields, newField) => {
+  const addField = (fields, setFields, newField, errors, setErrors) => {
     setFields([...fields, newField]);
-
-  //학력 필드 추가 시 오류 상태 추가
-    setEducationErrors([...educationErrors, {
-      school_name: false,
-      major: false,
-      start_date: false,
-      end_date: false,
-      graduation_status: false,
-    }]);
+  
+    // 학력 필드 추가 시 오류 상태 추가
+    setErrors([
+      ...errors,
+      {
+        school_name: false,
+        major: false,
+        start_date: false,
+        end_date: false,
+        graduation_status: false,
+      },
+    ]);
   };
 
   // 필드제거 x버튼용
-  const removeField = (index, fields, setFields) => {
+  const removeField = (index, fields, setFields, errors, setErrors) => {
     const updatedFields = fields.filter((_, i) => i !== index);
     setFields(updatedFields);
+  
+    const updatedErrors = errors.filter((_, i) => i !== index);
+    setErrors(updatedErrors);
   };
 
   // 취소버튼용
@@ -973,7 +983,7 @@ const applyColorToQuotes = (text) => {
       
       <ClearIcon
     className={styles.clearIcon}
-    onClick={() => removeField(index, educationFields, setEducationFields)}
+    onClick={() => removeField(index, educationFields, setEducationFields, educationErrors, setEducationErrors)}
     style={{
     position: 'absolute',
     right: '-15px',
@@ -1097,7 +1107,15 @@ const applyColorToQuotes = (text) => {
 <button
   type="button"
   className={`${styles.add} ${styles.button}`}
-  onClick={() => addField(educationFields, setEducationFields, { school_name: '', major: '', start_date: '', end_date: '', graduation_status: '' })}
+  onClick={() =>
+    addField(
+      educationFields,
+      setEducationFields,
+      { school_name: '', major: '', start_date: '', end_date: '', graduation_status: '' },
+      educationErrors, // 추가된 에러 상태 인자
+      setEducationErrors // 에러 상태 업데이트 함수
+    )
+  }
 >
   + 학력 추가
 </button>

@@ -206,7 +206,7 @@
 /* 슬라이드 이미지를 위한 클래스 */
 .bgImage1 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-  url('../../public/images/info01.jpg');
+  url('../../public/images/infotest.png');
 }
 
 .bgImage2 {
