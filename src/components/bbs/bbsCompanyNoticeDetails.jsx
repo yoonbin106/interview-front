@@ -114,6 +114,7 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
                     {new Date(editedCompanyNotice.companyNoticeCreatedTime).toLocaleString('ko-KR', {
                         hour: '2-digit',
                         minute: '2-digit',
+                        hour12: false //24시간 형식
                     })}
                 </p>
             <Typography variant="subtitle1" style={{ marginLeft: '1px' }}>
