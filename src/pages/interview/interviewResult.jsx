@@ -644,7 +644,7 @@ const ResultPage = observer(() => {
                       <Bar dataKey="time" fill="#8884d8" />
                     </BarChart>
                   </ResponsiveContainer>
-                  <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.answerTimeAnalysis.evaluation}</Typography>
+                  <Typography variant="subtitle1" gutterBottom>답변시간: {interviewResult.answerTimeAnalysis.evaluation}초</Typography>
                   <Typography variant="body2">{interviewResult.answerTimeAnalysis.feedback}</Typography>
                 </CardContent>
               </Card>
