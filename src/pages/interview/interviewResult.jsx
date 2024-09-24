@@ -100,6 +100,43 @@ const ResultPage = observer(() => {
   useEffect(() => {
     const fetchedInterview = toJS(interviewStore.fetchedInterview);
     console.log('fetchedInterview', fetchedInterview);
+
+
+    // 잘못된 백틱 문자를 포함한 contentData에서 백틱을 제거하고 JSON 파싱
+    let contentData = fetchedInterview.claudeAnalyses[0].analysisData.content;
+
+    // 백틱 및 "```json" 같은 텍스트를 제거
+    contentData = contentData.replace(/```json/g, '').replace(/```/g, '');
+
+    // JSON 파싱을 진행
+    let parsedContentData;
+    try {
+        parsedContentData = JSON.parse(contentData);
+        console.log(parsedContentData);
+    } catch (error) {
+        console.error('JSON 파싱 중 오류 발생:', error);
+    }
+
+
+    // 유니코드로 저장된 keywords를 변환
+    const encodedKeywords = fetchedInterview.claudeAnalyses[0].keywords;
+    // JSON 문자열을 배열로 변환
+    let keywordsArray;
+    try {
+      keywordsArray = JSON.parse(encodedKeywords);
+    } catch (error) {
+      console.error("JSON 파싱 중 오류 발생:", error);
+    }
+
+    // 유니코드 문자열을 변환하는 함수
+    const decodeUnicodeString = (str) => {
+      return unescape(str.replace(/\\u/g, '%u'));
+    };
+
+    // 각 키워드를 변환
+    const decodedKeywords = keywordsArray.map(decodeUnicodeString);
+    console.log('decodedKeywords', decodedKeywords);
+    
     const randomAdjust = (value) => {
       // -10에서 10 사이의 소수점 값을 랜덤으로 더하거나 뺌
       const randomValue = (Math.random() * 10).toFixed(1); // 0 ~ 10 사이의 소수점 첫째 자리까지 랜덤 값
@@ -120,7 +157,7 @@ const ResultPage = observer(() => {
     const result = {
       aiEvaluation: {
         grade: (() => {
-          const score = fetchedInterview.claudeAnalyses[0].overallScore;
+          const score = parsedContentData.overall_quality;
           if (score >= 90) {
             return 1;
           } else if (score >= 80) {
@@ -133,28 +170,28 @@ const ResultPage = observer(() => {
             return 5;
           }
         })(),
-        overallScore: fetchedInterview.claudeAnalyses[0].overallScore,
+        overallScore: parsedContentData.overall_quality,
         recommendationScore: (() => {
-          const logicScore = fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score || 0;
-          const creativityScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score || 0;
-          const problemSolvingScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score || 0;
-          const grammarStructureScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score || 0;
-          const professionalVocabScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.professional_vocab_score || 0;
-          const confidenceScore = fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score || 0;
-          const consistencyScore = fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score || 0;
+          const logicScore = parsedContentData.content_analysis.logic_score || 0;
+          const creativityScore = parsedContentData.insight_analysis.creativity_score || 0;
+          const problemSolvingScore = parsedContentData.insight_analysis.problem_solving_score || 0;
+          const grammarStructureScore = parsedContentData.language_pattern_analysis.grammar_structure_score || 0;
+          const professionalVocabScore = parsedContentData.language_pattern_analysis.professional_vocab_score || 0;
+          const confidenceScore = parsedContentData.sentiment_analysis.confidence_score || 0;
+          const consistencyScore = parsedContentData.content_analysis.consistency_score || 0;
           
           const score = logicScore + creativityScore + problemSolvingScore + grammarStructureScore + professionalVocabScore + confidenceScore + consistencyScore;
           return ((score / 7) * 10).toFixed(1);
         })(),
         evaluationItems: [
-          { name: '논리성', score: fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score * 10 },
-          { name: '자신감', score: fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score * 10 },
-          { name: '적절성', score: fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score * 10 },
-          { name: '일관성', score: fetchedInterview.claudeAnalyses[0].analysisData.tone_tension_analysis.consistency_score * 10 },
-          { name: '창의성', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score * 10 },
-          { name: '문제해결능력', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score * 10 },
+          { name: '논리성', score: parsedContentData.content_analysis.logic_score * 10 },
+          { name: '자신감', score: parsedContentData.sentiment_analysis.confidence_score * 10 },
+          { name: '적절성', score: parsedContentData.language_pattern_analysis.grammar_structure_score * 10 },
+          { name: '일관성', score: parsedContentData.content_analysis.consistency_score * 10 },
+          { name: '창의성', score: parsedContentData.insight_analysis.creativity_score * 10 },
+          { name: '문제해결능력', score: parsedContentData.insight_analysis.problem_solving_score * 10 },
         ],
-        aiFeedback: "AI 종합 평가:\n" + fetchedInterview.claudeAnalyses[0].improvementSuggestions
+        aiFeedback: "AI 종합 평가:\n" + parsedContentData.improvement_suggestions
       },
       personalityTraits: fetchedInterview.videos[0].filePath,
       personalityAnalysis: fetchedInterview.videoAnalyses[0].analyzedFilePath,
@@ -228,9 +265,9 @@ const ResultPage = observer(() => {
         },
       ],
       voiceAnalysis: {
-        averagePitch: 60,
-        averageVolume: 70,
-        averageSpeed: 80,
+        averagePitch: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
+        averageVolume: Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000),
+        averageSpeed: Math.floor(fetchedInterview.videoAnalyses[0].audioTempo),
         evaluation: '양호',
         feedback: '말하기 속도가 약간 빠른 편입니다. 중요한 부분에서는 속도를 조금 줄이는 것이 좋겠습니다.',
       },
@@ -291,16 +328,17 @@ const ResultPage = observer(() => {
         feedback: '주요 키워드가 직무와 잘 연관되어 있습니다. 특히 "열정"과 "팀워크"를 강조한 점이 인상적입니다.',
       },
       answerTimes: [
-        { question: '자기소개', time: 120 },
-        { question: '지원동기', time: 90 },
-        { question: '직무역량', time: 150 },
-        { question: '장단점', time: 100 },
-        { question: '목표', time: 110 },
+        // { question: '응답시간(초)', time: parsedContentData.answer_duration_analysis.duration },
+        { question: '응답시간점수', time: parsedContentData.answer_duration_analysis.pace_score * 10 },
+        { question: 'Situation', time: parsedContentData.star_analysis.situation_score * 10 },
+        { question: 'Task', time: parsedContentData.star_analysis.task_score * 10 },
+        { question: 'Action', time: parsedContentData.star_analysis.action_score * 10 },
+        { question: 'Results', time: parsedContentData.star_analysis.result_score * 10 },
       ],
       answerTimeAnalysis: {
-        averageTime: 114,
-        evaluation: '양호',
-        feedback: '대부분의 질문에 적절한 시간을 사용했습니다. 다만, "직무역량" 질문에 대한 답변 시간이 다소 길었습니다.',
+        averageTime: parsedContentData.answer_duration_analysis.duration,
+        evaluation: parsedContentData.answer_duration_analysis.duration,
+        feedback: parsedContentData.answer_duration_analysis.comment,
       },
     };
 
@@ -359,7 +397,7 @@ const ResultPage = observer(() => {
           <Tab label="AI종합평가" className={styles.tab} />
           <Tab label="영상복기" className={styles.tab}/>
           <Tab label="음성 및 시선분석" className={styles.tab}/>
-          <Tab label="키워드 및 시간" className={styles.tab}/>
+          <Tab label="키워드 및 시간&STAR 분석" className={styles.tab}/>
         </Tabs>
       </Paper>
 
