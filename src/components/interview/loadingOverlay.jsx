@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from '@/styles/interview/interviewLoading.module.css';
 
@@ -11,40 +11,13 @@ const LoadingOverlay = () => {
     '이제 곧 질문을 보실 수 있습니다'
   ];
 
-  const speakText = useCallback((text) => {
-    if ('speechSynthesis' in window) {
-      // 이전 음성을 취소
-      window.speechSynthesis.cancel();
-
-      const speech = new SpeechSynthesisUtterance(text);
-      speech.lang = 'ko-KR';
-      window.speechSynthesis.speak(speech);
-    }
-  }, []);
-
   useEffect(() => {
-    // 첫 번째 메시지 즉시 재생
-    speakText(messages[currentMessageIndex]);
-
     const interval = setInterval(() => {
-      setCurrentMessageIndex((prevIndex) => {
-        const newIndex = (prevIndex + 1) % messages.length;
-        return newIndex;
-      });
-    }, 10000);
+      setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
+    }, 5000);
 
-    return () => {
-      clearInterval(interval);
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-    };
+    return () => clearInterval(interval);
   }, []);
-
-  // 메시지가 변경될 때마다 새로운 음성 출력
-  useEffect(() => {
-    speakText(messages[currentMessageIndex]);
-  }, [currentMessageIndex, speakText, messages]);
 
   return (
     <div className={styles.overlay}>

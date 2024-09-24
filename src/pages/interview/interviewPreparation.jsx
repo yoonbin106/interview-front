@@ -27,7 +27,7 @@ import { Camera } from '@mediapipe/camera_utils';
 
 const InterviewPreparation = observer(() => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(false);
   const { interviewStore, userStore } = useStores();
   const [interviewType, setInterviewType] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -48,14 +48,14 @@ const InterviewPreparation = observer(() => {
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const speechRef = useRef(null);
   
-  // 얼굴 감지 관련 상태 추가
   const [faceDetected, setFaceDetected] = useState(false);
   const canvasRef = useRef(null);
   const faceDetectionRef = useRef(null);
   const cameraRef = useRef(null);
+  const faceDetectionCleanupRef = useRef(null);
 
-  // MediaPipe 얼굴 감지 초기화
   useEffect(() => {
     if (cameraReady && videoRef.current) {
       initializeFaceDetection();
@@ -66,36 +66,59 @@ const InterviewPreparation = observer(() => {
       }
     };
   }, [cameraReady]);
+  
+  const initializeFaceDetection = async () => {
+    if (!videoRef.current || !canvasRef.current) return;
 
-   // MediaPipe 얼굴 감지 초기화 함수
-   const initializeFaceDetection = async () => {
-    if (!videoRef.current || !canvasRef.current) return; // 둘 중 하나라도 없으면 초기화 중단
+    try {
+      faceDetectionRef.current = new FaceDetection({
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`;
+        }
+      });
 
-    faceDetectionRef.current = new FaceDetection({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`;
+      await faceDetectionRef.current.setOptions({
+        model: 'short',
+        minDetectionConfidence: 0.5
+      });
+
+      faceDetectionRef.current.onResults(onFaceDetectionResults);
+
+      if (!cameraRef.current) {
+        cameraRef.current = new Camera(videoRef.current, {
+          onFrame: async () => {
+            if (faceDetectionRef.current) {
+              await faceDetectionRef.current.send({image: videoRef.current});
+            }
+          },
+          width: 640,
+          height: 480
+        });
       }
-    });
 
-    faceDetectionRef.current.setOptions({
-      model: 'short',
-      minDetectionConfidence: 0.5
-    });
+      await cameraRef.current.start();
 
-    faceDetectionRef.current.onResults(onFaceDetectionResults);
-
-    cameraRef.current = new Camera(videoRef.current, {
-      onFrame: async () => {
-        await faceDetectionRef.current.send({image: videoRef.current});
-      },
-      width: 640,
-      height: 480
-    });
-
-    cameraRef.current.start();
+      faceDetectionCleanupRef.current = () => {
+        if (cameraRef.current) {
+          cameraRef.current.stop();
+        }
+        if (faceDetectionRef.current) {
+          faceDetectionRef.current.close();
+        }
+      };
+    } catch (error) {
+      console.error("Error initializing face detection:", error);
+    }
   };
 
-  // 얼굴 감지 결과 처리 함수
+  useEffect(() => {
+    return () => {
+      if (faceDetectionCleanupRef.current) {
+        faceDetectionCleanupRef.current();
+      }
+    };
+  }, []);
+
   const onFaceDetectionResults = (results) => {
     if (!canvasRef.current) return;
   
@@ -112,7 +135,6 @@ const InterviewPreparation = observer(() => {
       results.detections.forEach((detection) => {
         const boundingBox = detection.boundingBox;
         
-        // 바운딩 박스 그리기
         canvasCtx.strokeStyle = 'blue';
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeRect(
@@ -122,7 +144,6 @@ const InterviewPreparation = observer(() => {
           boundingBox.height * height
         );
   
-        // 랜드마크 그리기 (있다면)
         if (detection.landmarks) {
           detection.landmarks.forEach((landmark) => {
             canvasCtx.beginPath();
@@ -180,13 +201,19 @@ const InterviewPreparation = observer(() => {
     }
   };
 
-  const speakText = (text) => {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'ko-KR';
-    window.speechSynthesis.speak(speech);
-  };
+  const speakText = useCallback((text, onEnd) => {
+    if ('speechSynthesis' in window) {
+      if (speechRef.current) {
+        window.speechSynthesis.cancel();
+      }
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = 'ko-KR';
+      speech.onend = onEnd;
+      speechRef.current = speech;
+      window.speechSynthesis.speak(speech);
+    }
+  }, []);
 
-   // 카메라와 마이크 준비 상태 체크
   useEffect(() => {
     if (cameraReady && micReady) {
       interviewStore.setAllReady(true);
@@ -198,7 +225,6 @@ const InterviewPreparation = observer(() => {
     }
   }, [cameraReady, micReady, interviewStore]);
 
-  // 카운트다운 관리
   useEffect(() => {
     let timer;
     if (allReady && countdown > 0) {
@@ -251,7 +277,7 @@ const InterviewPreparation = observer(() => {
       return () => videoRef.current.removeEventListener('loadedmetadata', resizeCanvas);
     }
   }, []);
-  // 카메라 확인 함수 수정
+
   const checkCamera = async () => {
     try {
       if (stream) {
@@ -261,21 +287,18 @@ const InterviewPreparation = observer(() => {
       console.log("Camera stream obtained:", mediaStream);
       interviewStore.setStream(mediaStream);
       interviewStore.setCameraReady(true);
-      // if (videoRef.current) {
-      //   videoRef.current.srcObject = mediaStream;
-      //   console.log("Video element source set");
-      // }
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         await new Promise(resolve => videoRef.current.onloadedmetadata = resolve);
-        await initializeFaceDetection(); // Face Detection 초기화 기다림
+        await initializeFaceDetection();
       }
-      initializeFaceDetection(); // Face Detection 초기화 호출
+      initializeFaceDetection();
     } catch (error) {
       console.error("카메라 접근 에러:", error);
       interviewStore.setCameraReady(false);
     }
   };
+
   const checkMic = async () => {
     try {
       if (audioContextRef.current) {
@@ -319,6 +342,7 @@ const InterviewPreparation = observer(() => {
       setIsListening(false);
     }
   };
+
   const handleReset = () => {
     cleanupResources();
     interviewStore.setStream('');
@@ -332,61 +356,82 @@ const InterviewPreparation = observer(() => {
     setTranscript('');
     setFaceDetected(false);
   };
+
   const cleanupResources = useCallback(() => {
-    // 카메라 스트림 정리
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
       interviewStore.setStream(null);
     }
   
-    // 오디오 컨텍스트 정리
     if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
       audioContextRef.current.close();
     }
   
-    // 애니메이션 프레임 취소
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
   
-    // 음성 인식 정리
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
   
-    // 상태 초기화
     interviewStore.setCameraReady(false);
     interviewStore.setMicReady(false);
     interviewStore.setAudioLevel(0);
     setTranscript('');
     setIsListening(false);
   
-    // 비디오 요소 초기화
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-    if (faceDetectionRef.current && faceDetectionRef.current.close) {
-      faceDetectionRef.current.close();
+
+    if (faceDetectionRef.current) {
+      try {
+        if (typeof faceDetectionRef.current.close === 'function') {
+          faceDetectionRef.current.close();
+        }
+      } catch (error) {
+        console.error("Error closing face detection:", error);
+      } finally {
+        faceDetectionRef.current = null;
+      }
     }
+    
     if (cameraRef.current) {
-      cameraRef.current.stop();
+      try {
+        cameraRef.current.stop();
+      } catch (error) {
+        console.error("Error stopping camera:", error);
+      } finally {
+        cameraRef.current = null;
+      }
     }
   
   }, [stream, interviewStore]);
-  // 완료 핸들러
+
   const handleComplete = () => {
     setModalOpen(true);
   };
-   // 모달 확인 핸들러
-   const handleConfirm = async () => {
-    setModalOpen(false);
-    setIsLoading(true); // 로딩 시작
 
-    // handleSetMockQuestions가 완료될 때까지 기다림
+  const handleConfirm = async () => {
+    setModalOpen(false);
+    setIsLoading(true);
+
+    const messages = [
+      'AI가 사용자의 이력서를 분석하고 있습니다',
+      'AI가 이력서를 바탕으로 질문을 생성하고 있습니다',
+      '잠시만 기다려주세요',
+      '이제 곧 질문을 보실 수 있습니다'
+    ];
+
+    for (const message of messages) {
+      speakText(message);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+
     await handleSetMockQuestions();
 
     setIsLoading(false);
-    // 이후 코드가 실행됨
     if (interviewType === 'mock') {
       router.push({
         pathname: '/interview/interviewQuestionsPage'
@@ -400,21 +445,22 @@ const InterviewPreparation = observer(() => {
   async function handleSetMockQuestions() {
     try {
       if(interviewStore.type === 'mock') {
-        const mockQuestions = await getMockQuestions(interviewStore.choosedResume, userStore.id);  // 비동기 함수 대기
-        interviewStore.setMockQuestions(mockQuestions);  // 데이터 저장
-      }else{
-        const realQuestions = await getRealQuestions(interviewStore.choosedResume, userStore.id);  // 비동기 함수 대기
+        const mockQuestions = await getMockQuestions(interviewStore.choosedResume, userStore.id);
+        interviewStore.setMockQuestions(mockQuestions);
+      } else {
+        const realQuestions = await getRealQuestions(interviewStore.choosedResume, userStore.id);
         console.log("실전 질문 6개입니다!", realQuestions);
-        interviewStore.setRealQuestions(realQuestions);  // 데이터 저장
+        interviewStore.setRealQuestions(realQuestions);
       }
     } catch (error) {
       console.error('Mock 질문을 불러오는 중 오류가 발생했습니다:', error);
     }
   }
+
   const handleClose = () => {
     setModalOpen(false);
   };
-  // 스텝 정의
+
   const steps = [
     { label: '웹캠/마이크 세팅 점검', icon: <SettingsIcon /> },
     { label: '연결중', icon: <CastConnectedIcon /> },
@@ -511,48 +557,48 @@ const InterviewPreparation = observer(() => {
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4}>
-            <Paper elevation={3} className={styles.section}>
-            <Typography variant="h6">화면 미리보기</Typography>
-                <Box className={styles.videoContainer}>
-                  {cameraReady ? (
-                    <>
-                      <video ref={videoRef} autoPlay muted className={styles.video}/>
-                      <canvas 
+                <Paper elevation={3} className={styles.section}>
+                  <Typography variant="h6">화면 미리보기</Typography>
+                  <Box className={styles.videoContainer}>
+                    {cameraReady ? (
+                      <>
+                        <video ref={videoRef} autoPlay muted className={styles.video}/>
+                        <canvas 
                           ref={canvasRef} 
                           className={styles.canvas} 
                           width={videoRef.current?.videoWidth || 640} 
                           height={videoRef.current?.videoHeight || 480} 
                         />
-                    </>
-                  ) : (
-                    <Typography>카메라를 활성화해주세요</Typography>
-                  )}
-                </Box>
-                <Button
-                  className={styles.button}
-                  variant="contained"
-                  color={faceDetected ? "success" : "primary"}
-                  onClick={checkCamera}
-                  disabled={cameraReady}
-                >
-                  {faceDetected ? '얼굴 인식 완료' : '얼굴 인식 시작'}
-                </Button>
-                <Box className={styles.countdownContainer}>
-                  <Box
-                    className={styles.countdownProgress}
-                    style={{ width: `${((5 - countdown) / 5) * 100}%` }}
-                  />
-                </Box>
-                <Typography variant="body2" className={styles.countdownText}>
-                  {allReady 
-                    ? countdown > 0 
-                      ? `세팅 ${countdown}초 전` 
-                      : "면접 준비 완료"
-                    : "면접 환경 확인"}
-                </Typography>
-              </Paper>
+                      </>
+                    ) : (
+                      <Typography>카메라를 활성화해주세요</Typography>
+                    )}
+                  </Box>
+                  <Button
+                    className={styles.button}
+                    variant="contained"
+                    color={faceDetected ? "success" : "primary"}
+                    onClick={checkCamera}
+                    disabled={cameraReady}
+                  >
+                    {faceDetected ? '얼굴 인식 완료' : '얼굴 인식 시작'}
+                  </Button>
+                  <Box className={styles.countdownContainer}>
+                    <Box
+                      className={styles.countdownProgress}
+                      style={{ width: `${((5 - countdown) / 5) * 100}%` }}
+                    />
+                  </Box>
+                  <Typography variant="body2" className={styles.countdownText}>
+                    {allReady 
+                      ? countdown > 0 
+                        ? `세팅 ${countdown}초 전` 
+                        : "면접 준비 완료"
+                      : "면접 환경 확인"}
+                  </Typography>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
           </Box>
           <Paper elevation={3} className={styles.tipSection}>
             <Typography variant="h6" className={styles.tipTitle}>
@@ -571,7 +617,7 @@ const InterviewPreparation = observer(() => {
             </List>
           </Paper>
           <Box className={styles.buttonContainer}>
-          <Button 
+            <Button 
               variant="outlined" 
               onClick={handleReset}
               startIcon={<RestartAltIcon />}
@@ -604,37 +650,37 @@ const InterviewPreparation = observer(() => {
           }
         }}
       >
-  <DialogTitle id="alert-dialog-title" className={styles.modalTitle}>
-    <Typography variant="h5" component="span">
-      면접 시작 준비
-    </Typography>
-  </DialogTitle>
-  <DialogContent>
-    <DialogContentText id="alert-dialog-description" className={styles.modalContent}>
-      <Typography variant="body1">
-        모든 준비가 완료되었습니다. 면접을 시작하시겠습니까?
-      </Typography>
-      <Box className={styles.modalTips}>
-        <Typography variant="subtitle2" gutterBottom>
-          면접 시작 전 체크리스트:
-        </Typography>
-        <ul>
-          <li>카메라와 마이크가 정상 작동하는지 확인하세요.</li>
-          <li>주변 소음이 없는 조용한 환경인지 확인하세요.</li>
-          <li>긍정적인 마인드로 자신감 있게 임하세요!</li>
-        </ul>
-      </Box>
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions className={styles.modalActions}>
-    <Button onClick={handleClose} color="primary" startIcon={<CancelIcon />} className={styles.cancelButton}>
-      취소
-    </Button>
-    <Button onClick={handleConfirm} color="primary" variant="contained" autoFocus startIcon={<PlayArrowIcon />} className={styles.confirmButton}>
-      면접 시작
-    </Button>
-  </DialogActions>
-</Dialog>
+        <DialogTitle id="alert-dialog-title" className={styles.modalTitle}>
+          <Typography variant="h5" component="span">
+            면접 시작 준비
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description" className={styles.modalContent}>
+            <Typography variant="body1">
+              모든 준비가 완료되었습니다. 면접을 시작하시겠습니까?
+            </Typography>
+            <Box className={styles.modalTips}>
+              <Typography variant="subtitle2" gutterBottom>
+                면접 시작 전 체크리스트:
+              </Typography>
+              <ul>
+                <li>카메라와 마이크가 정상 작동하는지 확인하세요.</li>
+                <li>주변 소음이 없는 조용한 환경인지 확인하세요.</li>
+                <li>긍정적인 마인드로 자신감 있게 임하세요!</li>
+              </ul>
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className={styles.modalActions}>
+          <Button onClick={handleClose} color="primary" startIcon={<CancelIcon />} className={styles.cancelButton}>
+            취소
+          </Button>
+          <Button onClick={handleConfirm} color="primary" variant="contained" autoFocus startIcon={<PlayArrowIcon />} className={styles.confirmButton}>
+            면접 시작
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 });
