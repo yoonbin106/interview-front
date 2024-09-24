@@ -109,3 +109,35 @@ export const getMockQuestions = async (choosedResume, userId) => {
       console.error("면접 결과를 가져오는 중 오류가 발생하였습니다:", error);
     }
   };
+
+  export const minusBasicPlanPayment = async (userId) => {
+    try {
+      const response = await axios.get(`${baseUrl}/minusBasicPlanPayment`, {
+        params: { userId: userId },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {
+      console.error("결제 정보 차감 중 오류가 발생하였습니다:", error);
+    }
+  };
+
+  export const minusPremiumPlanPayment = async (userId) => {
+    try {
+      const response = await axios.get(`${baseUrl}/minusPremiumPlanPayment`, {
+        params: { userId: userId },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {
+      console.error("결제 정보 차감 중 오류가 발생하였습니다:", error);
+    }
+  };

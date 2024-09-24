@@ -13,13 +13,14 @@ import {
   Tab,
   Box,
   CircularProgress,
-  LinearProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -44,7 +45,7 @@ import AnimatedWordCloud from "components/interview/animatedWordCloud";
 import styles from "styles/interview/InterviewResult.module.css";
 import { observer } from "mobx-react-lite";
 import { useStores } from "contexts/storeContext";
-import { fetchInterviewResult } from "api/interview";
+import { fetchInterviewResult, minusBasicPlanPayment, minusPremiumPlanPayment } from "api/interview";
 import { useRouter } from "next/router";
 import { getPayInfoByUserId } from "api/user";
 
@@ -90,21 +91,78 @@ const ResultPage = observer(() => {
   const [activeTab, setActiveTab] = useState(0);
   const { interviewStore, userStore } = useStores();
   const [interviewResult, setInterviewResult] = useState(null); // 상태로 interviewResult를 관리
-
-  // useEffect(() => {
-  //     const fetchPaymentInfo = async () => {
-  //         try {
-  //             const paymentInfo = await getPayInfoByUserId(userStore.id);
-  //             console.log('결제정보: ', paymentInfo);
-  //         } catch (error) {
-  //             console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
-  //         }
-  //     };
-  //     fetchPaymentInfo();
-  // }, [userStore]);
+  const [paymentInfo, setPaymentInfo] = useState([]);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [blurSections, setBlurSections] = useState([2, 3]); // 2: 음성 및 시선분석, 3: 키워드 및 시간&STAR 분석
+  const [previousTab, setPreviousTab] = useState(0); // 이전 탭 정보를 저장
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   const handleTabChange = (event, newValue) => {
+    setPreviousTab(activeTab); // 현재 탭을 이전 탭으로 저장
     setActiveTab(newValue);
+    if (blurSections.includes(newValue)) {
+      setIsOverlayVisible(true);  // 배경 덮개 보이도록 설정
+      setShowPaymentDialog(true); // 블러 처리된 탭 클릭 시 팝업 띄움
+    }
+  };
+  // 팝업 창이 닫힐 때 이전 탭으로 이동
+  const handleDialogClose = () => {
+    setShowPaymentDialog(false);
+    setIsOverlayVisible(false);
+    setActiveTab(previousTab); // 팝업 닫을 때 이전 탭으로 이동
+  };
+  const handlePlanSelection = (plan) => {
+    setSelectedPlan(plan);
+  };
+  const handlePaymentSubmit = async () => {
+    if (selectedPlan === "베이직플랜") {
+      if(activeTab === 3){
+        setActiveTab(previousTab); // 팝업 닫을 때 이전 탭으로 이동
+        setBlurSections([2, 3]);
+      }else{
+        await minusBasicPlanPayment(userStore.id);
+        const paymentInfo = await getPayInfoByUserId(userStore.id);
+        setPaymentInfo(paymentInfo.data); // 결제 정보를 배열로 설정
+        setBlurSections([3]); // 베이직 플랜 선택 시 키워드 및 시간&STAR 분석만 블러 처리
+      }
+      setIsOverlayVisible(false);
+    } else if (selectedPlan === "프리미엄플랜") {
+      await minusPremiumPlanPayment(userStore.id);
+      const paymentInfo = await getPayInfoByUserId(userStore.id);
+      setPaymentInfo(paymentInfo.data); // 결제 정보를 배열로 설정
+      setBlurSections([]); // 프리미엄 플랜 선택 시 블러 처리 해제
+      setIsOverlayVisible(false);
+    }
+    setShowPaymentDialog(false);
+    
+  };
+  const isBlurred = (tabIndex) => blurSections.includes(tabIndex);
+  // 결제 플랜을 라디오 버튼으로 선택 가능하게 렌더링
+  // 결제 플랜을 라디오 버튼으로 선택 가능하게 렌더링
+  const renderPaymentOptions = () => {
+    if (paymentInfo.length === 0) {
+      return <Typography>결제된 플랜이 없습니다.</Typography>;
+    }
+
+    return (
+      <FormControl component="fieldset">
+        <RadioGroup
+          name="paymentPlans"
+          value={selectedPlan || ""}
+          onChange={(e) => handlePlanSelection(e.target.value)}
+        >
+          {paymentInfo.map((payment, index) => (
+            <FormControlLabel
+              key={index}
+              value={payment.orderName}
+              control={<Radio />}
+              label={`${payment.orderName} / 남은횟수: ${payment.useCount}회`}
+            />
+          ))}
+        </RadioGroup>
+      </FormControl>
+    );
   };
 
   useEffect(() => {
@@ -112,6 +170,7 @@ const ResultPage = observer(() => {
         try {
             const paymentInfo = await getPayInfoByUserId(userStore.id);
             console.log('결제정보: ', paymentInfo);
+            setPaymentInfo(paymentInfo.data); // 결제 정보를 배열로 설정
         } catch (error) {
             console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
         }
@@ -408,6 +467,9 @@ const ResultPage = observer(() => {
 
   return (
     <Container maxWidth="lg" className={styles.container}>
+      {isOverlayVisible && setBlurSections !== null &&(
+        <div className={styles.overlay} />
+      )}
       <Paper elevation={3} className={styles.paper}>
         <Typography variant="h4" gutterBottom align="center"  className={styles.title}>
           AI 면접 결과 분석
@@ -419,6 +481,19 @@ const ResultPage = observer(() => {
           <Tab label="키워드 및 시간&STAR 분석" className={styles.tab}/>
         </Tabs>
       </Paper>
+
+      {/* Dialog for Payment Plan Selection */}
+      <Dialog open={showPaymentDialog} onClose={handleDialogClose}>
+        <DialogTitle className={styles.dialogTitle}>사용하실 결제 플랜을 선택해주세요</DialogTitle>
+        <DialogContent className={styles.dialogContent}>
+          {renderPaymentOptions()}
+        </DialogContent>
+        <DialogActions className={styles.dialogActions}>
+          <Button onClick={handlePaymentSubmit} className={styles.paymentButton} disabled={!selectedPlan}>
+            다음
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Grid container spacing={4}>
         {/* AI 종합평가 탭 */}
@@ -560,7 +635,7 @@ const ResultPage = observer(() => {
         {/* 음성 및 시선분석 탭 */}
         {activeTab === 2 && (
           <>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} className={isBlurred(2) ? styles.blurred : ""}>
               <Card className={styles.card}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>시선 처리</Typography>
@@ -633,7 +708,7 @@ const ResultPage = observer(() => {
         {/* 키워드 및 시간 탭 */}
         {activeTab === 3 && (
           <>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} className={isBlurred(3) ? styles.blurred : ""}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>키워드 분석</Typography>
@@ -695,6 +770,13 @@ const ResultPage = observer(() => {
           메인으로 돌아가기
         </Button>
       </Box>
+      {/* 다음과 같은 blur 스타일을 적용 */}
+      <style jsx>{`
+        .blurred {
+          filter: blur(5px);
+          pointer-events: none;
+        }
+      `}</style>
     </Container>
   );
 });
