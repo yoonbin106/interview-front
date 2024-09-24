@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Grid, Typography, Paper, Avatar, TextField, Button, ButtonGroup } from '@mui/material';
 import { useRouter } from 'next/router';
-import { observer } from 'mobx-react-lite'; // observer 가져오기
-import { useStores } from '@/contexts/storeContext'; // useStores 훅 가져오기
+import { observer } from 'mobx-react-lite'; 
+import { useStores } from '@/contexts/storeContext'; 
 import styles from '@/styles/adminPage/adminUserDetails.module.css';
 import axios from 'axios';
 
 const AdminUserDetails = observer(() => {
   const [editMode, setEditMode] = useState(false); // 수정 모드 상태 관리
-  const [selectedFile, setSelectedFile] = useState(null); // 프로필 이미지 파일 상태
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const [preview, setPreview] = useState(null); // 이미지 미리보기 상태
-  const { viewUserStore } = useStores(); // viewUserStore 가져오기
+  const [fileName, setFileName] = useState(''); // 파일명 상태
+  const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 파일 상태
+  
+  const { viewUserStore } = useStores(); 
   const router = useRouter();
   const { email } = router.query;
 
@@ -31,68 +34,100 @@ const AdminUserDetails = observer(() => {
     return `${formattedDate} ${formattedTime}`;
   };
 
-  // 이미지 파일 선택 핸들러(미리보기 업데이트 포함)
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-    // 파일 선택 시 미리보기를 위해 객체 URL 생성
-    setPreview(URL.createObjectURL(file));
-  };
-
   // 컴포넌트가 로드되었을 때 이메일이 존재하면 사용자를 가져옴
   useEffect(() => {
     if (email) {
-      viewUserStore.fetchUserByEmail(email); // viewUserStore에서 사용자 정보 가져오기
+      viewUserStore.fetchUserByEmail(email); 
     }
 
-    // 컴포넌트가 언마운트 될 때 조회된 사용자 정보 초기화
     return () => {
-      viewUserStore.clearViewedUser(); // 조회된 사용자 정보를 초기화
+      viewUserStore.clearViewedUser(); 
     };
   }, [email, viewUserStore]);
 
-  // 입력값 변경 핸들러 (수정 모드에서 텍스트 필드 값 변경)
+  //프로필 사진 파일 선택 핸들러
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const validImageTypes = ['image/jpeg', 'image/png'];
+      if (!validImageTypes.includes(file.type)) {
+        alert('사진파일만 업로드 가능합니다.');
+        setFileName('');
+        setPreview(null);
+        setProfileImage(null);
+        return;
+      }
+      setFileName(file.name);
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFileName('');
+      setPreview(null);
+      setProfileImage(viewUserStore.viewedUser.profileImage);
+    }
+  };
+
+  // handleInputChange: 텍스트 필드 값 변경 핸들러
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    viewUserStore.updateField(name, value); // MobX 스토어에서 값 변경
+    viewUserStore.updateField(name, value); 
   };
 
   // 사용자 정보 저장 핸들러
   const handleSaveClick = async () => {
+    setLoading(true); 
     try {
       const updatedUser = {
         email: viewUserStore.viewedUser.email,
         username: viewUserStore.viewedUser.username,
         address: viewUserStore.viewedUser.address,
         birth: viewUserStore.viewedUser.birth,
-        profileImage: selectedFile || viewUserStore.viewedUser.profileImage,
+        profileImage: profileImage ? profileImage : viewUserStore.viewedUser.profileImage, 
       };
 
+      const formData = new FormData();
+      formData.append('email', updatedUser.email);
+      formData.append('username', updatedUser.username);
+      formData.append('address', updatedUser.address);
+      formData.append('birth', updatedUser.birth);
+      if (profileImage) {
+        formData.append('profileImage', profileImage);
+      } else if (viewUserStore.viewedUser.profileImage) {
+        // 기존 프로필 이미지를 유지하기 위해 서버로 전달
+        formData.append('profileImage', viewUserStore.viewedUser.profileImage);
+      } else {
+        // 아무 이미지도 없을 경우에는 null을 보내지 않도록 할 수 있음
+        console.log('프로필 이미지 없음: 새 이미지도 기존 이미지도 없습니다.');
+      }
 
-      // 사용자 정보 업데이트 요청
-      await viewUserStore.updateUserDetails(
-        updatedUser.email,
-        updatedUser.username,
-        updatedUser.address,
-        updatedUser.birth,
-        updatedUser.profileImage // 이미지가 있으면 전송
-      );
+      await axios.post('http://localhost:8080/api/auth/edituser', formData);
 
-      // 사용자 정보 업데이트 후 다시 가져오기
       await viewUserStore.fetchUserByEmail(updatedUser.email);
 
-      alert("사용자 정보가 성공적으로 업데이트되었습니다.");
-      setEditMode(false); // 수정 모드 종료
+      alert('사용자 정보가 성공적으로 업데이트되었습니다.');
+      setEditMode(false);
     } catch (error) {
-      alert("사용자 정보를 업데이트하는 중 오류가 발생했습니다.");
+      alert('사용자 정보를 업데이트하는 중 오류가 발생했습니다.');
+      console.error('오류 세부 사항:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // 수정 모드 전환 핸들러
+  const handleEditClick = () => {
+    setEditMode(true);
   };
 
   // 사용자 비활성화 핸들러
   const handleDeactivateClick = async () => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/deactivateUser', null, {
-        params: { email: user.email }, 
+        params: { email: user.email },
       });
       alert(response.data);
       await viewUserStore.fetchUserByEmail(user.email);
@@ -102,7 +137,7 @@ const AdminUserDetails = observer(() => {
     }
   };
 
-  // 사용자 비활성화 -> 활성화 핸들러
+  // 사용자 활성화 핸들러
   const handleActivateClick = async () => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/activateUser', null, {
@@ -130,54 +165,37 @@ const AdminUserDetails = observer(() => {
     }
   };
 
-  // 수정 모드 전환 핸들러
-  const handleEditClick = () => {
-    setEditMode(true);
-  };
-
   // 사용자의 정보가 로드되지 않았을 경우
   if (!viewUserStore.viewedUser) {
-    return <Typography>사용자 정보를 불러오는 중입니다...</Typography>; // 데이터가 없을 경우 로딩 메시지
+    return <Typography>사용자 정보를 불러오는 중입니다...</Typography>; 
   }
 
-  const user = viewUserStore.viewedUser; // 조회된 사용자 정보 사용
-
-  // isActivated 값을 숫자로 변환하여 비교
-  const isActivated = Number(user.isActivated);
+  const user = viewUserStore.viewedUser; 
 
   return (
     <Box className={styles.userDetailsContainer}>
-      {/* 배너 */}
-      {user.isDeleted ? (
-        <Box className={styles.bannerDeleted}>탈퇴한 회원입니다</Box>
-      ) : !user.isActivated ? (
-        <Box className={styles.bannerDeactivated}>비활성화된 회원입니다</Box>
-      ) : null}
-
       <Typography variant="h4" className={styles.userDetailsTitle}>
-        {editMode ? "개인 정보 수정" : "개인 정보 조회"}
+        {editMode ? '개인 정보 수정' : '개인 정보 조회'}
       </Typography>
 
       <Paper className={styles.userDetailsPaper}>
         <Grid container spacing={2}>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Avatar
-  className={styles.userAvatar}
-  src={preview || (user && user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : '/default-avatar.png')}
-  alt="User Profile"
-  sx={{ width: 200, height: 200 }}
-/>
-
+            <Avatar
+              className={styles.userAvatar}
+              src={preview || (user && user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : '')}
+              alt="User Profile"
+              sx={{ width: 200, height: 200 }}
+            />
           </Grid>
 
-          {/* 파일 선택 버튼 */}
           {editMode && (
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
               <input
                 type="file"
                 accept="image/*"
                 id="file-upload"
-                className={styles.fileInput} // input 숨기기
+                className={styles.fileInput} 
                 onChange={handleFileChange}
               />
               <label htmlFor="file-upload" className={styles.fileUploadLabel}>
@@ -192,7 +210,6 @@ const AdminUserDetails = observer(() => {
             </Typography>
           </Grid>
 
-          {/* 사용자 정보 입력 필드 */}
           <Grid item xs={6}>
             <TextField
               fullWidth
@@ -261,7 +278,6 @@ const AdminUserDetails = observer(() => {
               InputProps={{ readOnly: true }}
             />
           </Grid>
-
           <Grid item xs={6}>
             <TextField
               fullWidth
@@ -281,7 +297,6 @@ const AdminUserDetails = observer(() => {
             />
           </Grid>
 
-          {/* 버튼 그룹 */}
           <Grid item xs={12} className={styles.buttonGroupContainer}>
             <ButtonGroup variant="contained" aria-label="contained primary button group" className={styles.userDetailsButtonGroup}>
               {editMode ? (
@@ -293,7 +308,7 @@ const AdminUserDetails = observer(() => {
                   회원정보수정
                 </Button>
               )}
-              {isActivated === 0 ? (
+              {user.isActivated === 0 ? (
                 <Button onClick={handleActivateClick} className={styles.userDetailsActivateButton}>
                   회원 활성화
                 </Button>
