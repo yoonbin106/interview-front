@@ -7,11 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableHead from '@mui/material/TableHead';
-import Link from 'next/link';
+
 import axios from 'axios';
 import ForumIcon from '@mui/icons-material/Forum';
 import styles from '@/styles/bbs/bbs.module.css';
-import Calendar from 'react-calendar';
+
 import 'react-calendar/dist/Calendar.css'; // 기본 CSS를 가져옵니다.
 import RegisterButton from '@/components/bbs/bbsRegisterButton';
 import { useRouter } from 'next/router';
@@ -149,17 +149,7 @@ const Bbs = () => {
                                     
                                 </div>
                             </div>
-                            {/* 테이블 가로 길이에 맞춘 달력 */}
-                            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-                                <Box sx={{ width: '100%' }}>
-                                    <Calendar
-                                        value={date}
-                                        onChange={setDate}
-                                        locale="en-US"
-                                        className={styles.calendar}
-                                    />
-                                </Box>
-                            </Box>
+                            
                             {/* 필터링된 게시판 테이블로 렌더링 */}
                             <TableContainer component={Paper} className={styles.bbsTableContainer} >
                                 <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">

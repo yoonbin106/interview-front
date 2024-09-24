@@ -217,9 +217,11 @@ const PostContent = ({ post, openReportModal }) => {
 
 // 댓글 목록 컴포넌트
 const CommentList = ({ comments, setComments }) => {
+  // 작성일자에 따라 댓글 정렬 (오름차순)
+  const sortedComments = [...comments].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   return (
     <div className={styles.commentList}>
-      {comments.map((comment, index) => (
+      {sortedComments.map((comment, index) => (
         <CommentItem key={`${comment.commentId}-${index}`} comment={comment} setComments={setComments} />
       ))}
     </div>
@@ -312,20 +314,37 @@ const CommentItem = ({ comment, setComments }) => {
   return (
     <div className={styles.commentItem}>
       <strong>{comment.username}</strong>
-      {isEditing ? (
-        <>
+       {/* 댓글 수정 중일 때 */}
+       {isEditing ? (
+        <div style={{ marginTop: '10px' }}> {/* 작성자 밑에 댓글 수정 필드 배치 */}
           <input
             type="text"
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
+            style={{ width: '100%', marginBottom: '10px' }} // 댓글 입력 필드 스타일
           />
-          <button onClick={handleSaveClick}>저장</button>
-          <button onClick={() => setIsEditing(false)}>취소</button>
-        </>
+          <div>
+            <button onClick={handleSaveClick} style={{ marginRight: '10px' }}>
+              저장
+            </button>
+            <button onClick={() => setIsEditing(false)}>취소</button>
+          </div>
+        </div>
+
       ) : (
         <>
           <div className={styles.commentContainer}>
             <p className={styles.commentContent}>{comment.content}</p>
+            <p className={styles.commentTime}>
+              {new Date(comment.createdAt).toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+              
+            </p> {/* 작성 시간 표시 */}
             <IconButton size="small" aria-label="more actions" onClick={handleClick}>
               <MoreVertIcon />
             </IconButton>
