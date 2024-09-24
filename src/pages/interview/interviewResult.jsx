@@ -46,6 +46,7 @@ import { observer } from "mobx-react-lite";
 import { useStores } from "contexts/storeContext";
 import { fetchInterviewResult } from "api/interview";
 import { useRouter } from "next/router";
+import { getPayInfoByUserId } from "api/user";
 
 // 스타일드 컴포넌트 정의
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -86,18 +87,36 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 }));
 
 const ResultPage = observer(() => {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
   const { interviewStore, userStore } = useStores();
-  const { videoId } = router.query; // URL에서 videoId 추출
   const [interviewResult, setInterviewResult] = useState(null); // 상태로 interviewResult를 관리
-  const [generateAIFeedback, setGenerateAIFeedback] = useState(null);
+
+  // useEffect(() => {
+  //     const fetchPaymentInfo = async () => {
+  //         try {
+  //             const paymentInfo = await getPayInfoByUserId(userStore.id);
+  //             console.log('결제정보: ', paymentInfo);
+  //         } catch (error) {
+  //             console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
+  //         }
+  //     };
+  //     fetchPaymentInfo();
+  // }, [userStore]);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
   useEffect(() => {
+      const fetchPaymentInfo = async () => {
+        try {
+            const paymentInfo = await getPayInfoByUserId(userStore.id);
+            console.log('결제정보: ', paymentInfo);
+        } catch (error) {
+            console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
+        }
+    };
+    fetchPaymentInfo();
     const fetchedInterview = toJS(interviewStore.fetchedInterview);
     console.log('fetchedInterview', fetchedInterview);
 
@@ -344,7 +363,7 @@ const ResultPage = observer(() => {
 
   
     setInterviewResult(result); // 상태 업데이트
-  }, []);
+  }, [userStore]);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
   // 성격 특성 분석
