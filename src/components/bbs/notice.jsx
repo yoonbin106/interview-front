@@ -53,6 +53,11 @@ const Notice = () => {
         fetchNoticeData();
     }, []);
 
+    useEffect(() => {
+        const queryPage = router.query.page ? parseInt(router.query.page, 10) : 0;
+        setPage(queryPage);
+    }, [router.query.page]);
+
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
         setSearchTerm('');
@@ -84,6 +89,10 @@ const Notice = () => {
 
     const handleChangePage = (newPage) => {
         setPage(newPage);
+        router.push({
+            pathname: '/bbs/noticePage', // 정확한 경로로 설정
+            query: { ...router.query, page: newPage }, // 페이지 상태를 쿼리에 추가
+        });
     };
 
     const totalPages = Math.ceil(filteredNotices.length / rowsPerPage);

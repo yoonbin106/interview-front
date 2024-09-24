@@ -100,7 +100,10 @@ const BbsCompanyNotice = () => {
         fetchCompanyNoticeData(); // 
       }, []); 
    
-
+    useEffect(() => {
+        const queryPage = router.query.page ? parseInt(router.query.page, 10) : 0;
+        setPage(queryPage);
+    }, [router.query.page]);
     
     const handleCategoryChange = (event) => {
         setSearchCategory(event.target.value);
@@ -126,9 +129,13 @@ const BbsCompanyNotice = () => {
     };
     
 
-        const handleChangePage = (newPage) => {
-            setPage(newPage);
-        };
+    const handleChangePage = (newPage) => {
+        setPage(newPage);
+        router.push({
+            pathname: '/bbs/bbsCompanyNoticePage', // 정확한 경로로 설정
+            query: { ...router.query, page: newPage }, // 페이지 상태를 쿼리에 추가
+        });
+    };
     
         const handleRowsPerPageChange = (event) => {
             setRowsPerPage(parseInt(event.target.value, 10));
