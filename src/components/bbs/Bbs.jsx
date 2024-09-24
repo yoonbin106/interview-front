@@ -59,6 +59,11 @@ const Bbs = () => {
         }
     }, [sortCriteria, post]);
 
+    useEffect(() => {
+        const queryPage = router.query.page ? parseInt(router.query.page, 10) : 0;
+        setPage(queryPage);
+    }, [router.query.page]);
+    
 
     const handleClick = (bbsId) => {
         router.push(`/bbs/postView?id=${bbsId}`)
@@ -102,6 +107,10 @@ const Bbs = () => {
     };
 
     const handleChangePage = (newPage) => {
+        router.push({
+            pathname: '/bbs',
+            query: { page: newPage }
+        });
         setPage(newPage);
     };
 
@@ -278,6 +287,7 @@ const Bbs = () => {
                                     <MenuItem value={25}>25</MenuItem>
                                 </Select>
                             </Box>
+
                         </div>
                     </div>
                 </div>
