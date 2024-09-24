@@ -22,6 +22,8 @@ import Image from 'next/image';
 import styles from '@/styles/interview/interviewPreparation.module.css';
 import { getMockQuestions, getRealQuestions } from 'api/interview';
 import LoadingOverlay from '@/components/interview/loadingOverlay'; // 로딩 컴포넌트 임포트
+import { FaceDetection } from '@mediapipe/face_detection';
+import { Camera } from '@mediapipe/camera_utils';
 
 const InterviewPreparation = observer(() => {
   const router = useRouter();
@@ -46,6 +48,95 @@ const InterviewPreparation = observer(() => {
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const animationFrameRef = useRef(null);
+  
+  // 얼굴 감지 관련 상태 추가
+  const [faceDetected, setFaceDetected] = useState(false);
+  const canvasRef = useRef(null);
+  const faceDetectionRef = useRef(null);
+  const cameraRef = useRef(null);
+
+  // MediaPipe 얼굴 감지 초기화
+  useEffect(() => {
+    if (cameraReady && videoRef.current) {
+      initializeFaceDetection();
+    }
+    return () => {
+      if (cameraRef.current) {
+        cameraRef.current.stop();
+      }
+    };
+  }, [cameraReady]);
+
+   // MediaPipe 얼굴 감지 초기화 함수
+   const initializeFaceDetection = async () => {
+    if (!videoRef.current || !canvasRef.current) return; // 둘 중 하나라도 없으면 초기화 중단
+
+    faceDetectionRef.current = new FaceDetection({
+      locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`;
+      }
+    });
+
+    faceDetectionRef.current.setOptions({
+      model: 'short',
+      minDetectionConfidence: 0.5
+    });
+
+    faceDetectionRef.current.onResults(onFaceDetectionResults);
+
+    cameraRef.current = new Camera(videoRef.current, {
+      onFrame: async () => {
+        await faceDetectionRef.current.send({image: videoRef.current});
+      },
+      width: 640,
+      height: 480
+    });
+
+    cameraRef.current.start();
+  };
+
+  // 얼굴 감지 결과 처리 함수
+  const onFaceDetectionResults = (results) => {
+    if (!canvasRef.current) return;
+  
+    const canvasCtx = canvasRef.current.getContext('2d');
+    if (!canvasCtx) return;
+  
+    const width = canvasRef.current.width;
+    const height = canvasRef.current.height;
+  
+    canvasCtx.clearRect(0, 0, width, height);
+  
+    if (results.detections && results.detections.length > 0) {
+      setFaceDetected(true);
+      results.detections.forEach((detection) => {
+        const boundingBox = detection.boundingBox;
+        
+        // 바운딩 박스 그리기
+        canvasCtx.strokeStyle = 'blue';
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeRect(
+          boundingBox.xCenter * width - (boundingBox.width * width) / 2,
+          boundingBox.yCenter * height - (boundingBox.height * height) / 2,
+          boundingBox.width * width,
+          boundingBox.height * height
+        );
+  
+        // 랜드마크 그리기 (있다면)
+        if (detection.landmarks) {
+          detection.landmarks.forEach((landmark) => {
+            canvasCtx.beginPath();
+            canvasCtx.arc(landmark.x * width, landmark.y * height, 5, 0, 2 * Math.PI);
+            canvasCtx.fillStyle = 'red';
+            canvasCtx.fill();
+          });
+        }
+      });
+    } else {
+      setFaceDetected(false);
+      console.log("No face detected");
+    }
+  };
 
   useEffect(() => {
     if (router.isReady) {
@@ -125,7 +216,7 @@ const InterviewPreparation = observer(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
     }
-  }, [stream, cameraReady]);
+  }, [stream]);
 
   useEffect(() => {
     return () => {
@@ -149,20 +240,42 @@ const InterviewPreparation = observer(() => {
     interviewStore.setStream('');
   }, [stream, interviewStore]);
 
+  useEffect(() => {
+    if (videoRef.current && canvasRef.current) {
+      const resizeCanvas = () => {
+        if (videoRef.current.videoWidth && videoRef.current.videoHeight) {
+          canvasRef.current.width = videoRef.current.videoWidth;
+          canvasRef.current.height = videoRef.current.videoHeight;
+        }
+      };
+      return () => videoRef.current.removeEventListener('loadedmetadata', resizeCanvas);
+    }
+  }, []);
+  // 카메라 확인 함수 수정
   const checkCamera = async () => {
     try {
       if (stream) {
         stopStream();
       }
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      console.log("Camera stream obtained:", mediaStream);
       interviewStore.setStream(mediaStream);
       interviewStore.setCameraReady(true);
+      // if (videoRef.current) {
+      //   videoRef.current.srcObject = mediaStream;
+      //   console.log("Video element source set");
+      // }
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+        await new Promise(resolve => videoRef.current.onloadedmetadata = resolve);
+        await initializeFaceDetection(); // Face Detection 초기화 기다림
+      }
+      initializeFaceDetection(); // Face Detection 초기화 호출
     } catch (error) {
       console.error("카메라 접근 에러:", error);
       interviewStore.setCameraReady(false);
     }
   };
-
   const checkMic = async () => {
     try {
       if (audioContextRef.current) {
@@ -206,9 +319,8 @@ const InterviewPreparation = observer(() => {
       setIsListening(false);
     }
   };
-   // 리셋 핸들러
   const handleReset = () => {
-    stopStream();
+    cleanupResources();
     interviewStore.setStream('');
     interviewStore.setCameraReady(false);
     interviewStore.setMicReady(false);
@@ -217,8 +329,8 @@ const InterviewPreparation = observer(() => {
     interviewStore.setAudioLevel(0);
     interviewStore.setAllReady(false);
     interviewStore.setButtonActive(false);
-    setTranscript(''); // Reset transcript
-    stop();  // Stop listening for speech
+    setTranscript('');
+    setFaceDetected(false);
   };
   const cleanupResources = useCallback(() => {
     // 카메라 스트림 정리
@@ -252,6 +364,12 @@ const InterviewPreparation = observer(() => {
     // 비디오 요소 초기화
     if (videoRef.current) {
       videoRef.current.srcObject = null;
+    }
+    if (faceDetectionRef.current && faceDetectionRef.current.close) {
+      faceDetectionRef.current.close();
+    }
+    if (cameraRef.current) {
+      cameraRef.current.stop();
     }
   
   }, [stream, interviewStore]);
@@ -395,13 +513,30 @@ const InterviewPreparation = observer(() => {
               <Grid item xs={12} md={4}>
             <Paper elevation={3} className={styles.section}>
             <Typography variant="h6">화면 미리보기</Typography>
-                  <Box className={styles.videoContainer}>
-                    {cameraReady ? (
+                <Box className={styles.videoContainer}>
+                  {cameraReady ? (
+                    <>
                       <video ref={videoRef} autoPlay muted className={styles.video}/>
-                    ) : (
-                      <Typography>카메라를 활성화해주세요</Typography>
-                    )}
+                      <canvas 
+                          ref={canvasRef} 
+                          className={styles.canvas} 
+                          width={videoRef.current?.videoWidth || 640} 
+                          height={videoRef.current?.videoHeight || 480} 
+                        />
+                    </>
+                  ) : (
+                    <Typography>카메라를 활성화해주세요</Typography>
+                  )}
                 </Box>
+                <Button
+                  className={styles.button}
+                  variant="contained"
+                  color={faceDetected ? "success" : "primary"}
+                  onClick={checkCamera}
+                  disabled={cameraReady}
+                >
+                  {faceDetected ? '얼굴 인식 완료' : '얼굴 인식 시작'}
+                </Button>
                 <Box className={styles.countdownContainer}>
                   <Box
                     className={styles.countdownProgress}
