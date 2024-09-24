@@ -27,10 +27,8 @@ const InterviewSelectPage = observer(() => {
   const router = useRouter();
   const { interviewStore, userStore, authStore } = useStores();
   const [openModal, setOpenModal] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState('');
   const [selectedResume, setSelectedResume] = useState('');
   const [error, setError] = useState('');
-  const [paymentList, setPaymentList] = useState([]);
   const [resumeList, setResumeList] = useState([]);
   const [interviewType, setInterviewType] = useState('');
 
@@ -59,24 +57,18 @@ const InterviewSelectPage = observer(() => {
     setError('');
   };
 
-  const handlePaymentChange = (event) => {
-    setSelectedPayment(event.target.value);
-  };
-
   const handleResumeChange = (resumeId) => {
     setSelectedResume(resumeId);
   };
 
   const handleStartInterview = () => {
-    if (!selectedPayment || !selectedResume) {
-      setError('결제 옵션과 이력서를 반드시 선택해야 합니다.');
+    if (!selectedResume) {
+      setError('이력서를 반드시 선택해야 합니다.');
       return;
     }
 
-    interviewStore.setChoosedPayment(selectedPayment);
     interviewStore.setChoosedResume(selectedResume);
     interviewStore.setType(interviewType);
-    // ... (기존 interviewStore 설정 유지)
 
     router.push({
       pathname: '/interview/interviewPreparation',
@@ -94,18 +86,8 @@ const InterviewSelectPage = observer(() => {
     }
   };
 
-  const fetchPaymentInfo = async () => {
-    try {
-      const paymentData = await getAllPayInfo();
-      setPaymentList(paymentData.data);
-    } catch (error) {
-      console.error('결제 데이터를 불러오는 중 오류 발생:', error);
-    }
-  };
-
   useEffect(() => {
     fetchResumes();
-    fetchPaymentInfo();
   }, []);
 
   const realInterviewFeatures = [
@@ -120,14 +102,6 @@ const InterviewSelectPage = observer(() => {
     'AI 분석을 통한 상세한 피드백 제공',
   ];
 
-  const paymentOptions = [
-    { id: '0', label: '무료', price: 0 },
-    ...paymentList.map((payment) => ({
-      id: payment.id,
-      label: payment.orderName,
-      price: payment.price,
-    })),
-  ];
 
   return (
     <Container maxWidth="lg" className={styles.container}>
@@ -177,22 +151,6 @@ const InterviewSelectPage = observer(() => {
             <Typography variant="h6" gutterBottom>
               면접 준비
             </Typography>
-            <FormControl component="fieldset" fullWidth margin="normal">
-              <FormLabel component="legend">결제 옵션</FormLabel>
-              <RadioGroup
-                value={selectedPayment}
-                onChange={handlePaymentChange}
-              >
-                {paymentOptions.map((option) => (
-                  <FormControlLabel
-                    key={option.id}
-                    value={option.id}
-                    control={<Radio color="primary" />}
-                    label={`${option.label} (${option.price ? `${option.price}원` : '무료'})`}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
 
             <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
               이력서 선택
