@@ -202,41 +202,44 @@
         };
         reader.readAsDataURL(file);
       } else {
+        // 파일을 선택하지 않은 경우에도 기존 이미지를 유지하도록 처리
         setFileName('');
-        setPreview(null);
-        setProfileImage(userStore.profile);
+        setPreview(userStore.profile); // 기존 프로필 이미지 유지
+        setProfileImage(userStore.profile); // 서버에서 받은 프로필 이미지를 유지
       }
     };
     const handleSubmit = async (event) => {
       event.preventDefault();
-
+    
       const username = document.getElementById('name').value || userStore.username;
       const birth = birthDate || userStore.birth;
       const addressPostcode = postcode || userInfo.address;
-
+    
       const nameRegex = /^[가-힣]+$/; // 한글만 허용하는 정규식
       if (!nameRegex.test(username)) {
         alert('이름은 한글만 입력 가능합니다.');
         return;
       }
-
+    
       if (!birth) {
         alert('생년월일을 입력해 주세요.');
         return;
       }
-
+    
       if (!addressPostcode) {
         alert('주소의 우편번호를 입력해 주세요.');
         return;
       }
+    
       const formData = new FormData();
       formData.append('email', userInfo.email);
       formData.append('username', username);
       formData.append('address', `${postcode || userInfo.address.postalCode} ${address || userInfo.address.basicAddress} ${specificAddress || userInfo.address.extraDetail} ${extraAddress || userInfo.address.detail}`);
       formData.append('birth', birthDate || userStore.birth);
-
+    
+      // 새로운 이미지를 선택하지 않은 경우 기존 이미지 URL을 백엔드로 전송
       if (profileImage) {
-        formData.append('profileImage', profileImage);
+        formData.append('profileImage', profileImage); // 새로운 이미지를 선택한 경우
       }
     
       try {
@@ -246,22 +249,18 @@
         });
         const changedProfile = await getProfileImage(userInfo.email, userStore);
         if (response.ok) {
-          // 서버로부터 성공적인 응답을 받으면 userStore 업데이트
           const updatedUsername = document.getElementById('name').value || userStore.username;
           const updatedAddress = `${postcode || userInfo.address.postalCode} ${address || userInfo.address.basicAddress} ${specificAddress || userInfo.address.extraDetail} ${extraAddress || userInfo.address.detail}`;
-          const updatedProfile = profileImage ? changedProfile : userStore.profile; // 프로필 이미지 URL 업데이트
-
-          // userStore 값을 업데이트
+          const updatedProfile = profileImage ? changedProfile : userStore.profile;
+    
           userStore.setUsername(updatedUsername);
           userStore.setAddress(updatedAddress);
           userStore.setBirth(birthDate || userStore.birth);
           userStore.setProfile(updatedProfile);
     
-          // 성공 처리
           alert('유저 정보가 성공적으로 변경되었습니다.');
           router.push('/myPage');
         } else {
-          // 오류 처리
           const errorMessage = await response.text();
           alert(`오류 발생: ${errorMessage}`);
         }
@@ -269,6 +268,7 @@
         console.error('유저 정보를 수정하는 중 오류가 발생했습니다:', error);
       }
     };
+    
     const handleCloseSnackbar = () => {
       setOpenSnackbar(false);
       setShowOverlay(false);
