@@ -8,38 +8,38 @@ import userStore from 'stores/userStore';
 import ReportModal from '@/pages/bbs/reportModal';
 
 const PostView = () => {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]); // 댓글 리스트 상태 관리
   const router = useRouter();
-  const { id, increment } = router.query;  // URL 파라미터에서 ID를 가져옴
-  const [post, setPost] = useState({}); // 포스트 데이터를 저장할 상태
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 상태 추가
+  const { id, increment } = router.query; // URL 파라미터에서 게시글 ID 및 조회수 증가 여부 가져오기
+  const [post, setPost] = useState({}); // 게시글 데이터 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
+  const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 열림 상태
 
+  // 게시글과 댓글 데이터를 서버에서 가져오는 useEffect
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
         try {
+          // 조회수 증가 여부 결정
           const incrementValue = increment === 'false' ? 'false' : 'true';
           const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=${incrementValue}`);
 
-          // 포맷팅된 날짜를 추가하여 상태 업데이트
+          // 게시글 데이터와 작성 날짜 포맷 설정
           const postData = response.data;
           const formattedDate = new Date(postData.createdAt).toLocaleTimeString('ko-KR', {
             hour: '2-digit',
             minute: '2-digit',
           });
 
-          setPost({ ...postData, formattedDate });
+          setPost({ ...postData, formattedDate }); // 게시글 데이터 설정
 
-          // 댓글 가져오기
+          // 댓글 데이터 가져오기
           const commentResponse = await axios.get(`http://localhost:8080/bbs/${id}/comments`);
-          setComments(commentResponse.data);  // 서버에서 받은 댓글 데이터를 설정
-
-
+          setComments(commentResponse.data); // 댓글 데이터 설정
         } catch (error) {
-          console.error('Failed to fetch post:', error);
+          console.error('Failed to fetch post:', error); // 오류 처리
         } finally {
-          setLoading(false);
+          setLoading(false); // 로딩 상태 종료
         }
       };
 
@@ -47,26 +47,30 @@ const PostView = () => {
     }
   }, [id, increment]);
 
+  // 로딩 중일 때 표시
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // 게시글이 없을 때 처리
   if (!post || Object.keys(post).length === 0) {
     return <div>No post found</div>;
   }
 
+  // 신고 모달 열기
   const openReportModal = () => {
-    setReportModalOpen(true); // 신고 모달 열기
+    setReportModalOpen(true);
   };
 
+  // 신고 모달 닫기
   const closeReportModal = () => {
-    setReportModalOpen(false); // 신고 모달 닫기
+    setReportModalOpen(false);
   };
 
   return (
     <div className={styles.content}>
       <div className={styles.postView}>
-        <PostContent post={post} openReportModal={openReportModal} />
+        <PostContent post={post} openReportModal={openReportModal} /> {/* 게시글 본문 */}
         <div className={styles.divider}></div>
         <h3>댓글</h3>
         <CommentList comments={comments} setComments={setComments} />  {/* 댓글 리스트 */}
@@ -87,14 +91,15 @@ const PostView = () => {
   );
 };
 
+// 게시글 본문 컴포넌트
 const PostContent = ({ post, openReportModal }) => {
   const router = useRouter();
   const { id } = router.query;
-  const [anchorEl, setAnchorEl] = useState(null);
-  const postOwnerId = Number(post.userId?.id) || 0;
-  const currentUserId = Number(userStore.id) || 0;
+  const [anchorEl, setAnchorEl] = useState(null); // 메뉴 버튼 상태
+  const postOwnerId = Number(post.userId?.id) || 0; // 게시글 작성자의 ID
+  const currentUserId = Number(userStore.id) || 0; // 현재 로그인된 사용자의 ID
 
-  // 신고된 게시글 처리
+  // 신고된 게시글에 대한 처리
   if (post.deletedReason === 1) {
     return (
       <div className={styles.reportedContainer}>
@@ -104,21 +109,23 @@ const PostContent = ({ post, openReportModal }) => {
     );
   }
 
-
-
+  // 메뉴 버튼 클릭 핸들러
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  // 메뉴 닫기 핸들러
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  // 게시글 수정 핸들러
   const handleEdit = () => {
     router.push(`/bbs/editPost?id=${id}&increment=false`);
     handleClose();
   };
 
+  // 게시글 삭제 핸들러
   const handleDelete = async () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
@@ -127,7 +134,7 @@ const PostContent = ({ post, openReportModal }) => {
         });
 
         if (response.status === 200) {
-          router.push('/bbs');
+          router.push('/bbs'); // 삭제 후 게시판 목록으로 이동
         } else {
           alert('삭제를 실패하였습니다');
         }
@@ -139,19 +146,19 @@ const PostContent = ({ post, openReportModal }) => {
     handleClose();
   };
 
+  // 게시글 신고 핸들러
   const handleReport = () => {
-    openReportModal();
+    openReportModal(); // 신고 모달 열기
     handleClose();
   };
 
+  // 메뉴 아이템 (게시글 작성자는 수정/삭제 가능, 다른 사용자는 신고 가능)
   const menuItems = postOwnerId === currentUserId ? [
     <MenuItem key="edit" onClick={handleEdit}>수정</MenuItem>,
     <MenuItem key="delete" onClick={handleDelete}>삭제</MenuItem>
   ] : [
     <MenuItem key="report" onClick={handleReport}>신고</MenuItem>
   ];
-
-
 
   return (
     <div className={styles.postContainer}>
@@ -161,7 +168,6 @@ const PostContent = ({ post, openReportModal }) => {
           {post.username} <span className={styles.postTime}>({post.formattedDate})</span>
         </div>
         <div className={styles.postInfo}>
-
           <span>조회 {post.hitCount || 0}</span>
           <span>{post.date}</span>
           <IconButton
@@ -185,6 +191,8 @@ const PostContent = ({ post, openReportModal }) => {
       </div>
       <hr className={styles.divider} />
       <p>{post.content}</p>
+
+      {/* 첨부 파일 목록 */}
       <div className={styles.files}>
         {post.files && Object.keys(post.files).length > 0 ? (
           Object.keys(post.files).map((fileName, index) => (
@@ -195,8 +203,7 @@ const PostContent = ({ post, openReportModal }) => {
                 rel="noopener noreferrer"
                 className={styles.fileLink}
               >
-
-                <div className={styles.fileName}>📄{fileName}</div> {/* 파일 이름 */}
+                <div className={styles.fileName}>📄{fileName}</div>
               </a>
             </div>
           ))
@@ -204,11 +211,9 @@ const PostContent = ({ post, openReportModal }) => {
           <p></p>
         )}
       </div>
-
     </div>
   );
 };
-
 
 // 댓글 목록 컴포넌트
 const CommentList = ({ comments, setComments }) => {
@@ -221,16 +226,17 @@ const CommentList = ({ comments, setComments }) => {
   );
 };
 
-// 신고된 댓글 처리 추가
+// 댓글 아이템 컴포넌트 (댓글 수정, 삭제, 신고 처리 포함)
 const CommentItem = ({ comment, setComments }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [newContent, setNewContent] = useState(comment.content);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [isReportModalOpen, setReportModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // 댓글 수정 모드 상태
+  const [newContent, setNewContent] = useState(comment.content); // 수정된 댓글 내용 상태
+  const [anchorEl, setAnchorEl] = useState(null); // 메뉴 버튼 상태
+  const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 열림 상태
 
   const commentOwnerId = Number(comment.user?.id) || 0;
   const currentUserId = Number(userStore.id) || 0;
 
+  // 신고된 댓글에 대한 처리
   if (comment.deletedReason === 1) {
     return (
       <div className={styles.reportedCommentContainer}>
@@ -248,11 +254,13 @@ const CommentItem = ({ comment, setComments }) => {
     setAnchorEl(null);
   };
 
+  // 댓글 수정 버튼 클릭 시
   const handleEditClick = () => {
     setIsEditing(true);
     handleClose();
   };
 
+  // 댓글 수정 저장 처리
   const handleSaveClick = async () => {
     try {
       const commentId = comment.commentId;
@@ -266,7 +274,7 @@ const CommentItem = ({ comment, setComments }) => {
             c.commentId === commentId ? { ...c, content: newContent } : c
           )
         );
-        setIsEditing(false);
+        setIsEditing(false); // 수정 모드 종료
       } else {
         console.error("Failed to update comment:", response.statusText);
       }
@@ -275,6 +283,7 @@ const CommentItem = ({ comment, setComments }) => {
     }
   };
 
+  // 댓글 삭제 처리
   const handleDeleteClick = async () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
@@ -289,11 +298,13 @@ const CommentItem = ({ comment, setComments }) => {
     handleClose();
   };
 
+  // 댓글 신고 모달 열기
   const openReportModal = () => {
     setReportModalOpen(true);
     handleClose();
   };
 
+  // 댓글 신고 모달 닫기
   const closeReportModal = () => {
     setReportModalOpen(false);
   };
@@ -348,6 +359,7 @@ const CommentInput = ({ post, postId, setComments }) => {
   const [content, setContent] = useState('');
   const userId = userStore.id;
 
+  // 댓글 제출 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (content.trim()) {
@@ -358,13 +370,13 @@ const CommentInput = ({ post, postId, setComments }) => {
         });
 
         const newComment = response.data;
-        setComments((prevComments) => [...prevComments, newComment]);
-        setContent('');
+        setComments((prevComments) => [...prevComments, newComment]); // 새 댓글 추가
+        setContent(''); // 입력 필드 초기화
       } catch (error) {
         console.error('Failed to add comment:', error);
       }
 
-      // 알림을 위한 메세지 전송
+      // 알림 전송을 위한 메시지 데이터 준비
       const messageData = {
         text: content,
         bbsId: post.bbsId.toString(),
@@ -378,13 +390,11 @@ const CommentInput = ({ post, postId, setComments }) => {
       };
 
       try {
-        // 파이썬 FastAPI 서버로 메시지 보내기
-        await axios.post('http://192.168.0.137:8000/sendComment', messageData);
+        await axios.post('http://192.168.0.137:8000/sendComment', messageData); // 댓글 알람 전송
       } catch (error) {
         console.error("댓글 알람 전송 중 오류 발생:", error);
       }
     }
-
   };
 
   return (

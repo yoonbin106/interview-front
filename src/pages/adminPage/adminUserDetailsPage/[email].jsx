@@ -39,11 +39,6 @@ const AdminUserDetails = observer(() => {
     setPreview(URL.createObjectURL(file));
   };
 
-  // 프로필 업데이트 함수
-  const handleProfileUpdate = () => {
-    return selectedFile ? selectedFile : viewUserStore.viewedUser.profileImage;
-  };
-
   // 컴포넌트가 로드되었을 때 이메일이 존재하면 사용자를 가져옴
   useEffect(() => {
     if (email) {
@@ -70,8 +65,9 @@ const AdminUserDetails = observer(() => {
         username: viewUserStore.viewedUser.username,
         address: viewUserStore.viewedUser.address,
         birth: viewUserStore.viewedUser.birth,
-        profileImage: handleProfileUpdate(), // 프로필 이미지 업데이트 로직 반영
+        profileImage: selectedFile || viewUserStore.viewedUser.profileImage,
       };
+
 
       // 사용자 정보 업데이트 요청
       await viewUserStore.updateUserDetails(
@@ -96,7 +92,7 @@ const AdminUserDetails = observer(() => {
   const handleDeactivateClick = async () => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/deactivateUser', null, {
-        params: { email: user.email },
+        params: { email: user.email }, 
       });
       alert(response.data);
       await viewUserStore.fetchUserByEmail(user.email);
@@ -165,12 +161,13 @@ const AdminUserDetails = observer(() => {
       <Paper className={styles.userDetailsPaper}>
         <Grid container spacing={2}>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Avatar
-              className={styles.userAvatar}
-              src={preview || (user && user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : '/default-avatar.png')}
-              alt="User Profile"
-              sx={{ width: 200, height: 200 }}
-            />
+          <Avatar
+  className={styles.userAvatar}
+  src={preview || (user && user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : '/default-avatar.png')}
+  alt="User Profile"
+  sx={{ width: 200, height: 200 }}
+/>
+
           </Grid>
 
           {/* 파일 선택 버튼 */}

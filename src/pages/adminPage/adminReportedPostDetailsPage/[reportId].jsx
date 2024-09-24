@@ -13,21 +13,6 @@ export default function AdminReportedPostDetailsPage() {
     const [loading, setLoading] = useState(true); // 로딩 상태 관리
     const [error, setError] = useState(null); // 에러 상태 관리
 
-    useEffect(() => {
-        if (reportId) {
-            axios.get(`http://localhost:8080/api/adminreported/reportedposts/${reportId}`)
-                .then(response => {
-                    setPost(response.data);  // 게시글 정보 설정
-                    setLoading(false);  // 데이터를 받은 후 로딩 상태를 false로 설정
-                })
-                .catch(error => {
-                    console.error('Error fetching post data:', error);
-                    setError('게시글을 불러오는 중 오류가 발생했습니다.');
-                    setLoading(false);  // 오류 발생 시에도 로딩 상태를 false로 설정
-                });
-        }
-    }, [reportId]);
-
     // 게시글 삭제하는 함수
     const handleDelete = () => {
         if (typeof window !== 'undefined') {
@@ -67,34 +52,53 @@ export default function AdminReportedPostDetailsPage() {
         router.push('/adminPage/adminReportedPostPage');
     };
 
-    // 로딩 중 또는 에러가 있을 때 처리
+    // reportId가 변경될 때마다 게시글 정보 불러오기
+    useEffect(() => {
+        if (reportId) {
+            axios.get(`http://localhost:8080/api/adminreported/reportedposts/${reportId}`)
+                .then(response => {
+                    setPost(response.data);  // 게시글 정보 설정
+                    setLoading(false);       // 데이터를 받은 후 로딩 상태를 false로 설정
+                })
+                .catch(error => {
+                    console.error('Error fetching post data:', error);
+                    setError('게시글을 불러오는 중 오류가 발생했습니다.');
+                    setLoading(false);       // 오류 발생 시에도 로딩 상태를 false로 설정
+                });
+        }
+    }, [reportId]);
+
+    // 로딩 중일 때 화면에 표시되는 메시지
     if (loading) {
         return <div>게시글을 불러오는 중입니다...</div>;
     }
 
+    // 에러가 있을 경우 에러 메시지 표시
     if (error) {
         return <div>{error}</div>;
     }
 
-    // 데이터가 준비되었을 때 렌더링
+    // 게시글 데이터가 준비된 후 렌더링
     return (
         <div className={sidebar.container}>
             <div className={sidebar.sidebar}>
-                <NestedList />
+                <NestedList />  {/* 사이드바 메뉴 */}
             </div>
+
             <div className={sidebar.content}>
                 {post ? (
                     <div>
+                        {/* 게시글 정보 카드 */}
                         <Card className={styles.reportedPostCard} elevation={3}>
                             <CardContent>
                                 <Typography variant="h6" sx={{ color: 'gray', marginBottom: 2 }}>
                                     [신고된 게시글]
                                 </Typography>
-                                
+
                                 <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
                                     {post.title}
                                 </Typography>
-                                
+
                                 <Typography variant="body2" sx={{ color: 'gray', marginBottom: 1 }}>
                                     작성자: {post.username}
                                 </Typography>
@@ -102,7 +106,7 @@ export default function AdminReportedPostDetailsPage() {
                                 <Typography variant="body2" sx={{ color: 'gray', marginBottom: 3 }}>
                                     등록 날짜: {new Date(post.createdAt).toLocaleString()}
                                 </Typography>
-                                
+
                                 <Typography variant="body1" component="p" sx={{ fontWeight: 'bold', marginBottom: 3 }}>
                                     {post.content}
                                 </Typography>
@@ -111,6 +115,7 @@ export default function AdminReportedPostDetailsPage() {
 
                         <br />
 
+                        {/* 신고 정보 카드 */}
                         <Card className={styles.reportedPostCard} elevation={3}>
                             <CardContent>
                                 <Grid container spacing={2}>
@@ -138,6 +143,7 @@ export default function AdminReportedPostDetailsPage() {
                                     게시글 신고 날짜: {new Date(post.reportedAt).toLocaleString()}
                                 </Typography>
 
+                                {/* 버튼 컨트롤 (삭제, 복구, 목록) */}
                                 <div className={styles.reportedPostDetailsButtonContainer}>
                                     <Button className={styles.reportedPostDetailsDeleteButton} onClick={handleDelete}>
                                         게시글 영구삭제
