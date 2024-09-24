@@ -20,7 +20,7 @@
   font-family: Arial, sans-serif;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-color: #DEFFF5;
+  
   border-radius: 8px;
   padding: 20px;
   margin-top: 50px;
@@ -103,11 +103,14 @@
   text-align: left;
 }
 
+.postTime{
+  margin-left: 5px;
+}
 
 /* Divider */
 .divider {
   border: none;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #bebcbc;
   margin: 20px 0;
 }
 

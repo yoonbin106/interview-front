@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import userStore from 'stores/userStore';
 import ReportModal from '@/pages/bbs/reportModal';
-
+import { Typography, Divider, Box, Card, CardContent } from '@mui/material';
+import CommentIcon from '@mui/icons-material/Comment'; // MUI 아이콘 추가
 const PostView = () => {
   const [comments, setComments] = useState([]); // 댓글 리스트 상태 관리
   const router = useRouter();
@@ -71,12 +72,38 @@ const PostView = () => {
     <div className={styles.content}>
       <div className={styles.postView}>
         <PostContent post={post} openReportModal={openReportModal} /> {/* 게시글 본문 */}
-        <div className={styles.divider}></div>
-        <h3>댓글</h3>
-        <CommentList comments={comments} setComments={setComments} />  {/* 댓글 리스트 */}
-        <div className={styles.divider}></div>
-        <h3>댓글 쓰기</h3>
-        <CommentInput post={post} postId={id} setComments={setComments} />  {/* 댓글 입력 */}
+        
+        <Divider sx={{ marginY: 2, Color: '#bebcbc', borderWidth: 1 }} />
+
+
+        {/* 댓글 섹션 */}
+        <Card variant="outlined" sx={{ marginBottom: 2, border: 'none', boxShadow: 'none' }}>
+          <CardContent>
+            <Box display="flex" alignItems="center" mb={2}>
+              <CommentIcon sx={{ marginRight: 1, fontSize: 30, color: 'primary.main' }} />
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                댓글
+              </Typography>
+            </Box>
+            <CommentList comments={comments} setComments={setComments} />  {/* 댓글 리스트 */}
+          </CardContent>
+        </Card>
+
+        <Divider sx={{ marginY: 2, Color: '#bebcbc', borderWidth: 1 }} />
+
+
+        {/* 댓글 쓰기 섹션 */}
+        <Card variant="outlined" sx={{ marginBottom: 2, border: 'none', boxShadow: 'none' }}>
+          <CardContent>
+            <Box display="flex" alignItems="center" mb={2}>
+              <CommentIcon sx={{ marginRight: 1, fontSize: 30, color: 'primary.main' }} />
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                댓글 쓰기
+              </Typography>
+            </Box>
+            <CommentInput post={post} postId={id} setComments={setComments} />  {/* 댓글 입력 */}
+          </CardContent>
+        </Card>
       </div>
 
       {/* 신고 모달 */}
