@@ -98,7 +98,7 @@ function Home() {
     }
 
     const handleButtonClick = () => {
-        router.push('/resume/resumeList');
+        router.push('/interview');
     };
 
 
