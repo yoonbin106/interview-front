@@ -237,12 +237,12 @@ const SurveyResult = () => {
                   sx={{ textAlign: 'center', marginTop: '24px' }} 
                   className={styles.surveySubTitleLineThank}
                 >
-                  AI 면접 및 이력서 첨삭 서비스로 한 발 더 나아가세요!
+                  이력서 첨삭 및 AI 면접 서비스로 한 발 더 나아가세요!
                 </Typography>
 
                   <Typography variant="body2" paragraph className={styles.surveySubTitleResultx}>
                     저희는 단순한 직업 추천을 넘어, 여러분이 취업 준비 과정에서 최고의 성과를 낼 수 있도록 돕고자 합니다.
-                    AI 면접 시뮬레이션과 전문적인 이력서 첨삭 서비스를 통해 지원하는 회사에서 돋보일 수 있도록 도와드립니다.
+                    전문적인 이력서 첨삭 서비스와 AI 면접 시뮬레이션를 통해 지원하는 회사에서 돋보일 수 있도록 도와드립니다.
                     지금 바로 아래 버튼을 클릭하여, 취업 성공의 길로 한 걸음 더 나아가세요.
                   </Typography>
 
@@ -253,7 +253,7 @@ const SurveyResult = () => {
                 className={styles.directButton}
                 sx={{ marginBottom: '16px' }}  // margin-bottom 추가
               >
-                AI 면접 및 이력서 첨삭 서비스로 이동하기
+                이력서 첨삭 및 AI 면접 서비스로 이동하기
               </Button>
 
                 </>
