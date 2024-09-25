@@ -30,46 +30,6 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
         }
     }, [companyNoticeId, companyNoticeData]);
 
-    const handleEdit = () => {
-        setIsEditing(true);
-    };
-
-    const handleSave = async () => {
-        try {
-            const updatedCompanyNotice = {
-               companyNoticeTitle: editedCompanyNotice.companyNoticeTitle,
-               companyNoticeContent: editedCompanyNotice.companyNoticeContent,
-            };
-            await axios.put(`http://localhost:8080/api/companynotice/${editedCompanyNotice.companyNoticeId}`, updatedCompanyNotice);
-            alert('공지사항이 성공적으로 수정되었습니다.');
-            setIsEditing(false);
-            router.push(`/adminPage/adminCompanyNoticeDetailsPage/${editedCompanyNotice.companyNoticeId}`);
-        } catch (error) {
-            console.error('공지사항 수정 중 오류 발생:', error);
-            alert('공지사항 수정에 실패했습니다.');
-        }
-    };
-
-    const handleDelete = () => {
-        setOpenDeleteDialog(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        try {
-            await axios.delete(`http://localhost:8080/api/companynotice/${editedCompanyNotice.companyNoticeId}`);
-            alert('공지사항이 성공적으로 삭제되었습니다.');
-            setOpenDeleteDialog(false);
-            router.push('/adminPage/adminCompanyNoticePage');
-        } catch (error) {
-            console.error('공지사항 삭제 중 오류 발생:', error);
-            alert('공지사항 삭제에 실패했습니다.');
-        }
-    };
-
-    const handleCancelDelete = () => {
-        setOpenDeleteDialog(false);
-    };
-
     const handleGoBack = () => {
         router.push('/bbs/bbsCompanyNoticePage');
     };
@@ -112,6 +72,9 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
                 <p className={styles.companyNoticeDetailsDate}>
                     {new Date(editedCompanyNotice.companyNoticeCreatedTime).toLocaleString('ko-KR', {
+                        year: 'numeric',     
+                        month: '2-digit',    
+                        day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
                         hour12: false //24시간 형식
@@ -180,22 +143,7 @@ const BbsCompanyNoticeDetails = ({ companyNoticeData }) => {
                     {renderButtons()}
                 </Paper>
 
-                <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
-                    <DialogTitle>공지사항 삭제</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            공지사항을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCancelDelete} color="primary">
-                            취소
-                        </Button>
-                        <Button onClick={handleConfirmDelete} color="secondary">
-                            삭제
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                
             </div>
         </div>
     );

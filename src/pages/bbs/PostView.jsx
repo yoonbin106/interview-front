@@ -28,6 +28,9 @@ const PostView = () => {
           // 게시글 데이터와 작성 날짜 포맷 설정
           const postData = response.data;
           const formattedDate = new Date(postData.createdAt).toLocaleTimeString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
             hour12: false // 24시간 형식
@@ -193,7 +196,8 @@ const PostContent = ({ post, openReportModal }) => {
       <h2>{post.title}</h2>
       <div className={styles.postMeta}>
         <div className={styles.author}>
-          {post.username} <span className={styles.postTime}>{post.formattedDate}</span>
+          {post.username}
+          <span className={styles.postTime} >{post.formattedDate}</span>
         </div>
         <div className={styles.postInfo}>
           <span>조회 {post.hitCount || 0}</span>

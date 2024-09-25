@@ -71,6 +71,9 @@ const BbsNoticeDetails = ({ noticeData }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <p className={styles.noticeDetailsDate}>
                     {new Date(editedNotice.noticeCreatedTime).toLocaleString('ko-KR', {
+                        year: 'numeric',     
+                        month: '2-digit',    
+                        day: '2-digit', 
                         hour: '2-digit',
                         minute: '2-digit', 
                         hour12: false //24시간 형식
