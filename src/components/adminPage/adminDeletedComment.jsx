@@ -18,7 +18,7 @@ export default function AdminDeletedComment() {
       .then(response => {
         console.log('받아오는 데이터:',response)
         // 삭제된 날짜 기준으로 오름차순 정렬
-        const sortedData = response.data.sort((a, b) => new Date(a.deletedAt) - new Date(b.deletedAt));
+        const sortedData = response.data.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
         setDeletedComments(sortedData);
       })
       .catch(error => {

@@ -181,7 +181,6 @@ const AdminAdminNoticeDetails = ({ noticeData }) => {
                         [관리자 공지사항]
                     </Typography>
                     {renderHeader()}
-                    {renderAuthor()}
                     {renderContent()}
                     {renderButtons()}
                 </Paper>

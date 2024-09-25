@@ -13,18 +13,6 @@
     white-space:nowrap;
   }
   
-  .companyNoticeTableLink {
-    color: black;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .companyNoticeTableLink:hover {
-    text-decoration: underline;
-  }
-  
-  
-  
   /* 레이아웃 및 컨테이너 스타일 */
   .companyNoticeContainer {
     display: flex;
@@ -36,7 +24,7 @@
   
   .companyNoticeSidebar {
     border: solid 2px;
-    border-color: #DEFFF5;
+    border-color: #ffffff;
     margin: 10px 20px 10px 10px;
     min-width: 200px;
   }
@@ -46,7 +34,7 @@
     padding: 20px;
     margin: 10px 10px 10px 10px;
     border: solid 2px;
-    border-color: #DEFFF5;
+    border-color: #ffffff;
     min-width: 500px;
     width: 1080px;
     box-sizing: border-box;
@@ -63,12 +51,6 @@
     font-size: 40px;
     font-weight:bold;
   }
-  .companyNoticeTitleContainer{
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
   
   .companyNoticeTitleDivider {
     border: 0;
@@ -109,31 +91,7 @@
     background-color: #ffffff;
   }
   
-  /* 달력에서 요일에 커서 올렸을 때 물음표 커서 제거 */
-  .calendar__tile {
-    cursor: default;
-  }
-  /* 달력에서 요일에 커서 올렸을 때 물음표 커서 제거 */
-  .calendar__month-view__weekdays__weekday {
-    cursor: pointer;
-  }
-  
-  
-  /* 달력에서 이전 달과 다음 달로 넘어가는 버튼 스타일 */
-  .calendar__navigation button {
-    min-width: 44px;
-    background: none;
-    font-size: 5rem;
-    margin-top: 8px;
-    cursor: pointer;
-  }
-  
-  .companyNoticeButtonContainer {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-  }
-  
+
   .companyNoticeRegisterButton {
     background-color: #5A8AF2;
     margin-bottom : 20px;
@@ -142,4 +100,8 @@
   
   .companyNoticeRegisterButton:hover {
     background-color: #0056b3;
+  }
+
+  .companyNoticeDateCell {
+    white-space: nowrap;
   }

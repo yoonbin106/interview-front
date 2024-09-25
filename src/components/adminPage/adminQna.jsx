@@ -14,7 +14,12 @@ const PaginationTableQna = ({ rows, page, rowsPerPage, getStatusText }) => {
   //행을 클릭했을 때 실행되는 함수
   const handleRowClick = (qnaId) => {
     router.push(`/adminPage/adminQnaDetailsPage/${qnaId}`)
-  }
+  };
+
+  // 제목이 10자 이상이면 '...' 처리하는 함수
+  const truncateTitle = (title) => {
+    return title.length > 10 ? `${title.substring(0, 10)}...` : title;
+  };
 
   return (
     <TableContainer component={Paper} className={styles.adminQnaTableContainer}>
@@ -34,15 +39,17 @@ const PaginationTableQna = ({ rows, page, rowsPerPage, getStatusText }) => {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.qnaId}
-            hover
-            onClick={() => handleRowClick(row.qnaId)}
-            style={{ cursor: 'pointer' }}>
+            <TableRow
+              key={row.qnaId}
+              hover
+              onClick={() => handleRowClick(row.qnaId)}
+              style={{ cursor: 'pointer' }}
+            >
               <TableCell align="center">{row.qnaId}</TableCell>
               <TableCell align="center">{getStatusText(row.qnaStatus)}</TableCell>
               <TableCell align="center">{`[${row.qnaCategory}]`}</TableCell>
               <TableCell align="center" className={styles.adminQnaTitleCell}>
-                  {row.qnaTitle}
+                {truncateTitle(row.qnaTitle)}
               </TableCell>
               <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
               <TableCell align="center">

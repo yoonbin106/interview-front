@@ -172,8 +172,28 @@ const AdminUserDetails = observer(() => {
 
   const user = viewUserStore.viewedUser; 
 
-  return (
+  // isActivated 값을 숫자로 변환하여 비교
+  const isActivated = Number(user.isActivated);
+
+  // 배너 표시 로직 추가
+  const renderBanner = () => {
+    if (user.isDeleted === 1) {
+      return <div className={styles.bannerDeleted}>탈퇴한 회원입니다</div>;
+    } else if (user.isActivated === 0) {
+      return <div className={styles.bannerDeactivated}>비활성화된 회원입니다</div>;
+    }
+    return null;
+  };
+
+    return (
     <Box className={styles.userDetailsContainer}>
+      {/* 배너 */}
+      {!loading && user.isDeleted ? ( // 로딩 중이 아닐 때만 배너 표시
+        <Box className={styles.bannerDeleted}>탈퇴한 회원입니다</Box>
+      ) : !loading && !user.isActivated ? (
+        <Box className={styles.bannerDeactivated}>비활성화된 회원입니다</Box>
+      ) : null}
+
       <Typography variant="h4" className={styles.userDetailsTitle}>
         {editMode ? '개인 정보 수정' : '개인 정보 조회'}
       </Typography>
@@ -297,7 +317,8 @@ const AdminUserDetails = observer(() => {
             />
           </Grid>
 
-          <Grid item xs={12} className={styles.buttonGroupContainer}>
+           {/* 버튼 그룹 */}
+           <Grid item xs={12} className={styles.buttonGroupContainer}>
             <ButtonGroup variant="contained" aria-label="contained primary button group" className={styles.userDetailsButtonGroup}>
               {editMode ? (
                 <Button onClick={handleSaveClick} className={styles.userDetailsButton}>
@@ -308,7 +329,7 @@ const AdminUserDetails = observer(() => {
                   회원정보수정
                 </Button>
               )}
-              {user.isActivated === 0 ? (
+              {isActivated === 0 ? (
                 <Button onClick={handleActivateClick} className={styles.userDetailsActivateButton}>
                   회원 활성화
                 </Button>

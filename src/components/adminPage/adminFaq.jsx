@@ -15,8 +15,17 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         const fetchFaqs = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/faq/all');
-                setFaqs(response.data);
-                setFilteredFaqs(response.data);
+
+                // 카테고리명 기준으로 오름차순 정렬 (ㄱㄴㄷ순)
+                const sortedFaqs = response.data.sort((a, b) => {
+                    if (a.faqCategory && b.faqCategory) {
+                        return a.faqCategory.localeCompare(b.faqCategory, 'ko', { sensitivity: 'base' });
+                    } else {
+                        return 0; // 카테고리가 없는 항목을 정렬에 포함시키지 않음
+                    }
+                });
+                setFaqs(sortedFaqs);
+                setFilteredFaqs(sortedFaqs);
             } catch (error) {
                 console.error('Error fetching FAQs:', error);
             }
@@ -27,7 +36,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
 
     const handleDeleteFaq = async (faqId) => {
         try {
-            await axios.delete(`http://localhost:8080/api/faq/${faqId}`);
+            await axios.delete(`http://localhost:8080/api/faq/delete/${faqId}`);
             setFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
             setFilteredFaqs(prevFaqs => prevFaqs.filter(faq => faq.faqId !== faqId));
         } catch (error) {
@@ -53,10 +62,10 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
             <Box mb={3} className={styles.adminFaqHeader}>
                 <Box display="flex" alignItems="center">
                     <ListItemIcon>
-                    <QuestionAnswerTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2' }} />
+                        <QuestionAnswerTwoToneIcon sx={{ fontSize: 60, color: '#5A8AF2' }} />
                     </ListItemIcon>
                     <Typography variant="h3" gutterBottom className={styles.adminFaqTitle}>
-                    자주 묻는 질문(𝐅𝐀𝐐)
+                        자주 묻는 질문(𝐅𝐀𝐐)
                     </Typography>
                 </Box>
                 <Button 
@@ -67,7 +76,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                     새 FAQ 등록
                 </Button>
             </Box>
-    
+
             <Box mb={3} className={styles.adminFaqCategorySearch}>
                 <FormControl fullWidth variant="outlined">
                     <Select
@@ -96,7 +105,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                     </Select>
                 </FormControl>
             </Box>
-    
+
             {filteredFaqs
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(faq => (
@@ -125,7 +134,7 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                     </Accordion>
                 ))
             }
-    
+
             <Box className={styles.adminFaqPaginationControl}>
                 <Button
                     variant="outlined"
@@ -173,4 +182,5 @@ const AdminFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         </div>
     );
 };
-    export default AdminFaq;
+
+export default AdminFaq;

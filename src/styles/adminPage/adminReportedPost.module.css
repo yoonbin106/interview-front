@@ -39,7 +39,7 @@
 
 .reportedPostSidebar {
   border: solid 2px;
-  border-color: #DEFFF5;
+  border-color: #ffffff;
   margin: 10px 20px 10px 10px;
   min-width: 200px;
 }
@@ -49,7 +49,7 @@
   padding: 20px;
   margin: 10px 10px 10px 10px;
   border: solid 2px;
-  border-color: #DEFFF5;
+  border-color: #ffffff;
   min-width: 500px;
   width: 1080px;
   box-sizing: border-box;
@@ -98,4 +98,24 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 400px;
+}
+.reportedPostIdCell {
+  width: 10%; /* 신고 번호 셀 너비 */
+}
+
+.reportedPostTitleCell {
+  width: 45%; /* 게시글 제목 셀 너비 */
+}
+
+.reportedPostAuthorCell {
+  width: 10%; /* 작성자 셀 너비 */
+}
+
+.reportedPostReporterCell {
+  width: 10%; /* 신고자 셀 너비 */
+}
+
+.reportedPostDateCell {
+  width: 25%; /* 신고 날짜 셀 너비 */
 }

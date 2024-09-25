@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Paper, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import dynamic from 'next/dynamic';
-import styles from '@/styles/adminPage/adminCompanyNoticeDetails.module.css';
+import styles from '@/styles/adminPage/adminAdminNoticeDetails.module.css'; // 스타일을 AdminNoticeDetails와 동일하게
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import 'react-quill/dist/quill.snow.css'; // Quill의 기본 스타일 적용
@@ -37,8 +37,8 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
     const handleSave = async () => {
         try {
             const updatedCompanyNotice = {
-               companyNoticeTitle: editedCompanyNotice.companyNoticeTitle,
-               companyNoticeContent: editedCompanyNotice.companyNoticeContent,
+                companyNoticeTitle: editedCompanyNotice.companyNoticeTitle,
+                companyNoticeContent: editedCompanyNotice.companyNoticeContent,
             };
             await axios.put(`http://localhost:8080/api/companynotice/${editedCompanyNotice.companyNoticeId}`, updatedCompanyNotice);
             alert('공지사항이 성공적으로 수정되었습니다.');
@@ -86,7 +86,7 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
     }
 
     const renderHeader = () => (
-        <div className={styles.adminCompanyNoticeDetailsHeader}>
+        <div className={styles.adminAdminNoticeDetailsHeader}>
             {isEditing ? (
                 <TextField
                     fullWidth
@@ -105,30 +105,36 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
             ) : (
                 <h2 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>{editedCompanyNotice.companyNoticeTitle}</h2>
             )}
-            <p className={styles.adminCompanyNoticeDetailsDate}>{editedCompanyNotice.companyNoticeCreatedTime}</p>
+            <p className={styles.adminAdminNoticeDetailsDate}>
+                {new Date(editedCompanyNotice.companyNoticeCreatedTime).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                })}
+            </p>
         </div>
     );
 
     const renderContent = () => (
-        <div className={styles.adminCompanyNoticeDetailsContent}>
+        <div className={styles.adminAdminNoticeDetailsContent}>
             {isEditing ? (
                 <ReactQuill
                     value={editedCompanyNotice.companyNoticeContent}
                     onChange={handleChange}
-                    placeholder="내용을 입력하세요" // Placeholder 추가
+                    placeholder="내용을 입력하세요"
                     modules={{
                         toolbar: [
-                            [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+                            [{ 'header': '1' }, { 'header': '2' }],
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                            [{'list': 'ordered'}, {'list': 'bullet'}, 
-                            {'indent': '-1'}, {'indent': '+1'}],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
                             ['link', 'image', 'video'],
-                            ['clean']
+                            ['clean'],
                         ],
                     }}
                     formats={[
-                        'header', 'font',
-                        'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
                         'list', 'bullet', 'indent',
                         'link', 'image', 'video'
                     ]}
@@ -139,27 +145,21 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
         </div>
     );
 
-    const renderAuthor = () => (
-        <div className={styles.adminCompanyNoticeAuthor}>
-            <Typography variant="subtitle1">작성자: {editedCompanyNotice.user?.username}</Typography>
-        </div>
-    );
-
     const renderButtons = () => (
-        <div className={styles.adminCompanyNoticeDetailsButtonsContainer}>
+        <div className={styles.adminAdminNoticeDetailsButtonsContainer}>
             {isEditing ? (
-                <Button variant="contained" className={styles.adminCompanyNoticeSaveButton} onClick={handleSave}>
+                <Button variant="contained" className={styles.adminAdminNoticeSaveButton} onClick={handleSave}>
                     저장하기
                 </Button>
             ) : (
                 <>
-                    <Button variant="contained" className={styles.adminCompanyNoticeEditButton} onClick={handleEdit}>
+                    <Button variant="contained" className={styles.adminAdminNoticeEditButton} onClick={handleEdit}>
                         수정하기
                     </Button>
-                    <Button variant="contained" className={styles.adminCompanyNoticeDeleteButton} onClick={handleDelete}>
+                    <Button variant="contained" className={styles.adminAdminNoticeDeleteButton} onClick={handleDelete}>
                         삭제하기
                     </Button>
-                    <Button variant="contained" className={styles.adminCompanyNoticeListButton} onClick={handleGoBack}>
+                    <Button variant="contained" className={styles.adminAdminNoticeListButton} onClick={handleGoBack}>
                         목록으로 돌아가기
                     </Button>
                 </>
@@ -168,14 +168,13 @@ const AdminCompanyNoticeDetails = ({ companyNoticeData }) => {
     );
 
     return (
-        <div className={styles.adminCompanyNoticeContent}>
-            <div className={styles.adminCompanyNoticeDetailsContainer}>
-                <Paper elevation={3} className={styles.adminCompanyNoticeDetailsPaper}>
-                    <Typography variant="h6" gutterBottom className={styles.adminCompanyNoticeDetailsDate}>
+        <div className={styles.adminAdminNoticeContent}>
+            <div className={styles.adminAdminNoticeDetailsContainer}>
+                <Paper elevation={3} className={styles.adminAdminNoticeDetailsPaper}>
+                    <Typography variant="h6" gutterBottom className={styles.adminAdminNoticeDetailsDate}>
                         [기업 공지사항]
                     </Typography>
                     {renderHeader()}
-                    {renderAuthor()}
                     {renderContent()}
                     {renderButtons()}
                 </Paper>

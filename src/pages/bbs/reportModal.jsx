@@ -3,14 +3,17 @@ import { Modal, Button, Radio, FormControl, FormControlLabel, RadioGroup, Typogr
 import styles from '@/styles/bbs/reportModal.module.css'; // 모듈 CSS 사용
 import axios from 'axios';
 import userStore from 'stores/userStore';  // userStore import 추가
+import { useRouter } from 'next/router';
 
 
-const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent }) => {
+const ReportModal = ({ open, onClose, postId, commentId, postAuthor, postContent }) => {
   const [reason, setReason] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState({
     defamation: false,
     illegalContent: false,
   });
+  
+  const router = useRouter();  // useRouter hook 사용
 
   const handleReasonChange = (event) => {
     setReason(event.target.value);
@@ -37,6 +40,7 @@ const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent 
   
         alert('신고가 접수되었습니다.');
         onClose();
+        router.reload();  // 신고 완료 후 페이지 새로고침
       } catch (error) {
         console.error('신고 실패:', error);
         alert('신고를 접수하는 중 오류가 발생했습니다.');
@@ -45,16 +49,12 @@ const ReportModal = ({open, onClose, postId, commentId, postAuthor, postContent 
       alert('신고 사유를 선택해주세요.');
     }
   };
-  
-
-  
 
   return (
     <Modal open={open} onClose={onClose}>
       <div className={styles.modalContent}>
         <Typography variant="h5" gutterBottom>신고하기</Typography>
        
-
         <FormControl component="fieldset" className={styles.formControl}>
           <Typography variant="subtitle2" gutterBottom>사유 선택</Typography>
           <RadioGroup value={reason} onChange={handleReasonChange}>

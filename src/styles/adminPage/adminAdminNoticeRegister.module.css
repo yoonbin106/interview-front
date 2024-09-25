@@ -25,22 +25,6 @@
     max-width: 100%;
 }
 
-/* 툴바 크기와 버튼 크기 조정 */
-.ql-toolbar.ql-snow {
-    height: 50px;
-    font-size: 1.1rem;
-}
-
-.ql-toolbar.ql-snow .ql-picker-label, 
-.ql-toolbar.ql-snow .ql-picker-item {
-    padding: 10px;
-}
-
-.ql-toolbar.ql-snow .ql-formats button, 
-.ql-toolbar.ql-snow .ql-formats .ql-picker {
-    font-size: 1.1rem;
-    padding: 5px;
-}
 
 /* 등록 버튼 스타일 */
 .adminAdminNoticeRegisterSubmitButton {

@@ -1,160 +1,126 @@
 /* adminNotice.module.css */
 
 /* 테이블 관련 스타일 */
+
+/* 테이블 컨테이너의 상단 여백 설정 */
 .noticeTableContainer {
-    margin-top: 20px;
-  }
-  
-  .noticeTableHeaderCell {
-    font-weight: bold;
-    background-color: #5A8AF2;
-    color: white;
-    width: 150px;
-    white-space:nowrap;
-  }
-  
-  .noticeTableLink {
-    color: black;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .noticeTableLink:hover {
-    text-decoration: underline;
-  }
-  
-  .noticeContainerFluid {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin-top: 25px;
-}
-  
-  /* 레이아웃 및 컨테이너 스타일 */
-  .noticeContainer {
-    display: flex;
-    margin: 30px 30px 30px 30px;
-    width: 100%;
-    height:1000px ;
-    justify-content: center;
-  }
-  
-  .noticeSidebar {
-    border: solid 2px;
-    border-color: #DEFFF5;
-    margin: 10px 20px 10px 10px;
-    min-width: 200px;
-  }
-  .noticeColPadding {
-    padding-right: 15px;
-    padding-left: 15px;
-    min-width: 950px;
-}
-  
-  .noticeContent {
-    background-color: white;
-    padding: 20px;
-    margin: 10px 10px 10px 10px;
-    border: solid 2px;
-    border-color: #DEFFF5;
-    min-width: 500px;
-    width: 1080px;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
-  
-  .noticeMainContainer {
-    padding: 20px;
-  }
-  
-  .noticeTitle {
-    margin: 15px;
-    white-space: nowrap;
-    font-size: 40px;
-    font-weight:bold;
-  }
-  .noticeTitleContainer{
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  
-  .adminNoticeTitleDivider {
-    border: 0;
-    height: 2px;
-    background-color: #ccc;
-    margin-bottom: 20px;
-  }
-  
-  .noticeGridContainer {
-    margin-top: 20px;
-    max-width: 100%;
-  }
-  
-  .noticeGridItem {
-    height: 56px;
-  }
-  
-  .noticeSearchButton {
-    background-color: #5A8AF2;
-    &:hover {
-        background-color: #357ABD;
-    }
-    height: 56px;
-  }
-  .adminNoticeTitleCell {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  
-.noticeDateCell {
-  white-space: nowrap; /* 한 줄로 고정 */
+  margin-top: 20px;
 }
 
-  /* 달력 기본 스타일 */
-  .calendar {
-    width: 100%;
-    max-width: 100%;
-    border: 8px solid #cccccc;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #ffffff;
-  }
-  
-  /* 달력에서 요일에 커서 올렸을 때 물음표 커서 제거 */
-  .calendar__tile {
-    cursor: default;
-  }
-  /* 달력에서 요일에 커서 올렸을 때 물음표 커서 제거 */
-  .calendar__month-view__weekdays__weekday {
-    cursor: pointer;
-  }
-  
-  
-  /* 달력에서 이전 달과 다음 달로 넘어가는 버튼 스타일 */
-  .calendar__navigation button {
-    min-width: 44px;
-    background: none;
-    font-size: 5rem;
-    margin-top: 8px;
-    cursor: pointer;
-  }
-  
-  .adminNoticeButtonContainer {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-  }
-  
-  .adminNoticeRegisterButton {
-    background-color: #5A8AF2;
-    margin-bottom : 20px;
-    padding: 10px 30px;
-  }
-  
-  .adminNoticeRegisterButton:hover {
-    background-color: #0056b3;
-  }
+/* 테이블 헤더 셀 스타일, 배경색과 글자색 설정, 너비 고정 */
+.noticeTableHeaderCell {
+  font-weight: bold;
+  background-color: #5A8AF2;
+  color: white;
+  width: 150px;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+/* 레이아웃 및 컨테이너 스타일 */
+
+/* 페이지 전체 레이아웃을 위한 컨테이너. 가로로 Flexbox 레이아웃 적용 */
+.noticeContainer {
+  display: flex;
+  margin: 30px;
+  width: 100%;
+  height: 1000px;
+  justify-content: center; /* 중앙 정렬 */
+}
+
+/* 사이드바 스타일. 테두리와 여백 설정 */
+.noticeSidebar {
+  border: solid 2px;
+  border-color: #ffffff;
+  margin: 10px 20px 10px 10px;
+  min-width: 200px; /* 최소 너비 설정 */
+}
+
+/* 콘텐츠 영역 스타일. 배경색, 테두리, 패딩 설정 */
+.noticeContent {
+  background-color: white;
+  padding: 20px;
+  margin: 10px;
+  border: solid 2px;
+  border-color: #ffffff;
+  min-width: 500px;
+  width: 1080px; /* 콘텐츠의 고정 너비 설정 */
+  box-sizing: border-box; /* padding과 border 포함하여 전체 너비 계산 */
+  overflow-y: auto; /* 수직 스크롤 허용 */
+}
+
+/* 메인 컨테이너 스타일. 공지사항 제목 섹션 */
+.noticeMainContainer {
+  padding: 20px;
+}
+
+/* 공지사항 제목 스타일. 큰 글씨와 굵은 폰트 적용 */
+.noticeTitle {
+  margin: 15px;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  font-size: 40px;
+  font-weight: bold;
+}
+
+/* 제목과 내용을 구분하는 구분선 */
+.adminNoticeTitleDivider {
+  border: 0;
+  height: 2px;
+  background-color: #ccc;
+  margin-bottom: 20px;
+}
+
+/* 검색 및 정렬 그리드 컨테이너 */
+.noticeGridContainer {
+  margin-top: 20px;
+  max-width: 100%; /* 그리드 최대 너비 설정 */
+}
+
+/* 검색 필드 높이 조정 */
+.noticeGridItem {
+  height: 56px;
+}
+
+/* 검색 버튼 스타일. 배경색과 높이 설정 */
+.noticeSearchButton {
+  background-color: #5A8AF2;
+  height: 56px;
+}
+
+/* 검색 버튼 호버 시 배경색 변경 */
+.noticeSearchButton:hover {
+  background-color: #357ABD;
+}
+
+/* 공지사항 제목 셀. 긴 제목은 줄임표(...)로 표시 */
+.adminNoticeTitleCell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 작성 날짜 셀. 한 줄로 고정하여 날짜가 한 줄에 표시되도록 함 */
+.noticeDateCell {
+  white-space: nowrap;
+}
+
+/* 달력 기본 스타일 */
+.calendar {
+  width: 100%;
+  max-width: 100%; /* 최대 너비 설정 */
+  border: 8px solid #cccccc; /* 테두리 설정 */
+  border-radius: 8px; /* 둥근 모서리 */
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+/* 공지 등록 버튼 스타일 */
+.adminNoticeRegisterButton {
+  background-color: #5A8AF2;
+  margin-bottom: 20px;
+  padding: 10px 30px; /* 버튼의 상하, 좌우 패딩 설정 */
+}
+
+/* 공지 등록 버튼 호버 시 배경색 변경 */
+.adminNoticeRegisterButton:hover {
+  background-color: #0056b3;
+}

@@ -17,6 +17,10 @@
   color: black;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
 }
 
 .deletedPostTableLink:hover {
@@ -36,7 +40,7 @@
 
 .deletedPostSidebar {
   border: solid 2px;
-  border-color: #DEFFF5;
+  border-color: #ffffff;
   margin: 10px 20px 10px 10px;
   min-width: 200px;
 }
@@ -46,7 +50,7 @@
   padding: 20px;
   margin: 10px 10px 10px 10px;
   border: solid 2px;
-  border-color: #DEFFF5;
+  border-color: #ffffff;
   min-width: 500px;
   width: 1080px;
   box-sizing: border-box;

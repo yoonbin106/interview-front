@@ -7,25 +7,25 @@ import axios from 'axios';
 import userStore from 'stores/userStore';
 import ReportModal from '@/pages/bbs/reportModal';
 import { Typography, Divider, Box, Card, CardContent } from '@mui/material';
-import CommentIcon from '@mui/icons-material/Comment'; // MUI 아이콘 추가
+import CommentIcon from '@mui/icons-material/Comment';
+
 const PostView = () => {
   const [comments, setComments] = useState([]); // 댓글 리스트 상태 관리
-  const router = useRouter();
-  const { id, increment } = router.query; // URL 파라미터에서 게시글 ID 및 조회수 증가 여부 가져오기
   const [post, setPost] = useState({}); // 게시글 데이터 상태
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [isReportModalOpen, setReportModalOpen] = useState(false); // 신고 모달 열림 상태
+  const router = useRouter();
+  const { id, increment } = router.query; // URL 파라미터에서 게시글 ID 및 조회수 증가 여부 가져오기
 
-  // 게시글과 댓글 데이터를 서버에서 가져오는 useEffect
+  // 게시글과 댓글 데이터를 서버에서 가져오는 함수
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
         try {
-          // 조회수 증가 여부 결정
           const incrementValue = increment === 'false' ? 'false' : 'true';
           const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=${incrementValue}`);
 
-          // 게시글 데이터와 작성 날짜 포맷 설정
+          // 게시글 데이터와 날짜 포맷 설정
           const postData = response.data;
           const formattedDate = new Date(postData.createdAt).toLocaleTimeString('ko-KR', {
             year: 'numeric',
@@ -47,7 +47,6 @@ const PostView = () => {
           setLoading(false); // 로딩 상태 종료
         }
       };
-
       fetchPost();
     }
   }, [id, increment]);
@@ -75,10 +74,11 @@ const PostView = () => {
   return (
     <div className={styles.content}>
       <div className={styles.postView}>
-        <PostContent post={post} openReportModal={openReportModal} /> {/* 게시글 본문 */}
-        
-        <Divider sx={{ marginY: 2, Color: '#bebcbc', borderWidth: 1 }} />
+        {/* 게시글 본문 */}
+        <PostContent post={post} openReportModal={openReportModal} />
 
+        {/* 구분선 */}
+        <Divider sx={{ marginY: 2, Color: '#bebcbc', borderWidth: 1 }} />
 
         {/* 댓글 섹션 */}
         <Card variant="outlined" sx={{ marginBottom: 2, border: 'none', boxShadow: 'none' }}>
@@ -89,12 +89,12 @@ const PostView = () => {
                 댓글
               </Typography>
             </Box>
-            <CommentList comments={comments} setComments={setComments} />  {/* 댓글 리스트 */}
+            <CommentList comments={comments} setComments={setComments} /> {/* 댓글 리스트 */}
           </CardContent>
         </Card>
 
+        {/* 구분선 */}
         <Divider sx={{ marginY: 2, Color: '#bebcbc', borderWidth: 1 }} />
-
 
         {/* 댓글 쓰기 섹션 */}
         <Card variant="outlined" sx={{ marginBottom: 2, border: 'none', boxShadow: 'none' }}>
@@ -105,7 +105,7 @@ const PostView = () => {
                 댓글 쓰기
               </Typography>
             </Box>
-            <CommentInput post={post} postId={id} setComments={setComments} />  {/* 댓글 입력 */}
+            <CommentInput post={post} postId={id} setComments={setComments} /> {/* 댓글 입력 */}
           </CardContent>
         </Card>
       </div>
@@ -197,7 +197,7 @@ const PostContent = ({ post, openReportModal }) => {
       <div className={styles.postMeta}>
         <div className={styles.author}>
           {post.username}
-          <span className={styles.postTime} >{post.formattedDate}</span>
+          <span className={styles.postTime}>{post.formattedDate}</span>
         </div>
         <div className={styles.postInfo}>
           <span>조회 {post.hitCount || 0}</span>
@@ -212,11 +212,7 @@ const PostContent = ({ post, openReportModal }) => {
           >
             <MoreVertIcon />
           </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
             {menuItems}
           </Menu>
         </div>
@@ -251,6 +247,7 @@ const PostContent = ({ post, openReportModal }) => {
 const CommentList = ({ comments, setComments }) => {
   // 작성일자에 따라 댓글 정렬 (오름차순)
   const sortedComments = [...comments].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
   return (
     <div className={styles.commentList}>
       {sortedComments.map((comment, index) => (
@@ -346,8 +343,7 @@ const CommentItem = ({ comment, setComments }) => {
   return (
     <div className={styles.commentItem}>
       <strong>{comment.username}</strong>
-       {/* 댓글 수정 중일 때 */}
-       {isEditing ? (
+      {isEditing ? (
         <div style={{ marginTop: '10px' }}> {/* 작성자 밑에 댓글 수정 필드 배치 */}
           <input
             type="text"
@@ -362,37 +358,33 @@ const CommentItem = ({ comment, setComments }) => {
             <button onClick={() => setIsEditing(false)}>취소</button>
           </div>
         </div>
-
       ) : (
-        <>
-          <div className={styles.commentContainer}>
-            <p className={styles.commentContent}>{comment.content}</p>
-            <p className={styles.commentTime}>
-              {new Date(comment.createdAt).toLocaleString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-              })}
-              
-            </p> {/* 작성 시간 표시 */}
-            <IconButton size="small" aria-label="more actions" onClick={handleClick}>
-              <MoreVertIcon />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-              {commentOwnerId === currentUserId ? (
-                <>
-                  <MenuItem onClick={handleEditClick}>수정</MenuItem>
-                  <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
-                </>
-              ) : (
-                <MenuItem onClick={openReportModal}>신고</MenuItem>
-              )}
-            </Menu>
-          </div>
-        </>
+        <div className={styles.commentContainer}>
+          <p className={styles.commentContent}>{comment.content}</p>
+          <p className={styles.commentTime}>
+            {new Date(comment.createdAt).toLocaleString('ko-KR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            })}
+          </p>
+          <IconButton size="small" aria-label="more actions" onClick={handleClick}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+            {commentOwnerId === currentUserId ? (
+              <>
+                <MenuItem onClick={handleEditClick}>수정</MenuItem>
+                <MenuItem onClick={handleDeleteClick}>삭제</MenuItem>
+              </>
+            ) : (
+              <MenuItem onClick={openReportModal}>신고</MenuItem>
+            )}
+          </Menu>
+        </div>
       )}
 
       <ReportModal

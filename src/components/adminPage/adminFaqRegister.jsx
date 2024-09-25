@@ -106,7 +106,7 @@ const AdminFaqRegister = () => {
             </CardContent>
             <CardActions className={styles.faqRegisterButtonContainer}>
                <Button className={styles.faqRegisterButton}
-               onnClick={handleSubmit}>
+               onClick={handleSubmit}>
                                 등록하기
                             </Button>
                 </CardActions>

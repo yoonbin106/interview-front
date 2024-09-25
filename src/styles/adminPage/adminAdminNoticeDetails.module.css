@@ -29,9 +29,9 @@
     white-space: pre-wrap;
     line-height: 1.6;
     font-size: 1.5rem;
+    border: none;
     padding: 10px;
-    border: 1px solid #ccc;
-    min-height: 300px;
+    min-height: 200px;
 }
 
 /* 툴바 크기 조절 */
