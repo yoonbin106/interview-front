@@ -47,10 +47,7 @@ const Chatting = observer(({ closeChatting }) => {
                 userId,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            // if (JSON.stringify(chatRoomList) !== JSON.stringify(response.data)) {
-            //     setChatRoomList(response.data); // 목록이 다를 때만 업데이트
-            // }
-            setChatRoomList(response.data); // 목록이 다를 때만 업데이트
+            setChatRoomList(response.data);
         } catch (error) {
             console.error('Error fetching chat rooms:', error);
         }
@@ -66,14 +63,12 @@ const Chatting = observer(({ closeChatting }) => {
         }
     }
     
-    // 채팅 알람 가져오기
     const getChatAlarm = async () => {
         try {
             const response = await axios.post('http://localhost:8080/api/alarm/getChatAlarm',
                 userStore.id,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            // 채팅 알람 상태 저장
             setChatAlarm(response.data);
             return response.data;
         } catch (error) {
@@ -84,14 +79,12 @@ const Chatting = observer(({ closeChatting }) => {
     useEffect(() => {
         if (!client) {
             const mqttClient = mqttStore.mqttClient;
-
             mqttClient.on('connect', () => {
-                // console.log('Connected to MQTT broker');
+                console.log('Connected to MQTT broker');
                 setIsConnected(true);
             });
 
             mqttClient.on('message', (topic, message) => {
-                // console.log('메세지 받음');
                 if (topic.startsWith('mqtt/chat/')) {
                     console.log('Received message:', message.toString());
                     const receivedMessage = JSON.parse(message);
@@ -104,13 +97,6 @@ const Chatting = observer(({ closeChatting }) => {
                             room.id == lastMTopic ? { ...room, lastMessage: lastM, updatedTime: new Date().toISOString() } : room
                         )
                     );
-                    // getChatroomList();
-
-                    // console.log(receivedMessage);
-                    // console.log(receivedMessage.chatroomId);
-
-                    // if (receivedMessage && receivedMessage.chatroomId == currentChatRoomId) {
-                    //채팅방에 들어가서 ! 채팅방 아이디값을 얻어왔을때만 그 채팅방에 해당하는 메세지만 화면에 setMessages하기
                     if (receivedMessage && receivedMessage.chatroomId == currentChatRoomIdRef.current) {
                         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
                     }
@@ -118,14 +104,10 @@ const Chatting = observer(({ closeChatting }) => {
                 if (topic.startsWith('mqtt/member/')) {
                     console.log('topic.startsWith(mqtt/member/');
                     const roomId = JSON.parse(message).chatroomId;
-                    // if(message)
                     if(roomId == currentChatRoomIdRef.current){
                         readChatAlarmInChatroom(roomId);
-                        
                     }
                     getChatAlarm();
-                    // getChatroomList();
-                    
                 }
             });
 
@@ -145,18 +127,12 @@ const Chatting = observer(({ closeChatting }) => {
 
     useEffect(() => {
         if (chatRoomList) {
-            // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
             chatRoomList.forEach((list) => {
                 const topic = `mqtt/chat/${list.id}`;
                 client.subscribe(topic);
             })
         }
-
     }, [client, chatRoomList]);
-
-    // useEffect(() => {
-    //     console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
-        
 
     // }, [client, chatRoomList]);
 
@@ -282,16 +258,10 @@ const Chatting = observer(({ closeChatting }) => {
         }
     };
 
-    //파이썬으로 채팅 값 보내는 함수
     const sendMessage = async () => {
         const userIdsForAlarm = await getUserIdsForChatAlarm();
-        console.log('userIdsForAlarm: ', userIdsForAlarm);
-        console.log('userIdsForAlarm[0]: ', userIdsForAlarm[0]);
-        console.log('typeof(userIdsForAlarm): ', typeof (userIdsForAlarm));
-        console.log('typeof(userIdsForAlarm[0]): ', typeof (userIdsForAlarm[0]));
 
         if (inputMessage.trim()) {
-
             const messageData = {
                 text: inputMessage,
                 chatroomId: currentChatRoomIdRef.current,
@@ -300,27 +270,13 @@ const Chatting = observer(({ closeChatting }) => {
                 timestamp: new Date().toISOString(),
                 type: 'chat',
                 userIds: userIdsForAlarm
-
             };
-            console.log('type: ', typeof userStore.id);
-            console.log('messageData: ', messageData);
             try {
-                // 파이썬 FastAPI 서버로 메시지 보내기
                 await axios.post('http://192.168.0.137:8000/sendMessage', messageData);
                 setInputMessage('');
             } catch (error) {
                 console.error("메시지 전송 중 오류 발생:", error);
             }
-
-            // MQTT publish 코드
-            // client.publish(`mqtt/chat/${currentChatRoomIdRef.current}`, 
-            //     JSON.stringify({ 
-            //         text: inputMessage, 
-            //         chatroomId: currentChatRoomIdRef.current,
-            //         sender: userStore.username, 
-            //         timestamp: new Date(), 
-            //         senderId: userStore.id
-            //     }));
         }
     };
 
@@ -365,15 +321,12 @@ const Chatting = observer(({ closeChatting }) => {
 
     const exitChatroom = async () => {
         try {
-            // const response = 
-            // console.log('[exitChatroom()] :', currentChatRoomId, userStore.id);
             await axios.delete('http://localhost:8080/api/chat/exitChatroom', {
                 params: {
                     currentChatRoomId: currentChatRoomId,
                     userId: userStore.id
                 }
             });
-            //채팅방 다시 불러와서 UI 갱신
             getChatroomList();
 
             client.unsubscribe(currentChatRoomId);

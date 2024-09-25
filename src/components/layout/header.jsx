@@ -161,26 +161,14 @@ const Header = observer(() => {
         mqttClient.on('connect', () => {
           console.log('Connected to MQTT broker');
           mqttClient.subscribe(`mqtt/member/${userStore.id}`);
-          // setIsConnected(true);
         });
 
         mqttClient.on('message', async (topic, message) => {
           if (topic.startsWith('mqtt/member/')) {  // topic이 일치할 경우
             console.log('Received message:', message.toString());
             console.log('topic: ', topic);
-            // const receivedMessage = JSON.parse(message);
-            // alarm 테이블에서 receiverId == userStore.id 와 동일한 경우 > isDisabled 0 인 경우 > 
-            // 알람들 다 갖고오고 state로 저장, tabPanel로 state 넘겨서 type 구분에 따라 출력 달라지게 하기
-            // 개수 따져서 BadgeCount에 넣고 ...
-            // getAlarm 으로 알람들 다 가져오지만 isRead 값만 BadgeCount에 적용
-            // await getAlarm(userStore.id);
-
             getAlarm(userStore.id);
           }
-
-
-
-
         });
       }
 
