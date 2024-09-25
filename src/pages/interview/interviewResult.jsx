@@ -180,21 +180,6 @@ const ResultPage = observer(() => {
     console.log('fetchedInterview', fetchedInterview);
 
 
-    // 잘못된 백틱 문자를 포함한 contentData에서 백틱을 제거하고 JSON 파싱
-    let contentData = fetchedInterview.claudeAnalyses[0].analysisData.content;
-
-    // 백틱 및 "```json" 같은 텍스트를 제거
-    contentData = contentData.replace(/```json/g, '').replace(/```/g, '');
-
-    // JSON 파싱을 진행
-    let parsedContentData;
-    try {
-        parsedContentData = JSON.parse(contentData);
-        console.log(parsedContentData);
-    } catch (error) {
-        console.error('JSON 파싱 중 오류 발생:', error);
-    }
-
 
     // 유니코드로 저장된 keywords를 변환
     const encodedKeywords = fetchedInterview.claudeAnalyses[0].keywords;
@@ -214,7 +199,10 @@ const ResultPage = observer(() => {
     // 각 키워드를 변환
     const decodedKeywords = keywordsArray.map(decodeUnicodeString);
     console.log('decodedKeywords', decodedKeywords);
-    
+    const keywords = decodedKeywords.map((word, index) => ({
+      text: word,
+      value: word.length * 10 + index // 임의로 단어 길이에 인덱스를 더한 값으로 설정
+    }));
     const randomAdjust = (value) => {
       // -10에서 10 사이의 소수점 값을 랜덤으로 더하거나 뺌
       const randomValue = (Math.random() * 10).toFixed(1); // 0 ~ 10 사이의 소수점 첫째 자리까지 랜덤 값
@@ -225,7 +213,7 @@ const ResultPage = observer(() => {
       const randomValue = (Math.random() * 5).toFixed(1); // 0 ~ 5 사이의 소수점 첫째 자리까지 랜덤 값
       return value + (Math.random() < 0.5 ? -randomValue : +randomValue); // 랜덤하게 더하거나 뺌
     };
-    const positive = Number(fetchedInterview.videoSpeechAnalyses[0].sentimentConfidence.toFixed(2));
+    const positive = Number(fetchedInterview.videoSpeechAnalyses[0].sentimentConfidence / 100);
     const remaining = 100 - positive; // 100에서 positive를 뺀 값
 
     // remaining 값을 neutral과 negative가 랜덤하게 나눠 갖게 함
@@ -235,7 +223,7 @@ const ResultPage = observer(() => {
     const result = {
       aiEvaluation: {
         grade: (() => {
-          const score = parsedContentData.overall_quality;
+          const score = fetchedInterview.claudeAnalyses[0].overallScore;
           if (score >= 90) {
             return 1;
           } else if (score >= 80) {
@@ -248,28 +236,28 @@ const ResultPage = observer(() => {
             return 5;
           }
         })(),
-        overallScore: parsedContentData.overall_quality,
+        overallScore: fetchedInterview.claudeAnalyses[0].overallScore,
         recommendationScore: (() => {
-          const logicScore = parsedContentData.content_analysis.logic_score || 0;
-          const creativityScore = parsedContentData.insight_analysis.creativity_score || 0;
-          const problemSolvingScore = parsedContentData.insight_analysis.problem_solving_score || 0;
-          const grammarStructureScore = parsedContentData.language_pattern_analysis.grammar_structure_score || 0;
-          const professionalVocabScore = parsedContentData.language_pattern_analysis.professional_vocab_score || 0;
-          const confidenceScore = parsedContentData.sentiment_analysis.confidence_score || 0;
-          const consistencyScore = parsedContentData.content_analysis.consistency_score || 0;
+          const logicScore = fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score || 0;
+          const creativityScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score || 0;
+          const problemSolvingScore = fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score || 0;
+          const grammarStructureScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score || 0;
+          const professionalVocabScore = fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.professional_vocab_score || 0;
+          const confidenceScore = fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score || 0;
+          const consistencyScore = fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.consistency_score || 0;
           
           const score = logicScore + creativityScore + problemSolvingScore + grammarStructureScore + professionalVocabScore + confidenceScore + consistencyScore;
           return ((score / 7) * 10).toFixed(1);
         })(),
         evaluationItems: [
-          { name: '논리성', score: parsedContentData.content_analysis.logic_score * 10 },
-          { name: '자신감', score: parsedContentData.sentiment_analysis.confidence_score * 10 },
-          { name: '적절성', score: parsedContentData.language_pattern_analysis.grammar_structure_score * 10 },
-          { name: '일관성', score: parsedContentData.content_analysis.consistency_score * 10 },
-          { name: '창의성', score: parsedContentData.insight_analysis.creativity_score * 10 },
-          { name: '문제해결능력', score: parsedContentData.insight_analysis.problem_solving_score * 10 },
+          { name: '논리성', score: fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.logic_score * 10 },
+          { name: '자신감', score: fetchedInterview.claudeAnalyses[0].analysisData.sentiment_analysis.confidence_score * 10 },
+          { name: '적절성', score: fetchedInterview.claudeAnalyses[0].analysisData.language_pattern_analysis.grammar_structure_score * 10 },
+          { name: '일관성', score: fetchedInterview.claudeAnalyses[0].analysisData.content_analysis.consistency_score * 10 },
+          { name: '창의성', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.creativity_score * 10 },
+          { name: '문제해결능력', score: fetchedInterview.claudeAnalyses[0].analysisData.insight_analysis.problem_solving_score * 10 },
         ],
-        aiFeedback: "AI 종합 평가:\n" + parsedContentData.improvement_suggestions
+        aiFeedback: "AI 종합 평가:\n" + fetchedInterview.claudeAnalyses[0].improvementSuggestions
       },
       personalityTraits: fetchedInterview.videos[0].filePath,
       personalityAnalysis: fetchedInterview.videoAnalyses[0].analyzedFilePath,
@@ -302,8 +290,15 @@ const ResultPage = observer(() => {
       },
       gazeAnalysis: {
         averageGaze: Number(fetchedInterview.videoAnalyses[0].eyeScore.toFixed(2)),
-        evaluation: '양호',
-        feedback: '전반적으로 좋은 눈맞춤을 유지했지만, 일부 순간에 개선이 필요합니다.',
+        evaluation: (() => {
+          const gazeScore = fetchedInterview.videoAnalyses[0].eyeScore;
+          if (gazeScore >= 85) return '우수';
+          if (gazeScore >= 70) return '양호';
+          if (gazeScore >= 55) return '보통';
+          if (gazeScore >= 30) return '미흡';
+          return '취약';
+        })(),
+        feedback: fetchedInterview.videoAnalyses[0].headEyeFeedback,
       },
       expressionAnalysis: {
         dominantExpression: '긍정',
@@ -313,110 +308,55 @@ const ResultPage = observer(() => {
       voiceData: [
         { 
           time: 0, 
-          pitch: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
-          volume: Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000),
+          pitch: Math.floor(fetchedInterview.videoAnalyses[0].audioPitch / 10),
+          spectralCentroid: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
           speed: Math.floor(fetchedInterview.videoAnalyses[0].audioTempo)
         },
         { 
           time: 1, 
-          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
-          volume: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000)),
+          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioPitch / 10)),
+          spectralCentroid: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
           speed: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioTempo))
         },
         { 
           time: 2, 
-          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
-          volume: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000)),
+          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioPitch / 10)),
+          spectralCentroid: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
           speed: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioTempo))
         },
         { 
           time: 3, 
-          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
-          volume: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000)),
+          pitch: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioPitch / 10)),
+          spectralCentroid: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10)),
           speed: randomAdjust(Math.floor(fetchedInterview.videoAnalyses[0].audioTempo))
         },
         { 
           time: 4, 
-          pitch: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
-          volume: Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000),
+          pitch: Math.floor(fetchedInterview.videoAnalyses[0].audioPitch / 10),
+          spectralCentroid: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
           speed: Math.floor(fetchedInterview.videoAnalyses[0].audioTempo)
         },
       ],
       voiceAnalysis: {
         averagePitch: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
-        averageVolume: Math.floor(fetchedInterview.videoAnalyses[0].audioVolume * 1000),
+        averageVolume: Math.floor(fetchedInterview.videoAnalyses[0].audioSpectralCentroid / 10),
         averageSpeed: Math.floor(fetchedInterview.videoAnalyses[0].audioTempo),
-        evaluation: '양호',
-        feedback: '말하기 속도가 약간 빠른 편입니다. 중요한 부분에서는 속도를 조금 줄이는 것이 좋겠습니다.',
+        evaluation: '음정과 스펙트럼은 나누기 10 한 값이 그래프에 표시됩니다',
+        feedback: fetchedInterview.videoAnalyses[0].audioFeedback,
       },
-      keywords: [
-        { text: '열정', value: 64 },
-        { text: '팀워크', value: 55 },
-        { text: '창의성', value: 48 },
-        { text: '책임감', value: 47 },
-        { text: '전문성', value: 44 },
-        { text: '의사소통', value: 42 },
-        { text: '리더십', value: 40 },
-        { text: '혁신', value: 38 },
-        { text: '분석력', value: 36 },
-        { text: '문제해결', value: 35 },
-        { text: '적응력', value: 33 },
-        { text: '성실성', value: 32 },
-        { text: '도전정신', value: 30 },
-        { text: '목표지향', value: 29 },
-        { text: '유연성', value: 28 },
-        { text: '협업', value: 27 },
-        { text: '자기주도', value: 26 },
-        { text: '긍정적', value: 25 },
-        { text: '전략적사고', value: 24 },
-        { text: '시간관리', value: 23 },
-        { text: '고객중심', value: 22 },
-        { text: '세부지향', value: 21 },
-        { text: '비판적사고', value: 20 },
-        { text: '네트워킹', value: 19 },
-        { text: '성과지향', value: 18 },
-        { text: '윤리의식', value: 17 },
-        { text: '글로벌마인드', value: 16 },
-        { text: '멀티태스킹', value: 15 },
-        { text: '프로젝트관리', value: 14 },
-        { text: '기획력', value: 13 },
-        { text: '실행력', value: 12 },
-        { text: '품질관리', value: 11 },
-        { text: '위기관리', value: 10 },
-        { text: '데이터분석', value: 9 },
-        { text: '협상력', value: 8 },
-        { text: '비전제시', value: 7 },
-        { text: '조직이해', value: 6 },
-        { text: '학습능력', value: 5 },
-        { text: '프레젠테이션', value: 4 },
-        { text: '동기부여', value: 3 },
-        { text: '창의력', value: 2 },
-        { text: '정보수집', value: 1 },
-        { text: '의사결정', value: 1 },
-        { text: '목표설정', value: 1 },
-        { text: '자기개발', value: 1 },
-        { text: '비즈니스통찰력', value: 1 },
-        { text: '감성지능', value: 1 },
-        { text: '체계적사고', value: 1 },
-        { text: '유머감각', value: 1 },
-      ],
-      keywordAnalysis: {
-        topKeywords: ['열정', '팀워크', '창의성'],
-        evaluation: '우수',
-        feedback: '주요 키워드가 직무와 잘 연관되어 있습니다. 특히 "열정"과 "팀워크"를 강조한 점이 인상적입니다.',
-      },
+      keywords: keywords,
       answerTimes: [
         // { question: '응답시간(초)', time: parsedContentData.answer_duration_analysis.duration },
-        { question: '응답시간점수', time: parsedContentData.answer_duration_analysis.pace_score * 10 },
-        { question: 'Situation', time: parsedContentData.star_analysis.situation_score * 10 },
-        { question: 'Task', time: parsedContentData.star_analysis.task_score * 10 },
-        { question: 'Action', time: parsedContentData.star_analysis.action_score * 10 },
-        { question: 'Results', time: parsedContentData.star_analysis.result_score * 10 },
+        { question: '응답시간점수', time: fetchedInterview.claudeAnalyses[0].analysisData.answer_duration_analysis.pace_score * 10 },
+        { question: 'Situation', time: fetchedInterview.claudeAnalyses[0].analysisData.star_analysis.situation_score * 10 },
+        { question: 'Task', time: fetchedInterview.claudeAnalyses[0].analysisData.star_analysis.task_score * 10 },
+        { question: 'Action', time: fetchedInterview.claudeAnalyses[0].analysisData.star_analysis.action_score * 10 },
+        { question: 'Results', time: fetchedInterview.claudeAnalyses[0].analysisData.star_analysis.result_score * 10 },
       ],
       answerTimeAnalysis: {
-        averageTime: parsedContentData.answer_duration_analysis.duration,
-        evaluation: parsedContentData.answer_duration_analysis.duration,
-        feedback: parsedContentData.answer_duration_analysis.comment,
+        averageTime: fetchedInterview.claudeAnalyses[0].analysisData.answer_duration_analysis.duration,
+        evaluation: fetchedInterview.claudeAnalyses[0].analysisData.answer_duration_analysis.duration,
+        feedback: fetchedInterview.claudeAnalyses[0].analysisData.answer_duration_analysis.comment,
       },
     };
 
@@ -693,11 +633,11 @@ const ResultPage = observer(() => {
                       <YAxis />
                       <Tooltip />
                       <Line type="monotone" dataKey="pitch" stroke="#8884d8" strokeWidth={2} />
-                      <Line type="monotone" dataKey="volume" stroke="#82ca9d" strokeWidth={2} />
+                      <Line type="monotone" dataKey="spectralCentroid" stroke="#82ca9d" strokeWidth={2} />
                       <Line type="monotone" dataKey="speed" stroke="#ffc658" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
-                  <Typography variant="subtitle1" gutterBottom>평가: {interviewResult.voiceAnalysis.evaluation}</Typography>
+                  <Typography variant="subtitle1" gutterBottom>주의: {interviewResult.voiceAnalysis.evaluation}</Typography>
                   <Typography variant="body2">{interviewResult.voiceAnalysis.feedback}</Typography>
                 </CardContent>
               </Card>
@@ -715,14 +655,8 @@ const ResultPage = observer(() => {
                 <AnimatedWordCloud
                   data={interviewResult.keywords}
                   width="100%"
-                  height={300}
+                  height={350}
                 />
-                <Typography variant="subtitle1" gutterBottom>
-                  평가: {interviewResult.keywordAnalysis.evaluation}
-                </Typography>
-                <Typography variant="body2">
-                  {interviewResult.keywordAnalysis.feedback}
-                </Typography>
               </CardContent>
             </Card>
           </Grid>
