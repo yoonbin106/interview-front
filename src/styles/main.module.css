@@ -206,7 +206,7 @@
 /* 슬라이드 이미지를 위한 클래스 */
 .bgImage1 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-  url('../../public/images/infotest01 (5).png');
+  url('../../public/images/infotest2.png');
 }
 
 .bgImage2 {
@@ -226,7 +226,7 @@
 
 .bgImage5 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-  url('../../public/images/infotest05 (2).png');
+  url('../../public/images/infotest5.png');
 }
 
 .mainIntroBoxIn{
