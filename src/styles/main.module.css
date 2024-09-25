@@ -206,27 +206,27 @@
 /* 슬라이드 이미지를 위한 클래스 */
 .bgImage1 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-  url('../../public/images/infotest.png');
+  url('../../public/images/infotest01 (2).png');
 }
 
 .bgImage2 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-  url('../../public/images/info02.jpg');
+  url('../../public/images/infotest02 (3).png');
 }
 
 .bgImage3 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-  url('../../public/images/info03.jpg');
+  url('../../public/images/infotest03.png');
 }
 
 .bgImage4 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-  url('../../public/images/info04.png');
+  url('../../public/images/infotest04.png');
 }
 
 .bgImage5 {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-  url('../../public/images/info05.png');
+  url('../../public/images/infotest05.png');
 }
 
 .mainIntroBoxIn{
