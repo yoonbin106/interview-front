@@ -46,7 +46,14 @@ function Home() {
             href: "/chatBot",
             bgClass: 'bgImage1'
         },
-       
+        {
+            title: "이력서 첨삭",
+            subtitle1: "맟춤법 검사 및 AI 첨삭 기능 제공.",
+            subtitle2: "확실하고 편리하게 작성하세요!",
+            buttonText: "사용하기",
+            href: "/resume",
+            bgClass: 'bgImage2'
+        },
         {
             title: "비대면 면접",
             subtitle1: "최신 트렌드를 반영한 면접 질문 제공.",
@@ -54,14 +61,6 @@ function Home() {
             buttonText: "사용하기",
             href: "/interview",
             bgClass: 'bgImage3'
-        },
-        {
-            title: "이력서 첨삭",
-            subtitle1: "모의면접에 관련된 모든 질문에 즉각 응답합니다.",
-            subtitle2: "확실한 정보를 제공합니다.",
-            buttonText: "사용하기",
-            href: "/resume",
-            bgClass: 'bgImage2'
         },
         {
             title: "AI 면접 평가",
