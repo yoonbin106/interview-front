@@ -77,6 +77,10 @@
   position: absolute; /* 절대 위치 지정 */
   font-size: 17px;
   font-weight: 600;
+  max-width: 270px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chattingMessageCreate {
