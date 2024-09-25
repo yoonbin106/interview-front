@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
-import axios from 'axios'; // axios 사용하여 API 호출
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -8,6 +7,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const formatDate = (date, isToday = false) => {
   const day = date.getDate().toString().padStart(2, '0'); // 일자 (2자리)
   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월 (2자리)
+
   return isToday ? `오늘(${month}.${day})` : `${month}.${day}`;
 };
 
@@ -27,24 +27,9 @@ const generateTimeLabels = () => {
 };
 
 const AdminMainCharts = ({ chartType }) => {
-  const [signupData, setSignupData] = useState([0, 0, 0]);
-  const [activeUsersData, setActiveUsersData] = useState([23, 56, 34, 22, 38]); 
-  const chartHeight = 200;
-
-  // API에서 최근 3일간 가입자 수 가져오기
-  useEffect(() => {
-    if (chartType === 'signup') {
-      axios.get('http://localhost:8080/api/auth/signupstats') // 실제 API 엔드포인트로 변경 필요
-        .then((response) => {
-          setSignupData([response.data]); // 서버에서 받은 데이터를 상태로 설정//단일 값을 배열로 변환
-        })
-        .catch((error) => {
-          console.error('Error fetching signup data:', error);
-        });
-    }
-  }, [chartType]);
-
   let content;
+
+  const chartHeight = 200;
 
   if (chartType === 'signup') {
     const today = new Date();
@@ -83,7 +68,7 @@ const AdminMainCharts = ({ chartType }) => {
       series: [
         {
           name: '가입회원 수',
-          data: signupData, // 서버에서 받아온 데이터로 대체
+          data: [70, 85, 100], // 하드코딩된 데이터 (이틀 전, 하루 전, 오늘)
         },
       ],
     };
