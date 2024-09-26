@@ -231,7 +231,7 @@ const ChattingList = ({
                                 <div className={styles.verticalContainer}>
                                     <div className={styles.messageTime}>{formatTime(list.updatedTime)}</div>
                                     <div className={styles.chattingListAlarmBadge}>
-                                        <Badge badgeContent={chatAlarm.filter(alarm => alarm.chatroomId === list.id).length} color="error" sx={{ marginLeft: 4 }} />
+                                        <Badge badgeContent={chatAlarm.filter(alarm => alarm.chatroomId == list.id).length} color="error" sx={{ marginLeft: 4 }} />
                                     </div>
                                 </div>
 
