@@ -66,7 +66,7 @@ function Home() {
         {
             title: "AI 면접 평가",
             subtitle1: "사용자에 맞춘 맞춤형 면접 준비.",
-            subtitle2: "효율적인 학습을 제공합니다.",
+            subtitle2: "이력서를 기반으로 면접을 보실 수 있습니다.",
             buttonText: "사용하기",
             href: "/interviewResult",
             bgClass: 'bgImage4'
