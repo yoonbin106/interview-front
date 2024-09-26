@@ -374,7 +374,7 @@ const CommentItem = ({ comment, setComments }) => {
           <IconButton size="small" aria-label="more actions" onClick={handleClick}>
             <MoreVertIcon />
           </IconButton>
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} disableScrollLock={true}>
             {commentOwnerId === currentUserId ? (
               <>
                 <MenuItem onClick={handleEditClick}>수정</MenuItem>
