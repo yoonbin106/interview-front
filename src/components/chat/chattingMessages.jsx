@@ -42,9 +42,9 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, usersInCh
       <div className={styles.chattingMessageHeader}>
         <div className={styles.chattingMessageTitle}>{chatRoomTitle}</div>
         <div className={styles.chattingMessageCreate}>
-          <button>
+          {/* <button>
             <UserRoundPlus />
-          </button>
+          </button> */}
         </div>
         <div className={styles.chattingMessageSettings}>
           <button>
