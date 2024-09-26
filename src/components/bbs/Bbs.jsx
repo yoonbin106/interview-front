@@ -160,7 +160,7 @@ const Bbs = () => {
                             </div>
                             
                             {/* 필터링된 게시판 테이블로 렌더링 */}
-                            <TableContainer component={Paper} className={styles.bbsTableContainer} >
+                            <TableContainer component={Paper} className={styles.bbsTableContainer}>
                                 <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
                                     <TableHead sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>
                                         <TableRow>
@@ -172,30 +172,41 @@ const Bbs = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {(rowsPerPage > 0
-                                            ? filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            : filteredPosts
-                                        ).map((post) => (
-                                            <TableRow key={post.bbsId} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
-                                                <TableCell align="center">{post.bbsId}</TableCell>
-                                                <TableCell align="center">
-                                                    <div style={{ textDecoration: 'none', color: 'black' }}>
-                                                        <Tooltip title={post.title} arrow>
-                                                            <Typography variant="body2" sx={{ cursor: 'pointer', fontWeight: 'bold', color: '#4A90E2' }}
-                                                                onClick={() => handleClick(post.bbsId)}>
-                                                                {post.title}
-                                                            </Typography>
-                                                        </Tooltip>
-                                                    </div>
+                                        {filteredPosts.length > 0 ? (
+                                            (rowsPerPage > 0
+                                                ? filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                : filteredPosts
+                                            ).map((post) => (
+                                                <TableRow key={post.bbsId} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
+                                                    <TableCell align="center">{post.bbsId}</TableCell>
+                                                    <TableCell align="center">
+                                                        <div style={{ textDecoration: 'none', color: 'black' }}>
+                                                            <Tooltip title={post.title} arrow>
+                                                                <Typography variant="body2" sx={{ cursor: 'pointer', fontWeight: 'bold', color: '#4A90E2' }}
+                                                                    onClick={() => handleClick(post.bbsId)}>
+                                                                    {post.title}
+                                                                </Typography>
+                                                            </Tooltip>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell align="center">{post.username}</TableCell>
+                                                    <TableCell align="center">{new Date(post.createdAt).toLocaleDateString()}</TableCell>
+                                                    <TableCell align="center">{post.hitCount || 0}</TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={5} align="center">
+                                                    <Typography variant="h6" sx={{ padding: '20px' }}>
+                                                        등록된 글이 없습니다.
+                                                    </Typography>
                                                 </TableCell>
-                                                <TableCell align="center">{post.username}</TableCell>
-                                                <TableCell align="center">{new Date(post.createdAt).toLocaleDateString()}</TableCell>
-                                                <TableCell align="center">{post.hitCount || 0}</TableCell>
                                             </TableRow>
-                                        ))}
+                                        )}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
+
                            
                             {/* 검색 필터 */}
                             <Grid container spacing={1} alignItems="center" justifyContent="flex-end" style={{ marginTop: '20px', maxWidth: '100%' }}>
