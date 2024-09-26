@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from '@/styles/main.module.css';
 import MainEconomicNews from '../components/mainEconomicNews.jsx';//추인철추가
 import { useRouter } from 'next/router';
+import ScrollButtons from 'components/layout/scrollButtons.jsx';
 
 
 
@@ -136,6 +137,7 @@ function Home() {
 
     return (
         <div>
+              <ScrollButtons />
             {/* 면접 보러가기 화면 */}
             <div className={`${styles.container} ${imageClasses[currentImage]}`}>
                 <div className={styles.mainImages}>

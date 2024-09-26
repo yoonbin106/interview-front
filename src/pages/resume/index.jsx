@@ -779,7 +779,7 @@ const applyColorToQuotes = (text) => {
           <ModalContent sx={{ width: 300 }}>
             <div className={modalStyles.spinner}></div>
             <h2 id="loading-modal-title" className={modalStyles.modalText}>
-              AI 첨삭 중...
+              AI 첨삭 진행중
             </h2>
           </ModalContent>
         </Modal>
