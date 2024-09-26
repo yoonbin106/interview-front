@@ -116,44 +116,40 @@ const AdminReportedPost = () => {
                         <Divider sx={{ my: 2, borderBottomWidth: 3, borderColor: '#999' }} />
 
                         <TableContainer component={Paper} className={styles.reportedPostTableContainer}>
-                            <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center" className={styles.reportedPostHeaderCell}>신고 번호</TableCell>
-                                        <TableCell align="center" className={styles.reportedPostHeaderCell}>게시글 제목</TableCell>
-                                        <TableCell align="center" className={styles.reportedPostHeaderCell}>작성자</TableCell>
-                                        <TableCell align="center" className={styles.reportedPostHeaderCell}>신고자</TableCell>
-                                        <TableCell align="center" className={styles.reportedPostHeaderCell}>신고날짜</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {(rowsPerPage > 0
-                                        ? filteredReportedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        : filteredReportedPost
-                                    ).map((row) => (
-                                        <TableRow 
-                                            key={row.reportId} 
-                                            hover 
-                                            style={{ cursor: 'pointer' }} 
-                                            onClick={() => handleRowClick(row.reportId)}
-                                        >
-                                            <TableCell align="center">{row.reportId}</TableCell>
-                                            <TableCell align="center" className={styles.reportedPostTableLink}>
-                                                    {row.title}
-                                            </TableCell>
-                                            <TableCell align="center">{row.username}</TableCell>
-                                            <TableCell align="center">{row.reporterName}</TableCell>
-                                            <TableCell align="center">{formatDate(row.reportedAt)}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{ height: 30 * emptyRows }}>
-                                            <TableCell colSpan={4} />
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+    <Table className={styles.reportedPostTable} aria-label="reported posts table">
+        <TableHead>
+            <TableRow>
+                <TableCell align="center" className={`${styles.reportedPostHeaderCell} ${styles.reportedPostIdCell}`}>신고 번호</TableCell>
+                <TableCell align="center" className={`${styles.reportedPostHeaderCell} ${styles.reportedPostTitleCell}`}>게시글 제목</TableCell>
+                <TableCell align="center" className={`${styles.reportedPostHeaderCell} ${styles.reportedPostAuthorCell}`}>작성자</TableCell>
+                <TableCell align="center" className={`${styles.reportedPostHeaderCell} ${styles.reportedPostReporterCell}`}>신고자</TableCell>
+                <TableCell align="center" className={`${styles.reportedPostHeaderCell} ${styles.reportedPostDateCell}`}>신고날짜</TableCell>
+            </TableRow>
+        </TableHead>
+        <TableBody>
+            {(rowsPerPage > 0
+                ? filteredReportedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : filteredReportedPost
+            ).map((row) => (
+                <TableRow 
+                    key={row.reportId} 
+                    hover 
+                    style={{ cursor: 'pointer' }} 
+                    onClick={() => handleRowClick(row.reportId)}
+                >
+                    <TableCell align="center" className={styles.reportedPostIdCell}>{row.reportId}</TableCell>
+                    <TableCell align="center" className={styles.reportedPostTitleCell}>
+                        {row.title.length > 30 ? `${row.title.slice(0, 30)}...` : row.title}
+                    </TableCell>
+                    <TableCell align="center" className={styles.reportedPostAuthorCell}>{row.username}</TableCell>
+                    <TableCell align="center" className={styles.reportedPostReporterCell}>{row.reporterName}</TableCell>
+                    <TableCell align="center" className={styles.reportedPostDateCell}>{formatDate(row.reportedAt)}</TableCell>
+                </TableRow>
+            ))}
+        </TableBody>
+    </Table>
+</TableContainer>
+
 
                         {/* 검색 필터 UI */}
                         <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.reportedPostSearchContainer}>

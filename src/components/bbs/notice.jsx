@@ -122,38 +122,49 @@ const Notice = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {(rowsPerPage > 0
-                                    ? filteredNotices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    : filteredNotices
-                                ).map((row) => (
-                                    <TableRow key={row.noticeId}
-                                        hover
-                                        onClick={() => handleRowClick(row.noticeId)}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <TableCell align="center">{row.noticeId}</TableCell>
-                                        <TableCell align="center" className={styles.NoticeTitleCell}>
-                                            {row.noticeTitle}
-                                        </TableCell>
-                                        <TableCell align="center">{row.user.username}</TableCell>
-                                        <TableCell align="center" className={styles.noticeDateCell}>
-                                            {new Date(row.noticeCreatedTime).toLocaleString('ko-KR', {
-                                                year: 'numeric',
-                                                month: '2-digit',
-                                                day: '2-digit',
-                                                
-                                            })}
+                                {filteredNotices.length > 0 ? (
+                                    (rowsPerPage > 0
+                                        ? filteredNotices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        : filteredNotices
+                                    ).map((row) => (
+                                        <TableRow key={row.noticeId}
+                                            hover
+                                            onClick={() => handleRowClick(row.noticeId)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <TableCell align="center">{row.noticeId}</TableCell>
+                                            <TableCell align="center" className={styles.NoticeTitleCell}>
+                                                {row.noticeTitle}
+                                            </TableCell>
+                                            <TableCell align="center">{row.user.username}</TableCell>
+                                            <TableCell align="center" className={styles.noticeDateCell}>
+                                                {new Date(row.noticeCreatedTime).toLocaleString('ko-KR', {
+                                                    year: 'numeric',
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                })}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} align="center">
+                                            <Typography variant="h6" sx={{ padding: '20px' }}>
+                                                등록한 글이 없습니다.
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: 30 * emptyRows }}>
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={4} />
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
                     </TableContainer>
+
+
 
                     <Grid container spacing={1} alignItems="center" justifyContent="flex-end" className={styles.noticeGridContainer}>
                         <Grid item xs={3}>

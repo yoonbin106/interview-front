@@ -3,6 +3,7 @@
     width: 100%;
     max-width: 240px;
     background-color: #ffffff;
+    padding: 20px;
   }
   
   /* 서브헤더 스타일 (관리자 페이지 제목) */

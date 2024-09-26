@@ -67,24 +67,7 @@ export default function BbsQnaSideMenu() {
         </List>
       </Collapse>
       <Divider />
-            {/*공지사항 페이지 관련*/}
-      <ListItemButton onClick={() => handleClick('notice')} className={styles.BbsQnaSideMenuCursorPointer}>
-        <ListItemText primary="　공지사항" />
-        {openItems.notice ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={openItems.notice} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {/* 전체 공지사항 페이지로 이동 */}
-          <ListItemButton className={`${styles.BbsQnaSideMenuItemButton} ${styles.BbsQnaSideMenuCursorPointer}`} onClick={() => handleNavigation('/bbs/noticePage')}>
-            <ListItemText primary="　　전체 공지사항" />
-          </ListItemButton>
-          {/* 기업별 공지사항 페이지로 이동 */}
-          <ListItemButton className={`${styles.BbsQnaSideMenuItemButton} ${styles.BbsQnaSideMenuCursorPointer}`} onClick={() => handleNavigation('/bbs/bbsCompanyNoticePage')}>
-            <ListItemText primary="　　기업별 공지사항" />
-          </ListItemButton>
-        </List>
-      </Collapse>
-      <Divider />
+           
     </List>
   );
 }

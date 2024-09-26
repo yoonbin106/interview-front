@@ -7,6 +7,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const formatDate = (date, isToday = false) => {
   const day = date.getDate().toString().padStart(2, '0'); // 일자 (2자리)
   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월 (2자리)
+
   return isToday ? `오늘(${month}.${day})` : `${month}.${day}`;
 };
 

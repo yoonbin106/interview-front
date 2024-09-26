@@ -8,7 +8,7 @@
 /* 공지사항 카드 스타일 */
 .adminCompanyNoticeDetailsPaper {
     padding: 20px;
-    max-width: 800px;
+    max-width: 1000px; /* AdminAdminNoticeDetails와 동일하게 조정 */
     width: 100%;
 }
 
@@ -28,6 +28,27 @@
 .adminCompanyNoticeDetailsContent {
     white-space: pre-wrap;
     line-height: 1.6;
+    font-size: 1.5rem;
+    border: none;
+    padding: 10px;
+    min-height: 200px;
+}
+
+/* 툴바 크기 조절 */
+.ql-toolbar.ql-snow {
+    height: 50px;
+    font-size: 1.1rem;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label, 
+.ql-toolbar.ql-snow .ql-picker-item {
+    padding: 10px;
+}
+
+.ql-toolbar.ql-snow .ql-formats button, 
+.ql-toolbar.ql-snow .ql-formats .ql-picker {
+    font-size: 1.1rem;
+    padding: 5px;
 }
 
 /* 버튼 컨테이너 스타일 */

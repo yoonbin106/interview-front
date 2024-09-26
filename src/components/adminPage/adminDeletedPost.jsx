@@ -125,30 +125,31 @@ const AdminDeletedPost = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {(rowsPerPage > 0
-                                        ? filteredDeletedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        : filteredDeletedPost
-                                    ).map((row) => (
-                                        <TableRow 
-                                            key={row.bbsId} 
-                                            hover 
-                                            style={{ cursor: 'pointer' }} 
-                                            onClick={() => handleRowClick(row.bbsId)}
-                                        >
-                                            <TableCell align="center">{row.bbsId}</TableCell>
-                                            <TableCell align="center" className={styles.deletedPostTableLink}>
-                                                    {row.title}
-                                            </TableCell>
-                                            <TableCell align="center">{row.username}</TableCell>
-                                            <TableCell align="center">{formatDate(row.deletedAt)}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{ height: 30 * emptyRows }}>
-                                            <TableCell colSpan={4} />
-                                        </TableRow>
-                                    )}
-                                </TableBody>
+    {(rowsPerPage > 0
+        ? filteredDeletedPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : filteredDeletedPost
+    ).map((row) => (
+        <TableRow 
+            key={row.bbsId} 
+            hover 
+            style={{ cursor: 'pointer' }} 
+            onClick={() => handleRowClick(row.bbsId)}
+        >
+            <TableCell align="center">{row.bbsId}</TableCell>
+            <TableCell align="center" className={styles.deletedPostTableLink}>
+                {row.title.length > 20 ? `${row.title.slice(0, 20)}...` : row.title}
+            </TableCell>
+            <TableCell align="center">{row.username}</TableCell>
+            <TableCell align="center">{formatDate(row.deletedAt)}</TableCell>
+        </TableRow>
+    ))}
+    {emptyRows > 0 && (
+        <TableRow style={{ height: 30 * emptyRows }}>
+            <TableCell colSpan={4} />
+        </TableRow>
+    )}
+</TableBody>
+
                             </Table>
                         </TableContainer>
 

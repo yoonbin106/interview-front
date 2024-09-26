@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Box,Table,TableBody,TableCell,TableContainer,TableHead,
-    TableRow,Paper,Button,Select,MenuItem,Radio,RadioGroup,
-    FormControlLabel,FormControl,FormLabel,TextField,Card,
-    CardContent,Modal,Divider } from '@mui/material';
+    Box, Table, TableBody, TableCell, TableContainer, TableHead,
+    TableRow, Paper, Button, Select, MenuItem, Radio, RadioGroup,
+    FormControlLabel, FormControl, FormLabel, TextField, Card,
+    CardContent, Modal, Divider
+} from '@mui/material';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -189,41 +190,47 @@ export default function AdminPayment() {
                     </ThemeProvider>
 
                     <Box sx={{ width: '100%', mt: 4 }}>
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell className={styles.adminPaymentTableHeader}>결제번호</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>이메일</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>결제일</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>남은횟수</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>요금제 유형</TableCell>
-                                        <TableCell className={styles.adminPaymentTableHeader}>결제취소</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {searchResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                                        <TableRow key={row.paymentId}>
-                                            <TableCell>{row.paymentId}</TableCell>
-                                            <TableCell>{row.email}</TableCell>
-                                            <TableCell>{row.paymentDate}</TableCell>
-                                            <TableCell>{row.amount}</TableCell>
-                                            <TableCell>{row.planType}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    disabled={!row.isRefundable}
-                                                    onClick={() => handleOpenModal(row.paymentKey)}
-                                                >
-                                                    {row.isRefundable ? '환불하기' : '환불 완료'}
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                    <TableContainer component={Paper} className={styles.adminPaymentTableContainer}>
+    <Table className={styles.adminPaymentTable}>
+        <TableHead>
+            <TableRow>
+                <TableCell className={styles.adminPaymentTableHeader}>결제번호</TableCell>
+                <TableCell className={styles.adminPaymentTableHeader}>이메일</TableCell>
+                <TableCell className={styles.adminPaymentTableHeader}>결제일</TableCell>
+                <TableCell className={styles.adminPaymentTableHeader}>남은횟수</TableCell>
+                <TableCell className={styles.adminPaymentTableHeader}>요금제 유형</TableCell>
+                <TableCell className={styles.adminPaymentTableHeader}>결제취소</TableCell>
+            </TableRow>
+        </TableHead>
+        <TableBody>
+            {searchResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                <TableRow key={row.paymentId}>
+                    <TableCell className={styles.adminPaymentTableCell}>
+                        {row.paymentId.length > 17 
+                            ? `${row.paymentId.slice(0, -17)}**********`
+                            : row.paymentId
+                        }
+                    </TableCell>
+                    <TableCell className={styles.adminPaymentTableCell}>{row.email}</TableCell>
+                    <TableCell className={styles.adminPaymentTableCell}>{row.paymentDate}</TableCell>
+                    <TableCell className={styles.adminPaymentTableCell}>{row.amount}</TableCell>
+                    <TableCell className={styles.adminPaymentTableCell}>{row.planType}</TableCell>
+                    <TableCell className={styles.adminPaymentTableCell}>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            disabled={!row.isRefundable}
+                            onClick={() => handleOpenModal(row.paymentKey)}
+                        >
+                            환불하기
+                        </Button>
+                    </TableCell>
+                </TableRow>
+            ))}
+        </TableBody>
+    </Table>
+</TableContainer>
+
 
                         <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Button

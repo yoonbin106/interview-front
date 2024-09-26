@@ -31,47 +31,59 @@ const PaginationTableAdminCompanyNotice = ({rows,page,rowsPerPage}) => {
     }
     return (
         <TableContainer component={Paper} className={styles.companyNoticeTableContainer}>
-          <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>글 번호</TableCell>
-                <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>제목</TableCell>
-                <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>작성자</TableCell>
-                <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>작성날짜</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : rows
-              ).map((row) => (
-                <TableRow key={row.companyNoticeId}
-                hover
-                onClick={() => handleRowClick(row.companyNoticeId)}
-                style={{cursor:'pointer'}}>
-                  <TableCell align="center">{row.companyNoticeId}</TableCell>
-                  <TableCell align="center" className={styles.companyNoticeTitleCell}>
-                      {row.companyNoticeTitle}
-                  </TableCell>
-                  <TableCell align="center">{row.user.username}</TableCell> {/* 작성자 이름 표시 */}
-                  <TableCell align="center">
-                    {new Date(row.companyNoticeCreatedTime).toLocaleString('ko-KR',{
-                        year: 'numeric',
-                        month:'2-digit',
-                        day: '2-digit',
-                        
-                    })}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 30 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+            <Table sx={{ minWidth: 400 }} aria-label="custom pagination table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>글 번호</TableCell>
+                        <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>제목</TableCell>
+                        <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>작성자</TableCell>
+                        <TableCell align="center" className={styles.companyNoticeTableHeaderCell}>작성날짜</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {rows.length > 0 ? (
+                        (rowsPerPage > 0
+                            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            : rows
+                        ).map((row) => (
+                            <TableRow key={row.companyNoticeId}
+                                hover
+                                onClick={() => handleRowClick(row.companyNoticeId)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <TableCell align="center">{row.companyNoticeId}</TableCell>
+                                <TableCell align="center" className={styles.companyNoticeTitleCell}>
+                                    {row.companyNoticeTitle}
+                                </TableCell>
+                                <TableCell align="center">{row.user.username}</TableCell>
+                                <TableCell align="center">
+                                    {new Date(row.companyNoticeCreatedTime).toLocaleString('ko-KR', {
+                                        year: 'numeric',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                    })}
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} align="center">
+                                <Typography variant="h6" sx={{ padding: '20px' }}>
+                                    등록된 글이 없습니다.
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
+                    )}
+                    {emptyRows > 0 && (
+                        <TableRow style={{ height: 30 * emptyRows }}>
+                            <TableCell colSpan={4} />
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
         </TableContainer>
+
+
       );
     };
 const BbsCompanyNotice = () => {

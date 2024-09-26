@@ -36,22 +36,6 @@
     font-size: 16px;
   }
   
-  /* 툴바 크기 조절 */
-  .ql-toolbar.ql-snow {
-    height: 50px;
-    font-size: 1.1rem;
-  }
-  
-  .ql-toolbar.ql-snow .ql-picker-label, 
-  .ql-toolbar.ql-snow .ql-picker-item {
-    padding: 10px;
-  }
-  
-  .ql-toolbar.ql-snow .ql-formats button, 
-  .ql-toolbar.ql-snow .ql-formats .ql-picker {
-    font-size: 1.1rem;
-    padding: 5px;
-  }
   
   /* 버튼 컨테이너 스타일 */
   .adminNoticeDetailsButtonsContainer {

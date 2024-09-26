@@ -12,19 +12,22 @@ import styles from '@/styles/adminPage/adminAdminNoticeRegister.module.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const AdminAdminNoticeRegister = observer(() => {
-    const { userStore } = useStores();
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');  // Quill.js의 content를 관리하기 위한 상태
-    const router = useRouter();
+    const { userStore } = useStores(); // MobX store에서 사용자 정보 가져오기
+    const [title, setTitle] = useState(''); // 제목 상태
+    const [content, setContent] = useState(''); // Quill.js의 content를 관리하기 위한 상태
+    const router = useRouter(); // Next.js 라우터
 
+    // 제목 입력 핸들러
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
     };
 
+    // Quill.js 에디터의 내용 변경 핸들러
     const handleContentChange = (value) => {
-        setContent(value);  // Quill.js가 반환하는 HTML을 상태로 저장
+        setContent(value); // Quill.js가 반환하는 HTML을 상태로 저장
     };
 
+    // 등록 버튼 클릭 시 실행되는 함수
     const handleSubmit = async () => {
         if (!title || !content) {
             alert('제목과 내용을 모두 입력해주세요.');
@@ -32,15 +35,16 @@ const AdminAdminNoticeRegister = observer(() => {
         }
 
         const adminAdminNoticeData = {
-            adminNoticeTitle: title,
-            adminNoticeContent: content,  // Quill.js가 생성한 HTML을 저장
-            id: userStore.id
+            adminNoticeTitle: title, // 제목 저장
+            adminNoticeContent: content, // Quill.js가 생성한 HTML 저장
+            id: userStore.id // 사용자 ID
         };
 
         try {
+            // 관리자 공지사항 등록 API 호출
             await axios.post('http://localhost:8080/api/adminnotice', adminAdminNoticeData);
             alert('관리자 공지사항이 성공적으로 등록되었습니다.');
-            router.push('/adminPage/adminAdminNoticePage');
+            router.push('/adminPage/adminAdminNoticePage'); // 공지사항 페이지로 이동
         } catch (error) {
             console.error('공지사항 등록 중 오류 발생:', error);
             alert('공지사항 등록에 실패했습니다.');
@@ -50,8 +54,12 @@ const AdminAdminNoticeRegister = observer(() => {
     return (
         <Grid container spacing={2} className={styles.adminAdminNoticeRegisterContainer}>
             <Grid item xs={12}>
-                <Typography variant="h5" gutterBottom>글 작성하기</Typography>
+                <Typography variant="h5" gutterBottom>
+                    글 작성하기
+                </Typography>
             </Grid>
+
+            {/* 제목 입력 필드 */}
             <Grid item xs={12}>
                 <TextField
                     fullWidth
@@ -62,26 +70,25 @@ const AdminAdminNoticeRegister = observer(() => {
                     onChange={handleTitleChange}
                 />
             </Grid>
+
+            {/* Quill 에디터 */}
             <Grid item xs={12}>
                 <ReactQuill
                     value={content}
                     onChange={handleContentChange}
-                    placeholder="내용을 입력하세요" // 여기에 placeholder 추가
+                    placeholder="내용을 입력하세요"
                     modules={{
                         toolbar: [
-                            [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+                            [{ header: '1' }, { header: '2' }, { font: [] }],
                             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                            [{'list': 'ordered'}, {'list': 'bullet'}, 
-                            {'indent': '-1'}, {'indent': '+1'}],
+                            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                             ['link', 'image', 'video'],
                             ['clean']
                         ],
                     }}
                     formats={[
-                        'header', 'font',
-                        'bold', 'italic', 'underline', 'strike', 'blockquote',
-                        'list', 'bullet', 'indent',
-                        'link', 'image', 'video'
+                        'header', 'font', 'bold', 'italic', 'underline', 'strike', 'blockquote',
+                        'list', 'bullet', 'indent', 'link', 'image', 'video'
                     ]}
                     className={styles.adminAdminNoticeRegisterContentInput}
                     style={{
@@ -93,15 +100,18 @@ const AdminAdminNoticeRegister = observer(() => {
                 <Typography variant="body2" align="right" color="textSecondary" className={styles.noticeRegisterCharCount}>
                     {content.length}/2000
                 </Typography>
-                <Grid item xs={12} align="right">
-                    <Button className={styles.adminAdminNoticeRegisterSubmitButton}
-                        variant="contained" 
-                        color="primary" 
-                        onClick={handleSubmit}
-                    >
-                        등록하기
-                    </Button>
-                </Grid>
+            </Grid>
+
+            {/* 등록 버튼 */}
+            <Grid item xs={12} align="right">
+                <Button
+                    className={styles.adminAdminNoticeRegisterSubmitButton}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                >
+                    등록하기
+                </Button>
             </Grid>
         </Grid>
     );

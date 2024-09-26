@@ -13,6 +13,16 @@
 .adminPaymentContent {
     flex-grow: 1;
     padding: 20px;
+    overflow-x: hidden;
+}
+.adminPaymentTable {
+    width: 100%; 
+    table-layout: auto; 
+}
+
+.adminPaymentTableCell {
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
 }
 
 .adminPaymentTitle {
@@ -25,9 +35,23 @@
     background-color: #5A8AF2;
     color: white;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .adminPaymentCard {
     width: 100%;
     box-sizing: border-box; /* 패딩이나 마진을 포함하여 전체 너비를 100%로 유지 */
+}
+
+.adminPaymentTableCell {
+    white-space: nowrap;
+}
+
+.adminPaymentButton{
+    white-space:nowrap;
+}
+
+.adminPaymentTableContainer{
+    max-width: 100%; 
+    overflow-x: hidden; 
 }

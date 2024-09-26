@@ -14,9 +14,13 @@ const BbsFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
         const fetchFaqs = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/faq/all');
-                console.log(response.data);
-                setFaqs(response.data);
-                setFilteredFaqs(response.data);
+                // 카테고리명 기준으로 정렬 (ㄱㄴㄷ순)
+                const sortedFaqs = response.data.sort((a, b) => 
+                    a.faqCategory.localeCompare(b.faqCategory, 'ko', { sensitivity: 'base' })
+                );
+                console.log(sortedFaqs);
+                setFaqs(sortedFaqs);
+                setFilteredFaqs(sortedFaqs);
             } catch (error) {
                 console.error('Error fetching FAQs:', error);
             }
