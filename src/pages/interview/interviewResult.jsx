@@ -203,6 +203,20 @@ const ResultPage = observer(() => {
       text: word,
       value: word.length * 10 + index // 임의로 단어 길이에 인덱스를 더한 값으로 설정
     }));
+
+    // 피드백 데이터를 변수로 선언
+    let encodedFeedback = fetchedInterview.videoSpeechAnalyses[0].feedback;
+
+    // JSON 데이터를 파싱하기 전에 인코딩된 부분을 디코딩
+    let decodedFeedback = decodeURIComponent(encodedFeedback);
+
+    // 디코딩된 데이터를 JSON으로 파싱
+    let feedbackObj = JSON.parse(decodedFeedback);
+
+    // 결과 확인
+    console.log(feedbackObj);
+
+
     const randomAdjust = (value) => {
       // -10에서 10 사이의 소수점 값을 랜덤으로 더하거나 뺌
       const randomValue = (Math.random() * 10).toFixed(1); // 0 ~ 10 사이의 소수점 첫째 자리까지 랜덤 값
@@ -302,8 +316,15 @@ const ResultPage = observer(() => {
       },
       expressionAnalysis: {
         dominantExpression: '긍정',
-        evaluation: '우수',
-        feedback: '면접 동안 대부분 긍정적인 표정을 유지했습니다. 이는 열정과 자신감을 잘 표현한 것으로 보입니다.',
+        evaluation: (() => {
+          const expressionScore = positive;
+          if (expressionScore >= 85) return '우수';
+          if (expressionScore >= 70) return '양호';
+          if (expressionScore >= 55) return '보통';
+          if (expressionScore >= 30) return '미흡';
+          return '취약';
+        })(),
+        feedback: feedbackObj.summary_feedback,
       },
       voiceData: [
         { 
