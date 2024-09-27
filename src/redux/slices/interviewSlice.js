@@ -43,8 +43,6 @@ export const loadMockQuestions = createAsyncThunk(
         }
       ];
 
-      console.log("Selected questions for mock interview:", selectedQuestions);
-
        return selectedQuestions && selectedQuestions.length > 0
       ? selectedQuestions.map(id => mockQuestions.find(q => q.id === id) || { id, question: `질문 ${id}` })
       : mockQuestions;
@@ -96,7 +94,6 @@ export const loadRealQuestions = createAsyncThunk(
 export const loadQuestions = createAsyncThunk(
   'interview/loadQuestions',
   async ({ interviewType, selectedQuestions, candidateData }, { dispatch }) => {
-    console.log("loadQuestions called with:", { interviewType, selectedQuestions, candidateData });
     let result;
     if (interviewType === 'mock') {
       result = await dispatch(loadMockQuestions(selectedQuestions)).unwrap();
@@ -105,7 +102,6 @@ export const loadQuestions = createAsyncThunk(
     } else {
       throw new Error(`Invalid interview type: ${interviewType}`);
     }
-    console.log("loadQuestions result:", result);
     return result;
   }
 );

@@ -22,10 +22,8 @@ app.post('/check-spelling', (req, res) => {
 
   hanspell.spellCheckByDAUM(sentence, 6000, (result) => {
     res.json(result);
-  }, () => {
-    console.log('Check finished');
-  }, (err) => {
-    console.error('Error:', err);
+  }, 
+  (err) => {
     res.status(500).send('Spelling check error');
   });
 });

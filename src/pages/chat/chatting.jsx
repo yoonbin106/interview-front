@@ -80,13 +80,11 @@ const Chatting = observer(({ closeChatting }) => {
         if (!client) {
             const mqttClient = mqttStore.mqttClient;
             mqttClient.on('connect', () => {
-                console.log('Connected to MQTT broker');
                 setIsConnected(true);
             });
 
             mqttClient.on('message', (topic, message) => {
                 if (topic.startsWith('mqtt/chat/')) {
-                    console.log('Received message:', message.toString());
                     const receivedMessage = JSON.parse(message);
 
                     const lastM = `${receivedMessage.sender} : ${receivedMessage.text}`;
@@ -102,7 +100,6 @@ const Chatting = observer(({ closeChatting }) => {
                     }
                 }
                 if (topic.startsWith('mqtt/member/')) {
-                    console.log('topic.startsWith(mqtt/member/');
                     const roomId = JSON.parse(message).chatroomId;
                     if(roomId == currentChatRoomIdRef.current){
                         readChatAlarmInChatroom(roomId);
@@ -116,7 +113,6 @@ const Chatting = observer(({ closeChatting }) => {
             });
 
             mqttClient.on('close', () => {
-                console.log('Disconnected from MQTT broker');
                 setIsConnected(false);
             });
 
@@ -134,36 +130,12 @@ const Chatting = observer(({ closeChatting }) => {
         }
     }, [client, chatRoomList]);
 
-    // }, [client, chatRoomList]);
-
-    // useEffect(() => {
-    //     // console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
-    //     // chatRoomList.map((list) => {
-    //     //     client.subscribe(`mqtt/chat/${list.id}`);
-    //     // })
-
-    //     //아래는 채팅방 들어갔다가 나갈때 토픽 구독/해제 하는 코드
-
-    //     if (client && currentChatRoomId) {
-    //         const topic = `mqtt/chat/${currentChatRoomId}`;
-    //         client.subscribe(topic);
-    //         console.log(`Subscribed to topic: ${topic}`);
-
-    //         return () => {
-    //             client.unsubscribe(topic);
-    //             console.log(`Unsubscribed from topic: ${topic}`);
-    //         };
-    //     }
-    // }, [client, currentChatRoomId]);
-
     const readChatAlarmInChatroom = async (chatroomId) => {
         try {
             const response = await axios.post('http://localhost:8080/api/alarm/readChatAlarmInChatroom',
                 { chatroomId: chatroomId, userId: userStore.id},
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            console.log('[chatting.jsx] readChatAlarmInChatroom(): ', response.data);
-            console.log('[chatting.jsx] readChatAlarmInChatroom().length: ', response.data.length);
             return response.data;
         } catch (error) {
             console.error('채팅방 들어가서 알람 읽기 중 에러 발생:', error);
@@ -186,7 +158,6 @@ const Chatting = observer(({ closeChatting }) => {
 
     //chatroomList 전체를 클릭하든 케밥메뉴 클릭하든 아무튼 chatRoomId 얻어오기
     const getChatroomId = (chatRoomId) => {
-        console.log('[getChatroomId() 호출]: ', chatRoomId);
 
         setCurrentChatRoomId(chatRoomId); // 선택된 채팅방 ID 저장
         currentChatRoomIdRef.current = chatRoomId;
@@ -195,10 +166,6 @@ const Chatting = observer(({ closeChatting }) => {
     }
 
     const onChatClick = (chatRoomId) => {
-
-        // getUsersInChatroom(chatRoomId);
-
-        console.log('[onChatClick() 호출]: ', chatRoomId);
         currentChatRoomIdRef.current = chatRoomId; // Ref에 바로 값 저장
         setIsChatOpen(true);
     };
@@ -207,12 +174,10 @@ const Chatting = observer(({ closeChatting }) => {
         setIsChatOpen(false);
         getChatroomList();
         getChatAlarm();
-        // setCurrentChatRoomId('');
         currentChatRoomIdRef.current = '';
         setMessages([]); //채팅방 왔다갔다 하면 값 유지되는거 초기화 해버리기
     };
 
-    //currentChatRoomId : 선택된 채팅방 ID 값 저장돼있듬
     const getPastChatting = async (chatroomId) => {
         try {
             const response = await axios.post('http://localhost:8080/api/chat/getPastChatting',
@@ -227,10 +192,6 @@ const Chatting = observer(({ closeChatting }) => {
                 timestamp: chat.createdTime,
                 senderId: chat.userId,
             }));
-
-            // console.log('response.date: ', response.data);
-            // console.log(pastMessages);
-            // console.log(userStore.id);
 
             pastMessages.map((pastMessage, index) => (
                 setMessages(prev => [...prev, pastMessage])
@@ -250,7 +211,6 @@ const Chatting = observer(({ closeChatting }) => {
                     userId: userStore.id
                 },
             });
-            console.log(response.data);
             return response.data;
         }
         catch (err) {
@@ -303,15 +263,12 @@ const Chatting = observer(({ closeChatting }) => {
 
 
     const getChatroomTitle = async (chatRoomId) => {
-        console.log('[ChattingList.jsx] currentChatRoomId: ', chatRoomId);
         try {
             const response = await axios.get('http://localhost:8080/api/chat/getChatroomTitle', {
                 params: {
                     id: chatRoomId
                 }
             });
-            // console.log('[getChatroomTitle()] - response.data: ', response.data);
-            // setCurrentChatRoomTitle(response.data);
             setChatRoomTitle(response.data);
             return response.data;
         } catch (error) {
@@ -330,7 +287,6 @@ const Chatting = observer(({ closeChatting }) => {
             getChatroomList();
 
             client.unsubscribe(currentChatRoomId);
-            console.log(`Unsubscribed from topic: ${currentChatRoomId}`);
 
         } catch (error) {
             console.error('채팅방 나가기 중 에러 발생:', error);
@@ -345,9 +301,6 @@ const Chatting = observer(({ closeChatting }) => {
                     userId: userStore.id
                 },
             });
-            // console.log('getUsersInChatroom(): ', response.data);
-
-            // setUsersInChatroom(response.data);
 
             setUsersInChatroom(prevState => ({
                 ...prevState,   // 이전 상태를 유지하면서

@@ -18,7 +18,6 @@ const BbsFaq = ({ onPageChange, onRowsPerPageChange, rowsPerPage, page }) => {
                 const sortedFaqs = response.data.sort((a, b) => 
                     a.faqCategory.localeCompare(b.faqCategory, 'ko', { sensitivity: 'base' })
                 );
-                console.log(sortedFaqs);
                 setFaqs(sortedFaqs);
                 setFilteredFaqs(sortedFaqs);
             } catch (error) {

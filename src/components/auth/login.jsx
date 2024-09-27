@@ -66,7 +66,6 @@ const Login = observer(() => {
     formData.forEach((value, key) => {
       formObject[key] = value;
     });
-    console.log(formObject);
 
     if (!validateForm(formObject)) {
       setIsLoading(false);
@@ -75,7 +74,6 @@ const Login = observer(() => {
 
     try {
       const response = await login(formObject, authStore, userStore);
-      console.log(response);
 
       if (response.status === 200) {
         // 로그인 성공 시 프로필 이미지를 불러옵니다.
@@ -86,7 +84,6 @@ const Login = observer(() => {
           mqttStore.setMqttClient(mqttClient);
 
           mqttClient.on('connect', () => {
-            console.log('Connected to MQTT broker');
             // setIsConnected(true);
             mqttClient.subscribe(`mqtt/member/${userStore.id}`);
           });

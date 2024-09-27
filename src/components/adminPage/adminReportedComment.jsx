@@ -21,8 +21,6 @@ export default function AdminReportedComment() {
   React.useEffect(() => {
     axios.get('http://localhost:8080/api/adminreported/reportedcomments')
       .then(response => {
-        console.log('Fetched reported comments:', response.data);
-
          // deletedReason이 1인 댓글만 필터링
       const filteredData = response.data.filter(comment => comment.deletedReason === 1);
 

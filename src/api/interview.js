@@ -11,7 +11,6 @@ export const getMockQuestions = async (choosedResume, userId) => {
         }
       });
       if (response.status === 200) {
-        console.log(response.data);
         return response.data;
       }
     } catch (error) {
@@ -28,7 +27,6 @@ export const getMockQuestions = async (choosedResume, userId) => {
         }
       });
       if (response.status === 200) {
-        console.log(response.data);
         return response.data;
       }
     } catch (error) {
@@ -49,7 +47,6 @@ export const getMockQuestions = async (choosedResume, userId) => {
       });
       if (response.status === 200) {
         const data = response.data;
-        console.log("데이터입니다: ",data);
         return data;
       }
     } catch (error) {
@@ -66,7 +63,6 @@ export const getMockQuestions = async (choosedResume, userId) => {
         }
       });
       if (response.status === 200) {
-        console.log("Video uploaded successfully:", response.data);
         return response.data;  // 서버에서 반환한 데이터 (videoId 포함) 반환
       }
     } catch (error) {
@@ -85,7 +81,6 @@ export const getMockQuestions = async (choosedResume, userId) => {
       });
       if (response.status === 200) {
         const data = response.data;
-        console.log("면접 결과 데이터입니다: ",data);
         return data;
       }
     } catch (error) {

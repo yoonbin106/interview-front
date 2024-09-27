@@ -505,8 +505,6 @@ const ModalContent = styled('div')(
                 motivation:motivation
             });
 
-            console.log('키워드 업데이트 응답:', keywordResponse.data);
-
             setIsModalOpen(false);
             setIsConfirmationOpen(true);
         } catch (error) {

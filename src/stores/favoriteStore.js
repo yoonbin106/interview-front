@@ -40,7 +40,6 @@ class FavoriteStore {
 
     axios.post(`http://localhost:8080/api/favorite/addFavorite`, favoriteDto)
       .then(response => {
-        console.log('Added to liked companies:', response.data);
         this.addLikedCompany({
           companyId: company.enpBsadr,
           companyName: company.corpNm,
@@ -58,7 +57,6 @@ class FavoriteStore {
 
     axios.delete(`http://localhost:8080/api/favorite/removeFavorite`, { data: favoriteDto })
       .then(response => {
-        console.log('Removed from liked companies:', response.data);
         this.removeLikedCompany(companyId);
       })
       .catch(error => console.error('Error removing favorite:', error));

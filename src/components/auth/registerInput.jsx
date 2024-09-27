@@ -359,14 +359,6 @@ function SignupForm({ goToNext, goBack, formObject }) {
 
     // 주소 데이터 추가
     formObject.address = `${postcode} ${address} ${specificAddress} ${extraAddress}`;
-
-    console.log(formObject);
-
-    // 페이지 이동
-    // router.push({
-    //   pathname: "/auth/registerInputProfile",
-    //   query: formObject,
-    // });
     // 다음 단계로 이동 (router.push 대신)
     goToNext(formObject);
   };

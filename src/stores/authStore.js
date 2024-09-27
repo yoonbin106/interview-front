@@ -19,7 +19,6 @@ class AuthStore {
     }
   }
   setLoggedIn(status) {
-    console.log('setLoggedIn: ', status);
     this.loggedIn = status;
   }
 
@@ -29,7 +28,6 @@ class AuthStore {
   }
 
   setIsAdmin(status) {
-    console.log('setIsAdmin: ', status);
     this.isAdmin = status;
   }
 }

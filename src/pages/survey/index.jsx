@@ -17,23 +17,19 @@ const SurveyHome = () => {
 
   const onChangeNameHandler = (e) => {
     setUserName(e.target.value);
-    console.log("User Name:", e.target.value);
   };
 
   const onChangeGenderHandler = (e) => {
     setGender(e.target.value);
-    console.log("Gender:", e.target.value);
   };
 
   const homeClickHandler = () => {
-    console.log("Home Click Handler Executed");
     dispatch(actionSetName(userName));
     dispatch(actionSetGender(gender));
     router.push('/survey/surveyExample');
   };
 
   const isButtonDisabled = userName === '' || gender === '';
-  console.log("Is Button Disabled:", isButtonDisabled);
 
   return (
     <>

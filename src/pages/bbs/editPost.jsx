@@ -22,8 +22,6 @@ const EditPost = () => {
           const response = await axios.get(`http://localhost:8080/bbs/${id}?increment=false`);
           const data = response.data;
   
-          console.log('API 응답 데이터:', data);  // 파일 리스트가 포함된 응답인지 확인
-  
           setTitle(data.title);
           setContent(data.content);
   
@@ -57,9 +55,6 @@ const EditPost = () => {
   const handleSave = async (e) => {
     e.preventDefault();
   
-    // 현재 상태의 filesToRemove 배열 확인
-    console.log("filesToRemove before sending:", filesToRemove);
-  
     // 파일 업로드와 함께 전송할 FormData 생성
     const formData = new FormData();
     formData.append('title', title); // 제목 필드 추가
@@ -67,9 +62,6 @@ const EditPost = () => {
   
     // 삭제할 파일 목록을 JSON 문자열로 변환하여 추가
     formData.append('filesToRemove', JSON.stringify(filesToRemove));
-    
-    // FormData에 추가된 삭제할 파일 목록 확인
-    console.log("FormData with filesToRemove:", formData.get('filesToRemove'));
   
     // 새로 업로드할 파일들 추가
     filesToUpload.forEach((file) => {

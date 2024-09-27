@@ -109,7 +109,6 @@ const BoardPosts = observer(() => {
                 { headers: { 'Content-Type': 'application/json' } }
             );
             setBbsComment(response.data);
-            console.log('댓글 response.data: ', response.data);
         } catch (error) {
             console.error('내가 작성한 댓글 불러오기 중 에러 발생:', error);
         }
@@ -123,7 +122,6 @@ const BoardPosts = observer(() => {
                 { headers: { 'Content-Type': 'application/json' } }
             );
             setBbsPost(response.data);
-            console.log('게시글 response.data: ', response.data);
         } catch (error) {
             console.error('내가 작성한 게시글 불러오기 중 에러 발생:', error);
         }

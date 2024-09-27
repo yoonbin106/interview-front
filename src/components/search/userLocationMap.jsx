@@ -22,7 +22,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
             try {
                 const existingScript = document.querySelector('script[src*="dapi.kakao.com"]');
                 if (existingScript) {
-                    console.log('Kakao Map script already loaded');
                     initializeUserLocation();
                     return;
                 }
@@ -33,7 +32,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
                 script.async = true;
     
                 script.onload = () => {
-                    console.log('Kakao Map script loaded');
                     initializeUserLocation();
                 };
     
@@ -89,7 +87,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
             });
 
             addMarkers(); // 맵 초기화 후 마커 추가
-            console.log('Map initialized');
         } else {
             console.error("카카오 맵 객체를 로드하지 못했습니다.");
         }
@@ -97,7 +94,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
 
     useEffect(() => {
         if (mapRef.current) {
-            console.log('Companies state changed:', companies);
             addMarkers();
         }
     }, [companies, searchTriggered]);
@@ -154,7 +150,7 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
             clustererRef.current.addMarkers(markers);
             markersRef.current = markers;
             customOverlaysRef.current = overlays;
-            console.log('Clusterer markers added:', markers);
+
             if (searchTriggered && firstMarkerPosition) {
                 mapRef.current.relayout();
                 setLoading(false);
@@ -183,7 +179,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
                     overlays.push(overlay);
 
                     window.kakao.maps.event.addListener(marker, 'click', () => {
-                        console.log('Marker clicked:', company.corpNm);
                         if (currentOverlayRef.current) {
                             currentOverlayRef.current.setMap(null);
                         }
@@ -197,7 +192,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
 
                     resolve({ y: result[0].y, x: result[0].x });
                 } else {
-                    console.log(`Geocoder failed for: ${address} with status: ${status}`);
                     resolve(false);
                 }
             });
@@ -248,7 +242,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
     };
 
     const openRoadview = (company, coords) => {
-        console.log('로드뷰 아이콘 클릭됨');
         const roadviewContainer = document.getElementById('roadview');
         roadviewContainer.style.display = 'block';
         setIsRoadviewVisible(true); // 로드뷰 표시 상태 변경
@@ -264,7 +257,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
 
         roadviewClient.getNearestPanoId(coords, 50, (panoId) => {
             if (panoId !== null) {
-                console.log('로드뷰 파노라마 ID:', panoId);
                 roadview.setPanoId(panoId, coords);
 
                 // 로드뷰에 마커 추가
@@ -324,7 +316,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
                     closeBtn.className = roadviewStyles['roadview-close-btn'];
                     closeBtn.innerHTML = '&times;';
                     closeBtn.onclick = () => {
-                        console.log('로드뷰 닫기 버튼 클릭됨');
                         roadviewContainer.style.display = 'none';
                         setIsRoadviewVisible(false);
                     };
@@ -333,8 +324,6 @@ const UserLocationMap = ({ companies = [], setMapBounds, searchTriggered, setFil
                 }
             } else {
                 alert('해당 위치의 로드뷰를 찾을 수 없습니다.');
-                console.log('로드뷰를 찾을 수 없음');
-
                  // 로드뷰를 닫고 원래 지도 화면으로 돌아가기
                 roadviewContainer.style.display = 'none';
                 setIsRoadviewVisible(false);

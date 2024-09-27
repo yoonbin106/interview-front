@@ -15,7 +15,6 @@ const AdminFaqPage = () => {
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
-                console.log("Fetching FAQs...");
                 const response = await axios.get('http://localhost:8080/api/faq/all');
                 setFaqs(response.data);
                 setFilteredFaqs(response.data);

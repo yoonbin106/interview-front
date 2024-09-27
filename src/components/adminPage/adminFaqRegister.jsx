@@ -39,7 +39,6 @@ const AdminFaqRegister = () => {
             faqCategory : category,
             faqCreatedTime: new Date(),
         };
-        console.log(faqData);
 
         try {
             await axios.post('http://localhost:8080/api/faq', faqData);

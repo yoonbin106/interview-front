@@ -62,7 +62,6 @@ const SurveyResult = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('File uploaded successfully:', response.data);
 
         const jobList = response.data.split('\n').map(item => item.trim()).filter(item => item);
 

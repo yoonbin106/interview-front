@@ -9,7 +9,6 @@ class MqttStore {
     }
 
     setMqttClient(status) {
-        console.log('mqttClient: ', status);
         this.mqttClient = status;
     }
 }

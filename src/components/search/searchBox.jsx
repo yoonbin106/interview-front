@@ -24,7 +24,6 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
             const response = await axios.get(`${baseURL}/api/search/searchHistory`, {
                 params: { email }
             });
-            console.log('Fetched search history:', response.data); // 검색 기록 로그
             setSearchHistory(response.data);
         } catch (error) {
             console.error('Failed to fetch search history:', error);
@@ -32,7 +31,6 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
     };
 
     const searchHistoryCall = () => {
-        console.log("box clicked");  // 입력값 로그
         setShowDropdown(true); // 검색 기록 드롭다운 표시
         fetchSearchHistory(); // 검색 기록을 가져옴
     };
@@ -52,14 +50,12 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
             await axios.post(`${baseURL}/api/search/saveSearchHistory`, null, {
                 params: { searchInput, email }
             });
-            console.log('Search history saved successfully');
         } catch (error) {
             console.error('Failed to save search history:', error);
         }
     };
 
     const handleInputChange = (e) => {
-        console.log("Input changed: ", e.target.value);  // 입력값 로그
         setCorpNm(e.target.value);
     };
 
@@ -169,8 +165,6 @@ const SearchBox = observer(({ handleSearch, setSearchInputFocus, searchInputRef,
             });
             // 로컬 상태에서 삭제된 항목 제거
             setSearchHistory(prevHistory => prevHistory.filter(item => item !== term));
-
-            console.log(`Deleted search history term: ${term}`);
         } catch (error) {
             console.error('Failed to delete search history:', error);
         }

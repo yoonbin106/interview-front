@@ -128,8 +128,6 @@ const Header = observer(() => {
         { headers: { 'Content-Type': 'application/json' } }
       );
       const unreadAlarms = response.data.filter(alarm => alarm.isRead === 0);
-      // console.log('[header.jsx] getAlarm(): ', response.data);
-      // console.log('[header.jsx] getAlarm().length: ', response.data.length);
       setAlarmList(response.data);
       setBadgeCount(unreadAlarms.length);
       return response.data;
@@ -159,14 +157,11 @@ const Header = observer(() => {
         mqttStore.setMqttClient(mqttClient);
 
         mqttClient.on('connect', () => {
-          console.log('Connected to MQTT broker');
           mqttClient.subscribe(`mqtt/member/${userStore.id}`);
         });
 
         mqttClient.on('message', async (topic, message) => {
           if (topic.startsWith('mqtt/member/')) {  // topic이 일치할 경우
-            console.log('Received message:', message.toString());
-            console.log('topic: ', topic);
             getAlarm(userStore.id);
           }
         });

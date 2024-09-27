@@ -42,7 +42,6 @@ class InterviewStore {
     }
     setChoosedPayment(choosedPayment) {
         this.choosedPayment = choosedPayment;
-        console.log('setChoosedPayment: ', choosedPayment);
         if (typeof window !== 'undefined') {
             localStorage.setItem('choosedPayment', choosedPayment);
         }
@@ -50,7 +49,6 @@ class InterviewStore {
 
     setChoosedResume(choosedResume) {
         this.choosedResume = choosedResume;
-        console.log('setChoosedResume: ', choosedResume);
         if (typeof window !== 'undefined') {
             localStorage.setItem('choosedResume', choosedResume);
         }
@@ -96,25 +94,22 @@ class InterviewStore {
         } else {
             this.selectedQuestions.push(id);
         }
-        console.log('선택된 질문들: ', this.selectedQuestions);
     }
 
     // 질문 열림 상태 설정
     setOpenQuestion(id) {
         this.openQuestion = id;
-        console.log('열려 있는 질문 ID: ', this.openQuestion);
     }
 
     // 질문 편집 모드 설정
     setEditMode({ id, type }) {
         this.editMode = { id, type };
-        console.log('편집 모드: ', this.editMode);
     }
 
     // 임시 편집 상태 설정
     setTempEdit({ script, keywords }) {
         this.tempEdit = { script, keywords };
-        console.log('임시 편집 상태: ', this.tempEdit);
+
     }
 
     // 질문 저장
@@ -125,14 +120,12 @@ class InterviewStore {
             allQuestions[questionIndex].script = script;
             allQuestions[questionIndex].keywords = keywords;
         }
-        console.log('질문 저장됨: ', allQuestions[questionIndex]);
         this.setEditMode({ id: null, type: null });
     }
 
     // 선택된 질문 초기화
     clearSelectedQuestions() {
         this.selectedQuestions = [];
-        console.log('선택된 질문들이 초기화됨');
     }
 
     // 초기화 함수

@@ -16,10 +16,6 @@ const successBasicPayment = observer(() => {
             const id = userStore.id;
     
             if (amount == parseInt(process.env.NEXT_PUBLIC_API_TOSS_BASIC_AMOUNT, 10)) {
-                console.log(orderId);
-                console.log(paymentKey);
-                console.log(amount);
-                console.log(id);
                 try {
                     const response = await paymentCheck(orderId, paymentKey, amount, id);
                     if (response.status === 200) {

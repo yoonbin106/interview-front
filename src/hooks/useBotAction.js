@@ -14,7 +14,6 @@ export const useBotActions = (
   const startNewBot = useCallback(async (tempId) => {
     try {
       const response = await startChat(tempId);
-      console.log("New chat started with ID:", response.data.botId);
       setCurrentBotId(response.data.botId);
       setBotStartTime(new Date(response.data.createdTime));
       setBotEndTime(null);

@@ -88,7 +88,6 @@ const BotMessages = ({ messages, feedbacks, addFeedback, isGenerating, isUserTyp
   }, []);
 
   const handleOptionSelect = useCallback((option) => {
-    console.log('Selected option:', option);
     setMessages(prevMessages => [...prevMessages, { text: `Selected option: ${option}`, sender: 'user' }]);
     // 필요한 경우 여기서 추가 로직을 구현할 수 있습니다.
   }, [setMessages]);

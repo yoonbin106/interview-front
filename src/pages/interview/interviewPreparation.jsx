@@ -155,7 +155,6 @@ const InterviewPreparation = observer(() => {
       });
     } else {
       setFaceDetected(false);
-      console.log("No face detected");
     }
   };
 
@@ -284,7 +283,6 @@ const InterviewPreparation = observer(() => {
         stopStream();
       }
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-      console.log("Camera stream obtained:", mediaStream);
       interviewStore.setStream(mediaStream);
       interviewStore.setCameraReady(true);
       if (videoRef.current) {
@@ -449,7 +447,6 @@ const InterviewPreparation = observer(() => {
         interviewStore.setMockQuestions(mockQuestions);
       } else {
         const realQuestions = await getRealQuestions(interviewStore.choosedResume, userStore.id);
-        console.log("실전 질문 6개입니다!", realQuestions);
         interviewStore.setRealQuestions(realQuestions);
       }
     } catch (error) {

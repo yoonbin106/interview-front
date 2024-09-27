@@ -115,12 +115,9 @@ const SurveyPlay = () => {
       startDtm: Date.now(),
       answers: formattedAnswers,
     };
-    console.log(postData);
     try {
       const response = await PostResultAPI(postData);
-      console.log('response: ',response);
       const resultData = response.data.RESULT;
-      console.log('resultData: ',resultData.url);
       const url = resultData.url;
       const encodedUrl = encodeURIComponent(url);
      // 쿼리 파라미터를 객체로 전달

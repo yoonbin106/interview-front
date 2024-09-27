@@ -65,9 +65,7 @@ const InterviewResultList = observer(() => {
       const parsedAnalysisData = JSON.parse(data.claudeAnalyses[0].analysisData);
       data.claudeAnalyses[0].analysisData = parsedAnalysisData;
     }
-    console.log(data);
     interviewStore.setFetchedInterview(data);
-    // router.push(`/interview/interviewResult?videoId=${videoId}`);
     router.push(`/interview/interviewResult`);
   };
 

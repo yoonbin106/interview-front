@@ -129,11 +129,6 @@ const ResumeList = () => {
             }
         }
 
-        
-        console.log('Response 헤더:', response.headers);
-        console.log('Content-Disposition 헤더:', contentDisposition);
-        console.log('최종 다운로드 파일명:', filename);
-
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;

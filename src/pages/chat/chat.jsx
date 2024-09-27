@@ -12,17 +12,11 @@ const Chat = () => {
     setClient(websocketClient);
 
     websocketClient.onopen = () => {
-      console.log("WebSocket connection established");
     };
 
     websocketClient.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log("Received WebSocket message: ", message);
       setMessages((prevMessages) => [...prevMessages, message]);
-    };
-
-    websocketClient.onclose = () => {
-      console.log("WebSocket connection closed");
     };
 
     return () => websocketClient.close();
@@ -32,7 +26,6 @@ const Chat = () => {
   const sendMessage = () => {
     if (client) {
       const message = { text: input, timestamp: new Date() };
-      console.log("Sending WebSocket message: ", message);
       client.send(JSON.stringify(message));
       setInput('');
     }

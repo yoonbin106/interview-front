@@ -116,10 +116,6 @@ const Bbs = () => {
 
     const totalPages = Math.ceil(filteredPosts.length / rowsPerPage);
 
-    useEffect(() => {
-        console.log("현재 페이지의 게시글 데이터:", filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
-    }, [filteredPosts, page, rowsPerPage]);
-
     const handleSortCriteriaChange = (event) => {
         setSortCriteria(event.target.value);
     };

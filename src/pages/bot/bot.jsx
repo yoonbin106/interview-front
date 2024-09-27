@@ -53,10 +53,8 @@ const Bot = ({onClose}) => {
     '/music/Why Oh Why - The Soundlings.mp3',
   ]);
   const handleMessage = useCallback(async (message) => {
-    console.log("Received message:", message);  // 이 줄을 추가
     const lowerMessage = message.toLowerCase();
     if (lowerMessage.includes('뮤직 실행')) {
-      console.log("Music playback requested");  // 이 줄을 추가
       setShowMusicPlayer(true);
     } else if (lowerMessage.includes('뮤직 종료')) {
       setShowMusicPlayer(false);
@@ -119,7 +117,6 @@ const Bot = ({onClose}) => {
   // 채팅방이 열리고 봇 ID가 없을 때 새 봇을 시작합니다.
   useEffect(() => {
     if (isOpen && !currentBotId) {
-      console.log("Starting new chat");
       startNewBot(tempId());
     }
   }, [isOpen, currentBotId, startNewBot, tempId]);
@@ -139,7 +136,6 @@ const Bot = ({onClose}) => {
       const response = await axios.post('http://localhost:8080/api/bot/feedback', null, {
         params: { answerId, isLike }
       });
-      console.log('Feedback added:', response.data);
       setSnackbar({ open: true, message: '피드백이 성공적으로 추가되었습니다.', severity: 'success' });
       updateMessageFeedback(answerId, isLike);
       setFeedbacks(prev => ({

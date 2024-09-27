@@ -14,7 +14,6 @@ const KakaoMap = ({ companies }) => {
         script.async = true;
 
         script.onload = () => {
-            console.log('Kakao Map script loaded');
             initializeMap();
         };
 
@@ -27,7 +26,6 @@ const KakaoMap = ({ companies }) => {
 
     useEffect(() => {
         if (mapRef.current) {
-            console.log('Companies state changed:', companies);
             addMarkers();
         }
     }, [companies]);
@@ -48,8 +46,6 @@ const KakaoMap = ({ companies }) => {
             minLevel: 5,
             gridSize: 60 // 클러스터의 격자 크기 설정
         });
-
-        console.log('Map initialized');
     };
 
     const addMarkers = () => {
@@ -76,10 +72,7 @@ const KakaoMap = ({ companies }) => {
                     // 클러스터러에 마커 추가
                     if (markers.length === companies.length) {
                         clustererRef.current.addMarkers(markers);
-                        console.log('Clusterer markers added:', markers);
                     }
-                } else {
-                    console.log('Geocoder failed for:', companyName, 'with status:', status);
                 }
             });
         });

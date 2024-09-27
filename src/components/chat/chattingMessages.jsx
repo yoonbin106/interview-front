@@ -12,8 +12,6 @@ const ChattingMessages = ({ messages, userStore, chatRoomTitle, users, usersInCh
 
   const getSenderProfileImage = (senderId) => {
     const user = users.find((user) => user.id == senderId);
-    // return user ? user.profileImage : '';
-    // console.log('user: ', user);
     return user ? user.profileImage : '';
   };
   

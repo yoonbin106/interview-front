@@ -15,7 +15,6 @@ const ChattingCreateRoom = ({ onBack, userStore, getChatroomList }) => {
         try {
             const response = await getAllUsers();
             setUsers(response.data);
-            // console.log('테스트얌: ', response.data);
             setFilteredUsers(response.data);
         }
         catch (error) {
@@ -70,22 +69,15 @@ const ChattingCreateRoom = ({ onBack, userStore, getChatroomList }) => {
             return;
         }
 
-        // console.log('profile: ', users[0].profile);
 
         //여기에 채팅방 생성 ~~ 로직을 넣어야함 id값을 전달 (selectedUserIds)
         try {
             const newSelectedUserIds = [...selectedUserIds, userStore.id]; //선택된 유저 + 선택한 나 < 도 추가
             const response = await axios.post('http://localhost:8080/api/chat/createChatroom', newSelectedUserIds);
-            // const response = await axios.post('http://localhost:8080/api/chat/createChatroom', {
-            //     userIds: selectedUserIds
-            // });
-            console.log('selectedUserIds: ', selectedUserIds);
-            console.log('Chatroom created:', response.data);
         } catch (error) {
             console.error('Error creating chatroom:', error);
         }
 
-        console.log('Selected User Ids:', selectedUserIds); //emails 값 얻어오기, selectedUserEmails에 저장돼있음
         getChatroomList();
         onBack();
     };

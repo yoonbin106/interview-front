@@ -16,7 +16,6 @@ export const login = async (loginData, authStore, userStore) => {  // authStore�
     }
   });
   const token = response.headers['authorization'] || response.headers['Authorization'];
-  console.log("받은 값:",response.data);
   if (token) {
     const pureToken = token.split(' ')[1];
     if (typeof window !== 'undefined') {
@@ -79,7 +78,6 @@ export const getAllUsers = async () => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(allUsers);
     return allUsers;
   } catch (error) {
     console.error("유저목록을 가져오는데 오류가 발생했습니다:", error);

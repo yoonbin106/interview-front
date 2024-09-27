@@ -122,7 +122,6 @@ function ResumeEdit() {
 
       axios.post('http://localhost:8080/api/resume', dataToSend)
         .then(response => {
-          console.log('성공:', response.data);
           setIsModalOpen(false);
           setIsConfirmationOpen(true);
         })

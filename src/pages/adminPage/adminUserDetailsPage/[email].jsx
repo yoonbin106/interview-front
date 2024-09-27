@@ -99,9 +99,6 @@ const AdminUserDetails = observer(() => {
       } else if (viewUserStore.viewedUser.profileImage) {
         // 기존 프로필 이미지를 유지하기 위해 서버로 전달
         formData.append('profileImage', viewUserStore.viewedUser.profileImage);
-      } else {
-        // 아무 이미지도 없을 경우에는 null을 보내지 않도록 할 수 있음
-        console.log('프로필 이미지 없음: 새 이미지도 기존 이미지도 없습니다.');
       }
 
       await axios.post('http://localhost:8080/api/auth/edituser', formData);

@@ -41,7 +41,6 @@ const CompanyList = observer(({ companies, onCompanyClick, onMarkerClick }) => {
           onMouseLeave={(e) => e.currentTarget.style.border = '1px solid #ccc'}
         >
           <div onClick={() => {
-              console.log(`Company clicked: ${company.corpNm}`);
               onCompanyClick(company);
           }} style={{ flex: 1, wordWrap: 'break-word', whiteSpace: 'normal' }}>
             <strong>{company.corpNm}</strong>
@@ -65,7 +64,6 @@ const CompanyList = observer(({ companies, onCompanyClick, onMarkerClick }) => {
           <div 
             onClick={(e) => {
               e.stopPropagation();
-              console.log(`Marker icon clicked: ${company.corpNm}`);
               onMarkerClick(company);
             }} 
             style={{ width: '30px', height: '30px', background: 'url(/images/marker-icon.png) no-repeat center/contain' }}

@@ -32,7 +32,6 @@ const AdminDeletedPost = () => {
                 const response = await axios.get('http://localhost:8080/api/admindeleted/deletedposts');
                 // deletedAt 필드를 기준으로 내림차순 정렬
                 const sortedPosts = response.data.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
-                console.log('API 응답 데이터:', response.data);
                 setDeletedPosts(sortedPosts);
                 setFilteredDeletedPost(sortedPosts);
             } catch (error) {

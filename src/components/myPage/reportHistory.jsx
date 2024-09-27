@@ -93,7 +93,6 @@ const ReportHistory = observer(() => {
             // 내림차순 정렬 (최신 글이 위로)
             const sortedReportPosts = filteredPosts.sort((a, b) => new Date(b.reportedAt) - new Date(a.reportedAt));
             setReportPosts(sortedReportPosts);
-            // console.log('신고한 게시글 response.data: ', sortedReportPosts);
         } catch (error) {
             console.error('신고한 게시글 불러오기 중 에러 발생:', error);
         }

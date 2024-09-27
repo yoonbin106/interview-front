@@ -25,20 +25,13 @@ const AdminNoticeDetailsPage = () => {
 
     // 공지사항 저장 핸들러
     const handleSave = (updatedNotice) => {
-        console.log('저장된 공지사항:', updatedNotice);
         alert('공지사항이 저장되었습니다.');
     };
 
     // 공지사항 삭제 핸들러
     const handleDelete = () => {
-        console.log('공지사항이 삭제되었습니다.');
         alert('공지사항이 삭제되었습니다.');
         router.push('/adminPage/adminNoticePage');
-    };
-
-    // 공지사항 수정 핸들러
-    const handleEdit = () => {
-        console.log('공지사항이 수정되었습니다.');
     };
 
     return (

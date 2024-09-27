@@ -54,12 +54,10 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
 
     const deleteAlarm = (id) => {
         disableAlarm(id);
-        // setAlarmList(alarmList.filter(alarm => alarm.id !== id));
         getAlarm(userId);
     };
 
     const readAllAlarm = () => {
-        // console.log("모든 알람을 읽음 처리합니다.");
         readAllAlarms(userId);
         getAlarm(userId);
     };
@@ -136,7 +134,6 @@ export default function TabPanel({ userId, alarmList, setAlarmList, getAlarm, cl
     };
 
     const bbsAlarmClick = (bbsId, id) => {
-        console.log('bbsId, id: ', bbsId, id);
         router.push(`/bbs/postView?id=${bbsId}`);
         readBbsAlarm(id);
         closeMenu();

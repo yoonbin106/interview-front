@@ -137,11 +137,9 @@
 
     const handleUser = async () => {
       const email = localStorage.getItem('email'); // 예시: userStore.email 대신 localStorage 사용
-      console.log("이메일", email);
       
       try {
         const findedUser = await getUserByEmail(email);
-        console.log(findedUser);
         
         // 소셜 로그인 사용자인 경우 처리
         if (!findedUser.data.isGoogle && !findedUser.data.isKakao && !findedUser.data.isNaver) {

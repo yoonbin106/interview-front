@@ -43,7 +43,6 @@ const BbsRegister = observer(() => {
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('버튼 클릭');
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -53,8 +52,6 @@ const BbsRegister = observer(() => {
         });
         try {
             const response = await axios.post('http://localhost:8080/bbs', formData);
-            
-            console.log('게시글 등록 성공:', response.data);
             router.push('/bbs/bbsPage');
         } catch (error) {
             console.error('게시글 등록 실패:', error);

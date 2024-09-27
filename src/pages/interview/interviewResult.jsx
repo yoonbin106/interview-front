@@ -169,7 +169,6 @@ const ResultPage = observer(() => {
       const fetchPaymentInfo = async () => {
         try {
             const paymentInfo = await getPayInfoByUserId(userStore.id);
-            console.log('결제정보: ', paymentInfo);
             setPaymentInfo(paymentInfo.data); // 결제 정보를 배열로 설정
         } catch (error) {
             console.error('결제 정보를 가져오는 중 오류가 발생했습니다:', error);
@@ -177,9 +176,6 @@ const ResultPage = observer(() => {
     };
     fetchPaymentInfo();
     const fetchedInterview = toJS(interviewStore.fetchedInterview);
-    console.log('fetchedInterview', fetchedInterview);
-
-
 
     // 유니코드로 저장된 keywords를 변환
     const encodedKeywords = fetchedInterview.claudeAnalyses[0].keywords;
@@ -198,7 +194,6 @@ const ResultPage = observer(() => {
 
     // 각 키워드를 변환
     const decodedKeywords = keywordsArray.map(decodeUnicodeString);
-    console.log('decodedKeywords', decodedKeywords);
     const keywords = decodedKeywords.map((word, index) => ({
       text: word,
       value: word.length * 10 + index // 임의로 단어 길이에 인덱스를 더한 값으로 설정
@@ -212,10 +207,6 @@ const ResultPage = observer(() => {
 
     // 디코딩된 데이터를 JSON으로 파싱
     let feedbackObj = JSON.parse(decodedFeedback);
-
-    // 결과 확인
-    console.log(feedbackObj);
-
 
     const randomAdjust = (value) => {
       // -10에서 10 사이의 소수점 값을 랜덤으로 더하거나 뺌

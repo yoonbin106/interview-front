@@ -30,36 +30,21 @@ const ChattingList = ({
 
     const inputRef = useRef(null);
 
-    // useEffect(() => {
-    //     console.log('useEffect 안의 subscribe 함수: ', chatRoomList);
-    //     chatRoomList.forEach((list) => {
-    //         const topic = `mqtt/chat/test/${list.id}`;
-    //         client.subscribe(topic);
-    //     })
-    // }, [client, chatRoomList]);
-
     useEffect(() => {
 
         if (showEditModal && inputRef.current) {
             inputRef.current.focus();
         }
 
-        if (showEditModal) {
-            // getChatroomTitle();
-        }
-
     }, [showEditModal]);
 
     useEffect(() => {
         // 이 코드가 없으면 채팅방 실시간 업데이트가 안됨 근데 있으면 무한루프 돌아
-        // getChatroomList();
         chatRoomList.forEach((room) => {
             getUsersInChatroom(room.id);  // 각 채팅방에 대해 유저 목록을 가져옴
         });
     }, [chatRoomList]);
 
-    // console.log('chatRoomList print: ', chatRoomList);
-    // console.log('users.id: ', userStore.id, currentChatRoomId);
     const createRoomClick = () => {
         setIsCreatingRoom(true);
     };
@@ -70,8 +55,6 @@ const ChattingList = ({
 
     const editChatroomTitle = async (newChatroomTitle) => {
         try {
-            console.log('newChatroomTitle: ', newChatroomTitle);
-            console.log('currentChatRoomId: ', currentChatRoomId);
 
             await axios.post('http://localhost:8080/api/chat/editChatroomTitle', {
                 chatRoomId: currentChatRoomId,

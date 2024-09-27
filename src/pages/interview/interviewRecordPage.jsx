@@ -81,9 +81,6 @@ const InterviewRecordPage = observer(() => {
     };
   
     fetchInterviewData();
-    if (status || questions.length > 0) {
-      console.log("Status or questions changed:", { status, questionsLength: questions.length });
-    }
   }, [router.isReady]);
 
   useEffect(() => {
@@ -114,7 +111,6 @@ const InterviewRecordPage = observer(() => {
         console.error("미디어 접근 에러:", err);
         if (retryCount < maxRetries) {
           retryCount++;
-          console.log(`Retrying to get media... Attempt ${retryCount}`);
           setTimeout(tryGetMedia, 1000);
         } else {
           console.error("Failed to access media after multiple attempts");
@@ -180,7 +176,6 @@ const InterviewRecordPage = observer(() => {
 
     mediaRecorder.ondataavailable = (event) => {
       if (event.data && event.data.size > 0) {
-        console.log('Received data chunk:', event.data);
         setRecordedChunks((prev) => [...prev, event.data]);
       } else {
         console.error('No data available');
@@ -197,7 +192,6 @@ const InterviewRecordPage = observer(() => {
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-      console.log("Recording stopped");
     }
     setIsRecording(false);
   }, []);
@@ -261,18 +255,15 @@ const InterviewRecordPage = observer(() => {
       setIsSubmitting(true);
 
       const blob = new Blob(recordedChunks, { type: 'video/mp4' });
-      console.log("블롭 사이즈: ", blob.size);
       const formData = new FormData();
       formData.append('video', blob, 'interview.mp4');
       formData.append('userId', userStore.id);
       formData.append('questionId', questions[currentQuestionIndex].id);
       formData.append('choosedResume', interviewStore.choosedResume);
       formData.append('questionText', questions[currentQuestionIndex].questionText); // 질문 내용 추가
-      console.log('이거 확인: ', formData.get('video'));
 
       uploadInterviewVideo(formData)
         .then(response => {
-          console.log('Video uploaded successfully', response);
           dispatch(setInterviewData({
             questionIndex: currentQuestionIndex,
             videoId: response.videoId
@@ -312,16 +303,11 @@ const InterviewRecordPage = observer(() => {
   }, [currentQuestionIndex, questions.length, dispatch, router]);
 
   useEffect(() => {
-    console.log("Questions updated:", questions);
     if (questions && questions.length > 0) {
       dispatch(setStatus('pending'));
     }
   }, [questions, dispatch]);
 
-  useEffect(() => {
-    console.log("Current question index:", currentQuestionIndex);
-    console.log("Current status:", status);
-  }, [currentQuestionIndex, status]);
 
   const handleCloseWarning = () => {
     setShowWarning(false);
